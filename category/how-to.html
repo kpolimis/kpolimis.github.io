@@ -36,66 +36,57 @@
 <p>In <a href="/category/how-to.html">How-to</a>.</p>
 
 </footer><!-- /.post-info --><h1>How to setup Pelican to build a blog with Travis-CI</h1>
-<p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's url will be "username.github.io". You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.
-<br>
-I chose to use Pelican instead of other Python alternatives after reading this <a href = "https://jakevdp.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/" target ="_blank">Jake Vanderplas post</a>. These instructions are written for Linux-based operating systems (my computer uses Linux Mint) and some workarounds may be necessary if you have another operating system to install software.
-<br></p>
+<p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's URL will be <code>username.github.io</code>. You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.</p>
+<p>I chose to use Pelican instead of other Python alternatives after reading this <a href = "https://jakevdp.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/" target ="_blank">Jake Vanderplas post</a>. These instructions are written for Linux-based operating systems (my computer uses Linux Mint) and some workarounds may be necessary if you have another operating system to install software.</p>
 <h1>Outline</h1>
 <ol>
-<li>Create Github blog source repository
-<br></li>
-<li>Install Pelican
-<br></li>
-<li>Connect Github and Travis-CI
-<br></li>
-<li>Create Github blog repository
-<br></li>
-<li>Make first blog post
-<br></li>
-<li>Deploy Travis-CI 
-<br></li>
+<li>Create Github blog source repository</li>
+<li>Install Pelican</li>
+<li>Connect Github and Travis-CI</li>
+<li>Create Github blog repository</li>
+<li>Make first blog post</li>
+<li>Deploy Travis-CI </li>
 </ol>
 <h1>Create Github blog source repository</h1>
-<p>We will use two separate git repositories on Github for the source and the
-built website, let's first only create the repository for the source</p>
-<p>Login to Github and create the <username>.github.io-src repository. Initialize this repo with a README.md so you can clone immediately. The '.io-src' repository is the source repo for our Pelican blog. After you create this repository, add it as origin in your Pelican folder repository </p>
+<p>We will use two separate git repositories on Github for the source and the built website, let's first only create the repository for the source</p>
+<p>Login to Github and create a repository named: <code>&lt;username&gt;.github.io-src</code>. Initialize this repo with a README.md so you can clone immediately. The <code>&lt;username&gt;.github.io-src</code> repository is the source repo for the Pelican blog. </p>
+<h1>Virtual Environment Blogging</h1>
+<p>I recommend creating a virtual environment to blog in for flexibility with Python package installations.</p>
+<div class="highlight"><pre><span></span>conda create -n blog <span class="nv">python</span><span class="o">==</span>3.5
+<span class="nb">source</span> activate blog
+</pre></div>
+
+
 <h1>Install Pelican</h1>
 <div class="highlight"><pre><span></span>pip install pelican
 </pre></div>
 
 
-<p>additional packages to install</p>
-<div class="highlight"><pre><span></span>pip install Markdown beautifulsoup4 typogrify Pillow webassets
+<p>Additional packages to install for website development </p>
+<div class="highlight"><pre><span></span>pip install markdown fabric beautifulsoup4 typogrify pillow webassets
 </pre></div>
 
 
-<p>change directory to .io-src folder</p>
-<p>run pelican-quickstart to set up the pelican blogging platform. The screenshot below shows how to answer the quickstart questions to allow your blog to be hosted on Github.</p>
+<p>Change directory to <code>&lt;username&gt;.github.io-src</code> folder</p>
+<p>Run pelican-quickstart to set up the Pelican blogging platform. The screenshot below shows how to answer the quickstart questions to allow your blog to be hosted on Github.</p>
 <div class="highlight"><pre><span></span>pelican-quickstart  
 </pre></div>
 
 
-<p><img alt="pelican-quickstart" src="images/pelican-quickstart.png" /><br />
-add your github.io-src repository as the origin for your blog's folder</p>
-<div class="highlight"><pre><span></span>git remote add origin &lt;username.github.io-src&gt;  
-git init .  
-git remote -v  
+<p><img alt="pelican-quickstart" src="images/pelican-quickstart.png" />  </p>
+<p>Add requirements.txt for Pelican blog build on Travis</p>
+<div class="highlight"><pre><span></span><span class="o">(</span><span class="nb">echo</span> pelican<span class="p">;</span> <span class="nb">echo</span> markdown<span class="p">;</span> <span class="nb">echo</span> fabric<span class="p">;</span> <span class="nb">echo</span> beautifulsoup4<span class="p">;</span> <span class="nb">echo</span> typogrify<span class="p">;</span> <span class="nb">echo</span> pillow<span class="p">;</span>
+<span class="nb">echo</span> webassets<span class="o">)</span> &gt;&gt; requirements.txt  
 </pre></div>
 
 
-<p>add requirements.txt for pelican blog build on Travis</p>
-<div class="highlight"><pre><span></span><span class="o">(</span><span class="nb">echo</span> pelican<span class="p">;</span> <span class="nb">echo</span> Markdown<span class="p">;</span> <span class="nb">echo</span> fabric<span class="o">)</span> &gt;&gt; requirements.txt  
-</pre></div>
-
-
-<p>add a .travis.yml file for Travis build
-nano .travis.yml</p>
+<p>Create a .travis.yml file for Travis build</p>
 <div class="highlight"><pre><span></span>branches:
   only:
   - master
 language: python
 python:
-- 2.7
+- 3.5
 install:
 - pip install -r requirements.txt --use-mirrors
 script:
@@ -123,27 +114,26 @@ copy the token to a text editor  </p>
 Select integrations<br />
 Select Travis CI<br />
 Add to github account and authorize application  </p>
-<p>in the travis-ci.org webinterface
-select your account name in the top right<br />
-refresh and flick the repository switch on for your .io-src repository  </p>
-<p>on Ubuntu you need ruby dev to install travis</p>
+<p>In the travis-ci.org web interface:
+Select your account name in the top right<br />
+Refresh and flick the repository switch on for your .io-src repository  </p>
+<p>On Ubuntu you need ruby dev to install travis</p>
 <div class="highlight"><pre><span></span>sudo apt-get install ruby1.9.1-dev
 sudo gem install travis
 </pre></div>
 
 
-<p>inside repository:</p>
+<p>Inside <code>&lt;username&gt;.github.io-src</code> repository:</p>
 <div class="highlight"><pre><span></span>travis encrypt <span class="nv">GH_TOKEN</span><span class="o">=</span>LONGTOKENFROMGITHUB --add env.global
 </pre></div>
 
 
-<p>Will be prompted with "detected repository as <username>.<username>.github.io-src,
-is this correct?"  </p>
+<p>The previous command leads to the folllowing prompt:<br />
+"detected repository as <code>&lt;username&gt;.github.io-src</code>, is this correct?"  </p>
 <p>type yes
 <br></p>
-<p>Then add the deploy.sh script and update the global variable with yours:</p>
-<div class="highlight"><pre><span></span>nano deploy.sh
-<span class="c1">#!/usr/bin/env bash</span>
+<p>Then create a deploy.sh script and update the global variable with yours:</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
 <span class="nv">BRANCH</span><span class="o">=</span>master
 <span class="nv">TARGET_REPO</span><span class="o">=</span>&lt;username/username.github.io.git&gt;
 <span class="nv">PELICAN_OUTPUT_FOLDER</span><span class="o">=</span>output
@@ -172,6 +162,7 @@ is this correct?"  </p>
 </pre></div>
 
 
+<p>Create first commit for <code>&lt;username&gt;.github.io-src</code> repo</p>
 <div class="highlight"><pre><span></span>git pull origin master  
 git status  
 git add .  
@@ -182,30 +173,39 @@ git push origin master
 
 <h1>Create blog repository</h1>
 <p>Then we can create the repository that will host the actual blog:
-create the <username>.github.io repository for the website (initialize with README.md for immediate cloning)</p>
+create the <code>&lt;username&gt;.github.io</code> repository for the website (initialize with README.md for immediate cloning)</p>
 <h1>Make a post</h1>
-<p>you cannot run deploy.sh without an initial post</p>
+<p>deploy.sh will not run without an initial post. Pelican blog posts can be written in <a href ="http://daringfireball.net/projects/markdown/" target="_blank">markdown</a> or <a href ="http://docutils.sourceforge.net/rst.html" target="_blank">reStructuredText</a>.</p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> content/
 touch first-post.md
 </pre></div>
 
 
-<p>use pelican command generate static pages from files in content folder</p>
+<p>Post follow the following format:</p>
+<div class="highlight"><pre><span></span>Title: 
+Date: 
+Author: 
+Category: 
+</pre></div>
+
+
+<p>See <a href ="http://docs.getpelican.com/en/3.6.3/index.html" target="_blank">Pelican documentation</a> for additional information on using Pelican to generate a static site.</p>
+<p>After writing an initial post, use <code>pelican</code> command to generate a static html webpage </p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> ..
 pelican content
 </pre></div>
 
 
-<p>you can preview your site locally before pushing and building on Travis<br />
-Other installation materials I've consulted suggest running the folliwng commands in a new terminal.  </p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> output
+<p>Preview your site locally before pushing and building on Travis<br />
+Other installation materials I've consulted suggest running the following commands in a new terminal.  </p>
+<div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;username&gt;.github.io-src<span class="se">\o</span>utput
 python -m pelican.server
 </pre></div>
 
 
-<p>your site is running locally at port 8000
+<p>Your site is running locally at port 8000
 <a href="http://localhost:8000">http://localhost:8000/</a></p>
-<p>commit your first post to <username>.github.io-src</p>
+<p>Commit your first post to <code>&lt;username&gt;.github.io-src</code></p>
 <div class="highlight"><pre><span></span>git status
 git add .
 git commit -m <span class="s2">&quot;added first post&quot;</span>
@@ -213,16 +213,17 @@ git push origin master
 </pre></div>
 
 
-<p>run deploy.sh file to build your blog with Travis</p>
+<p>Run deploy.sh file to build your blog with Travis</p>
 <div class="highlight"><pre><span></span>chmod +x deploy.sh
 sh deploy.sh
 </pre></div>
 
 
-<p>running sh deploy.sh creates built_website folder<br />
+<p>Running sh deploy.sh creates the built_website folder that contains all website data, from .html pages to css stylesheets<br />
 I receive an access denied/authentication error the first time deploy.sh executes  </p>
-<p>add your <username>.github.io repository as the origin in built_website folder  </p>
-<div class="highlight"><pre><span></span>git remote add http https://github.com/&lt;username&gt;/&lt;username&gt;.github.io.git
+<p>Add your <code>&lt;username&gt;.github.io</code> repository as the origin in built_website folder  </p>
+<div class="highlight"><pre><span></span><span class="nb">cd</span> built_website
+git remote add http https://github.com/&lt;username&gt;/&lt;username&gt;.github.io.git
 git remote remove origin
 git remote rename http origin
 git remote -v
@@ -235,13 +236,13 @@ git add .nojekyll
 </pre></div>
 
 
-<p>Commit the .nojekyll file to your .io repository</p>
+<p>Commit the .nojekyll file to your <code>&lt;username&gt;.github.io</code> repository</p>
 <div class="highlight"><pre><span></span>git commit -m <span class="s2">&quot;added .nojekyll file for formatting&quot;</span>
 git push origin master
 </pre></div>
 
 
-<p>Commit the .nojekyll file and built_website folder to your <username>.github.io-src repository
+<p>Commit the .nojekyll file and built_website folder to your <code>&lt;username&gt;.github.io-src</code> repository
 <br></p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> ..
 git status
@@ -257,18 +258,19 @@ git push origin master
 </pre></div>
 
 
-<p>Your webshite is available at "username.github.io"
+<p>Your website is available at <code>username.github.io</code>
 <br>
 <br>
 Workflow for posts<br />
  - Write post as .md and place in content folder<br />
  - Run <code>pelican content</code><br />
- - Add and commit new posts to .io-src repository<br />
- - use deploy.sh to automatically push .io-src repository and build <username>.github.io website<br />
+ - Add and commit new posts to <code>&lt;username&gt;.github.io-src</code> repository<br />
+ - Use deploy.sh to automatically push <code>&lt;username&gt;.github.io-src</code> repository and build <code>&lt;username&gt;.github.io</code> website
+ - Commit published posts from deploy.sh to <code>&lt;username&gt;.github.io</code> repository 
 <br></p>
 <h1>References</h1>
 <ol>
-<li><a href ="http://docs.getpelican.com/en/3.6.3/index.html" target="_blank">Pelican docmentation</a></li>
+<li><a href ="http://docs.getpelican.com/en/3.6.3/index.html" target="_blank">Pelican documentation</a></li>
 <li>notions and notes setup pelican <a href = "http://www.notionsandnotes.org/tech/web-development/pelican-static-blog-setup.html" target="_blank">blog post</a></li>
 <li><a href="http://zonca.github.io/2013/09/automatically-build-pelican-and-publish-to-github-pages.html" target="_blank">Automatically build pelican</a>with Travis CI</li>
 </ol>                </article>

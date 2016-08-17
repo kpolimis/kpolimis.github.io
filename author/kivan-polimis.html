@@ -24,7 +24,7 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/nfl-and-python.html">NFL and Python</a></h1>
+                    <h1 class="entry-title"><a href="/positions-matter.html">Positions Matter</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2016-08-01T03:06:00-07:00">
                 Published: Mon 01 August 2016
@@ -35,13 +35,20 @@
         </address>
 <p>In <a href="/category/projects.html">Projects</a>.</p>
 
-</footer><!-- /.post-info --><h1>Predicting Career NFL Performance with Combine Data</h1>
+</footer><!-- /.post-info --><h1>The Combine's Positional Variability in Predicting Career NFL Performance</h1>
 <p>collaborators: Long Chen, Melaku Dubie, Rich Lee and Kivan Polimis</p>
 <h2>Background</h2>
-<p>Every year, hundreds of collegiate football players are invited to participate in a week-long scouting combine. Players are evaluated by NFL personnel departments on a series of physical and mental tests. Results from these “measurables” influence positioning in the ensuing NFL draft months after the combine. Our goal with this project was to determine the association between pre-draft metrics and career performance</p>
-<p>Press the <a href="http://mybinder.org/repo/kpolimis/nflcombineevaluationnotebooks" target="_blank"><img alt="Binder" src="http://mybinder.org/badge.svg" /></a> link to open a jupyter notebook directory window.
+<p>Every year, hundreds of collegiate football players are invited to participate in a week-long scouting combine. Players are evaluated by NFL personnel departments on a series of physical and mental tests. Results from these “measurables” influence positioning in the NFL draft. Our goal with this project was to determine the association between pre-draft metrics and career performance. We Used Python to gather data from online sources (see Additional Information below) and create the plots. The plots show that for some positions, different combine metrics are more important predictors of career NFL performance. </p>
+<p>The example plot below describes the analysis and interactive plotting features.</p>
+<h2>Interactive plotting</h2>
+<p>Press the <a href="http://mybinder.org:/repo/kpolimis/nfl-combine-evaluation-plots" target="_blank"><img alt="Binder" src="http://mybinder.org/badge.svg" /></a> link to open a jupyter notebook directory window.
 Select plots.ipynb to start an interactive notebook that plots the relationship between assorted Combine
-metrics (40 time, vertical, speed score, etc.) and total yards in a NFL career for quarterbacks, running backs and wide receivers</p>
+metrics (40 time, vertical, speed score, etc.) and total yards in a NFL career for quarterbacks, running backs and wide receivers. </p>
+<p>Below each metric-specific plot is an explanation of the metric, the goal of the combine test, and a short discussion about variation between positions. LaDainian Tomlinson (highlighted player in example), is an elite running back that demonstrates a strong observed positional relationship between combine metrics and career performance: </p>
+<blockquote>
+<p>There appears to be a slight negative relationship between 40 time and yardage for running backs indicating that faster running backs are more likely to have more productive careers. In contrast, there does not appear to be any clearly discernable relationship between yardage and 40 time for wide receivers or quarterbacks, suggesting that success for these positions may be more dependent on other characteristics such as skill, intelligence, or agility. </p>
+</blockquote>
+<p>Hovering over an individual point on the plot reveals the following information: player name, result in the selected metric, and a combination of career rushing, receiving and passing yards depending on the player's position (selected by changing the tabs in the plot's upper left). Plots can also be zoomed in/out, saved, etc.</p>
 <h2>Example Plot</h2>
 <p><img alt="rb-plot-example" src="../../images/rb-plot-example.png" /></p>
 <h2>Additional Information</h2>
@@ -49,8 +56,8 @@ metrics (40 time, vertical, speed score, etc.) and total yards in a NFL career f
 <a href="http://www.pro-football-reference.com/years/2015/passing.htm">Pro-football reference</a><br />
 Scouting combine and player database:<br />
 <a href="http://www.nflsavant.com/about.php">NFL savant</a> </p>
-<p>For more information about this project, visit the <a href="https://github.com/kpolimis/nflPlayerPerformance">nflPlayerPerformance repository</a> for all relevant code.
-In this repository, we build functions that gather and evaluate the relationship between pre-draft Combine metrics and career NFL performance</p>                </article>
+<p>For more information about this project, visit the <a href="https://github.com/kpolimis/nfl-combine-evaluation">NFL Combine Evaluation Repository</a> for all relevant code.
+In this repository, we have the functions that gather and evaluate the relationship between pre-draft Combine metrics and career NFL performance.</p>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
@@ -76,7 +83,7 @@ In this repository, we build functions that gather and evaluate the relationship
 
 </footer><!-- /.post-info -->                <p>This post is a workshop that I created for a social media workshop during the 
 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
-<p>All relevant code will eventually be availale on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
+<p>All relevant code will eventually be available on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
 <hr>
 
 <h1>Introduction</h1>
@@ -103,9 +110,8 @@ In this repository, we build functions that gather and evaluate the relationship
 <p>In <a href="/category/how-to.html">How-to</a>.</p>
 
 </footer><!-- /.post-info -->                <h1>How to setup Pelican to build a blog with Travis-CI</h1>
-<p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's url will be "username.github.io". You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.
-<br>
-I chose to ...</p>
+<p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's URL will be <code>username.github.io</code>. You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.</p>
+<p>I chose to ...</p>
                 <a class="readmore" href="/make-a-pelican-blog.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -127,7 +133,7 @@ I chose to ...</p>
         </address>
 <p>In <a href="/category/review.html">Review</a>.</p>
 
-</footer><!-- /.post-info -->                <p>This is my personal blog, built with Pelican and hosted on github</p>
+</footer><!-- /.post-info -->                <p>This is my personal blog, built with Pelican and hosted on Github</p>
                 <a class="readmore" href="/my-first-post.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>

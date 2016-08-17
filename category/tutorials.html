@@ -37,14 +37,14 @@
 
 </footer><!-- /.post-info --><p>This post is a workshop that I created for a social media workshop during the 
 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
-<p>All relevant code will eventually be availale on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
+<p>All relevant code will eventually be available on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
 <hr>
 
 <h1>Introduction</h1>
 <p>We are going to learn various R functions for gathering, processing and
 analyzing Twitter API data. Our goal is to collect tweets by location
 and subject. This workshop is aimed at graduate students with some
-familiary with R. The examples explored will gather tweets made in the
+familiarity with R. The examples explored will gather tweets made in the
 Washington, D.C. area as well as tweets that mention presidential
 candidates Hillary Clinton and Donald Trump. If we have time, we will
 explore methods to map our results nationally and show where people are
@@ -64,8 +64,7 @@ talking about the candidates.</p>
 Recommended:
 <a href = "https://www.rstudio.com/products/rstudio/download/" target="_blank">RStudio</a></p>
 <ul>
-<li>RStudio is a free and open-source integrated development environment
-    (IDE) for R</li>
+<li>RStudio is a free and open-source integrated development environment (IDE) for R</li>
 </ul>
 <p>If you have never used R before, or if you feel that you need a
 refresher, we recommend that you go over this <a href = "https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf" target="_blank">short R tutorial</a></p>
@@ -101,19 +100,15 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
     Token and Access Token Secret</li>
 </ul>
 <h3>Install R packages</h3>
-<p>You will need to have the following packages installed for the core of
-this workshop:</p>
+<p>You will need to have the following packages installed for the core of this workshop:</p>
 <ul>
-<li>twitteR</li>
-<li>streamR</li>
-<li>ROAuth</li>
-<li>RCurl</li>
-<li>dplyr</li>
+<li><code>twitteR</code></li>
+<li><code>streamR</code></li>
+<li><code>ROAuth</code></li>
+<li><code>RCurl</code></li>
+<li><code>dplyr</code></li>
 </ul>
-<p>Before we can started, we need to clear our workspace, set a working
-directory, and load packages (you may need to install these packages the
-first time run this file). Fill in your working directory below by
-replacing "FILL ME IN" with the file path of your workshop folder</p>
+<p>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing "FILL ME IN" with the file path of your workshop folder</p>
 <div class="highlight"><pre><span></span><span class="kp">rm</span><span class="p">(</span><span class="kt">list</span><span class="o">=</span><span class="kp">ls</span><span class="p">())</span>
 <span class="kp">setwd</span><span class="p">(</span><span class="s">&quot;FILL ME IN/PAA_2016_SMDM_Workshop/Twitter&quot;</span><span class="p">)</span>
 <span class="c1">#&#39; uncomment the command below to install the necessary packages</span>
@@ -135,11 +130,9 @@ replacing "FILL ME IN" with the file path of your workshop folder</p>
 
 
 <h3>Twitter API Authentication</h3>
-<p>We will use two packages, streamR and twitteR, to retrieve tweets from
-the Twitter API. To access the functions in these packages, we will
-complete two authentication procedures.</p>
+<p>We will use two packages, streamR and twitteR, to retrieve tweets from the Twitter API. To access the functions in these packages, we will complete two authentication procedures.</p>
 <ul>
-<li>streamR<ul>
+<li><code>streamR</code><ul>
 <li>Allows authorized applications to access <a href =
 "https://dev.twitter.com/streaming/overview" target="_blank">
 Twitter's Streaming API</a></li>
@@ -147,7 +140,7 @@ Twitter's Streaming API</a></li>
 <li>uses stored authentication</li>
 </ul>
 </li>
-<li>twitteR<ul>
+<li><code>twitteR</code><ul>
 <li>Allows authorized applications to access <a href =
 "https://dev.twitter.com/rest/public" target ="_blank">
 Twitter's API</a></li>
@@ -191,22 +184,18 @@ setup_twitter_oauth<span class="p">(</span>consumer_key<span class="p">,</span> 
 </pre></div>
 
 
-<p>Twitter authentication for streamR (Windows output with <code>download.file</code>
-executed shown)\
+<p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
 <img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png" /></p>
 <h1>Analysis</h1>
 <h3>Search tweets by location</h3>
-<p>Search for tweets by location using twitteR package functions. The
-functions below interact with the trend portion of the Twitter API. Use
-Where on Earth Identifiers
+<p>Search for tweets by location using <code>twitteR</code> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers
 <a href = "https://developer.yahoo.com/geo/geoplanet/guide/concepts.html" target ="_blank">(WOEID)</a>
 for locations</p>
 <ul>
 <li>availableTrendLocations</li>
 <li>getTrends</li>
 </ul>
-<p>View column names and small subset of observations with <code>glimpse</code>
-command</p>
+<p>View column names and small subset of observations with <code>glimpse</code> command</p>
 <div class="highlight"><pre><span></span>availableTrendLocations<span class="p">()</span> 
 woeid <span class="o">=</span> availableTrendLocations<span class="p">()</span>
 glimpse<span class="p">(</span>woeid<span class="p">)</span>
@@ -250,12 +239,10 @@ glimpse<span class="p">(</span>DC_tweets<span class="p">)</span>
 
 
 <h3>Search Twitter stream by subject</h3>
-<p>Search for tweets by subject using streamR package functions. The
-streamR functions interact with Twitter's Streaming API to filter tweets
-by keywords, users, language, and location</p>
+<p>Search for tweets by subject using <code>streamR</code> package functions. The <code>streamR</code> functions interact with Twitter's Streaming API to filter tweets by keywords, users, language, and location</p>
 <ul>
-<li>filterStream</li>
-<li>parseTweets</li>
+<li><code>filterStream</code></li>
+<li><code>parseTweets</code></li>
 </ul>
 <div class="highlight"><pre><span></span>filterStream<span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> track <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
 locations <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-125</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">-66</span><span class="p">,</span> <span class="m">50</span><span class="p">),</span> timeout <span class="o">=</span> <span class="m">60</span><span class="p">,</span> oauth <span class="o">=</span> twitCred<span class="p">)</span>
@@ -281,12 +268,12 @@ Trump_mentions <span class="o">&lt;-</span><span class="kp">length</span><span c
 
 <h1>Advanced</h1>
 <h3>Map results</h3>
-<p>use filterStream to search by location</p>
+<p>use <code>filterStream</code> to search by location</p>
 <ul>
 <li><a href = "http://dev.twitter.com/docs/streaming-apis/parameters#locations" target
     ="_blank">Twitter location parameters</a></li>
 </ul>
-<p>map tweets with ggplot2 and grid packages </p>
+<p>map tweets with <code>ggplot2</code> and <code>grid</code> packages </p>
 <p><br></p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
 <span class="c1">#install.packages(c(&quot;ggplot2&quot;, &quot;grid&quot;, &quot;maps&quot;, &quot;png&quot;, &quot;lubridate&quot;))</span>
@@ -450,11 +437,7 @@ the future</p>
 <li><a href = "http://pablobarbera.com/code/streamR.html" target="_blank">streamR vignette</a> by Pablo Barbera</li>
 </ol>
 <h1>Acknowledgements</h1>
-<p>I would like to thank workshop collaborators (Nina Cesare, Charles
-Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback
-while creating this module. Additionally, comments and suggestions from
-Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and
-Valentina Staneva improved the presentation and workshop materials.</p>                </article>
+<p>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
         </section><!-- /#extras -->
