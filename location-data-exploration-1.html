@@ -101,7 +101,23 @@
 <li>Download and unzip the file, and you should be looking at a <code>LocationHistory.json</code> file. Working with location data in <a href="http://pandas.pydata.org/">Pandas</a>. Pandas is an incredibly powerful tool that simplifies working with complex datatypes and performing statistical analysis in the style of R. Chris Albon has great primers on using Pandas <a href="http://chrisalbon.com/#Python">here</a> under the "Data Wrangling" section.</li>
 </ul>
 <h2 id="Install-modules">Install modules<a class="anchor-link" href="#Install-modules">&#182;</a></h2><ul>
+<li>If you use Anaconda to manage your Python packages, I recommend creating a virtual environment with anaconda to install the dependencies. Copying the lines below the instruction into the terminal creates the environment, requirements.txt, etc.<ul>
+<li>conda create -n test-env python=2.7 anaconda</li>
+<li>source activate test-env</li>
+</ul>
+</li>
+<li>make a requirements.txt file for dependencies <ul>
+<li>(echo matplotlib; echo numpy; echo pandas; echo descartes; echo IPython; echo shapely; echo fiona) &gt;&gt; requirements.txt  </li>
+</ul>
+</li>
+<li>install requirements.txt<ul>
 <li>pip install -r requirements.txt</li>
+</ul>
+</li>
+<li>install Basemap with Anaconda<ul>
+<li>conda install Basemap</li>
+</ul>
+</li>
 </ul>
 <p>After completing the setup, we'll read in the <code>LocationHistory.json</code> file from Google Takeout and create a DataFrame.</p>
 
@@ -483,7 +499,7 @@ Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Download this <a href="downloads/notebooks/map_of_flights.ipynb">notebook</a> , or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/map_of_flights.ipynb">here</a></p>
+<p>Download this <a href="downloads/notebooks/map_of_flights.ipynb">notebook</a>, or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/map_of_flights.ipynb">here</a></p>
 
 </div>
 </div>
