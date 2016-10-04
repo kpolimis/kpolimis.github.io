@@ -81,14 +81,14 @@
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Setup">Setup<a class="anchor-link" href="#Setup">&#182;</a></h1><ol>
 <li>Use Google Takout to download your Google location history</li>
-<li>Downloading your Google location history if you've previously enabled Google location reporting on your smartphone, your GPS data will be periodically uploaded to <a href="https://support.google.com/accounts/answer/3118687?hl=en&amp;visit_id=1-636109809748631344-4285616029&amp;rd=1">Google's servers</a>. <ul>
+<li>If you've previously enabled Google location reporting on your smartphone, your GPS data will be periodically uploaded to <a href="https://support.google.com/accounts/answer/3118687?hl=en&amp;visit_id=1-636109809748631344-4285616029&amp;rd=1">Google's servers</a>. Use Google Takeout to download your location history.<ul>
 <li>The decisions of when and how to upload this data are entirely obfuscated to the end user, but as you'll see below, Android appears to upload a GPS location every 60 seconds. That's plenty of data to work with.</li>
 </ul>
 </li>
-<li>Then install the required modules</li>
+<li>After downloading your data, install the required modules</li>
 </ol>
-<h2 id="Google-Takeout">Google Takeout<a class="anchor-link" href="#Google-Takeout">&#182;</a></h2><p>Google provides a service called <a href="https://takeout.google.com/settings/takeout">Takeout</a> that allows us to export any personal Google data. We'll use Takeout to download our raw location history as a one-time snapshot. Since Latitude was retired, no API exists to access location history in real-time.</p>
-<p>Here's what to do:</p>
+<h2 id="Google-Takeout">Google Takeout<a class="anchor-link" href="#Google-Takeout">&#182;</a></h2><p>Google <a href="https://takeout.google.com/settings/takeout">Takeout</a> is a Google service that allows users to export any personal Google data. We'll use Takeout to download our raw location history as a one-time snapshot. Since Latitude was retired, no API exists to access location history in real-time.</p>
+<p>Download location data:</p>
 <ul>
 <li>Go to <a href="https://www.google.com/settings/takeout">takeout</a>. Uncheck all services except "Location History" </li>
 <li>The data will be in a json format, which works great for us. Download it in your favorite compression type.</li>
@@ -102,15 +102,11 @@
 </ul>
 </li>
 <li>make a requirements.txt file for dependencies <ul>
-<li>(echo matplotlib; echo numpy; echo pandas; echo descartes; echo IPython; echo shapely; echo fiona) &gt;&gt; requirements.txt  </li>
+<li>(echo descartes; echo IPython; echo shapely; echo fiona; echo Basemap) &gt;&gt; requirements.txt  </li>
 </ul>
 </li>
 <li>install requirements.txt<ul>
-<li>pip install -r requirements.txt</li>
-</ul>
-</li>
-<li>install Basemap with Anaconda<ul>
-<li>conda install Basemap</li>
+<li>conda install --yes --file requirements.txt</li>
 </ul>
 </li>
 </ul>
@@ -178,7 +174,7 @@
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;LocationHistory.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
     <span class="n">raw</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
-<span class="c1"># ld is an abbreviation for location data</span>
+<span class="c1"># use ld as an abbreviation for location data</span>
 <span class="n">ld</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;locations&#39;</span><span class="p">])</span>
 <span class="k">del</span> <span class="n">raw</span> <span class="c1">#free up some memory</span>
 
@@ -208,13 +204,13 @@
 <li>data manipulation</li>
 </ul>
 <h3 id="Degrees-and-Radians">Degrees and Radians<a class="anchor-link" href="#Degrees-and-Radians">&#182;</a></h3><ul>
-<li>We're going to convert the degree-based geo data to radians to calculate distance traveled.<br>
-Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-degrees-and-radians/">this post</a> for more info about degrees and radians in distance calculation.<ul>
-<li>Degrees are arbitrary because they’re based on the sun (365 days ~ 360 degrees), but they are backwards because they are from the observer’s perspective.</li>
-<li>Because radians are in terms of the mover, equations “click into place”. Converting rotational to linear speed is easy, and ideas like sin(x)/x make sense.</li>
+<li>We're going to convert the degree-based geo data to radians to calculate distance traveled. I'm going to paraphrase an explanation (source below) about why the degree-to-radians conversion is necessary<ul>
+<li>Degrees are arbitrary because they’re based on the sun and backwards because they are from the observer’s perspective.</li>
+<li>Radians are in terms of the mover allowing equations to “click into place”. Converting rotational to linear speed is easy, and ideas like sin(x)/x make sense.</li>
 </ul>
 </li>
 </ul>
+<p>Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-degrees-and-radians/">this post</a> for more info about degrees and radians in distance calculation.</p>
 <ul>
 <li>convert degrees to radians</li>
 </ul>
@@ -293,8 +289,7 @@ Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-
                              <span class="s1">&#39;startlat&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
                              <span class="s1">&#39;startlon&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
                              <span class="s1">&#39;startdatetime&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                             <span class="p">}</span>
-                       <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                             <span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -406,9 +401,8 @@ Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This algorithm worked 100% of the time for me - no false positives or negatives. But the adjacency-criteria of the algorithm is fairly brittle. The core of it centers around the assumption that inter-flight GPS data will be directly adjacent to one another. That's why the initial screening on line 2 had to be so liberal.</p>
-<p>Now, the flights DataFrame contains only instances of true flight. All that's left to do is plot them.</p>
-<p>Matplotlib's Basemap again comes to the rescue. If we plot on a flat projection like tmerc, the drawgreatcircle function will produce a true path arc just like we see in the in-flight magazines.</p>
+<p>This algorithm worked 100% of the time for me - no false positives or negatives. But the adjacency-criteria of the algorithm is fairly brittle. The core of it centers around the assumption that inter-flight GPS data will be directly adjacent to one another. That's why the initial screening on line 1 of the previous cell had to be so liberal.</p>
+<p>Now, the flights DataFrame contains only instances of true flights which facilitates plotting with Matplotlib's Basemap. If we plot on a flat projection like tmerc, the drawgreatcircle function will produce a true path arc just like we see in the in-flight magazines.</p>
 <h1 id="Visualize-Flights">Visualize Flights<a class="anchor-link" href="#Visualize-Flights">&#182;</a></h1>
 </div>
 </div>
@@ -479,7 +473,8 @@ Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>You've now got the code to go ahead and reproduce these maps. I'm working on creating functions to automate these visualizations</p>
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>You've now got the code to go ahead and reproduce these maps.<br>
+I'm working on creating functions to automate these visualizations</p>
 <h2 id="Potential-future-directions">Potential future directions<a class="anchor-link" href="#Potential-future-directions">&#182;</a></h2><ul>
 <li>Figure out where you usually go on the weekends</li>
 <li>Calculate your fastest commute route</li>
