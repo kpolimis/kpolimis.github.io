@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 </head>
 
@@ -40,7 +40,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
         </address>
-<p>In <a href="/category/how-to.html">How-to</a>.</p>
+<p>In <a href="/category/how-to.html">How-to</a>. </p>
 
 </footer><!-- /.post-info -->      <h1>How to setup Pelican to build a blog with Travis-CI</h1>
 <p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's URL will be <code>username.github.io</code>. You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.</p>
@@ -80,7 +80,7 @@
 </pre></div>
 
 
-<p><img alt="pelican-quickstart" src="../../images/pelican-quickstart.png">  </p>
+<p><img alt="pelican-quickstart" src="../../images/pelican-quickstart.png" />  </p>
 <p>Add requirements.txt for Pelican blog build on Travis</p>
 <div class="highlight"><pre><span></span><span class="o">(</span><span class="nb">echo</span> pelican<span class="p">;</span> <span class="nb">echo</span> markdown<span class="p">;</span> <span class="nb">echo</span> fabric<span class="p">;</span> <span class="nb">echo</span> beautifulsoup4<span class="p">;</span> <span class="nb">echo</span> typogrify<span class="p">;</span> <span class="nb">echo</span> pillow<span class="p">;</span>
 <span class="nb">echo</span> webassets<span class="o">)</span> &gt;&gt; requirements.txt  
@@ -112,17 +112,17 @@ after_script:
 <h1>Connect Github and Travis-CI</h1>
 <p>In order to create the encrypted token, you can login to the Github web interface
 to get an <a href = "https://help.github.com/articles/creating-an-access-token-for-command-line-use" target ="_blank">Authentication Token</a>, and then install the travis command line tool with:  </p>
-<p>Select your avatar in the top right of the screen<br>
-Select settings<br>
-Select Personal access tokens<br>
-Select generate new token near upper right of the screen<br>
+<p>Select your avatar in the top right of the screen<br />
+Select settings<br />
+Select Personal access tokens<br />
+Select generate new token near upper right of the screen<br />
 copy the token to a text editor  </p>
-<p>Select your avatar in the top right of the screen again<br>
-Select integrations<br>
-Select Travis CI<br>
+<p>Select your avatar in the top right of the screen again<br />
+Select integrations<br />
+Select Travis CI<br />
 Add to github account and authorize application  </p>
 <p>In the travis-ci.org web interface:
-Select your account name in the top right<br>
+Select your account name in the top right<br />
 Refresh and flick the repository switch on for your .io-src repository  </p>
 <p>On Ubuntu you need ruby dev to install travis</p>
 <div class="highlight"><pre><span></span>sudo apt-get install ruby1.9.1-dev
@@ -135,7 +135,7 @@ sudo gem install travis
 </pre></div>
 
 
-<p>The previous command leads to the folllowing prompt:<br>
+<p>The previous command leads to the folllowing prompt:<br />
 "detected repository as <code>&lt;username&gt;.github.io-src</code>, is this correct?"  </p>
 <p>type yes
 <br></p>
@@ -203,7 +203,7 @@ pelican content
 </pre></div>
 
 
-<p>Preview your site locally before pushing and building on Travis<br>
+<p>Preview your site locally before pushing and building on Travis<br />
 Other installation materials I've consulted suggest running the following commands in a new terminal.  </p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;username&gt;.github.io-src<span class="se">\o</span>utput
 python -m pelican.server
@@ -226,7 +226,7 @@ sh deploy.sh
 </pre></div>
 
 
-<p>Running sh deploy.sh creates the built_website folder that contains all website data, from .html pages to css stylesheets<br>
+<p>Running sh deploy.sh creates the built_website folder that contains all website data, from .html pages to css stylesheets<br />
 I receive an access denied/authentication error the first time deploy.sh executes  </p>
 <p>Add your <code>&lt;username&gt;.github.io</code> repository as the origin in built_website folder  </p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> built_website
@@ -268,10 +268,10 @@ git push origin master
 <p>Your website is available at <code>username.github.io</code>
 <br>
 <br>
-Workflow for posts<br>
- - Write post as .md and place in content folder<br>
- - Run <code>pelican content</code><br>
- - Add and commit new posts to <code>&lt;username&gt;.github.io-src</code> repository<br>
+Workflow for posts<br />
+ - Write post as .md and place in content folder<br />
+ - Run <code>pelican content</code><br />
+ - Add and commit new posts to <code>&lt;username&gt;.github.io-src</code> repository<br />
  - Use deploy.sh to automatically push <code>&lt;username&gt;.github.io-src</code> repository and build <code>&lt;username&gt;.github.io</code> website
  - Commit published posts from deploy.sh to <code>&lt;username&gt;.github.io</code> repository 
 <br></p>

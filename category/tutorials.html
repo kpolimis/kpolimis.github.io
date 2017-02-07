@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 </head>
 
@@ -35,7 +35,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
         </address>
-<p>In <a href="/category/tutorials.html">Tutorials</a>.</p>
+<p>In <a href="/category/tutorials.html">Tutorials</a>. </p>
 
 </footer><!-- /.post-info --><p>This post is a workshop that I created for a social media workshop during the 
 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
@@ -74,7 +74,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <ol>
 <li>Create a <a href = "https://www.twitter.com/signup" target ="_blank">Twitter account</a></li>
 </ol>
-<p><img alt="Twitter-Main" src="../../images/02-TwitterSignUp1.png">
+<p><img alt="Twitter-Main" src="../../images/02-TwitterSignUp1.png" />
 <br>
 2.  If you have a Twitter account, but it is not verified with a phone,
     you would need to verify the account, by adding a mobile phone
@@ -82,7 +82,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
     <a href = "https://support.twitter.com/articles/110250" target="_blank">instructions</a>
 <br>
 3.  Create a  <a href = "https://dev.twitter.com" target="_blank">new app</a> Scroll to the bottom of the page and select Manage Your Apps under the Tools column (see highlighted box below)</p>
-<p><img alt="Dev-SignIn" src="../../images/08-TwitterDevSignIn2.png"> </p>
+<p><img alt="Dev-SignIn" src="../../images/08-TwitterDevSignIn2.png" /> </p>
 <ul>
 <li>Fill in your App with the following information</li>
 <li>The App name must be unique, edit "INITIALS" with your initials</li>
@@ -91,7 +91,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <li>Website: <a href = "http://www.example.com" target = "_blank">http://www.example.com</a></li>
 <li>You should leave the "callback website" field empty</li>
 </ul>
-<p><img alt="Twitter-App2" src="../../images/10-TwitterCreateApp2.png">
+<p><img alt="Twitter-App2" src="../../images/10-TwitterCreateApp2.png" />
 <br>
 4.  Obtain your consumer key, consumer secret, access token and access
     token secret. You will insert these credentials below</p>
@@ -187,7 +187,7 @@ setup_twitter_oauth<span class="p">(</span>consumer_key<span class="p">,</span> 
 
 
 <p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
-<img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png"></p>
+<img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png" /></p>
 <h1>Analysis</h1>
 <h3>Search tweets by location</h3>
 <p>Search for tweets by location using <code>twitteR</code> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers
@@ -331,7 +331,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="tweets-map" src="../../images/tweets-map.png"></p>
+<p><img alt="tweets-map" src="../../images/tweets-map.png" /></p>
 <p>Map Clinton only tweets</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
 Clinton_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
@@ -360,7 +360,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png"></p>
+<p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png" /></p>
 <p>Map Trump only tweets</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
 Trump_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
@@ -389,7 +389,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png"></p>
+<p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png" /></p>
 <p>Compare Clinton and Trump tweet maps side-by-side</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
 grid.arrange<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">,</span> ncol<span class="o">=</span><span class="m">2</span><span class="p">)</span>
@@ -411,7 +411,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png"><!-- --></p>
+<p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png" /><!-- --></p>
 <p>Save all objects in your current workspace and read back from file in
 the future</p>
 <div class="highlight"><pre><span></span><span class="kp">save.image</span><span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
@@ -440,6 +440,9 @@ the future</p>
 </ol>
 <h1>Acknowledgements</h1>
 <p>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</p>                </article>
+<p class="paginator">
+    Page 1 / 1
+</p>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
         </section><!-- /#extras -->
