@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 </head>
 
@@ -40,7 +40,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
         </address>
-<p>In <a href="/category/how-to.html">How-to</a>. </p>
+<p>In <a href="/category/how-to.html">How-to</a>.</p>
 
 </footer><!-- /.post-info -->      <h1>How to setup Pelican to build a blog with Travis-CI</h1>
 <p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's URL will be <code>username.github.io</code>. You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.</p>
@@ -59,7 +59,7 @@
 <p>Login to Github and create a repository named: <code>&lt;username&gt;.github.io-src</code>. Initialize this repo with a README.md so you can clone immediately. The <code>&lt;username&gt;.github.io-src</code> repository is the source repo for the Pelican blog. </p>
 <h1>Virtual Environment Blogging</h1>
 <p>I recommend creating a virtual environment to blog in for flexibility with Python package installations.</p>
-<div class="highlight"><pre><span></span>conda create -n blog <span class="nv">python</span><span class="o">==</span><span class="m">3</span>.5
+<div class="highlight"><pre><span></span>conda create -n blog <span class="nv">python</span><span class="o">==</span>3.5
 <span class="nb">source</span> activate blog
 </pre></div>
 
@@ -93,7 +93,7 @@
   - master
 language: python
 python:
-- <span class="m">3</span>.5
+- 3.5
 install:
 - pip install -r requirements.txt --use-mirrors
 script:
