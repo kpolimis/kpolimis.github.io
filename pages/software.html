@@ -31,13 +31,19 @@
 <h2>Download</h2>
 <p><a href="https://pypi.python.org/pypi/forestci/0.1">forestci</a></p>
 <h1>Summary</h1>
-<p>Random forests are a method for predicting numerous ensemble learning tasks. The variability in predictions is important for measuring standard errors and estimating standard errors. Forest-Confidence-Interval is a Python module for calculating variance and adding confidence intervals to scikit-learn random forest regression or classification objects. The core functions calculate an in-bag and error bars for random forest objects. This module is an implementation of an algorithm developed by Wager, Hastie and Efron (2014) and previously implemented in R here (Wager 2016).</p>
-<p><a href="http://contrib.scikit-learn.org/forest-confidence-interval/">Documentation</a></p>
+<p>Random forests are a method for predicting numerous ensemble learning tasks. The variability in predictions is important for measuring standard errors and estimating standard errors. <code>forest-confidence-interval</code> is a Python module for calculating variance and adding confidence intervals to <code>scikit-learn</code> random forest regression or classification objects. The core functions calculate an in-bag and error bars for random forest objects. Our software is designed for individuals using <code>scikit-learn</code> random forest objects that want to add estimates of uncertainty to random forest predictors. This module is an implementation of an algorithm developed by @wager_confidence_2014 and previously implemented in R here [@wager_randomforestci_2016].</p>
 <h1>Examples gallery</h1>
+<p>The regression example uses a data-set from the <a href="https://archive.ics.uci.edu/ml/datasets/Auto+MPG">UC Irvine Machine Learning Repository</a> with features of different cars and their MPG. The classification example generates synthetic data to simulate a task like that of a spam filter: classifying items into one of two categories (e.g., spam/non-spam) based on a number of features. The example data was imported as a data frame and separated into X (predictors) and y matrices (predictions). Then, <code>scikit-learn</code> functions split the example data into training and test data and generate a random forest object (regression or classifier). Our package's <code>random_forest_error</code> and <code>calc_inbag</code> functions use the random forest object (including training and test data) to create variance estimates that can be plotted (e.g. as confidence intervals or standard deviations). </p>
 <h2>Regression example</h2>
-<p><img alt="plot-mpg" src="../../images/plot_mpg.png" /></p>
+<h3>No variance estimated</h3>
+<p>-<img alt="plot-mpg-no-variance" src="plot_mpg_no_variance.png" /></p>
+<h3>Plot with variance</h3>
+<p>-<img alt="plot-mpg-variance" src="plot_mpg.png" /></p>
 <h2>Classification example</h2>
-<p><img alt="plot-spam" src="../../images/plot_spam.png" /></p>
+<h3>No variance estimated</h3>
+<p>-<img alt="plot-spam-no-variance" src="plot_spam_no_variance.png" /></p>
+<h3>Plot with variance</h3>
+<p>-<img alt="plot-spam" src="plot_spam.png" /></p>
 <h1>References</h1>
 <p>Wager, Stefan. 2016. "randomForestCI". <a href="September. https://github.com/swager/randomForestCI">Github</a>.</p>
 <p>Wager, Stefan, Trevor Hastie, and Bradley Efron. 2014. "Confidence Intervals for Random Forests: The Jackknife and the Infinitesimal Jackknife".The Journal of Machine Learning Research 15 (1): 1625-51.</p>
