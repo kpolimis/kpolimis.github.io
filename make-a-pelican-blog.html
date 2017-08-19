@@ -29,6 +29,7 @@
       <h1 class="entry-title">
         <a href="/make-a-pelican-blog.html" rel="bookmark"
            title="Permalink to make a Pelican blog">make a Pelican blog</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="kpolimis">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
@@ -59,7 +60,7 @@
 <p>Login to Github and create a repository named: <code>&lt;username&gt;.github.io-src</code>. Initialize this repo with a README.md so you can clone immediately. The <code>&lt;username&gt;.github.io-src</code> repository is the source repo for the Pelican blog. </p>
 <h1>Virtual Environment Blogging</h1>
 <p>I recommend creating a virtual environment to blog in for flexibility with Python package installations.</p>
-<div class="highlight"><pre><span></span>conda create -n blog <span class="nv">python</span><span class="o">==</span>3.5
+<div class="highlight"><pre><span></span>conda create -n blog <span class="nv">python</span><span class="o">==</span><span class="m">3</span>.5
 <span class="nb">source</span> activate blog
 </pre></div>
 
@@ -80,7 +81,7 @@
 </pre></div>
 
 
-<p><img alt="pelican-quickstart" src="../../images/pelican-quickstart.png" />  </p>
+<p><img alt="pelican-quickstart" src="../../images/pelican-quickstart.png">  </p>
 <p>Add requirements.txt for Pelican blog build on Travis</p>
 <div class="highlight"><pre><span></span><span class="o">(</span><span class="nb">echo</span> pelican<span class="p">;</span> <span class="nb">echo</span> markdown<span class="p">;</span> <span class="nb">echo</span> fabric<span class="p">;</span> <span class="nb">echo</span> beautifulsoup4<span class="p">;</span> <span class="nb">echo</span> typogrify<span class="p">;</span> <span class="nb">echo</span> pillow<span class="p">;</span>
 <span class="nb">echo</span> webassets<span class="o">)</span> &gt;&gt; requirements.txt  
@@ -93,7 +94,7 @@
   - master
 language: python
 python:
-- 3.5
+- <span class="m">3</span>.5
 install:
 - pip install -r requirements.txt --use-mirrors
 script:
@@ -112,17 +113,17 @@ after_script:
 <h1>Connect Github and Travis-CI</h1>
 <p>In order to create the encrypted token, you can login to the Github web interface
 to get an <a href = "https://help.github.com/articles/creating-an-access-token-for-command-line-use" target ="_blank">Authentication Token</a>, and then install the travis command line tool with:  </p>
-<p>Select your avatar in the top right of the screen<br />
-Select settings<br />
-Select Personal access tokens<br />
-Select generate new token near upper right of the screen<br />
+<p>Select your avatar in the top right of the screen<br>
+Select settings<br>
+Select Personal access tokens<br>
+Select generate new token near upper right of the screen<br>
 copy the token to a text editor  </p>
-<p>Select your avatar in the top right of the screen again<br />
-Select integrations<br />
-Select Travis CI<br />
+<p>Select your avatar in the top right of the screen again<br>
+Select integrations<br>
+Select Travis CI<br>
 Add to github account and authorize application  </p>
 <p>In the travis-ci.org web interface:
-Select your account name in the top right<br />
+Select your account name in the top right<br>
 Refresh and flick the repository switch on for your .io-src repository  </p>
 <p>On Ubuntu you need ruby dev to install travis</p>
 <div class="highlight"><pre><span></span>sudo apt-get install ruby1.9.1-dev
@@ -135,7 +136,7 @@ sudo gem install travis
 </pre></div>
 
 
-<p>The previous command leads to the folllowing prompt:<br />
+<p>The previous command leads to the folllowing prompt:<br>
 "detected repository as <code>&lt;username&gt;.github.io-src</code>, is this correct?"  </p>
 <p>type yes
 <br></p>
@@ -203,7 +204,7 @@ pelican content
 </pre></div>
 
 
-<p>Preview your site locally before pushing and building on Travis<br />
+<p>Preview your site locally before pushing and building on Travis<br>
 Other installation materials I've consulted suggest running the following commands in a new terminal.  </p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;username&gt;.github.io-src<span class="se">\o</span>utput
 python -m pelican.server
@@ -226,7 +227,7 @@ sh deploy.sh
 </pre></div>
 
 
-<p>Running sh deploy.sh creates the built_website folder that contains all website data, from .html pages to css stylesheets<br />
+<p>Running sh deploy.sh creates the built_website folder that contains all website data, from .html pages to css stylesheets<br>
 I receive an access denied/authentication error the first time deploy.sh executes  </p>
 <p>Add your <code>&lt;username&gt;.github.io</code> repository as the origin in built_website folder  </p>
 <div class="highlight"><pre><span></span><span class="nb">cd</span> built_website
@@ -268,10 +269,10 @@ git push origin master
 <p>Your website is available at <code>username.github.io</code>
 <br>
 <br>
-Workflow for posts<br />
- - Write post as .md and place in content folder<br />
- - Run <code>pelican content</code><br />
- - Add and commit new posts to <code>&lt;username&gt;.github.io-src</code> repository<br />
+Workflow for posts<br>
+ - Write post as .md and place in content folder<br>
+ - Run <code>pelican content</code><br>
+ - Add and commit new posts to <code>&lt;username&gt;.github.io-src</code> repository<br>
  - Use deploy.sh to automatically push <code>&lt;username&gt;.github.io-src</code> repository and build <code>&lt;username&gt;.github.io</code> website
  - Commit published posts from deploy.sh to <code>&lt;username&gt;.github.io</code> repository 
 <br></p>
@@ -296,5 +297,14 @@ Workflow for posts<br />
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-104881568-1', 'auto');
+    ga('send', 'pageview');
+    </script>
 </body>
 </html>

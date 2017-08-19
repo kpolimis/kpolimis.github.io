@@ -29,6 +29,7 @@
       <h1 class="entry-title">
         <a href="/social-media-twitter-api-and-r.html" rel="bookmark"
            title="Permalink to Social Media, Twitter API, and R">Social Media, Twitter API, and R</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="kpolimis">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
@@ -79,7 +80,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <ol>
 <li>Create a <a href = "https://www.twitter.com/signup" target ="_blank">Twitter account</a></li>
 </ol>
-<p><img alt="Twitter-Main" src="../../images/02-TwitterSignUp1.png" />
+<p><img alt="Twitter-Main" src="../../images/02-TwitterSignUp1.png">
 <br>
 2.  If you have a Twitter account, but it is not verified with a phone,
     you would need to verify the account, by adding a mobile phone
@@ -87,7 +88,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
     <a href = "https://support.twitter.com/articles/110250" target="_blank">instructions</a>
 <br>
 3.  Create a  <a href = "https://dev.twitter.com" target="_blank">new app</a> Scroll to the bottom of the page and select Manage Your Apps under the Tools column (see highlighted box below)</p>
-<p><img alt="Dev-SignIn" src="../../images/08-TwitterDevSignIn2.png" /> </p>
+<p><img alt="Dev-SignIn" src="../../images/08-TwitterDevSignIn2.png"> </p>
 <ul>
 <li>Fill in your App with the following information</li>
 <li>The App name must be unique, edit "INITIALS" with your initials</li>
@@ -96,7 +97,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <li>Website: <a href = "http://www.example.com" target = "_blank">http://www.example.com</a></li>
 <li>You should leave the "callback website" field empty</li>
 </ul>
-<p><img alt="Twitter-App2" src="../../images/10-TwitterCreateApp2.png" />
+<p><img alt="Twitter-App2" src="../../images/10-TwitterCreateApp2.png">
 <br>
 4.  Obtain your consumer key, consumer secret, access token and access
     token secret. You will insert these credentials below</p>
@@ -192,7 +193,7 @@ setup_twitter_oauth<span class="p">(</span>consumer_key<span class="p">,</span> 
 
 
 <p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
-<img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png" /></p>
+<img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png"></p>
 <h1>Analysis</h1>
 <h3>Search tweets by location</h3>
 <p>Search for tweets by location using <code>twitteR</code> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers
@@ -336,7 +337,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="tweets-map" src="../../images/tweets-map.png" /></p>
+<p><img alt="tweets-map" src="../../images/tweets-map.png"></p>
 <p>Map Clinton only tweets</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
 Clinton_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
@@ -365,7 +366,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png" /></p>
+<p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png"></p>
 <p>Map Trump only tweets</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
 Trump_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
@@ -394,7 +395,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png" /></p>
+<p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png"></p>
 <p>Compare Clinton and Trump tweet maps side-by-side</p>
 <div class="highlight"><pre><span></span><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
 grid.arrange<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">,</span> ncol<span class="o">=</span><span class="m">2</span><span class="p">)</span>
@@ -416,7 +417,7 @@ dev.off<span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png" /><!-- --></p>
+<p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png"><!-- --></p>
 <p>Save all objects in your current workspace and read back from file in
 the future</p>
 <div class="highlight"><pre><span></span><span class="kp">save.image</span><span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
@@ -460,5 +461,14 @@ the future</p>
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-104881568-1', 'auto');
+    ga('send', 'pageview');
+    </script>
 </body>
 </html>
