@@ -1,51 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <title>Home</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
-        <link href="./" type="application/atom+xml" rel="alternate" title="Kivan Polimis ATOM Feed" />
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Welcome to my website. My name is Kivan and I am excited that you are visiting my site. Currently, I live in Houston, Texas where I am a data scientist at Atlas Analytics. I am also a regional...">
+        <meta name="keywords" content="">
+        <link rel="icon" href="./favicon.ico">
+
+        <title>Home - Kivan Polimis</title>
+
+        <!-- Stylesheets -->
+        <link href="./theme/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./theme/css/fonts.css" rel="stylesheet">
+        <link href="./theme/css/nest.css" rel="stylesheet">
+        <link href="./theme/css/pygment.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-104881568-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+        <!-- /Google Analytics -->
 
 
-        <!--[if IE]>
-                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    </head>
 
-        <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
-                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+    <body>
 
-        <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+        <!-- Header -->
+    <div class="header-container gradient">
 
-</head>
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="./"><img class="mr20" src="./images/jade_mountain.png" alt="logo">Kivan Polimis</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="./index.html">Home</a>
+                                <a href="./categories.html">Articles</a>
+                                <a href="./pages/vita.html">Vita</a>
+                                <a href="./pages/software.html">Software</a>
+                                <a href="./pages/projects.html">Projects</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="./index.html">Kivan Polimis </a></h1>
-                <nav><ul>
-                    <li >
-                        <a href=".//index.html">Home</a>
-                    </li>
-                    <li >
-                        <a href=".//categories.html">Articles</a>
-                    </li>
-                    <li >
-                        <a href=".//pages/vita.html">Vita</a>
-                    </li>
-                    <li >
-                        <a href=".//pages/software.html">Software</a>
-                    </li>
-                    <li >
-                        <a href=".//pages/projects.html">Projects</a>
-                    </li>
-                <li><a href="./">Archives</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+            <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title text-uppercase">Home</h1>
+                      <div class="header-underline"></div>
+                  </div>
+              </div>
+        </div>
+    </div>
+            <!-- /Header -->
 
-        
-<section id="content" class="body">    
-    <h1 class="entry-title">Home</h1>
-    <p>Welcome to my website.</p>
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <p>Welcome to my website.</p>
 <p>My name is Kivan and I am excited that you are visiting my site.
 Currently, I live in Houston, Texas where I am a data scientist at Atlas Analytics. I am also a regional affiliate at the University of Washington's Center for the Study of Demography and Ecology <a href = "https://csde.washington.edu/">(CSDE)</a> and a research affiliate at the Bocconi Institute for Data Science and Analytics <a href = "http://www.bidsa.unibocconi.eu/wps/wcm/connect/Site/Bidsa/Home">(BIDSA)</a>
 Most recently, I was a data scientist with <a href="https://maana.io">MAANA</a> after completing postdoctoral fellowship at Università Bocconi's <a href="http://www.dondena.unibocconi.it/wps/wcm/connect/Cdr/Centro_Dondena/Home"> Dondena Centre for Research on Social Dynamics and Public Policy</a> in Milan.
@@ -59,36 +96,37 @@ about growing the community of computational social scientists and teach in
  <a href="http://www.datacarpentry.org/">Data Carpentry</a> Workshops.</p>
 <p>If you are interested in contacting me, email: <a href="mailto:kivan.polimis@gmail.com">kivan.polimis@gmail.com</a>
 <p style="text-align:center;"><img src="../../images/Kivan.jpg" alt="Kivan" style="width: 36%; height: 36%></p></p>
-</section>
+    </div>
+        <!-- /Content --> 
 
-        <aside id="sidebar">
-                <div class="widget">
-                        <h2>Categories</h2>
-                        <ul>
-                           <li ><a href="./category/how-to.html">How-to</a></li>
-                           <li ><a href="./category/review.html">Review</a></li>
-                           <li ><a href="./category/sports.html">Sports</a></li>
-                           <li ><a href="./category/tutorials.html">Tutorials</a></li>
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="./index.html">Home</a></li>
+                            <li><a href="./categories.html">Articles</a></li>
+                            <li><a href="./pages/vita.html">Vita</a></li>
+                            <li><a href="./pages/software.html">Software</a></li>
+                            <li><a href="./pages/projects.html">Projects</a></li>
                         </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; Kivan Polimis 2020</small>
+                        </p>
+                    </div>
                 </div>
-        </aside><!-- /#sidebar -->
-
-        <footer id="footer" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
-        </footer><!-- /#footer -->
-
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-    try {
-        var pageTracker = _gat._getTracker("UA-104881568-1");
-    pageTracker._trackPageview();
-    } catch(err) {}</script>
-</body>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
 </html>
