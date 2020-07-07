@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-          <title>Kivan Polimis - Social Media, Twitter API, and R</title>
+          <title>Kivan Polimis</title>
         <meta charset="utf-8" />
-
-
 
 
 
@@ -20,10 +18,10 @@
             <li><a href="/pages/vita.html">Vita</a></li>
             <li><a href="/pages/software.html">Software</a></li>
             <li><a href="/pages/projects.html">Projects</a></li>
-            <li><a href="./category/how-to.html">How-to</a></li>
-            <li><a href="./category/review.html">Review</a></li>
-            <li><a href="./category/sports.html">Sports</a></li>
-            <li class="active"><a href="./category/tutorials.html">Tutorials</a></li>
+              <li><a href="./category/how-to.html">How-to</a></li>
+              <li><a href="./category/review.html">Review</a></li>
+              <li><a href="./category/sports.html">Sports</a></li>
+              <li class="active"><a href="./category/tutorials.html">Tutorials</a></li>
         </ul></nav><!-- /#menu -->
 <section id="content" class="body">
   <header>
@@ -39,9 +37,6 @@
     <address class="vcard author">
       By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
     </address>
-    <div class="category">
-        Category: <a href="./category/tutorials.html">Tutorials</a>
-    </div>
   </footer><!-- /.post-info -->
   <div class="entry-content">
     <p>This post is a workshop that I created for a social media workshop during the 
@@ -120,7 +115,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <li><code>dplyr</code></li>
 </ul>
 <p>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing "FILL ME IN" with the file path of your workshop folder</p>
-<div class="highlight"><pre><span></span><code><span class="nf">rm</span><span class="p">(</span><span class="n">list</span><span class="o">=</span><span class="nf">ls</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><span class="nf">rm</span><span class="p">(</span><span class="n">list</span><span class="o">=</span><span class="nf">ls</span><span class="p">())</span>
 <span class="nf">setwd</span><span class="p">(</span><span class="s">&quot;FILL ME IN/PAA_2016_SMDM_Workshop/Twitter&quot;</span><span class="p">)</span>
 <span class="c1">#&#39; uncomment the command below to install the necessary packages</span>
 <span class="c1">#install.packages(c(&quot;twitteR&quot;,&quot;streamR&quot;,&quot;ROAuth&quot;,&quot;dplyr&quot;,&quot;base64enc&quot;))</span>
@@ -137,7 +132,7 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <span class="nf">library</span><span class="p">(</span><span class="n">RCurl</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">base64enc</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
 
 <h3>Twitter API Authentication</h3>
@@ -160,7 +155,7 @@ Twitter's API</a></li>
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Twitter credentials for streamR and twitteR authentication</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Twitter credentials for streamR and twitteR authentication</span>
 <span class="n">consumer_key</span> <span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
 <span class="n">consumer_secret</span><span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
 <span class="n">access_token</span><span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
@@ -192,7 +187,7 @@ Twitter's API</a></li>
 <span class="c1">#&#39; you will need to repeat this step unless you are running analysis from a location with a</span>
 <span class="c1">#&#39; cached authentication token </span>
 <span class="nf">setup_twitter_oauth</span><span class="p">(</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">access_token_secret</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
 
 <p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
@@ -207,31 +202,31 @@ for locations</p>
 <li>getTrends</li>
 </ul>
 <p>View column names and small subset of observations with <code>glimpse</code> command</p>
-<div class="highlight"><pre><span></span><code><span class="nf">availableTrendLocations</span><span class="p">()</span> 
+<div class="highlight"><pre><span></span><span class="nf">availableTrendLocations</span><span class="p">()</span> 
 <span class="n">woeid</span> <span class="o">=</span> <span class="nf">availableTrendLocations</span><span class="p">()</span>
 <span class="nf">glimpse</span><span class="p">(</span><span class="n">woeid</span><span class="p">)</span>
 
 <span class="c1">#&#39; get trending D.C. area tweets</span>
 <span class="n">DC_tweets</span> <span class="o">=</span> <span class="nf">getTrends</span><span class="p">(</span><span class="m">2514815</span><span class="p">)</span>
 <span class="nf">glimpse</span><span class="p">(</span><span class="n">DC_tweets</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; trending hashtags</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; trending hashtags</span>
 <span class="nf">head</span><span class="p">(</span><span class="n">DC_tweets</span><span class="o">$</span><span class="n">name</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="err">## [1] &quot;Rockets&quot;       &quot;Dwight Howard&quot; &quot;Paul George&quot;   &quot;#MentorIRL&quot;   </span>
+<div class="highlight"><pre><span></span><span class="err">## [1] &quot;Rockets&quot;       &quot;Dwight Howard&quot; &quot;Paul George&quot;   &quot;#MentorIRL&quot;   </span>
 <span class="err">## [5] &quot;Raptors&quot;       &quot;#DCvTOR&quot;</span>
-</code></pre></div>
+</pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="nf">getCommonHashtags</span><span class="p">(</span><span class="n">DC_tweets</span><span class="o">$</span><span class="n">name</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="nf">getCommonHashtags</span><span class="p">(</span><span class="n">DC_tweets</span><span class="o">$</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="err">## hashtags</span>
+<div class="highlight"><pre><span></span><span class="err">## hashtags</span>
 <span class="err">##                #93KDay              #ADay2016        #brunchofidiots </span>
 <span class="err">##                      1                      1                      1 </span>
 <span class="err">##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY </span>
@@ -246,7 +241,7 @@ for locations</p>
 <span class="err">##                      1                      1                      1 </span>
 <span class="err">##     #SignACastIn5Words               #SXonFOX </span>
 <span class="err">##                      1                      1</span>
-</code></pre></div>
+</pre></div>
 
 
 <h3>Search Twitter stream by subject</h3>
@@ -255,7 +250,7 @@ for locations</p>
 <li><code>filterStream</code></li>
 <li><code>parseTweets</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nf">filterStream</span><span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> <span class="n">track</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
+<div class="highlight"><pre><span></span><span class="nf">filterStream</span><span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> <span class="n">track</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
 <span class="n">locations</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-125</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">-66</span><span class="p">,</span> <span class="m">50</span><span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="m">60</span><span class="p">,</span> <span class="n">oauth</span> <span class="o">=</span> <span class="n">twitCred</span><span class="p">)</span>
 
 <span class="c1">#&#39; parse .json file of tweets and convert parsed tweets to a data frame </span>
@@ -268,13 +263,13 @@ for locations</p>
 
 <span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Clinton mentioned %d times in %d tweets&quot;</span><span class="p">,</span> <span class="n">Clinton_mentions</span><span class="p">,</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">))</span>
 <span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Trump mentioned %d times in %d tweets&quot;</span><span class="p">,</span> <span class="n">Trump_mentions</span><span class="p">,</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">))</span>
-</code></pre></div>
+</pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="o">##</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Clinton mentioned 397894 times in 5944511 tweets&quot;</span>
+<div class="highlight"><pre><span></span><span class="o">##</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Clinton mentioned 397894 times in 5944511 tweets&quot;</span>
 
 <span class="o">##</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Trump mentioned 1164798 times in 5944511 tweets&quot;</span>
-</code></pre></div>
+</pre></div>
 
 
 <h1>Advanced</h1>
@@ -286,7 +281,7 @@ for locations</p>
 </ul>
 <p>map tweets with <code>ggplot2</code> and <code>grid</code> packages </p>
 <p><br></p>
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
 <span class="c1">#install.packages(c(&quot;ggplot2&quot;, &quot;grid&quot;, &quot;maps&quot;, &quot;png&quot;, &quot;lubridate&quot;))</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
@@ -337,12 +332,12 @@ for locations</p>
 <span class="c1">#plot(tweets.map)</span>
 <span class="c1">#dev.print(png, &#39;tweets-map.png&#39;,height = 480 , width = 720, units = &quot;px&quot;) </span>
 <span class="c1">#dev.print(pdf, &#39;tweets-map.pdf&#39;)</span>
-</code></pre></div>
+</pre></div>
 
 
 <p><img alt="tweets-map" src="../../images/tweets-map.png"></p>
 <p>Map Clinton only tweets</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
 <span class="n">Clinton_tweets</span> <span class="o">&lt;-</span> <span class="n">ClintonTrump_tweets.df</span><span class="p">[</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> 
                                              <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
 
@@ -366,12 +361,12 @@ for locations</p>
 <span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;Clinton_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">720</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
 <span class="nf">plot</span><span class="p">(</span><span class="n">Clinton_tweets.map</span><span class="p">)</span>
 <span class="nf">dev.off</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
 
 <p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png"></p>
 <p>Map Trump only tweets</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
 <span class="n">Trump_tweets</span> <span class="o">&lt;-</span> <span class="n">ClintonTrump_tweets.df</span><span class="p">[</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> 
                                           <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
 
@@ -395,12 +390,12 @@ for locations</p>
 <span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;Trump_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">720</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
 <span class="nf">plot</span><span class="p">(</span><span class="n">Trump_tweets.map</span><span class="p">)</span>
 <span class="nf">dev.off</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
 
 <p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png"></p>
 <p>Compare Clinton and Trump tweet maps side-by-side</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
 <span class="nf">grid.arrange</span><span class="p">(</span><span class="n">Clinton_tweets.map</span><span class="p">,</span><span class="n">Trump_tweets.map</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 <span class="nf">dev.off</span><span class="p">()</span>
 
@@ -417,18 +412,18 @@ for locations</p>
 <span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;combined_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">720</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">1200</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
 <span class="nf">grid.raster</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="nf">dev.off</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
 
 <p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png"><!-- --></p>
 <p>Save all objects in your current workspace and read back from file in
 the future</p>
-<div class="highlight"><pre><span></span><code><span class="nf">save.image</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">save.image</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; future R sessions will require you to reload necessary libraries</span>
 <span class="c1">#&#39; uncomment the command below to load saved objects in future workspace sessions</span>
 <span class="c1">#load(&quot;PAA_2016_Twitter.RData&quot;)</span>
-</code></pre></div>
+</pre></div>
 
 
 <h1>References</h1>

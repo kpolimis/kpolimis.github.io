@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-          <title>Kivan Polimis - NBA MVP Comparisons - Part 3</title>
+          <title>Kivan Polimis</title>
         <meta charset="utf-8" />
-
-
 
 
 
@@ -20,10 +18,10 @@
             <li><a href="/pages/vita.html">Vita</a></li>
             <li><a href="/pages/software.html">Software</a></li>
             <li><a href="/pages/projects.html">Projects</a></li>
-            <li><a href="./category/how-to.html">How-to</a></li>
-            <li><a href="./category/review.html">Review</a></li>
-            <li class="active"><a href="./category/sports.html">Sports</a></li>
-            <li><a href="./category/tutorials.html">Tutorials</a></li>
+              <li><a href="./category/how-to.html">How-to</a></li>
+              <li><a href="./category/review.html">Review</a></li>
+              <li class="active"><a href="./category/sports.html">Sports</a></li>
+              <li><a href="./category/tutorials.html">Tutorials</a></li>
         </ul></nav><!-- /#menu -->
 <section id="content" class="body">
   <header>
@@ -39,12 +37,2933 @@
     <address class="vcard author">
       By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
     </address>
-    <div class="category">
-        Category: <a href="./category/sports.html">Sports</a>
-    </div>
   </footer><!-- /.post-info -->
   <div class="entry-content">
-    <p>{% notebook nba_mvp_comparisons-part_3.ipynb %}</p>
+    <p>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="NBA-MVP-Comparisons">NBA MVP Comparisons<a class="anchor-link" href="#NBA-MVP-Comparisons">&#182;</a></h1><h2 id="Part-3">Part 3<a class="anchor-link" href="#Part-3">&#182;</a></h2><ul>
+<li>6 <sup>th</sup> March 2019</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the last two blog posts we:</p>
+<ol>
+<li>Gathered the relevant data for all NBA MVPs</li>
+<li>Evaluated several machine learning models to select the MVP and chose the Latent Discriminant Analysis model as the best predictor.</li>
+</ol>
+<h3 id="The-goal-of-this-blog-post-is-to-gather-the-data-necessary-to-predict-the-2018-2019-MVP">The goal of this blog post is to gather the data necessary to predict the 2018-2019 MVP<a class="anchor-link" href="#The-goal-of-this-blog-post-is-to-gather-the-data-necessary-to-predict-the-2018-2019-MVP">&#182;</a></h3><p>We will look select from the MVP finalists in 2017-2018</p>
+<ul>
+<li>MVP will likely be a finalist from the previous year<ul>
+<li>Is this a valid assumption?</li>
+</ul>
+</li>
+</ul>
+<h2 id="Update">Update<a class="anchor-link" href="#Update">&#182;</a></h2><p>On May 17<sup>th</sup>, the NBA announced the 2018-2019 MVP finalists:</p>
+<ul>
+<li>Giannis Antetokounmpo, Milwaukee Bucks</li>
+<li>Paul George, Oklahoma City Thunder</li>
+<li>James Harden, Houston Rockets</li>
+<li>source:  <a href="https://www.nba.com/article/2019/05/17/finalists-2019-nba-awards">https://www.nba.com/article/2019/05/17/finalists-2019-nba-awards</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h1><ol>
+<li>Import modules</li>
+<li>Examine html structure of webpage</li>
+<li>Use a function with <code>Beautiful Soup</code> to parse webpages into .csv</li>
+<li>Analyze .csv of webpage as a <code>Pandas</code> DataFrame</li>
+<li>Process the data</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>import relevant modules</li>
+<li>standard library modules:<ul>
+<li><a href="https://docs.python.org/3/library/os.html">os</a></li>
+<li><a href="https://docs.python.org/3/library/urllib.html">urllib</a></li>
+<li><a href="https://docs.python.org/3/library/webbrowser.html">webbrowser</a></li>
+<li><a href="https://docs.python.org/3/library/datetime.html">datetime</a></li>
+</ul>
+</li>
+<li>open source modules:<ul>
+<li><a href="http://pandas.pydata.org">pandas</a></li>
+<li><a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url_2018_mvp_finalist</span> <span class="o">=</span> <span class="s2">&quot;https://www.basketball-reference.com/awards/awards_2018.html&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>examine webpage</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new_tab</span><span class="p">(</span><span class="n">url_2018_mvp_finalist</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>get the html</li>
+<li>create the BeautifulSoup object</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">html_finalist</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url_2018_mvp_finalist</span><span class="p">)</span>
+<span class="n">soup_finalist</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html_finalist</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Extract the necessary values for the column headers from the table and store them as a list</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">column_headers_finalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">soup_finalist</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;th&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">30</span><span class="p">)]</span>
+<span class="n">column_headers_finalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">column_headers_finalist</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">column_headers_finalist</span> <span class="o">=</span> <span class="n">column_headers_finalist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;raw column names in finalist table: </span><span class="si">{</span><span class="n">column_headers_finalist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">column_headers_finalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">column_headers_finalist</span> <span class="k">if</span> <span class="n">header</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;Shooting&#39;</span><span class="p">,</span> <span class="s1">&#39;Advanced&#39;</span><span class="p">,</span> <span class="s1">&#39;Per Game&#39;</span><span class="p">)][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;formatted column names in finalist table: </span><span class="si">{</span><span class="n">column_headers_finalist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">column_headers_finalist</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns in finalist table&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>raw column names in finalist table: [&#39;Per Game&#39;, &#39;Shooting&#39;, &#39;Advanced&#39;, &#39;Rank&#39;, &#39;Player&#39;, &#39;Age&#39;, &#39;Tm&#39;, &#39;First&#39;, &#39;Pts Won&#39;, &#39;Pts Max&#39;, &#39;Share&#39;, &#39;G&#39;, &#39;MP&#39;, &#39;PTS&#39;, &#39;TRB&#39;, &#39;AST&#39;, &#39;STL&#39;, &#39;BLK&#39;, &#39;FG%&#39;, &#39;3P%&#39;, &#39;FT%&#39;, &#39;WS&#39;, &#39;WS/48&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;]
+formatted column names in finalist table: [&#39;Rank&#39;, &#39;Player&#39;, &#39;Age&#39;, &#39;Tm&#39;, &#39;First&#39;, &#39;Pts Won&#39;, &#39;Pts Max&#39;, &#39;Share&#39;, &#39;G&#39;, &#39;MP&#39;, &#39;PTS&#39;, &#39;TRB&#39;, &#39;AST&#39;, &#39;STL&#39;, &#39;BLK&#39;, &#39;FG%&#39;, &#39;3P%&#39;, &#39;FT%&#39;, &#39;WS&#39;, &#39;WS/48&#39;]
+20 columns in finalist table
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The data is found within the <code>tr</code> elements of the first <code>tbody</code> element</li>
+<li>We want the elements from the 3rd row and on</li>
+<li>take a look at the last row to examine data quality</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">table_rows_finalist</span> <span class="o">=</span> <span class="n">soup_finalist</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the subset soup object is of type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">table_rows_finalist</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">table_rows_finalist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>the subset soup object is of type: &lt;class &#39;bs4.element.ResultSet&#39;&gt;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;tr&gt;&lt;th class=&#34;right &#34; data-stat=&#34;rank&#34; scope=&#34;row&#34;&gt;13&lt;/th&gt;&lt;td class=&#34;left &#34; csk=&#34;Oladipo,Victor&#34; data-append-csv=&#34;oladivi01&#34; data-stat=&#34;player&#34;&gt;&lt;a href=&#34;/players/o/oladivi01.html&#34;&gt;Victor Oladipo&lt;/a&gt;&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;age&#34;&gt;25&lt;/td&gt;&lt;td class=&#34;left &#34; data-stat=&#34;team_id&#34;&gt;&lt;a href=&#34;/teams/IND/2018.html&#34;&gt;IND&lt;/a&gt;&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;votes_first&#34;&gt;0.0&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;points_won&#34;&gt;2.0&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;points_max&#34;&gt;1010&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;award_share&#34;&gt;0.002&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;g&#34;&gt;75&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;mp_per_g&#34;&gt;34.0&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;pts_per_g&#34;&gt;23.1&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;trb_per_g&#34;&gt;5.2&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;ast_per_g&#34;&gt;4.3&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;stl_per_g&#34;&gt;2.4&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;blk_per_g&#34;&gt;0.8&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;fg_pct&#34;&gt;.477&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;fg3_pct&#34;&gt;.371&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;ft_pct&#34;&gt;.799&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;ws&#34;&gt;8.2&lt;/td&gt;&lt;td class=&#34;right &#34; data-stat=&#34;ws_per_48&#34;&gt;.155&lt;/td&gt;&lt;/tr&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>to get a player's 2018-2019 statistical information, we can extract the player's web page from the <code>BeautifulSoup</code> object</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">player_href</span> <span class="o">=</span> <span class="p">[</span><span class="n">href</span> <span class="k">for</span> <span class="n">href</span> <span class="ow">in</span> <span class="n">table_rows_finalist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+<span class="n">player_href</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[8]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;/players/o/oladivi01.html&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>however, the player link is just a stub url and needs a base url for basketball-reference.com appended to it to access the player's web page</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">base_basketball_ref_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.basketball-reference.com&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">player_link</span> <span class="o">=</span> <span class="n">base_basketball_ref_url</span> <span class="o">+</span> <span class="n">player_href</span>
+<span class="n">player_link</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[10]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;https://www.basketball-reference.com/players/o/oladivi01.html&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new_tab</span><span class="p">(</span><span class="n">player_link</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[11]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>create a function to extract MVP finalist data</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_finalist_data</span><span class="p">(</span><span class="n">table_rows</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract and return the the desired information from the td elements within the table rows.</span>
+<span class="sd">    :param: table_rows:  list of soup `tr` elements</span>
+<span class="sd">    :return: list of player-year MVP finalist observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">base_basketball_ref_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.basketball-reference.com&quot;</span>
+    
+    <span class="c1"># create the empty list to store the player data</span>
+    <span class="n">player_data</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table_rows</span><span class="p">:</span>  <span class="c1"># for each row do the following</span>
+
+        <span class="c1"># Get the text for each table data (td) element in the row</span>
+        <span class="n">player_rank</span> <span class="o">=</span> <span class="p">[</span><span class="n">td</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;th&quot;</span><span class="p">)]</span>
+        <span class="n">player_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">td</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)]</span>
+        <span class="n">player_href</span> <span class="o">=</span> <span class="p">[</span><span class="n">href</span> <span class="k">for</span> <span class="n">href</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+        <span class="n">player_link</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_basketball_ref_url</span> <span class="o">+</span> <span class="n">player_href</span><span class="p">]</span>        
+        
+        <span class="c1"># there are some empty table rows, which are the repeated column headers in the table</span>
+        <span class="c1"># we skip over those rows and and continue the for loop</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">player_list</span><span class="p">:</span>
+            <span class="k">continue</span>
+            
+        <span class="c1"># Now append the individual player data to list of all player data</span>
+        
+        <span class="n">player_info</span> <span class="o">=</span> <span class="n">player_rank</span><span class="o">+</span><span class="n">player_list</span><span class="o">+</span><span class="n">player_link</span>
+        <span class="n">player_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">player_info</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">player_data</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>extract the data we want</li>
+<li>and then store it in a <code>DataFrame</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">extracted_finalist_2018_data</span> <span class="o">=</span> <span class="n">extract_finalist_data</span><span class="p">(</span><span class="n">table_rows_finalist</span><span class="p">)</span>
+
+<span class="n">mvp_finalist_2018_data</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">extracted_finalist_2018_data</span><span class="p">)</span>
+<span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_headers_finalist</span><span class="o">+</span><span class="p">[</span><span class="s2">&quot;player_link&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the MVP finalist dataframe has </span><span class="si">{</span><span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows (player-year observations) and </span><span class="si">{</span><span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>the MVP finalist dataframe has 13 rows (player-year observations) and 21 columns
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[13]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Age</th>
+      <th>Tm</th>
+      <th>First</th>
+      <th>Pts Won</th>
+      <th>Pts Max</th>
+      <th>Share</th>
+      <th>G</th>
+      <th>MP</th>
+      <th>...</th>
+      <th>TRB</th>
+      <th>AST</th>
+      <th>STL</th>
+      <th>BLK</th>
+      <th>FG%</th>
+      <th>3P%</th>
+      <th>FT%</th>
+      <th>WS</th>
+      <th>WS/48</th>
+      <th>player_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>DeMar DeRozan</td>
+      <td>28</td>
+      <td>TOR</td>
+      <td>0.0</td>
+      <td>32.0</td>
+      <td>1010</td>
+      <td>0.032</td>
+      <td>80</td>
+      <td>33.9</td>
+      <td>...</td>
+      <td>3.9</td>
+      <td>5.2</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>.456</td>
+      <td>.310</td>
+      <td>.825</td>
+      <td>9.6</td>
+      <td>.170</td>
+      <td>https://www.basketball-reference.com/players/d...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>LaMarcus Aldridge</td>
+      <td>32</td>
+      <td>SAS</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>1010</td>
+      <td>0.006</td>
+      <td>75</td>
+      <td>33.5</td>
+      <td>...</td>
+      <td>8.5</td>
+      <td>2.0</td>
+      <td>0.6</td>
+      <td>1.2</td>
+      <td>.510</td>
+      <td>.293</td>
+      <td>.837</td>
+      <td>10.9</td>
+      <td>.209</td>
+      <td>https://www.basketball-reference.com/players/a...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10T</td>
+      <td>Jimmy Butler</td>
+      <td>28</td>
+      <td>MIN</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>1010</td>
+      <td>0.005</td>
+      <td>59</td>
+      <td>36.7</td>
+      <td>...</td>
+      <td>5.3</td>
+      <td>4.9</td>
+      <td>2.0</td>
+      <td>0.4</td>
+      <td>.474</td>
+      <td>.350</td>
+      <td>.854</td>
+      <td>8.9</td>
+      <td>.198</td>
+      <td>https://www.basketball-reference.com/players/b...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>10T</td>
+      <td>Stephen Curry</td>
+      <td>29</td>
+      <td>GSW</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>1010</td>
+      <td>0.005</td>
+      <td>51</td>
+      <td>32.0</td>
+      <td>...</td>
+      <td>5.1</td>
+      <td>6.1</td>
+      <td>1.6</td>
+      <td>0.2</td>
+      <td>.495</td>
+      <td>.423</td>
+      <td>.921</td>
+      <td>9.1</td>
+      <td>.267</td>
+      <td>https://www.basketball-reference.com/players/c...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>Joel Embiid</td>
+      <td>23</td>
+      <td>PHI</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>1010</td>
+      <td>0.004</td>
+      <td>63</td>
+      <td>30.3</td>
+      <td>...</td>
+      <td>11.0</td>
+      <td>3.2</td>
+      <td>0.6</td>
+      <td>1.8</td>
+      <td>.483</td>
+      <td>.308</td>
+      <td>.769</td>
+      <td>6.2</td>
+      <td>.155</td>
+      <td>https://www.basketball-reference.com/players/e...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>Victor Oladipo</td>
+      <td>25</td>
+      <td>IND</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1010</td>
+      <td>0.002</td>
+      <td>75</td>
+      <td>34.0</td>
+      <td>...</td>
+      <td>5.2</td>
+      <td>4.3</td>
+      <td>2.4</td>
+      <td>0.8</td>
+      <td>.477</td>
+      <td>.371</td>
+      <td>.799</td>
+      <td>8.2</td>
+      <td>.155</td>
+      <td>https://www.basketball-reference.com/players/o...</td>
+    </tr>
+  </tbody>
+</table>
+<p>6 rows × 21 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Extract the necessary values for the column headers from the table and store them as a list</li>
+<li>create the <code>BeautifulSoup</code> object</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">player_test_table</span> <span class="o">=</span> <span class="s2">&quot;https://www.basketball-reference.com/players/h/hardeja01.html#per_game::none&quot;</span>
+<span class="n">player_profile_request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">player_test_table</span><span class="p">)</span>
+<span class="n">player_profile_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">player_profile_request</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">column_headers_player</span> <span class="o">=</span> <span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;th&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">30</span><span class="p">)]</span>
+<span class="n">column_headers_player</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">column_headers_player</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">column_headers_player</span> <span class="o">=</span> <span class="n">column_headers_player</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the columns in the career data tables are: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">column_headers_player</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">column_headers_player</span><span class="p">)</span><span class="si">}</span><span class="s2"> total columns in the career table&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>the columns in the career data tables are: 
+ [&#39;Age&#39;, &#39;Tm&#39;, &#39;Lg&#39;, &#39;Pos&#39;, &#39;G&#39;, &#39;GS&#39;, &#39;MP&#39;, &#39;FG&#39;, &#39;FGA&#39;, &#39;FG%&#39;, &#39;3P&#39;, &#39;3PA&#39;, &#39;3P%&#39;, &#39;2P&#39;, &#39;2PA&#39;, &#39;2P%&#39;, &#39;eFG%&#39;, &#39;FT&#39;, &#39;FTA&#39;, &#39;FT%&#39;, &#39;ORB&#39;, &#39;DRB&#39;, &#39;TRB&#39;, &#39;AST&#39;, &#39;STL&#39;, &#39;BLK&#39;, &#39;TOV&#39;, &#39;PF&#39;, &#39;PTS&#39;] 
+
+there are 29 total columns in the career table
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">player_name</span> <span class="o">=</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+<span class="n">player_years_active</span> <span class="o">=</span> <span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;th&quot;</span><span class="p">)]</span>
+<span class="n">player_career_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">td</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>let's examine the data to make sure it conforms with our expectations</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;player name: </span><span class="si">{</span><span class="n">player_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;player years active: </span><span class="si">{</span><span class="n">player_years_active</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;player career data: </span><span class="si">{</span><span class="n">player_career_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>player name: James Harden
+player years active: [&#39;2009-10&#39;, &#39;2010-11&#39;, &#39;2011-12&#39;, &#39;2012-13&#39;, &#39;2013-14&#39;, &#39;2014-15&#39;, &#39;2015-16&#39;, &#39;2016-17&#39;, &#39;2017-18&#39;, &#39;2018-19&#39;]
+player career data: [&#39;20&#39;, &#39;OKC&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;76&#39;, &#39;0&#39;, &#39;22.9&#39;, &#39;3.1&#39;, &#39;7.6&#39;, &#39;.403&#39;, &#39;1.2&#39;, &#39;3.3&#39;, &#39;.375&#39;, &#39;1.8&#39;, &#39;4.3&#39;, &#39;.424&#39;, &#39;.484&#39;, &#39;2.6&#39;, &#39;3.2&#39;, &#39;.808&#39;, &#39;0.6&#39;, &#39;2.6&#39;, &#39;3.2&#39;, &#39;1.8&#39;, &#39;1.1&#39;, &#39;0.3&#39;, &#39;1.4&#39;, &#39;2.6&#39;, &#39;9.9&#39;, &#39;21&#39;, &#39;OKC&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;82&#39;, &#39;5&#39;, &#39;26.7&#39;, &#39;3.6&#39;, &#39;8.3&#39;, &#39;.436&#39;, &#39;1.4&#39;, &#39;4.0&#39;, &#39;.349&#39;, &#39;2.3&#39;, &#39;4.4&#39;, &#39;.514&#39;, &#39;.518&#39;, &#39;3.5&#39;, &#39;4.2&#39;, &#39;.843&#39;, &#39;0.5&#39;, &#39;2.6&#39;, &#39;3.1&#39;, &#39;2.1&#39;, &#39;1.1&#39;, &#39;0.3&#39;, &#39;1.3&#39;, &#39;2.5&#39;, &#39;12.2&#39;, &#39;22&#39;, &#39;OKC&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;62&#39;, &#39;2&#39;, &#39;31.4&#39;, &#39;5.0&#39;, &#39;10.1&#39;, &#39;.491&#39;, &#39;1.8&#39;, &#39;4.7&#39;, &#39;.390&#39;, &#39;3.1&#39;, &#39;5.4&#39;, &#39;.579&#39;, &#39;.582&#39;, &#39;5.0&#39;, &#39;6.0&#39;, &#39;.846&#39;, &#39;0.5&#39;, &#39;3.6&#39;, &#39;4.1&#39;, &#39;3.7&#39;, &#39;1.0&#39;, &#39;0.2&#39;, &#39;2.2&#39;, &#39;2.4&#39;, &#39;16.8&#39;, &#39;23&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;78&#39;, &#39;78&#39;, &#39;38.3&#39;, &#39;7.5&#39;, &#39;17.1&#39;, &#39;.438&#39;, &#39;2.3&#39;, &#39;6.2&#39;, &#39;.368&#39;, &#39;5.2&#39;, &#39;10.9&#39;, &#39;.477&#39;, &#39;.504&#39;, &#39;8.6&#39;, &#39;10.2&#39;, &#39;.851&#39;, &#39;0.8&#39;, &#39;4.1&#39;, &#39;4.9&#39;, &#39;5.8&#39;, &#39;1.8&#39;, &#39;0.5&#39;, &#39;3.8&#39;, &#39;2.3&#39;, &#39;25.9&#39;, &#39;24&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;73&#39;, &#39;73&#39;, &#39;38.0&#39;, &#39;7.5&#39;, &#39;16.5&#39;, &#39;.456&#39;, &#39;2.4&#39;, &#39;6.6&#39;, &#39;.366&#39;, &#39;5.1&#39;, &#39;9.9&#39;, &#39;.515&#39;, &#39;.529&#39;, &#39;7.9&#39;, &#39;9.1&#39;, &#39;.866&#39;, &#39;0.8&#39;, &#39;3.9&#39;, &#39;4.7&#39;, &#39;6.1&#39;, &#39;1.6&#39;, &#39;0.4&#39;, &#39;3.6&#39;, &#39;2.4&#39;, &#39;25.4&#39;, &#39;25&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;81&#39;, &#39;81&#39;, &#39;36.8&#39;, &#39;8.0&#39;, &#39;18.1&#39;, &#39;.440&#39;, &#39;2.6&#39;, &#39;6.9&#39;, &#39;.375&#39;, &#39;5.4&#39;, &#39;11.3&#39;, &#39;.480&#39;, &#39;.511&#39;, &#39;8.8&#39;, &#39;10.2&#39;, &#39;.868&#39;, &#39;0.9&#39;, &#39;4.7&#39;, &#39;5.7&#39;, &#39;7.0&#39;, &#39;1.9&#39;, &#39;0.7&#39;, &#39;4.0&#39;, &#39;2.6&#39;, &#39;27.4&#39;, &#39;26&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;82&#39;, &#39;82&#39;, &#39;38.1&#39;, &#39;8.7&#39;, &#39;19.7&#39;, &#39;.439&#39;, &#39;2.9&#39;, &#39;8.0&#39;, &#39;.359&#39;, &#39;5.8&#39;, &#39;11.7&#39;, &#39;.494&#39;, &#39;.512&#39;, &#39;8.8&#39;, &#39;10.2&#39;, &#39;.860&#39;, &#39;0.8&#39;, &#39;5.3&#39;, &#39;6.1&#39;, &#39;7.5&#39;, &#39;1.7&#39;, &#39;0.6&#39;, &#39;4.6&#39;, &#39;2.8&#39;, &#39;29.0&#39;, &#39;27&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;PG&#39;, &#39;81&#39;, &#39;81&#39;, &#39;36.4&#39;, &#39;8.3&#39;, &#39;18.9&#39;, &#39;.440&#39;, &#39;3.2&#39;, &#39;9.3&#39;, &#39;.347&#39;, &#39;5.1&#39;, &#39;9.6&#39;, &#39;.530&#39;, &#39;.525&#39;, &#39;9.2&#39;, &#39;10.9&#39;, &#39;.847&#39;, &#39;1.2&#39;, &#39;7.0&#39;, &#39;8.1&#39;, &#39;11.2&#39;, &#39;1.5&#39;, &#39;0.5&#39;, &#39;5.7&#39;, &#39;2.7&#39;, &#39;29.1&#39;, &#39;28&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;SG&#39;, &#39;72&#39;, &#39;72&#39;, &#39;35.4&#39;, &#39;9.0&#39;, &#39;20.1&#39;, &#39;.449&#39;, &#39;3.7&#39;, &#39;10.0&#39;, &#39;.367&#39;, &#39;5.4&#39;, &#39;10.1&#39;, &#39;.531&#39;, &#39;.541&#39;, &#39;8.7&#39;, &#39;10.1&#39;, &#39;.858&#39;, &#39;0.6&#39;, &#39;4.8&#39;, &#39;5.4&#39;, &#39;8.8&#39;, &#39;1.8&#39;, &#39;0.7&#39;, &#39;4.4&#39;, &#39;2.3&#39;, &#39;30.4&#39;, &#39;29&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;PG&#39;, &#39;78&#39;, &#39;78&#39;, &#39;36.8&#39;, &#39;10.8&#39;, &#39;24.5&#39;, &#39;.442&#39;, &#39;4.8&#39;, &#39;13.2&#39;, &#39;.368&#39;, &#39;6.0&#39;, &#39;11.3&#39;, &#39;.528&#39;, &#39;.541&#39;, &#39;9.7&#39;, &#39;11.0&#39;, &#39;.879&#39;, &#39;0.8&#39;, &#39;5.8&#39;, &#39;6.6&#39;, &#39;7.5&#39;, &#39;2.0&#39;, &#39;0.7&#39;, &#39;5.0&#39;, &#39;3.1&#39;, &#39;36.1&#39;, &#39;&#39;, &#39;&#39;, &#39;NBA&#39;, &#39;&#39;, &#39;765&#39;, &#39;552&#39;, &#39;34.1&#39;, &#39;7.2&#39;, &#39;16.2&#39;, &#39;.443&#39;, &#39;2.6&#39;, &#39;7.3&#39;, &#39;.365&#39;, &#39;4.5&#39;, &#39;9.0&#39;, &#39;.506&#39;, &#39;.525&#39;, &#39;7.3&#39;, &#39;8.5&#39;, &#39;.857&#39;, &#39;0.8&#39;, &#39;4.5&#39;, &#39;5.2&#39;, &#39;6.2&#39;, &#39;1.6&#39;, &#39;0.5&#39;, &#39;3.6&#39;, &#39;2.6&#39;, &#39;24.3&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;HOU&#39;, &#39;NBA&#39;, &#39;&#39;, &#39;545&#39;, &#39;545&#39;, &#39;37.1&#39;, &#39;8.5&#39;, &#39;19.3&#39;, &#39;.443&#39;, &#39;3.1&#39;, &#39;8.6&#39;, &#39;.364&#39;, &#39;5.4&#39;, &#39;10.7&#39;, &#39;.506&#39;, &#39;.524&#39;, &#39;8.8&#39;, &#39;10.2&#39;, &#39;.861&#39;, &#39;0.8&#39;, &#39;5.1&#39;, &#39;6.0&#39;, &#39;7.7&#39;, &#39;1.8&#39;, &#39;0.6&#39;, &#39;4.4&#39;, &#39;2.6&#39;, &#39;29.0&#39;, &#39;&#39;, &#39;OKC&#39;, &#39;NBA&#39;, &#39;&#39;, &#39;220&#39;, &#39;7&#39;, &#39;26.7&#39;, &#39;3.8&#39;, &#39;8.6&#39;, &#39;.444&#39;, &#39;1.5&#39;, &#39;3.9&#39;, &#39;.370&#39;, &#39;2.4&#39;, &#39;4.7&#39;, &#39;.506&#39;, &#39;.529&#39;, &#39;3.6&#39;, &#39;4.3&#39;, &#39;.835&#39;, &#39;0.5&#39;, &#39;2.9&#39;, &#39;3.4&#39;, &#39;2.5&#39;, &#39;1.1&#39;, &#39;0.3&#39;, &#39;1.6&#39;, &#39;2.5&#39;, &#39;12.7&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>the player career data is a list that includes every year the player was active<ul>
+<li>this list is not broken up by year</li>
+</ul>
+</li>
+<li>to create yearly player data from the player career data list, we need a function to seperate the list</li>
+<li>we can use the following function is from <a href="https://stackoverflow.com/questions/26945277/how-to-split-python-list-every-nth-element">StackOverflow</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">slice_per</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">source</span><span class="p">[</span><span class="n">i</span><span class="p">::</span><span class="n">step</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">step</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>every 29 items in the list represents a year of player data<ul>
+<li>we will split the <code>player_career_data</code> object every 29 steps (using the language of the <code>slice_per</code> function) to create a year of data</li>
+</ul>
+</li>
+<li>then we add the column headers to the dataframe as a sanity check that the information was extracted correctly</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sliced_player_data</span> <span class="o">=</span> <span class="n">slice_per</span><span class="p">(</span><span class="n">player_career_data</span><span class="p">,</span> <span class="mi">29</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sliced_player_data</span><span class="p">))</span>
+<span class="n">player_career_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sliced_player_data</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">player_career_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_headers_player</span>
+<span class="n">player_career_df</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;list&#39;&gt;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[19]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Age</th>
+      <th>Tm</th>
+      <th>Lg</th>
+      <th>Pos</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>MP</th>
+      <th>FG</th>
+      <th>FGA</th>
+      <th>FG%</th>
+      <th>...</th>
+      <th>FT%</th>
+      <th>ORB</th>
+      <th>DRB</th>
+      <th>TRB</th>
+      <th>AST</th>
+      <th>STL</th>
+      <th>BLK</th>
+      <th>TOV</th>
+      <th>PF</th>
+      <th>PTS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>76</td>
+      <td>0</td>
+      <td>22.9</td>
+      <td>3.1</td>
+      <td>7.6</td>
+      <td>.403</td>
+      <td>...</td>
+      <td>.808</td>
+      <td>0.6</td>
+      <td>2.6</td>
+      <td>3.2</td>
+      <td>1.8</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.4</td>
+      <td>2.6</td>
+      <td>9.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>21</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>82</td>
+      <td>5</td>
+      <td>26.7</td>
+      <td>3.6</td>
+      <td>8.3</td>
+      <td>.436</td>
+      <td>...</td>
+      <td>.843</td>
+      <td>0.5</td>
+      <td>2.6</td>
+      <td>3.1</td>
+      <td>2.1</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.3</td>
+      <td>2.5</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>22</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>62</td>
+      <td>2</td>
+      <td>31.4</td>
+      <td>5.0</td>
+      <td>10.1</td>
+      <td>.491</td>
+      <td>...</td>
+      <td>.846</td>
+      <td>0.5</td>
+      <td>3.6</td>
+      <td>4.1</td>
+      <td>3.7</td>
+      <td>1.0</td>
+      <td>0.2</td>
+      <td>2.2</td>
+      <td>2.4</td>
+      <td>16.8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>78</td>
+      <td>78</td>
+      <td>38.3</td>
+      <td>7.5</td>
+      <td>17.1</td>
+      <td>.438</td>
+      <td>...</td>
+      <td>.851</td>
+      <td>0.8</td>
+      <td>4.1</td>
+      <td>4.9</td>
+      <td>5.8</td>
+      <td>1.8</td>
+      <td>0.5</td>
+      <td>3.8</td>
+      <td>2.3</td>
+      <td>25.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>73</td>
+      <td>73</td>
+      <td>38.0</td>
+      <td>7.5</td>
+      <td>16.5</td>
+      <td>.456</td>
+      <td>...</td>
+      <td>.866</td>
+      <td>0.8</td>
+      <td>3.9</td>
+      <td>4.7</td>
+      <td>6.1</td>
+      <td>1.6</td>
+      <td>0.4</td>
+      <td>3.6</td>
+      <td>2.4</td>
+      <td>25.4</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>25</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>81</td>
+      <td>81</td>
+      <td>36.8</td>
+      <td>8.0</td>
+      <td>18.1</td>
+      <td>.440</td>
+      <td>...</td>
+      <td>.868</td>
+      <td>0.9</td>
+      <td>4.7</td>
+      <td>5.7</td>
+      <td>7.0</td>
+      <td>1.9</td>
+      <td>0.7</td>
+      <td>4.0</td>
+      <td>2.6</td>
+      <td>27.4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>26</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>82</td>
+      <td>82</td>
+      <td>38.1</td>
+      <td>8.7</td>
+      <td>19.7</td>
+      <td>.439</td>
+      <td>...</td>
+      <td>.860</td>
+      <td>0.8</td>
+      <td>5.3</td>
+      <td>6.1</td>
+      <td>7.5</td>
+      <td>1.7</td>
+      <td>0.6</td>
+      <td>4.6</td>
+      <td>2.8</td>
+      <td>29.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>27</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>PG</td>
+      <td>81</td>
+      <td>81</td>
+      <td>36.4</td>
+      <td>8.3</td>
+      <td>18.9</td>
+      <td>.440</td>
+      <td>...</td>
+      <td>.847</td>
+      <td>1.2</td>
+      <td>7.0</td>
+      <td>8.1</td>
+      <td>11.2</td>
+      <td>1.5</td>
+      <td>0.5</td>
+      <td>5.7</td>
+      <td>2.7</td>
+      <td>29.1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>28</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>72</td>
+      <td>72</td>
+      <td>35.4</td>
+      <td>9.0</td>
+      <td>20.1</td>
+      <td>.449</td>
+      <td>...</td>
+      <td>.858</td>
+      <td>0.6</td>
+      <td>4.8</td>
+      <td>5.4</td>
+      <td>8.8</td>
+      <td>1.8</td>
+      <td>0.7</td>
+      <td>4.4</td>
+      <td>2.3</td>
+      <td>30.4</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>29</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>PG</td>
+      <td>78</td>
+      <td>78</td>
+      <td>36.8</td>
+      <td>10.8</td>
+      <td>24.5</td>
+      <td>.442</td>
+      <td>...</td>
+      <td>.879</td>
+      <td>0.8</td>
+      <td>5.8</td>
+      <td>6.6</td>
+      <td>7.5</td>
+      <td>2.0</td>
+      <td>0.7</td>
+      <td>5.0</td>
+      <td>3.1</td>
+      <td>36.1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td></td>
+      <td></td>
+      <td>NBA</td>
+      <td></td>
+      <td>765</td>
+      <td>552</td>
+      <td>34.1</td>
+      <td>7.2</td>
+      <td>16.2</td>
+      <td>.443</td>
+      <td>...</td>
+      <td>.857</td>
+      <td>0.8</td>
+      <td>4.5</td>
+      <td>5.2</td>
+      <td>6.2</td>
+      <td>1.6</td>
+      <td>0.5</td>
+      <td>3.6</td>
+      <td>2.6</td>
+      <td>24.3</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>...</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td></td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td></td>
+      <td>545</td>
+      <td>545</td>
+      <td>37.1</td>
+      <td>8.5</td>
+      <td>19.3</td>
+      <td>.443</td>
+      <td>...</td>
+      <td>.861</td>
+      <td>0.8</td>
+      <td>5.1</td>
+      <td>6.0</td>
+      <td>7.7</td>
+      <td>1.8</td>
+      <td>0.6</td>
+      <td>4.4</td>
+      <td>2.6</td>
+      <td>29.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td></td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td></td>
+      <td>220</td>
+      <td>7</td>
+      <td>26.7</td>
+      <td>3.8</td>
+      <td>8.6</td>
+      <td>.444</td>
+      <td>...</td>
+      <td>.835</td>
+      <td>0.5</td>
+      <td>2.9</td>
+      <td>3.4</td>
+      <td>2.5</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.6</td>
+      <td>2.5</td>
+      <td>12.7</td>
+    </tr>
+  </tbody>
+</table>
+<p>14 rows × 29 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>now we need a function to extract the player career data using the link to the player's profile as the input</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_career_data</span><span class="p">(</span><span class="n">player_link</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract and return the the desired information from the td elements within the table rows.</span>
+<span class="sd">    :param: table_rows:  list of soup `tr` elements</span>
+<span class="sd">    :return: list of player-year MVP finalist observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="n">player_profile_request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">player_link</span><span class="p">)</span>
+
+    <span class="c1"># create the BeautifulSoup object</span>
+    <span class="n">player_profile_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">player_profile_request</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span> 
+    <span class="n">extracted_player_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">td</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">)]</span>
+
+    <span class="n">player_name</span> <span class="o">=</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">player_years_active</span> <span class="o">=</span> <span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">player_profile_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;th&quot;</span><span class="p">)]</span>
+    <span class="n">player_career_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">td</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">extracted_player_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)]</span>
+    
+    <span class="c1"># slice list of list (player_data into yearly lists)</span>
+    <span class="n">sliced_player_data</span> <span class="o">=</span> <span class="n">slice_per</span><span class="p">(</span><span class="n">player_career_data</span><span class="p">,</span> <span class="mi">29</span><span class="p">)</span>
+    
+    <span class="n">player_career_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sliced_player_data</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">player_career_df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Player&quot;</span><span class="p">,</span> <span class="n">player_name</span><span class="p">)</span>
+    <span class="n">player_career_df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">player_years_active</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">player_career_df</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>use list comprehension to extract career data for each player link in <code>mvp_finalist_2018_data</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_player_career_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">extract_career_data</span><span class="p">(</span><span class="n">player_link</span><span class="p">)</span> <span class="k">for</span> <span class="n">player_link</span> <span class="ow">in</span> <span class="n">mvp_finalist_2018_data</span><span class="p">[</span><span class="s2">&quot;player_link&quot;</span><span class="p">]]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>use <code>Pandas</code> concat function to store all finalist data in one <code>DataFrame</code></li>
+<li>store all finalist data in one <code>DataFrame</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_career_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_player_career_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;the MVP finalist dataframe has </span><span class="si">{</span><span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows (player-year observations) and </span><span class="si">{</span><span class="n">mvp_finalist_2018_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+
+<span class="n">mvp_finalist_2019_career_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>the MVP finalist dataframe has 13 rows (player-year observations) and 21 columns
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[22]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Player</th>
+      <th>Year</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>...</th>
+      <th>19</th>
+      <th>20</th>
+      <th>21</th>
+      <th>22</th>
+      <th>23</th>
+      <th>24</th>
+      <th>25</th>
+      <th>26</th>
+      <th>27</th>
+      <th>28</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>James Harden</td>
+      <td>2009-10</td>
+      <td>20</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>76</td>
+      <td>0</td>
+      <td>22.9</td>
+      <td>3.1</td>
+      <td>...</td>
+      <td>.808</td>
+      <td>0.6</td>
+      <td>2.6</td>
+      <td>3.2</td>
+      <td>1.8</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.4</td>
+      <td>2.6</td>
+      <td>9.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>James Harden</td>
+      <td>2010-11</td>
+      <td>21</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>82</td>
+      <td>5</td>
+      <td>26.7</td>
+      <td>3.6</td>
+      <td>...</td>
+      <td>.843</td>
+      <td>0.5</td>
+      <td>2.6</td>
+      <td>3.1</td>
+      <td>2.1</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.3</td>
+      <td>2.5</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>James Harden</td>
+      <td>2011-12</td>
+      <td>22</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>62</td>
+      <td>2</td>
+      <td>31.4</td>
+      <td>5.0</td>
+      <td>...</td>
+      <td>.846</td>
+      <td>0.5</td>
+      <td>3.6</td>
+      <td>4.1</td>
+      <td>3.7</td>
+      <td>1.0</td>
+      <td>0.2</td>
+      <td>2.2</td>
+      <td>2.4</td>
+      <td>16.8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>James Harden</td>
+      <td>2012-13</td>
+      <td>23</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>78</td>
+      <td>78</td>
+      <td>38.3</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>.851</td>
+      <td>0.8</td>
+      <td>4.1</td>
+      <td>4.9</td>
+      <td>5.8</td>
+      <td>1.8</td>
+      <td>0.5</td>
+      <td>3.8</td>
+      <td>2.3</td>
+      <td>25.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>James Harden</td>
+      <td>2013-14</td>
+      <td>24</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>73</td>
+      <td>73</td>
+      <td>38.0</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>.866</td>
+      <td>0.8</td>
+      <td>3.9</td>
+      <td>4.7</td>
+      <td>6.1</td>
+      <td>1.6</td>
+      <td>0.4</td>
+      <td>3.6</td>
+      <td>2.4</td>
+      <td>25.4</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>rename columns by concatentating <code>column_headers_player</code> with the two new columns we added in our <code>extract_career_data</code> function</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_career_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Player&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">column_headers_player</span>
+<span class="n">mvp_finalist_2019_career_data</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[23]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;Player&#39;, &#39;Year&#39;, &#39;Age&#39;, &#39;Tm&#39;, &#39;Lg&#39;, &#39;Pos&#39;, &#39;G&#39;, &#39;GS&#39;, &#39;MP&#39;, &#39;FG&#39;,
+       &#39;FGA&#39;, &#39;FG%&#39;, &#39;3P&#39;, &#39;3PA&#39;, &#39;3P%&#39;, &#39;2P&#39;, &#39;2PA&#39;, &#39;2P%&#39;, &#39;eFG%&#39;, &#39;FT&#39;,
+       &#39;FTA&#39;, &#39;FT%&#39;, &#39;ORB&#39;, &#39;DRB&#39;, &#39;TRB&#39;, &#39;AST&#39;, &#39;STL&#39;, &#39;BLK&#39;, &#39;TOV&#39;, &#39;PF&#39;,
+       &#39;PTS&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>examine the <code>mvp_finalist_2019_career_data</code> data</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_career_data</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[24]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Player</th>
+      <th>Year</th>
+      <th>Age</th>
+      <th>Tm</th>
+      <th>Lg</th>
+      <th>Pos</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>MP</th>
+      <th>FG</th>
+      <th>...</th>
+      <th>FT%</th>
+      <th>ORB</th>
+      <th>DRB</th>
+      <th>TRB</th>
+      <th>AST</th>
+      <th>STL</th>
+      <th>BLK</th>
+      <th>TOV</th>
+      <th>PF</th>
+      <th>PTS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Victor Oladipo</td>
+      <td>2014-15</td>
+      <td>22</td>
+      <td>ORL</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>72</td>
+      <td>71</td>
+      <td>35.7</td>
+      <td>6.6</td>
+      <td>...</td>
+      <td>.819</td>
+      <td>0.7</td>
+      <td>3.5</td>
+      <td>4.2</td>
+      <td>4.1</td>
+      <td>1.7</td>
+      <td>0.3</td>
+      <td>2.8</td>
+      <td>2.6</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Victor Oladipo</td>
+      <td>2015-16</td>
+      <td>23</td>
+      <td>ORL</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>72</td>
+      <td>52</td>
+      <td>33.0</td>
+      <td>5.9</td>
+      <td>...</td>
+      <td>.830</td>
+      <td>0.7</td>
+      <td>4.1</td>
+      <td>4.8</td>
+      <td>3.9</td>
+      <td>1.6</td>
+      <td>0.8</td>
+      <td>2.1</td>
+      <td>2.4</td>
+      <td>16.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Victor Oladipo</td>
+      <td>2016-17</td>
+      <td>24</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>67</td>
+      <td>67</td>
+      <td>33.2</td>
+      <td>6.1</td>
+      <td>...</td>
+      <td>.753</td>
+      <td>0.6</td>
+      <td>3.8</td>
+      <td>4.3</td>
+      <td>2.6</td>
+      <td>1.2</td>
+      <td>0.3</td>
+      <td>1.8</td>
+      <td>2.3</td>
+      <td>15.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Victor Oladipo</td>
+      <td>2017-18</td>
+      <td>25</td>
+      <td>IND</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>75</td>
+      <td>75</td>
+      <td>34.0</td>
+      <td>8.5</td>
+      <td>...</td>
+      <td>.799</td>
+      <td>0.6</td>
+      <td>4.6</td>
+      <td>5.2</td>
+      <td>4.3</td>
+      <td>2.4</td>
+      <td>0.8</td>
+      <td>2.9</td>
+      <td>2.3</td>
+      <td>23.1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Victor Oladipo</td>
+      <td>2018-19</td>
+      <td>26</td>
+      <td>IND</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>36</td>
+      <td>36</td>
+      <td>31.9</td>
+      <td>6.9</td>
+      <td>...</td>
+      <td>.730</td>
+      <td>0.6</td>
+      <td>5.0</td>
+      <td>5.6</td>
+      <td>5.2</td>
+      <td>1.7</td>
+      <td>0.3</td>
+      <td>2.3</td>
+      <td>2.0</td>
+      <td>18.8</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that we fixed up the necessary columns, let's write out the raw data to a CSV file.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../data/raw_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../data/clean_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Write out the career data for 2018 MVP finalists to the raw_data folder in the data folder</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_career_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../data/raw_data/mvp_finalist_2019_career_data.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Cleaning-the-Data">Cleaning the Data<a class="anchor-link" href="#Cleaning-the-Data">&#182;</a></h1><ul>
+<li>Now that we have the raw MVP data, we need to clean it up a bit for data exploration</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../data/raw_data/mvp_finalist_2019_career_data.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;Latin-1&quot;</span><span class="p">)</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[27]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Player</th>
+      <th>Year</th>
+      <th>Age</th>
+      <th>Tm</th>
+      <th>Lg</th>
+      <th>Pos</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>MP</th>
+      <th>FG</th>
+      <th>...</th>
+      <th>FT%</th>
+      <th>ORB</th>
+      <th>DRB</th>
+      <th>TRB</th>
+      <th>AST</th>
+      <th>STL</th>
+      <th>BLK</th>
+      <th>TOV</th>
+      <th>PF</th>
+      <th>PTS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>James Harden</td>
+      <td>2009-10</td>
+      <td>20</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>76</td>
+      <td>0</td>
+      <td>22.9</td>
+      <td>3.1</td>
+      <td>...</td>
+      <td>0.808</td>
+      <td>0.6</td>
+      <td>2.6</td>
+      <td>3.2</td>
+      <td>1.8</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.4</td>
+      <td>2.6</td>
+      <td>9.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>James Harden</td>
+      <td>2010-11</td>
+      <td>21</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>82</td>
+      <td>5</td>
+      <td>26.7</td>
+      <td>3.6</td>
+      <td>...</td>
+      <td>0.843</td>
+      <td>0.5</td>
+      <td>2.6</td>
+      <td>3.1</td>
+      <td>2.1</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.3</td>
+      <td>2.5</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>James Harden</td>
+      <td>2011-12</td>
+      <td>22</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>62</td>
+      <td>2</td>
+      <td>31.4</td>
+      <td>5.0</td>
+      <td>...</td>
+      <td>0.846</td>
+      <td>0.5</td>
+      <td>3.6</td>
+      <td>4.1</td>
+      <td>3.7</td>
+      <td>1.0</td>
+      <td>0.2</td>
+      <td>2.2</td>
+      <td>2.4</td>
+      <td>16.8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>James Harden</td>
+      <td>2012-13</td>
+      <td>23</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>78</td>
+      <td>78</td>
+      <td>38.3</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>0.851</td>
+      <td>0.8</td>
+      <td>4.1</td>
+      <td>4.9</td>
+      <td>5.8</td>
+      <td>1.8</td>
+      <td>0.5</td>
+      <td>3.8</td>
+      <td>2.3</td>
+      <td>25.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>James Harden</td>
+      <td>2013-14</td>
+      <td>24</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>73</td>
+      <td>73</td>
+      <td>38.0</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>0.866</td>
+      <td>0.8</td>
+      <td>3.9</td>
+      <td>4.7</td>
+      <td>6.1</td>
+      <td>1.6</td>
+      <td>0.4</td>
+      <td>3.6</td>
+      <td>2.4</td>
+      <td>25.4</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[28]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;Player&#39;, &#39;Year&#39;, &#39;Age&#39;, &#39;Tm&#39;, &#39;Lg&#39;, &#39;Pos&#39;, &#39;G&#39;, &#39;GS&#39;, &#39;MP&#39;, &#39;FG&#39;,
+       &#39;FGA&#39;, &#39;FG%&#39;, &#39;3P&#39;, &#39;3PA&#39;, &#39;3P%&#39;, &#39;2P&#39;, &#39;2PA&#39;, &#39;2P%&#39;, &#39;eFG%&#39;, &#39;FT&#39;,
+       &#39;FTA&#39;, &#39;FT%&#39;, &#39;ORB&#39;, &#39;DRB&#39;, &#39;TRB&#39;, &#39;AST&#39;, &#39;STL&#39;, &#39;BLK&#39;, &#39;TOV&#39;, &#39;PF&#39;,
+       &#39;PTS&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>create dictionaries for renaming columns</li>
+<li>rename all columns with dictionaries</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_columns_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Player&#39;</span><span class="p">:</span><span class="s1">&#39;player&#39;</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">:</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>  <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;Tm&#39;</span><span class="p">:</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;Lg&#39;</span><span class="p">:</span> <span class="s1">&#39;league&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;POS&#39;</span><span class="p">:</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="s1">&#39;games_played&#39;</span><span class="p">,</span> <span class="s1">&#39;GS&#39;</span><span class="p">:</span> <span class="s1">&#39;games_started&#39;</span><span class="p">,</span> <span class="s1">&#39;MP&#39;</span><span class="p">:</span> <span class="s1">&#39;avg_minutes&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;FG&#39;</span><span class="p">:</span> <span class="s1">&#39;field_goals_made_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;FGA&#39;</span><span class="p">:</span> <span class="s1">&#39;field_goals_attempted_per_game&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;FG%&#39;</span><span class="p">:</span> <span class="s1">&#39;field_goal_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;3P&#39;</span><span class="p">:</span> <span class="s1">&#39;three_pt_fg_made_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;3PA&#39;</span><span class="p">:</span> <span class="s1">&#39;three_pt_fg_attempted_per_game&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;3P%&#39;</span><span class="p">:</span> <span class="s1">&#39;three_pt_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;2P&#39;</span><span class="p">:</span> <span class="s1">&#39;two_pt_fg_made_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;2PA&#39;</span><span class="p">:</span> <span class="s1">&#39;two_pt_fg_attempted_per_game&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;2P%&#39;</span><span class="p">:</span> <span class="s1">&#39;two_pt_fg_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;eFG%&#39;</span><span class="p">:</span> <span class="s1">&#39;effective_fg_pct&#39;</span><span class="p">,</span>  
+                             <span class="s1">&#39;FT&#39;</span><span class="p">:</span> <span class="s1">&#39;free_throws_made_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;FTA&#39;</span><span class="p">:</span> <span class="s1">&#39;free_throws_attempted_per_game&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;FT%&#39;</span><span class="p">:</span> <span class="s1">&#39;free_throw_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;ORB&#39;</span><span class="p">:</span> <span class="s1">&#39;offensive_rebounds_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;DRB&#39;</span><span class="p">:</span> <span class="s1">&#39;defensive_rebounds_per_game&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;TRB&#39;</span><span class="p">:</span> <span class="s1">&#39;total_rebounds_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;AST&#39;</span><span class="p">:</span> <span class="s1">&#39;assists_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;STL&#39;</span><span class="p">:</span> <span class="s1">&#39;steals_per_game&#39;</span><span class="p">,</span> 
+                             <span class="s1">&#39;BLK&#39;</span><span class="p">:</span> <span class="s1">&#39;blocks_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;TOV&#39;</span><span class="p">:</span> <span class="s1">&#39;turnovers_per_game&#39;</span><span class="p">,</span>  <span class="s1">&#39;PF&#39;</span><span class="p">:</span> <span class="s1">&#39;fouls_committed_per_game&#39;</span><span class="p">,</span> <span class="s1">&#39;PTS&#39;</span><span class="p">:</span> <span class="s1">&#39;points_per_game&#39;</span>
+                              <span class="p">}</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="n">mvp_finalist_columns_dict</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[30]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>player</th>
+      <th>year</th>
+      <th>age</th>
+      <th>team</th>
+      <th>league</th>
+      <th>Pos</th>
+      <th>games_played</th>
+      <th>games_started</th>
+      <th>avg_minutes</th>
+      <th>field_goals_made_per_game</th>
+      <th>...</th>
+      <th>free_throw_pct</th>
+      <th>offensive_rebounds_per_game</th>
+      <th>defensive_rebounds_per_game</th>
+      <th>total_rebounds_per_game</th>
+      <th>assists_per_game</th>
+      <th>steals_per_game</th>
+      <th>blocks_per_game</th>
+      <th>turnovers_per_game</th>
+      <th>fouls_committed_per_game</th>
+      <th>points_per_game</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>James Harden</td>
+      <td>2009-10</td>
+      <td>20</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>76</td>
+      <td>0</td>
+      <td>22.9</td>
+      <td>3.1</td>
+      <td>...</td>
+      <td>0.808</td>
+      <td>0.6</td>
+      <td>2.6</td>
+      <td>3.2</td>
+      <td>1.8</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.4</td>
+      <td>2.6</td>
+      <td>9.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>James Harden</td>
+      <td>2010-11</td>
+      <td>21</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>82</td>
+      <td>5</td>
+      <td>26.7</td>
+      <td>3.6</td>
+      <td>...</td>
+      <td>0.843</td>
+      <td>0.5</td>
+      <td>2.6</td>
+      <td>3.1</td>
+      <td>2.1</td>
+      <td>1.1</td>
+      <td>0.3</td>
+      <td>1.3</td>
+      <td>2.5</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>James Harden</td>
+      <td>2011-12</td>
+      <td>22</td>
+      <td>OKC</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>62</td>
+      <td>2</td>
+      <td>31.4</td>
+      <td>5.0</td>
+      <td>...</td>
+      <td>0.846</td>
+      <td>0.5</td>
+      <td>3.6</td>
+      <td>4.1</td>
+      <td>3.7</td>
+      <td>1.0</td>
+      <td>0.2</td>
+      <td>2.2</td>
+      <td>2.4</td>
+      <td>16.8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>James Harden</td>
+      <td>2012-13</td>
+      <td>23</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>78</td>
+      <td>78</td>
+      <td>38.3</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>0.851</td>
+      <td>0.8</td>
+      <td>4.1</td>
+      <td>4.9</td>
+      <td>5.8</td>
+      <td>1.8</td>
+      <td>0.5</td>
+      <td>3.8</td>
+      <td>2.3</td>
+      <td>25.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>James Harden</td>
+      <td>2013-14</td>
+      <td>24</td>
+      <td>HOU</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>73</td>
+      <td>73</td>
+      <td>38.0</td>
+      <td>7.5</td>
+      <td>...</td>
+      <td>0.866</td>
+      <td>0.8</td>
+      <td>3.9</td>
+      <td>4.7</td>
+      <td>6.1</td>
+      <td>1.6</td>
+      <td>0.4</td>
+      <td>3.6</td>
+      <td>2.4</td>
+      <td>25.4</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[31]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;player&#39;, &#39;year&#39;, &#39;age&#39;, &#39;team&#39;, &#39;league&#39;, &#39;Pos&#39;, &#39;games_played&#39;,
+       &#39;games_started&#39;, &#39;avg_minutes&#39;, &#39;field_goals_made_per_game&#39;,
+       &#39;field_goals_attempted_per_game&#39;, &#39;field_goal_pct&#39;,
+       &#39;three_pt_fg_made_per_game&#39;, &#39;three_pt_fg_attempted_per_game&#39;,
+       &#39;three_pt_pct&#39;, &#39;two_pt_fg_made_per_game&#39;,
+       &#39;two_pt_fg_attempted_per_game&#39;, &#39;two_pt_fg_pct&#39;, &#39;effective_fg_pct&#39;,
+       &#39;free_throws_made_per_game&#39;, &#39;free_throws_attempted_per_game&#39;,
+       &#39;free_throw_pct&#39;, &#39;offensive_rebounds_per_game&#39;,
+       &#39;defensive_rebounds_per_game&#39;, &#39;total_rebounds_per_game&#39;,
+       &#39;assists_per_game&#39;, &#39;steals_per_game&#39;, &#39;blocks_per_game&#39;,
+       &#39;turnovers_per_game&#39;, &#39;fouls_committed_per_game&#39;, &#39;points_per_game&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cleaning-Up-the-Rest-of-the-Data">Cleaning Up the Rest of the Data<a class="anchor-link" href="#Cleaning-Up-the-Rest-of-the-Data">&#182;</a></h2><ul>
+<li>convert the data to proper numeric types</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span> <span class="o">=</span> <span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 121 entries, 0 to 120
+Data columns (total 31 columns):
+player                            121 non-null object
+year                              121 non-null object
+age                               121 non-null int64
+team                              121 non-null object
+league                            121 non-null object
+Pos                               121 non-null object
+games_played                      121 non-null int64
+games_started                     121 non-null int64
+avg_minutes                       121 non-null float64
+field_goals_made_per_game         121 non-null float64
+field_goals_attempted_per_game    121 non-null float64
+field_goal_pct                    121 non-null float64
+three_pt_fg_made_per_game         121 non-null float64
+three_pt_fg_attempted_per_game    121 non-null float64
+three_pt_pct                      121 non-null float64
+two_pt_fg_made_per_game           121 non-null float64
+two_pt_fg_attempted_per_game      121 non-null float64
+two_pt_fg_pct                     121 non-null float64
+effective_fg_pct                  121 non-null float64
+free_throws_made_per_game         121 non-null float64
+free_throws_attempted_per_game    121 non-null float64
+free_throw_pct                    121 non-null float64
+offensive_rebounds_per_game       121 non-null float64
+defensive_rebounds_per_game       121 non-null float64
+total_rebounds_per_game           121 non-null float64
+assists_per_game                  121 non-null float64
+steals_per_game                   121 non-null float64
+blocks_per_game                   121 non-null float64
+turnovers_per_game                121 non-null float64
+fouls_committed_per_game          121 non-null float64
+points_per_game                   121 non-null float64
+dtypes: float64(23), int64(3), object(5)
+memory usage: 30.2+ KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Get the column names for the numeric columns</li>
+<li>Replace all NaNs with 0</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_cols_finalist</span> <span class="o">=</span> <span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">!=</span> <span class="nb">object</span><span class="p">]</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">num_cols_finalist</span><span class="p">]</span> <span class="o">=</span> <span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">num_cols_finalist</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 121 entries, 0 to 120
+Data columns (total 31 columns):
+player                            121 non-null object
+year                              121 non-null object
+age                               121 non-null int64
+team                              121 non-null object
+league                            121 non-null object
+Pos                               121 non-null object
+games_played                      121 non-null int64
+games_started                     121 non-null int64
+avg_minutes                       121 non-null float64
+field_goals_made_per_game         121 non-null float64
+field_goals_attempted_per_game    121 non-null float64
+field_goal_pct                    121 non-null float64
+three_pt_fg_made_per_game         121 non-null float64
+three_pt_fg_attempted_per_game    121 non-null float64
+three_pt_pct                      121 non-null float64
+two_pt_fg_made_per_game           121 non-null float64
+two_pt_fg_attempted_per_game      121 non-null float64
+two_pt_fg_pct                     121 non-null float64
+effective_fg_pct                  121 non-null float64
+free_throws_made_per_game         121 non-null float64
+free_throws_attempted_per_game    121 non-null float64
+free_throw_pct                    121 non-null float64
+offensive_rebounds_per_game       121 non-null float64
+defensive_rebounds_per_game       121 non-null float64
+total_rebounds_per_game           121 non-null float64
+assists_per_game                  121 non-null float64
+steals_per_game                   121 non-null float64
+blocks_per_game                   121 non-null float64
+turnovers_per_game                121 non-null float64
+fouls_committed_per_game          121 non-null float64
+points_per_game                   121 non-null float64
+dtypes: float64(23), int64(3), object(5)
+memory usage: 30.2+ KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>We are finally done cleaning the data and now we can save it to a CSV file.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span> <span class="o">=</span> <span class="n">mvp_finalist_2019_df_clean</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">mvp_finalist_2019_df_clean</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">])]</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../data/clean_data/mvp_finalist_2019_df_clean.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; the dimensions for the final data are: </span><span class="si">{</span><span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (rows, columns)&quot;</span><span class="p">)</span>
+<span class="n">mvp_finalist_2019_df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre> the dimensions for the final data are: (121, 31) (rows, columns)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[35]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>player</th>
+      <th>year</th>
+      <th>age</th>
+      <th>team</th>
+      <th>league</th>
+      <th>Pos</th>
+      <th>games_played</th>
+      <th>games_started</th>
+      <th>avg_minutes</th>
+      <th>field_goals_made_per_game</th>
+      <th>...</th>
+      <th>free_throw_pct</th>
+      <th>offensive_rebounds_per_game</th>
+      <th>defensive_rebounds_per_game</th>
+      <th>total_rebounds_per_game</th>
+      <th>assists_per_game</th>
+      <th>steals_per_game</th>
+      <th>blocks_per_game</th>
+      <th>turnovers_per_game</th>
+      <th>fouls_committed_per_game</th>
+      <th>points_per_game</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>120</th>
+      <td>Victor Oladipo</td>
+      <td>2018-19</td>
+      <td>26</td>
+      <td>IND</td>
+      <td>NBA</td>
+      <td>SG</td>
+      <td>36</td>
+      <td>36</td>
+      <td>31.9</td>
+      <td>6.9</td>
+      <td>...</td>
+      <td>0.730</td>
+      <td>0.6</td>
+      <td>5.0</td>
+      <td>5.6</td>
+      <td>5.2</td>
+      <td>1.7</td>
+      <td>0.3</td>
+      <td>2.3</td>
+      <td>2.0</td>
+      <td>18.8</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>LeBron James</td>
+      <td>2018-19</td>
+      <td>34</td>
+      <td>LAL</td>
+      <td>NBA</td>
+      <td>SF</td>
+      <td>55</td>
+      <td>55</td>
+      <td>35.2</td>
+      <td>10.1</td>
+      <td>...</td>
+      <td>0.665</td>
+      <td>1.0</td>
+      <td>7.4</td>
+      <td>8.5</td>
+      <td>8.3</td>
+      <td>1.3</td>
+      <td>0.6</td>
+      <td>3.6</td>
+      <td>1.7</td>
+      <td>27.4</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>LaMarcus Aldridge</td>
+      <td>2018-19</td>
+      <td>33</td>
+      <td>SAS</td>
+      <td>NBA</td>
+      <td>C</td>
+      <td>81</td>
+      <td>81</td>
+      <td>33.2</td>
+      <td>8.4</td>
+      <td>...</td>
+      <td>0.847</td>
+      <td>3.1</td>
+      <td>6.1</td>
+      <td>9.2</td>
+      <td>2.4</td>
+      <td>0.5</td>
+      <td>1.3</td>
+      <td>1.8</td>
+      <td>2.2</td>
+      <td>21.3</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>Damian Lillard</td>
+      <td>2018-19</td>
+      <td>28</td>
+      <td>POR</td>
+      <td>NBA</td>
+      <td>PG</td>
+      <td>80</td>
+      <td>80</td>
+      <td>35.5</td>
+      <td>8.5</td>
+      <td>...</td>
+      <td>0.912</td>
+      <td>0.9</td>
+      <td>3.8</td>
+      <td>4.6</td>
+      <td>6.9</td>
+      <td>1.1</td>
+      <td>0.4</td>
+      <td>2.7</td>
+      <td>1.9</td>
+      <td>25.8</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Anthony Davis</td>
+      <td>2018-19</td>
+      <td>25</td>
+      <td>NOP</td>
+      <td>NBA</td>
+      <td>C</td>
+      <td>56</td>
+      <td>56</td>
+      <td>33.0</td>
+      <td>9.5</td>
+      <td>...</td>
+      <td>0.794</td>
+      <td>3.1</td>
+      <td>8.9</td>
+      <td>12.0</td>
+      <td>3.9</td>
+      <td>1.6</td>
+      <td>2.4</td>
+      <td>2.0</td>
+      <td>2.4</td>
+      <td>25.9</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Review">Review<a class="anchor-link" href="#Review">&#182;</a></h1><ul>
+<li>In this tutorial, we learned how to: <ul>
+<li>examine the html structure of webpage </li>
+<li>use functions based on the <code>Beautiful Soup</code> module to parse tables on multiple webpage into .csv</li>
+<li>analyzed a .csv file using the <code>Pandas</code> module</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Download this <a href="downloads/notebooks/nba_mvp_comparison-part_3.ipynb">notebook</a> or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/nba_mvp_comparison-part_3.ipynb">here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">bs4</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last updated: </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;System and module version information: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python version: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;urllib.request version: </span><span class="si">{</span><span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pandas version: </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Beautiful Soup version: </span><span class="si">{</span><span class="n">bs4</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>last updated: 2019-07-01 09:13 
+
+System and module version information: 
+
+Python version: sys.version_info(major=3, minor=7, micro=1, releaselevel=&#39;final&#39;, serial=0)
+urllib.request version: 3.7
+pandas version: 0.23.4
+Beautiful Soup version: 4.6.3
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+ 
+
+</p>
   </div><!-- /.entry-content -->
 </section>
         <footer id="contentinfo" class="body">

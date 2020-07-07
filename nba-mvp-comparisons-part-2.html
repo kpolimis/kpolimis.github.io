@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-          <title>Kivan Polimis - NBA MVP Comparisons - Part 2</title>
+          <title>Kivan Polimis</title>
         <meta charset="utf-8" />
-
-
 
 
 
@@ -20,10 +18,10 @@
             <li><a href="/pages/vita.html">Vita</a></li>
             <li><a href="/pages/software.html">Software</a></li>
             <li><a href="/pages/projects.html">Projects</a></li>
-            <li><a href="./category/how-to.html">How-to</a></li>
-            <li><a href="./category/review.html">Review</a></li>
-            <li class="active"><a href="./category/sports.html">Sports</a></li>
-            <li><a href="./category/tutorials.html">Tutorials</a></li>
+              <li><a href="./category/how-to.html">How-to</a></li>
+              <li><a href="./category/review.html">Review</a></li>
+              <li class="active"><a href="./category/sports.html">Sports</a></li>
+              <li><a href="./category/tutorials.html">Tutorials</a></li>
         </ul></nav><!-- /#menu -->
 <section id="content" class="body">
   <header>
@@ -39,9 +37,6 @@
     <address class="vcard author">
       By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
     </address>
-    <div class="category">
-        Category: <a href="./category/sports.html">Sports</a>
-    </div>
   </footer><!-- /.post-info -->
   <div class="entry-content">
     <script type="text/x-mathjax-config">
@@ -163,11 +158,11 @@ language such as robbed/robbery.</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><code><span class="err">RMSE = function(actual, predicted) {</span>
+<div class="highlight"><pre><span></span><span class="err">RMSE = function(actual, predicted) {</span>
 <span class="err">  RMSE = sqrt(sum(mean(actual-predicted)^2))</span>
 <span class="err">  return(RMSE)</span>
 <span class="err">  }</span>
-</code></pre></div>
+</pre></div>
 
 
 <table style="width:53%;">
@@ -229,11 +224,11 @@ for this analysis, there were no ties.</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><code><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
+<div class="highlight"><pre><span></span><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
 <span class="err">  group_by(Year) %&gt;% </span>
 <span class="err">  mutate(`LDA MVP` = ifelse(`LDA Prediction` == max(`LDA Prediction`), 1,</span>
 <span class="err">                     ifelse(`LDA Prediction` != max(`LDA Prediction`), 0,0)))</span>
-</code></pre></div>
+</pre></div>
 
 
 <ul>
@@ -605,9 +600,9 @@ Identify controversial MVPs</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><code><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
+<div class="highlight"><pre><span></span><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
 <span class="err">  mutate(Residual = abs(`Vote Share`-`LDA Prediction`))</span>
-</code></pre></div>
+</pre></div>
 
 
 <table>
