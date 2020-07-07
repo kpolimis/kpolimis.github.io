@@ -1,95 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Kivan Polimis - Positions Matter</title>
         <meta charset="utf-8" />
-        <title>Positions Matter</title>
-        <link rel="stylesheet" href="./theme/css/main.css" />
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+
+
+
+
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./">Kivan Polimis </a></h1>
-                <nav><ul>
-                    <li><a href="./pages/about.html">About</a></li>
-                    <li><a href="./pages/vita.html">Vita</a></li>
-                    <li><a href="./pages/software.html">Software</a></li>
-                    <li><a href="./category/how-to.html">How-to</a></li>
-                    <li class="active"><a href="./category/projects.html">Projects</a></li>
-                    <li><a href="./category/review.html">Review</a></li>
-                    <li><a href="./category/tutorials.html">Tutorials</a></li>
-                </ul></nav>
+                <h1><a href="./">Kivan Polimis <strong></strong></a></h1>
         </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/categories.html">Articles</a></li>
+            <li><a href="/pages/vita.html">Vita</a></li>
+            <li><a href="/pages/software.html">Software</a></li>
+            <li><a href="/pages/projects.html">Projects</a></li>
+            <li><a href="./category/how-to.html">How-to</a></li>
+            <li><a href="./category/review.html">Review</a></li>
+            <li class="active"><a href="./category/sports.html">Sports</a></li>
+            <li><a href="./category/tutorials.html">Tutorials</a></li>
+        </ul></nav><!-- /#menu -->
 <section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="./positions-matter.html" rel="bookmark"
-           title="Permalink to Positions Matter">Positions Matter</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="kpolimis">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-08-01T03:06:00-07:00">
-                Published: Mon 01 August 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="./category/projects.html">Projects</a>.</p>
-
-</footer><!-- /.post-info -->      <h1>The Combine's Positional Variability in Predicting Career NFL Performance</h1>
+  <header>
+    <h2 class="entry-title">
+      <a href="./positions-matter.html" rel="bookmark"
+         title="Permalink to Positions Matter">Positions Matter</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2016-08-01T03:06:00-07:00">
+      Mon 01 August 2016
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
+    </address>
+    <div class="category">
+        Category: <a href="./category/sports.html">Sports</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <h1>The Combine's Positional Variability in Predicting Career NFL Performance</h1>
 <p>collaborators: Long Chen, Melaku Dubie, Rich Lee and Kivan Polimis</p>
 <h2>Background</h2>
-<p>Every year, hundreds of collegiate football players are invited to participate in a week-long scouting combine. Players are evaluated by NFL personnel departments on a series of physical and mental tests. Results from these “measurables” influence positioning in the NFL draft. Our goal with this project was to determine the association between pre-draft metrics and career performance. We Used Python to gather data from online sources (see Additional Information below) and create the plots. The plots show that for some positions, different combine metrics are more important predictors of career NFL performance. </p>
+<p>Every year, hundreds of collegiate football players are invited to participate in a week-long scouting combine. Players are evaluated by NFL personnel departments on a series of physical and mental tests. Results from these “measurables” influence positioning in the NFL draft. Our goal with this project was to determine the association between pre-draft metrics and career performance. We Used Python to gather data from online sources (see Additional Information below) and create the plots. The plots show that for some positions, different combine metrics are more important predictors of career NFL performance.</p>
 <p>The example plot below describes the analysis and interactive plotting features.</p>
 <h2>Interactive plotting</h2>
-<p>Press the <a href="http://mybinder.org:/repo/kpolimis/nfl-combine-evaluation-plots" target="_blank"><img alt="Binder" src="http://mybinder.org/badge.svg"></a> link to open a jupyter notebook directory window.
+<p><a href="http://mybinder.org:/repo/kpolimis/nfl-combine-evaluation-plots" target="blank"><img alt="Binder" src="http://mybinder.org/badge.svg"></a></p>
+<p>Press the launch binder link above to open a jupyter notebook directory window.
 Select plots.ipynb to start an interactive notebook that plots the relationship between assorted Combine
-metrics (40 time, vertical, speed score, etc.) and total yards in a NFL career for quarterbacks, running backs and wide receivers. </p>
-<p>Below each metric-specific plot is an explanation of the metric, the goal of the combine test, and a short discussion about variation between positions. LaDainian Tomlinson (highlighted player in example), is an elite running back that demonstrates a strong observed positional relationship between combine metrics and career performance: </p>
+metrics (40 time, vertical, speed score, etc.) and total yards in a NFL career for quarterbacks, running backs and wide receivers.</p>
+<p>Below each metric-specific plot is an explanation of the metric, the goal of the combine test, and a short discussion about variation between positions. LaDainian Tomlinson (highlighted player in example), is an elite running back that demonstrates a strong observed positional relationship between combine metrics and career performance:</p>
 <blockquote>
-<p>There appears to be a slight negative relationship between 40 time and yardage for running backs indicating that faster running backs are more likely to have more productive careers. In contrast, there does not appear to be any clearly discernable relationship between yardage and 40 time for wide receivers or quarterbacks, suggesting that success for these positions may be more dependent on other characteristics such as skill, intelligence, or agility. </p>
+<p>There appears to be a slight negative relationship between 40 time and yardage for running backs indicating that faster running backs are more likely to have more productive careers. In contrast, there does not appear to be any clearly discernable relationship between yardage and 40 time for wide receivers or quarterbacks, suggesting that success for these positions may be more dependent on other characteristics such as skill, intelligence, or agility.</p>
 </blockquote>
 <p>Hovering over an individual point on the plot reveals the following information: player name, result in the selected metric, and a combination of career rushing, receiving and passing yards depending on the player's position (selected by changing the tabs in the plot's upper left). Plots can also be zoomed in/out, saved, etc.</p>
 <h2>Example Plot</h2>
-<p><img alt="rb-plot-example" src="../../images/rb-plot-example.png"></p>
+<p><div>
+<p style="text-align:center;"><img src="../../images/rb-plot-example.png" alt="RB Plot Example" style="width: 72%; height: 72%></p>
+</div></p>
+<div id="additional-information" class="section level2">
 <h2>Additional Information</h2>
+<div id="data-sources" class="section level3">
 <h3>Data Sources</h3>
+</div>
+</div>
+
 <p>Passing, rushing and receiving data for individual seasons:<br>
 <a href="http://www.pro-football-reference.com/years/2015/passing.htm">Pro-football reference</a><br>
 Scouting combine and player database:<br>
-<a href="http://www.nflsavant.com/about.php">NFL savant</a> </p>
+<a href="http://www.nflsavant.com/about.php">NFL savant</a></p>
 <p>For more information about this project, visit the <a href="https://github.com/kpolimis/nfl-combine-evaluation">NFL Combine Evaluation Repository</a> for all relevant code.
 In this repository, we have the functions that gather and evaluate the relationship between pre-draft Combine metrics and career NFL performance.</p>
-    </div><!-- /.entry-content -->
-
-  </article>
+  </div><!-- /.entry-content -->
 </section>
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
-
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
-
-    <script type="text/javascript">
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-104881568-1', 'auto');
-    ga('send', 'pageview');
-    </script>
 </body>
 </html>

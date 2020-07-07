@@ -1,49 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Kivan Polimis - Social Media, Twitter API, and R</title>
         <meta charset="utf-8" />
-        <title>Social Media, Twitter API, and R</title>
-        <link rel="stylesheet" href="./theme/css/main.css" />
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+
+
+
+
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./">Kivan Polimis </a></h1>
-                <nav><ul>
-                    <li><a href="./pages/about.html">About</a></li>
-                    <li><a href="./pages/vita.html">Vita</a></li>
-                    <li><a href="./pages/software.html">Software</a></li>
-                    <li><a href="./category/how-to.html">How-to</a></li>
-                    <li><a href="./category/projects.html">Projects</a></li>
-                    <li><a href="./category/review.html">Review</a></li>
-                    <li class="active"><a href="./category/tutorials.html">Tutorials</a></li>
-                </ul></nav>
+                <h1><a href="./">Kivan Polimis <strong></strong></a></h1>
         </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/categories.html">Articles</a></li>
+            <li><a href="/pages/vita.html">Vita</a></li>
+            <li><a href="/pages/software.html">Software</a></li>
+            <li><a href="/pages/projects.html">Projects</a></li>
+            <li><a href="./category/how-to.html">How-to</a></li>
+            <li><a href="./category/review.html">Review</a></li>
+            <li><a href="./category/sports.html">Sports</a></li>
+            <li class="active"><a href="./category/tutorials.html">Tutorials</a></li>
+        </ul></nav><!-- /#menu -->
 <section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="./social-media-twitter-api-and-r.html" rel="bookmark"
-           title="Permalink to Social Media, Twitter API, and R">Social Media, Twitter API, and R</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="kpolimis">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-17T05:07:00-07:00">
-                Published: Sun 17 April 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="./category/tutorials.html">Tutorials</a>.</p>
-
-</footer><!-- /.post-info -->      <p>This post is a workshop that I created for a social media workshop during the 
+  <header>
+    <h2 class="entry-title">
+      <a href="./social-media-twitter-api-and-r.html" rel="bookmark"
+         title="Permalink to Social Media, Twitter API, and R">Social Media, Twitter API, and R</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2016-04-17T05:07:00-07:00">
+      Sun 17 April 2016
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
+    </address>
+    <div class="category">
+        Category: <a href="./category/tutorials.html">Tutorials</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>This post is a workshop that I created for a social media workshop during the 
 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
 <p>All relevant code will eventually be available on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
 <hr>
@@ -119,8 +120,8 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <li><code>dplyr</code></li>
 </ul>
 <p>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing "FILL ME IN" with the file path of your workshop folder</p>
-<div class="highlight"><pre><span></span><span class="kp">rm</span><span class="p">(</span><span class="kt">list</span><span class="o">=</span><span class="kp">ls</span><span class="p">())</span>
-<span class="kp">setwd</span><span class="p">(</span><span class="s">&quot;FILL ME IN/PAA_2016_SMDM_Workshop/Twitter&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">rm</span><span class="p">(</span><span class="n">list</span><span class="o">=</span><span class="nf">ls</span><span class="p">())</span>
+<span class="nf">setwd</span><span class="p">(</span><span class="s">&quot;FILL ME IN/PAA_2016_SMDM_Workshop/Twitter&quot;</span><span class="p">)</span>
 <span class="c1">#&#39; uncomment the command below to install the necessary packages</span>
 <span class="c1">#install.packages(c(&quot;twitteR&quot;,&quot;streamR&quot;,&quot;ROAuth&quot;,&quot;dplyr&quot;,&quot;base64enc&quot;))</span>
 
@@ -129,14 +130,14 @@ refresher, we recommend that you go over this <a href = "https://cran.r-project.
 <span class="c1">#download.file(&quot;https://raw.githubusercontent.com/pablobarbera/social-media-workshop/master/functions.r&quot;,</span>
               <span class="s">&quot;functions_by_pablobarbera.R&quot;</span><span class="p">)</span>
 <span class="c1">#source(&quot;functions_by_pablobarbera.R&quot;)</span>
-<span class="kn">source</span><span class="p">(</span><span class="s">&quot;twitterFunctions.R&quot;</span><span class="p">)</span> <span class="c1"># few functions to clean data</span>
-<span class="kn">library</span><span class="p">(</span>twitteR<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>streamR<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>ROAuth<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>RCurl<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>base64enc<span class="p">)</span>
-</pre></div>
+<span class="nf">source</span><span class="p">(</span><span class="s">&quot;twitterFunctions.R&quot;</span><span class="p">)</span> <span class="c1"># few functions to clean data</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">twitteR</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">streamR</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ROAuth</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">RCurl</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">base64enc</span><span class="p">)</span>
+</code></pre></div>
 
 
 <h3>Twitter API Authentication</h3>
@@ -159,39 +160,39 @@ Twitter's API</a></li>
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Twitter credentials for streamR and twitteR authentication</span>
-consumer_key <span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-consumer_secret<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-access_token<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-access_token_secret<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Twitter credentials for streamR and twitteR authentication</span>
+<span class="n">consumer_key</span> <span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
+<span class="n">consumer_secret</span><span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
+<span class="n">access_token</span><span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
+<span class="n">access_token_secret</span><span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
 
 <span class="c1">#&#39; parameters and URLs for streamR authentication</span>
-reqURL <span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/request_token&quot;</span>
-accessURL<span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/access_token&quot;</span>
-authURL<span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/authorize&quot;</span>
+<span class="n">reqURL</span> <span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/request_token&quot;</span>
+<span class="n">accessURL</span><span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/access_token&quot;</span>
+<span class="n">authURL</span><span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/authorize&quot;</span>
 
 <span class="c1">#&#39; Note:  You only need to create an authentication object for streamR once</span>
 <span class="c1">#&#39; Microsoft Windows users need to uncomment the following command to download a cert file</span>
 <span class="c1">#download.file(url=&quot;http://curl.haxx.se/ca/cacert.pem&quot;, destfile=&quot;cacert.pem&quot;)</span>
 
 <span class="c1">#&#39; create an object &quot;cred&quot; that will save the authenticated object for later sessions</span>
-twitCred<span class="o">&lt;-</span> OAuthFactory<span class="o">$</span>new<span class="p">(</span>consumerKey<span class="o">=</span>consumer_key<span class="p">,</span>consumerSecret<span class="o">=</span>consumer_secret<span class="p">,</span>
-                            requestURL<span class="o">=</span>reqURL<span class="p">,</span>accessURL<span class="o">=</span>accessURL<span class="p">,</span>authURL<span class="o">=</span>authURL<span class="p">)</span>
+<span class="n">twitCred</span><span class="o">&lt;-</span> <span class="n">OAuthFactory</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">consumerKey</span><span class="o">=</span><span class="n">consumer_key</span><span class="p">,</span><span class="n">consumerSecret</span><span class="o">=</span><span class="n">consumer_secret</span><span class="p">,</span>
+                            <span class="n">requestURL</span><span class="o">=</span><span class="n">reqURL</span><span class="p">,</span><span class="n">accessURL</span><span class="o">=</span><span class="n">accessURL</span><span class="p">,</span><span class="n">authURL</span><span class="o">=</span><span class="n">authURL</span><span class="p">)</span>
 
 <span class="c1">#&#39; executing twitCred$handshake will redirect you to a website and provide your app a PIN</span>
 <span class="c1">#&#39; insert the PIN in the R console after you run this line</span>
 <span class="c1">#&#39; you can save authenticated credentials for later sessions</span>
 <span class="c1">#&#39; for later use, uncomment the following command in a folder that contains twitCred.RData</span>
 <span class="c1">#load(&quot;twitCred.RData&quot;)</span>
-twitCred<span class="o">$</span>handshake<span class="p">(</span>cainfo <span class="o">=</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;CurlSSL&quot;</span><span class="p">,</span> <span class="s">&quot;cacert.pem&quot;</span><span class="p">,</span> package <span class="o">=</span> <span class="s">&quot;RCurl&quot;</span><span class="p">))</span>
-<span class="kp">save</span><span class="p">(</span>twitCred<span class="p">,</span> file <span class="o">=</span> <span class="s">&quot;twitCred.RData&quot;</span><span class="p">)</span>
+<span class="n">twitCred</span><span class="o">$</span><span class="nf">handshake</span><span class="p">(</span><span class="n">cainfo</span> <span class="o">=</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;CurlSSL&quot;</span><span class="p">,</span> <span class="s">&quot;cacert.pem&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;RCurl&quot;</span><span class="p">))</span>
+<span class="nf">save</span><span class="p">(</span><span class="n">twitCred</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;twitCred.RData&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; setup direct Twitter authentication for twitteR functions</span>
 <span class="c1">#&#39; you will be prompted to cache authentication token</span>
 <span class="c1">#&#39; you will need to repeat this step unless you are running analysis from a location with a</span>
 <span class="c1">#&#39; cached authentication token </span>
-setup_twitter_oauth<span class="p">(</span>consumer_key<span class="p">,</span> consumer_secret<span class="p">,</span> access_token<span class="p">,</span> access_token_secret<span class="p">)</span>
-</pre></div>
+<span class="nf">setup_twitter_oauth</span><span class="p">(</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">access_token_secret</span><span class="p">)</span>
+</code></pre></div>
 
 
 <p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
@@ -206,46 +207,46 @@ for locations</p>
 <li>getTrends</li>
 </ul>
 <p>View column names and small subset of observations with <code>glimpse</code> command</p>
-<div class="highlight"><pre><span></span>availableTrendLocations<span class="p">()</span> 
-woeid <span class="o">=</span> availableTrendLocations<span class="p">()</span>
-glimpse<span class="p">(</span>woeid<span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">availableTrendLocations</span><span class="p">()</span> 
+<span class="n">woeid</span> <span class="o">=</span> <span class="nf">availableTrendLocations</span><span class="p">()</span>
+<span class="nf">glimpse</span><span class="p">(</span><span class="n">woeid</span><span class="p">)</span>
 
 <span class="c1">#&#39; get trending D.C. area tweets</span>
-DC_tweets <span class="o">=</span> getTrends<span class="p">(</span><span class="m">2514815</span><span class="p">)</span>
-glimpse<span class="p">(</span>DC_tweets<span class="p">)</span>
-</pre></div>
+<span class="n">DC_tweets</span> <span class="o">=</span> <span class="nf">getTrends</span><span class="p">(</span><span class="m">2514815</span><span class="p">)</span>
+<span class="nf">glimpse</span><span class="p">(</span><span class="n">DC_tweets</span><span class="p">)</span>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="c1">#&#39; trending hashtags</span>
-<span class="kp">head</span><span class="p">(</span>DC_tweets<span class="o">$</span>name<span class="p">)</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; trending hashtags</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">DC_tweets</span><span class="o">$</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span>## [1] &quot;Rockets&quot;       &quot;Dwight Howard&quot; &quot;Paul George&quot;   &quot;#MentorIRL&quot;   
-## [5] &quot;Raptors&quot;       &quot;#DCvTOR&quot;
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">## [1] &quot;Rockets&quot;       &quot;Dwight Howard&quot; &quot;Paul George&quot;   &quot;#MentorIRL&quot;   </span>
+<span class="err">## [5] &quot;Raptors&quot;       &quot;#DCvTOR&quot;</span>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span>getCommonHashtags<span class="p">(</span>DC_tweets<span class="o">$</span>name<span class="p">)</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">getCommonHashtags</span><span class="p">(</span><span class="n">DC_tweets</span><span class="o">$</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span>## hashtags
-##                #93KDay              #ADay2016        #brunchofidiots 
-##                      1                      1                      1 
-##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY 
-##                      1                      1                      1 
-##                #DCvTOR             #DevRelCon  #DreamvilleMusicVideo 
-##                      1                      1                      1 
-##    #IrritateMeIn4Words #ItsNoneOfYourBusiness              #LEMONADE 
-##                      1                      1                      1 
-##   #LetMeEntertainYouBy             #MentorIRL                 #NALCS 
-##                      1                      1                      1 
-##     #NashInMyrtleBeach              #NYRvsPIT        #RecordStoreDay 
-##                      1                      1                      1 
-##     #SignACastIn5Words               #SXonFOX 
-##                      1                      1
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">## hashtags</span>
+<span class="err">##                #93KDay              #ADay2016        #brunchofidiots </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##                #DCvTOR             #DevRelCon  #DreamvilleMusicVideo </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##    #IrritateMeIn4Words #ItsNoneOfYourBusiness              #LEMONADE </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##   #LetMeEntertainYouBy             #MentorIRL                 #NALCS </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##     #NashInMyrtleBeach              #NYRvsPIT        #RecordStoreDay </span>
+<span class="err">##                      1                      1                      1 </span>
+<span class="err">##     #SignACastIn5Words               #SXonFOX </span>
+<span class="err">##                      1                      1</span>
+</code></pre></div>
 
 
 <h3>Search Twitter stream by subject</h3>
@@ -254,26 +255,26 @@ glimpse<span class="p">(</span>DC_tweets<span class="p">)</span>
 <li><code>filterStream</code></li>
 <li><code>parseTweets</code></li>
 </ul>
-<div class="highlight"><pre><span></span>filterStream<span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> track <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
-locations <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-125</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">-66</span><span class="p">,</span> <span class="m">50</span><span class="p">),</span> timeout <span class="o">=</span> <span class="m">60</span><span class="p">,</span> oauth <span class="o">=</span> twitCred<span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">filterStream</span><span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> <span class="n">track</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
+<span class="n">locations</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-125</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">-66</span><span class="p">,</span> <span class="m">50</span><span class="p">),</span> <span class="n">timeout</span> <span class="o">=</span> <span class="m">60</span><span class="p">,</span> <span class="n">oauth</span> <span class="o">=</span> <span class="n">twitCred</span><span class="p">)</span>
 
 <span class="c1">#&#39; parse .json file of tweets and convert parsed tweets to a data frame </span>
-ClintonTrump_tweets.df <span class="o">&lt;-</span> parseTweets<span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> simplify <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-<span class="kp">head</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">)</span>
+<span class="n">ClintonTrump_tweets.df</span> <span class="o">&lt;-</span> <span class="nf">parseTweets</span><span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> <span class="n">simplify</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">)</span>
 
 <span class="c1">#&#39; print the amount of times Clinton and Trump are mentioned</span>
-Clinton_mentions <span class="o">&lt;-</span><span class="kp">length</span><span class="p">(</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
-Trump_mentions <span class="o">&lt;-</span><span class="kp">length</span><span class="p">(</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
+<span class="n">Clinton_mentions</span> <span class="o">&lt;-</span><span class="nf">length</span><span class="p">(</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
+<span class="n">Trump_mentions</span> <span class="o">&lt;-</span><span class="nf">length</span><span class="p">(</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
 
-<span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Clinton mentioned %d times in %d tweets&quot;</span><span class="p">,</span> Clinton_mentions<span class="p">,</span> <span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">))</span>
-<span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Trump mentioned %d times in %d tweets&quot;</span><span class="p">,</span> Trump_mentions<span class="p">,</span> <span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">))</span>
-</pre></div>
+<span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Clinton mentioned %d times in %d tweets&quot;</span><span class="p">,</span> <span class="n">Clinton_mentions</span><span class="p">,</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">))</span>
+<span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Trump mentioned %d times in %d tweets&quot;</span><span class="p">,</span> <span class="n">Trump_mentions</span><span class="p">,</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">))</span>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span>## [1] &quot;Clinton mentioned 397894 times in 5944511 tweets&quot;
+<div class="highlight"><pre><span></span><code><span class="o">##</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Clinton mentioned 397894 times in 5944511 tweets&quot;</span>
 
-## [1] &quot;Trump mentioned 1164798 times in 5944511 tweets&quot;
-</pre></div>
+<span class="o">##</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Trump mentioned 1164798 times in 5944511 tweets&quot;</span>
+</code></pre></div>
 
 
 <h1>Advanced</h1>
@@ -285,149 +286,149 @@ Trump_mentions <span class="o">&lt;-</span><span class="kp">length</span><span c
 </ul>
 <p>map tweets with <code>ggplot2</code> and <code>grid</code> packages </p>
 <p><br></p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
 <span class="c1">#install.packages(c(&quot;ggplot2&quot;, &quot;grid&quot;, &quot;maps&quot;, &quot;png&quot;, &quot;lubridate&quot;))</span>
-<span class="kn">library</span><span class="p">(</span>lubridate<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>grid<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>maps<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>png<span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">maps</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">png</span><span class="p">)</span>
 
 <span class="c1">#&#39; clean up tweets to include only english, alphanumeric tweets</span>
 <span class="c1">#&#39; subsets data frame of tweets to smallers subset of relevant variables</span>
 <span class="c1">#&#39; add tweet_timestamp column with lubridate package qualities</span>
-ClintonTrump_tweets.df <span class="o">&lt;-</span> clean_up_tweets<span class="p">(</span>ClintonTrump_tweets.df<span class="p">)</span>
-ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp <span class="o">&lt;-</span> <span class="kp">sapply</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>created_at<span class="p">,</span>tweet_time<span class="p">)</span>
+<span class="n">ClintonTrump_tweets.df</span> <span class="o">&lt;-</span> <span class="nf">clean_up_tweets</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">)</span>
+<span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">tweet_timestamp</span> <span class="o">&lt;-</span> <span class="nf">sapply</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">created_at</span><span class="p">,</span><span class="n">tweet_time</span><span class="p">)</span>
 
 <span class="c1">#&#39; rearrange data by date</span>
-ClintonTrump_tweets.df<span class="o">&lt;-</span>arrange<span class="p">(</span>ClintonTrump_tweets.df<span class="p">,</span> tweet_timestamp<span class="p">)</span>
+<span class="n">ClintonTrump_tweets.df</span><span class="o">&lt;-</span><span class="nf">arrange</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">,</span> <span class="n">tweet_timestamp</span><span class="p">)</span>
 
 <span class="c1">#&#39; find tweets start and end date</span>
-tweets_start<span class="o">&lt;-</span> <span class="kp">strsplit</span><span class="p">(</span><span class="kp">unlist</span><span class="p">(</span>
-    ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp<span class="p">)[</span><span class="m">1</span><span class="p">],</span> split <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
-tweets_end<span class="o">&lt;-</span><span class="kp">strsplit</span><span class="p">(</span><span class="kp">unlist</span><span class="p">(</span>
-    ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp<span class="p">[</span><span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">)]),</span> split <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
+<span class="n">tweets_start</span><span class="o">&lt;-</span> <span class="nf">strsplit</span><span class="p">(</span><span class="nf">unlist</span><span class="p">(</span>
+    <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">tweet_timestamp</span><span class="p">)[</span><span class="m">1</span><span class="p">],</span> <span class="n">split</span> <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
+<span class="n">tweets_end</span><span class="o">&lt;-</span><span class="nf">strsplit</span><span class="p">(</span><span class="nf">unlist</span><span class="p">(</span>
+    <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">tweet_timestamp</span><span class="p">[</span><span class="nf">nrow</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="p">)]),</span> <span class="n">split</span> <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
 
 <span class="c1">#&#39; a small percentage of users have location access enabled for their tweets</span>
 <span class="c1">#&#39; increase the timeout number to gather more tweets and increase geo-tagged tweets</span>
-map.data <span class="o">&lt;-</span> map_data<span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
-points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>place_lon<span class="p">),</span> 
-                     y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>place_lat<span class="p">))</span>
+<span class="n">map.data</span> <span class="o">&lt;-</span> <span class="nf">map_data</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
+<span class="n">points</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">place_lon</span><span class="p">),</span> 
+                     <span class="n">y</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">place_lat</span><span class="p">))</span>
 
-points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
+<span class="n">points</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> <span class="n">y</span> <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
+<span class="n">points</span><span class="o">&lt;-</span><span class="nf">subset</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">x</span><span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> <span class="n">x</span><span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
 
-tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Map of tweets \n from %s to %s&quot;</span><span class="p">,</span>
-tweets_start<span class="p">,</span> tweets_end<span class="p">))</span> <span class="o">+</span> geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> 
-map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> 
-expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> 
-axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> axis.title <span class="o">=</span> element_blank<span class="p">(),</span>
-panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-geom_point<span class="p">(</span>data <span class="o">=</span> points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.1</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
+<span class="n">tweets.map</span><span class="o">&lt;-</span><span class="nf">ggplot</span><span class="p">(</span><span class="n">map.data</span><span class="p">)</span> <span class="o">+</span> <span class="nf">ggtitle</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Map of tweets \n from %s to %s&quot;</span><span class="p">,</span>
+<span class="n">tweets_start</span><span class="p">,</span> <span class="n">tweets_end</span><span class="p">))</span> <span class="o">+</span> <span class="nf">geom_map</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">map_id</span> <span class="o">=</span> <span class="n">region</span><span class="p">),</span> 
+<span class="n">map</span> <span class="o">=</span> <span class="n">map.data</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> 
+<span class="nf">expand_limits</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">long</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">lat</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme</span><span class="p">(</span><span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> 
+<span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.ticks</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+<span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+<span class="n">panel.grid.major</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+<span class="n">plot.margin</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
+<span class="nf">geom_point</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">points</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">.</span><span class="m">1</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; save map as a .png</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
+<span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">720</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">tweets.map</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
 
 <span class="c1">#&#39; alternative ways to save map</span>
 <span class="c1">#plot(tweets.map)</span>
 <span class="c1">#dev.print(png, &#39;tweets-map.png&#39;,height = 480 , width = 720, units = &quot;px&quot;) </span>
 <span class="c1">#dev.print(pdf, &#39;tweets-map.pdf&#39;)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><img alt="tweets-map" src="../../images/tweets-map.png"></p>
 <p>Map Clinton only tweets</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
-Clinton_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
-                                             ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
+<span class="n">Clinton_tweets</span> <span class="o">&lt;-</span> <span class="n">ClintonTrump_tweets.df</span><span class="p">[</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> 
+                                             <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
 
-Clinton_points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Clinton_tweets<span class="o">$</span>place_lon<span class="p">),</span> 
-                     y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Clinton_tweets<span class="o">$</span>place_lat<span class="p">))</span>
+<span class="n">Clinton_points</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">Clinton_tweets</span><span class="o">$</span><span class="n">place_lon</span><span class="p">),</span> 
+                     <span class="n">y</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">Clinton_tweets</span><span class="o">$</span><span class="n">place_lat</span><span class="p">))</span>
 
 <span class="c1">#&#39; subset points to only include locations (roughly) within the United States</span>
-Clinton_points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>Clinton_points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-Clinton_points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>Clinton_points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
+<span class="n">Clinton_points</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">Clinton_points</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> <span class="n">y</span> <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
+<span class="n">Clinton_points</span><span class="o">&lt;-</span><span class="nf">subset</span><span class="p">(</span><span class="n">Clinton_points</span><span class="p">,</span> <span class="n">x</span><span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> <span class="n">x</span><span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
 
-Clinton_tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">&quot;Hillary Clinton Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
-  geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
-           color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span>
-  theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> 
-        axis.title <span class="o">=</span> element_blank<span class="p">(),</span> panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-        panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-        plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-  geom_point<span class="p">(</span>data <span class="o">=</span> Clinton_points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">Clinton_tweets.map</span><span class="o">&lt;-</span><span class="nf">ggplot</span><span class="p">(</span><span class="n">map.data</span><span class="p">)</span> <span class="o">+</span> <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Hillary Clinton Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_map</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">map_id</span> <span class="o">=</span> <span class="n">region</span><span class="p">),</span> <span class="n">map</span> <span class="o">=</span> <span class="n">map.data</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
+           <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> <span class="nf">expand_limits</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">long</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">lat</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.ticks</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> 
+        <span class="n">axis.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+        <span class="n">panel.grid.major</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+        <span class="n">plot.margin</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_point</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">Clinton_points</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">.</span><span class="m">75</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; Save map of Clinton only tweets</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;Clinton_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>Clinton_tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
+<span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;Clinton_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">720</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">Clinton_tweets.map</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
+</code></pre></div>
 
 
 <p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png"></p>
 <p>Map Trump only tweets</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
-Trump_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
-                                          ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
+<span class="n">Trump_tweets</span> <span class="o">&lt;-</span> <span class="n">ClintonTrump_tweets.df</span><span class="p">[</span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> <span class="n">ClintonTrump_tweets.df</span><span class="o">$</span><span class="n">text</span><span class="p">,</span> 
+                                          <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
 
-Trump_points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Trump_tweets<span class="o">$</span>place_lon<span class="p">),</span> 
-                          y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Trump_tweets<span class="o">$</span>place_lat<span class="p">))</span>
+<span class="n">Trump_points</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">Trump_tweets</span><span class="o">$</span><span class="n">place_lon</span><span class="p">),</span> 
+                          <span class="n">y</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">Trump_tweets</span><span class="o">$</span><span class="n">place_lat</span><span class="p">))</span>
 
 <span class="c1">#&#39; subset points to only include locations (roughly) within the United States</span>
-Trump_points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>Trump_points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-Trump_points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>Trump_points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
+<span class="n">Trump_points</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">Trump_points</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> <span class="n">y</span> <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
+<span class="n">Trump_points</span><span class="o">&lt;-</span><span class="nf">subset</span><span class="p">(</span><span class="n">Trump_points</span><span class="p">,</span> <span class="n">x</span><span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> <span class="n">x</span><span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
 
-Trump_tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">&quot;Donald Trump Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
-  geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
-           color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span>
-  theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> 
-        axis.title <span class="o">=</span> element_blank<span class="p">(),</span> panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-        panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-        plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-  geom_point<span class="p">(</span>data <span class="o">=</span> Trump_points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">Trump_tweets.map</span><span class="o">&lt;-</span><span class="nf">ggplot</span><span class="p">(</span><span class="n">map.data</span><span class="p">)</span> <span class="o">+</span> <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Donald Trump Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_map</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">map_id</span> <span class="o">=</span> <span class="n">region</span><span class="p">),</span> <span class="n">map</span> <span class="o">=</span> <span class="n">map.data</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
+           <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> <span class="nf">expand_limits</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">long</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">map.data</span><span class="o">$</span><span class="n">lat</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">axis.ticks</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> 
+        <span class="n">axis.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+        <span class="n">panel.grid.major</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span> <span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+        <span class="n">plot.margin</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_point</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">Trump_points</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">.</span><span class="m">75</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; Save map of Trump only tweets</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;Trump_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>Trump_tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
+<span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;Trump_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">720</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">Trump_tweets.map</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
+</code></pre></div>
 
 
 <p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png"></p>
 <p>Compare Clinton and Trump tweet maps side-by-side</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
-grid.arrange<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">,</span> ncol<span class="o">=</span><span class="m">2</span><span class="p">)</span>
-dev.off<span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
+<span class="nf">grid.arrange</span><span class="p">(</span><span class="n">Clinton_tweets.map</span><span class="p">,</span><span class="n">Trump_tweets.map</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
 
 <span class="c1">#&#39; Save Clinton and Trump comparison map</span>
-<span class="kn">require</span><span class="p">(</span>gridExtra<span class="p">)</span>
-ggsave<span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">,</span> arrangeGrob<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">),</span> dpi <span class="o">=</span> <span class="m">300</span><span class="p">)</span>
+<span class="nf">require</span><span class="p">(</span><span class="n">gridExtra</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">,</span> <span class="nf">arrangeGrob</span><span class="p">(</span><span class="n">Clinton_tweets.map</span><span class="p">,</span><span class="n">Trump_tweets.map</span><span class="p">),</span> <span class="n">dpi</span> <span class="o">=</span> <span class="m">300</span><span class="p">)</span>
 
 <span class="c1">#&#39; Improve comparison map image quality by rasterization</span>
-img <span class="o">&lt;-</span> readPNG<span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">)</span>
-grid.raster<span class="p">(</span>img<span class="p">)</span>
-dev.off<span class="p">()</span>
+<span class="n">img</span> <span class="o">&lt;-</span> <span class="nf">readPNG</span><span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">)</span>
+<span class="nf">grid.raster</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
 
 <span class="c1">#&#39; Save raster comparison map</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;combined_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">720</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">1200</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-grid.raster<span class="p">(</span>img<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
+<span class="nf">png</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;combined_tweets-map.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">720</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">1200</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
+<span class="nf">grid.raster</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
+</code></pre></div>
 
 
 <p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png"><!-- --></p>
 <p>Save all objects in your current workspace and read back from file in
 the future</p>
-<div class="highlight"><pre><span></span><span class="kp">save.image</span><span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">save.image</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
 
 <span class="c1">#&#39; future R sessions will require you to reload necessary libraries</span>
 <span class="c1">#&#39; uncomment the command below to load saved objects in future workspace sessions</span>
 <span class="c1">#load(&quot;PAA_2016_Twitter.RData&quot;)</span>
-</pre></div>
+</code></pre></div>
 
 
 <h1>References</h1>
@@ -448,29 +449,13 @@ the future</p>
 </ol>
 <h1>Acknowledgements</h1>
 <p>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</p>
-    </div><!-- /.entry-content -->
-
-  </article>
+  </div><!-- /.entry-content -->
 </section>
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
-
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
-
-    <script type="text/javascript">
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-104881568-1', 'auto');
-    ga('send', 'pageview');
-    </script>
 </body>
 </html>

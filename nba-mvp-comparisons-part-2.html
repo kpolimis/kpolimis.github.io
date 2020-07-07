@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <title>Kivan Polimis - NBA MVP Comparisons - Part 2</title>
+        <meta charset="utf-8" />
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">Kivan Polimis <strong></strong></a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/categories.html">Articles</a></li>
+            <li><a href="/pages/vita.html">Vita</a></li>
+            <li><a href="/pages/software.html">Software</a></li>
+            <li><a href="/pages/projects.html">Projects</a></li>
+            <li><a href="./category/how-to.html">How-to</a></li>
+            <li><a href="./category/review.html">Review</a></li>
+            <li class="active"><a href="./category/sports.html">Sports</a></li>
+            <li><a href="./category/tutorials.html">Tutorials</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="./nba-mvp-comparisons-part-2.html" rel="bookmark"
+         title="Permalink to NBA MVP Comparisons - Part 2">NBA MVP Comparisons - Part 2</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2019-02-27T09:12:00-08:00">
+      Wed 27 February 2019
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="./author/kivan-polimis.html">Kivan Polimis</a>
+    </address>
+    <div class="category">
+        Category: <a href="./category/sports.html">Sports</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<p></head></p>
+<h1>NBA MVP Comparisons - Part 2</h1>
+<h2>Part 2</h2>
+<ul>
+<li>27<sup>th</sup> February 2019</li>
+</ul>
+<p>In the previous post, <a href="http://www.kivanpolimis.com/nba-mvp-comparisons-part-1.html">Part
+1</a> of the
+NBA MVP Comparison series, we gathered the relevant NBA MVP finalist
+data from
+<a href="https://www.basketball-reference.com/">basketball-reference.com</a> and
+processed it.</p>
+<p>Before going further, it is important to note that all analysis in Part
+2 deals with MVP finalists from 1983 to the present (2018). This
+decision was made to separate the pre-3 point era from the post-3 point
+era which analytically and stylistically have different types of
+players.</p>
+<p>Our goal with this blog post is to understand which MVP finalist, but
+non-MVP winner was most deserving of the award. To do this, we will
+predict the continuous dependent variable, vote share (ranging from 0 to
+1), of a MVP finalist with a vector (list) of the following predictors
+(independent variables) from the processed MVP finalist data: age,
+games_played, avg_minutes, avg_points, avg_rebounds, avg_assists,
+avg_steals, avg_blocks, field_goal_pct, three_pt_pct,
+free_throw_pct, win_shares, win_shares_per_48.</p>
+<p>The specific questions that will allow us to assess which finalist was
+most deserving of a MVP award are:</p>
+<ol>
+<li>Which MVP winner(s) outperformed their predicted vote share?</li>
+<li>Which MVP winner(s) should have finished second to another finalist
+    in predicted vote share?</li>
+</ol>
+<p>In this post, we will:</p>
+<ol>
+<li>Compare machine learning (ML) models for selecting the MVP award</li>
+<li>Identify the finalists deserving of a MVP award</li>
+</ol>
+<p>While the language of statistical models deals more with over- and
+under-performance, I will interchange these terms with more colloquial
+language such as robbed/robbery.</p>
+<h2>Outline</h2>
+<ol>
+<li>Compare Machine Learning Regression Models</li>
+<li>Determine Controversial MVPs</li>
+<li>Choose New MVPs</li>
+</ol>
+<h2>Models Overview</h2>
+<ul>
+<li>Which model did well?</li>
+<li>To predict MVP awards and vote share, I used machine learning (ML)
+    regression models</li>
+<li><a href="https://www.coursera.org/learn/machine-learning">Machine learning</a>
+    refers to algorithms and models that perform predictions with
+    advanced pattern recognition/correlations and are devoid of explicit
+    human programming</li>
+<li>ML models were compared with the metric Root Mean Square Error
+    (RMSE)</li>
+</ul>
+<h3>ML Regression Models</h3>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest
+    Regressor</a><ul>
+<li>Ensemble learning method that constructs decision trees and
+    creates a mean prediction of the individual trees</li>
+</ul>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Linear_discriminant_analysis">Latent Discriminant
+    Analysis</a><ul>
+<li>Uses a linear combination of features to separate two or more
+    classes</li>
+</ul>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Gradient_boosting">Gradient Boost</a><ul>
+<li>Uses "weak learners", predicts loosely correlated with outcome
+    variable, in an ensemble method to produced boosted "strong
+    learners" with optimization</li>
+</ul>
+</li>
+<li><a href="https://www.kdnuggets.com/2017/10/xgboost-top-machine-learning-method-kaggle-explained.html">XGBoost</a><ul>
+<li>Gradient boosting method "robust enough to support fine tuning
+    and addition of regularization parameters"</li>
+</ul>
+</li>
+</ul>
+<h2>Compare ML Regression Models</h2>
+<ul>
+<li>To prepare the data for the ML models:<ul>
+<li>I split the MVP data into training (80%) and test datasets (20%)</li>
+<li>The models are trained (learn the patterns) on the training set
+    and then compared on how well they predict the MVPs in the test
+    set</li>
+</ul>
+</li>
+<li>Why Root Mean Square Error
+    <a href="https://www.statisticshowto.datasciencecentral.com/rmse/">(RMSE)</a>?</li>
+</ul>
+<div class="math">$$ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(Actual_{i} - Predicted_{i})^2} $$</div>
+<ul>
+<li>RMSE is the square root of the average of squared differences
+    between predicted values and actual observation. The RMSE ranges
+    from 0 to ∞ and the direction (positive/negative) of the residual
+    (Prediction - Actual) is inconsequential because the residual is
+    squared. Lower RMSE correspond with better performing models.</li>
+<li>RMSE equation as a function in R:</li>
+</ul>
+<!-- -->
+
+<div class="highlight"><pre><span></span><code><span class="err">RMSE = function(actual, predicted) {</span>
+<span class="err">  RMSE = sqrt(sum(mean(actual-predicted)^2))</span>
+<span class="err">  return(RMSE)</span>
+<span class="err">  }</span>
+</code></pre></div>
+
+
+<table style="width:53%;">
+<caption>RMSE Table</caption>
+<colgroup>
+<col width="43%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Machine Learning Model</th>
+<th align="center">RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Latent Discriminant Analysis</td>
+<td align="center">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">XGBoost - Linear</td>
+<td align="center">0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">Random Forest Classifier</td>
+<td align="center">0.005</td>
+</tr>
+<tr class="even">
+<td align="left">Gradient Boost</td>
+<td align="center">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">XGBoost - Tree</td>
+<td align="center">0.012</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>The Latent Discriminant Analysis (LDA) was the best performing
+    model</li>
+<li>Henceforth, "the model" will refer to the LDA model</li>
+</ul>
+<h3>Latent Discriminant Analysis (LDA)</h3>
+<p>Because our predicted variable, vote share, is continuous we need a rule
+to predict the binary (winner/loser(s)) MVP award. The rule we will use
+is the player with the maximum predicted vote share (LDA Prediction) for
+a given year will be awarded the MVP. This rule will need additional
+complexity to handle potential ties. The order of tiebreakers for
+playoff seeding is near the bottom of <a href="https://www.nbcsports.com/washington/wizards/how-are-nba-playoff-seeding-tiebreakers-determined-wizards-fans-may-want-brush-them">this
+article</a>.
+Perhaps we could adopt similar rules for vote share ties; fortunately
+for this analysis, there were no ties.</p>
+<ul>
+<li>Use <code>dplyr</code> library and <code>ifelse</code> function within <code>mutate</code><ul>
+<li>Create the binary LDA MVP variable based on our rule</li>
+</ul>
+</li>
+</ul>
+<!-- -->
+
+<div class="highlight"><pre><span></span><code><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
+<span class="err">  group_by(Year) %&gt;% </span>
+<span class="err">  mutate(`LDA MVP` = ifelse(`LDA Prediction` == max(`LDA Prediction`), 1,</span>
+<span class="err">                     ifelse(`LDA Prediction` != max(`LDA Prediction`), 0,0)))</span>
+</code></pre></div>
+
+
+<ul>
+<li>What did the LDA model do well?<ul>
+<li>30 of 36 MVPs accurately predicted with LDA vote share model</li>
+</ul>
+</li>
+<li>How do we find where the model "struggled"?<ul>
+<li>LDA unsuccessfully predicts MVP</li>
+<li>LDA predicts another player that year with higher vote share as
+    a better candidate for the MVP</li>
+</ul>
+</li>
+</ul>
+<table>
+<caption>LDA Correct MVP Predictions</caption>
+<colgroup>
+<col width="26%" />
+<col width="8%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="17%" />
+<col width="8%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Player</th>
+<th align="center">Age</th>
+<th align="center">Year</th>
+<th align="center">Team</th>
+<th align="center">Rank</th>
+<th align="center">Vote Share</th>
+<th align="center">MVP</th>
+<th align="center">LDA MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Moses Malone</td>
+<td align="center">27</td>
+<td align="center">1983</td>
+<td align="center">PHI</td>
+<td align="center">1</td>
+<td align="center">0.96</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Larry Bird</td>
+<td align="center">28</td>
+<td align="center">1985</td>
+<td align="center">BOS</td>
+<td align="center">1</td>
+<td align="center">0.978</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Larry Bird</td>
+<td align="center">29</td>
+<td align="center">1986</td>
+<td align="center">BOS</td>
+<td align="center">1</td>
+<td align="center">0.981</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Magic Johnson</td>
+<td align="center">27</td>
+<td align="center">1987</td>
+<td align="center">LAL</td>
+<td align="center">1</td>
+<td align="center">0.94</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Michael Jordan</td>
+<td align="center">24</td>
+<td align="center">1988</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.831</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Magic Johnson</td>
+<td align="center">29</td>
+<td align="center">1989</td>
+<td align="center">LAL</td>
+<td align="center">1</td>
+<td align="center">0.782</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Michael Jordan</td>
+<td align="center">27</td>
+<td align="center">1991</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.928</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Michael Jordan</td>
+<td align="center">28</td>
+<td align="center">1992</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.938</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Charles Barkley</td>
+<td align="center">29</td>
+<td align="center">1993</td>
+<td align="center">PHO</td>
+<td align="center">1</td>
+<td align="center">0.852</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Hakeem Olajuwon</td>
+<td align="center">31</td>
+<td align="center">1994</td>
+<td align="center">HOU</td>
+<td align="center">1</td>
+<td align="center">0.88</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">David Robinson</td>
+<td align="center">29</td>
+<td align="center">1995</td>
+<td align="center">SAS</td>
+<td align="center">1</td>
+<td align="center">0.858</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Michael Jordan</td>
+<td align="center">32</td>
+<td align="center">1996</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.986</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Michael Jordan</td>
+<td align="center">34</td>
+<td align="center">1998</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.934</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Shaquille O'Neal</td>
+<td align="center">27</td>
+<td align="center">2000</td>
+<td align="center">LAL</td>
+<td align="center">1</td>
+<td align="center">0.998</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Allen Iverson</td>
+<td align="center">25</td>
+<td align="center">2001</td>
+<td align="center">PHI</td>
+<td align="center">1</td>
+<td align="center">0.904</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Tim Duncan</td>
+<td align="center">25</td>
+<td align="center">2002</td>
+<td align="center">SAS</td>
+<td align="center">1</td>
+<td align="center">0.757</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Tim Duncan</td>
+<td align="center">26</td>
+<td align="center">2003</td>
+<td align="center">SAS</td>
+<td align="center">1</td>
+<td align="center">0.808</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Kevin Garnett</td>
+<td align="center">27</td>
+<td align="center">2004</td>
+<td align="center">MIN</td>
+<td align="center">1</td>
+<td align="center">0.991</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Dirk Nowitzki</td>
+<td align="center">28</td>
+<td align="center">2007</td>
+<td align="center">DAL</td>
+<td align="center">1</td>
+<td align="center">0.882</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Kobe Bryant</td>
+<td align="center">29</td>
+<td align="center">2008</td>
+<td align="center">LAL</td>
+<td align="center">1</td>
+<td align="center">0.873</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">LeBron James</td>
+<td align="center">24</td>
+<td align="center">2009</td>
+<td align="center">CLE</td>
+<td align="center">1</td>
+<td align="center">0.969</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">LeBron James</td>
+<td align="center">25</td>
+<td align="center">2010</td>
+<td align="center">CLE</td>
+<td align="center">1</td>
+<td align="center">0.98</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Derrick Rose</td>
+<td align="center">22</td>
+<td align="center">2011</td>
+<td align="center">CHI</td>
+<td align="center">1</td>
+<td align="center">0.977</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">LeBron James</td>
+<td align="center">27</td>
+<td align="center">2012</td>
+<td align="center">MIA</td>
+<td align="center">1</td>
+<td align="center">0.888</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">LeBron James</td>
+<td align="center">28</td>
+<td align="center">2013</td>
+<td align="center">MIA</td>
+<td align="center">1</td>
+<td align="center">0.998</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Kevin Durant</td>
+<td align="center">25</td>
+<td align="center">2014</td>
+<td align="center">OKC</td>
+<td align="center">1</td>
+<td align="center">0.986</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Stephen Curry</td>
+<td align="center">26</td>
+<td align="center">2015</td>
+<td align="center">GSW</td>
+<td align="center">1</td>
+<td align="center">0.922</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Stephen Curry</td>
+<td align="center">27</td>
+<td align="center">2016</td>
+<td align="center">GSW</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Russell Westbrook</td>
+<td align="center">28</td>
+<td align="center">2017</td>
+<td align="center">OKC</td>
+<td align="center">1</td>
+<td align="center">0.879</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">James Harden</td>
+<td align="center">28</td>
+<td align="center">2018</td>
+<td align="center">HOU</td>
+<td align="center">1</td>
+<td align="center">0.955</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+
+<p><br></br></p>
+<p><img src="../../images/age_vote_share_bivariate.png" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Green dots represent MVP winners successfully predicted by the model</li>
+<li>Red dots represent MVP winners the model missed</li>
+<li>MVP winners are clustered between ages 27 and 29</li>
+<li>Older winners average lower vote share</li>
+<li>The model struggled with predicting older MVP winners</li>
+</ul>
+<h3>Controversial MVPs</h3>
+<ol>
+<li>Which MVP winner(s) outperformed their predicted vote share?</li>
+<li>Which MVP winner(s) should have finished second to another finalist
+    in predicted vote share?  </li>
+</ol>
+<p>Identify controversial MVPs
+Identify controversial MVPs</p>
+<ul>
+<li>Select MVPs that the LDA model missed</li>
+<li>Create additional column for residual or error<ul>
+<li>Absolute value of the difference between actual and predicted
+    vote share for a MVP finalist</li>
+</ul>
+</li>
+<li>Residuals help us determine how much a player over- or
+    under-performed relative to our model</li>
+</ul>
+<!-- -->
+
+<div class="highlight"><pre><span></span><code><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
+<span class="err">  mutate(Residual = abs(`Vote Share`-`LDA Prediction`))</span>
+</code></pre></div>
+
+
+<table>
+<caption>Controversial MVPs</caption>
+<colgroup>
+<col width="18%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="14%" />
+<col width="19%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Player</th>
+<th align="center">Age</th>
+<th align="center">Year</th>
+<th align="center">Team</th>
+<th align="center">Vote Share</th>
+<th align="center">LDA Prediction</th>
+<th align="center">Residual</th>
+<th align="center">LDA MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Larry Bird</td>
+<td align="center">27</td>
+<td align="center">1984</td>
+<td align="center">BOS</td>
+<td align="center">0.858</td>
+<td align="center">0.347</td>
+<td align="center">0.511</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="left">Magic Johnson</td>
+<td align="center">30</td>
+<td align="center">1990</td>
+<td align="center">LAL</td>
+<td align="center">0.691</td>
+<td align="center">0.518</td>
+<td align="center">0.173</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Karl Malone</td>
+<td align="center">33</td>
+<td align="center">1997</td>
+<td align="center">UTA</td>
+<td align="center">0.857</td>
+<td align="center">0.857</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="left">Karl Malone</td>
+<td align="center">35</td>
+<td align="center">1999</td>
+<td align="center">UTA</td>
+<td align="center">0.701</td>
+<td align="center">0.701</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Steve Nash</td>
+<td align="center">30</td>
+<td align="center">2005</td>
+<td align="center">PHO</td>
+<td align="center">0.839</td>
+<td align="center">0.739</td>
+<td align="center">0.1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="left">Steve Nash</td>
+<td align="center">31</td>
+<td align="center">2006</td>
+<td align="center">PHO</td>
+<td align="center">0.739</td>
+<td align="center">0.739</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>Steve Nash (2005, 2006) and Karl Malone (1997, 1999) are repeat
+    offenders!</li>
+<li>A quick note on Larry in 1984 and Magic in 1990:<ul>
+<li>Larry had the highest residual (0.511), overperformance, of any
+    MVP winner</li>
+<li>Magic Johnson owns the second highest winner residual of 0.173.</li>
+<li>Can't tell a story of basketball without tying Larry and Magic
+    together.</li>
+</ul>
+</li>
+<li>The controversial MVP discussion will focus on Malone and Nash</li>
+<li>Whom did the models prefer in 1984, 1990, 1997, 1999, 2005, and
+    2006?</li>
+</ul>
+<table>
+<caption>LDA Preferred MVPs</caption>
+<colgroup>
+<col width="19%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="13%" />
+<col width="17%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Player</th>
+<th align="center">Age</th>
+<th align="center">Year</th>
+<th align="center">Team</th>
+<th align="center">Rank</th>
+<th align="center">Vote Share</th>
+<th align="center">LDA Prediction</th>
+<th align="center">Residual</th>
+<th align="center">LDA MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bernard King</td>
+<td align="center">27</td>
+<td align="center">1984</td>
+<td align="center">NYK</td>
+<td align="center">2</td>
+<td align="center">0.491</td>
+<td align="center">0.491</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Charles Barkley</td>
+<td align="center">26</td>
+<td align="center">1990</td>
+<td align="center">PHI</td>
+<td align="center">2</td>
+<td align="center">0.667</td>
+<td align="center">0.667</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Michael Jordan</td>
+<td align="center">33</td>
+<td align="center">1997</td>
+<td align="center">CHI</td>
+<td align="center">2</td>
+<td align="center">0.832</td>
+<td align="center">0.934</td>
+<td align="center">0.102</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Shaquille O'Neal</td>
+<td align="center">26</td>
+<td align="center">1999</td>
+<td align="center">LAL</td>
+<td align="center">6</td>
+<td align="center">0.075</td>
+<td align="center">0.888</td>
+<td align="center">0.813</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Shaquille O'Neal</td>
+<td align="center">32</td>
+<td align="center">2005</td>
+<td align="center">MIA</td>
+<td align="center">2</td>
+<td align="center">0.813</td>
+<td align="center">0.813</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Chauncey Billups</td>
+<td align="center">29</td>
+<td align="center">2006</td>
+<td align="center">DET</td>
+<td align="center">5</td>
+<td align="center">0.344</td>
+<td align="center">0.977</td>
+<td align="center">0.633</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>The model preferred 2<sup>nd</sup> place finishers in 4 of 6
+    controversial MVP years</li>
+<li>1984 projects as the only year a potential MVP (Bernard King) would
+    not have a vote share majority</li>
+</ul>
+<h3>The Robbers</h3>
+<ul>
+<li>Although Karl Malone and Steve Nash both "stole" 2 MVPs, I'm going
+    to focus on Steve Nash</li>
+<li>Steve Nash draws more scrutiny because Malone's predicted vote share
+    in our model doesn't change<ul>
+<li>Our model predicts that two players were overlooked in his
+    winning years</li>
+</ul>
+</li>
+<li>One such overlooked player was Michael Jordan in 1997<ul>
+<li>Jordan would go on to win the 1998 MVP award</li>
+<li>If Jordan had won the 1997 award, his legacy could have spanned
+    seven MVPs</li>
+<li>Maybe voter fatigue was a factor in denying Jordan his
+    6<sup>th</sup> MVP (at that time) for Malone's first</li>
+</ul>
+</li>
+<li>Contrastingly, our model shows that Steve Nash overperformed in one
+    year<ul>
+<li>Nash also should have faced a finalist with better vote share en
+    route to his second MVP</li>
+</ul>
+</li>
+<li>Our model suggests that Steve Nash overperformed in 2005 by 0.1
+    where Malone never overperformed</li>
+</ul>
+<h3>The Robbed</h3>
+<ul>
+<li>Shaq and Chauncey Billups wildly underperformed in 2 years the model
+    had them as clear favorites</li>
+<li>Shaq has the most beef as the only player robbed of two potential
+    MVPs</li>
+<li>Shaq recorded the highest residual prediction value (0.813)<ul>
+<li>Shaq was the most underrated MVP finalist ever in his 1999
+    campaign</li>
+</ul>
+</li>
+<li>Shaq also loses a MVP in 2005 when our model suggests that Steve
+    Nash overperformed</li>
+<li>Chauncey in 2006 had the second highest residual of 0.633 and could
+    be the rightful owner of Steve Nash's second MVP</li>
+</ul>
+<h2>Review</h2>
+<ul>
+<li>We compared multiple machine learning regression models to determine
+    MVP/MVP vote share</li>
+<li>Concluded that Steve Nash and Karl Malone repeatedly robbed
+    deserving MVP candidates</li>
+<li>Predicted that Larry Bird had the most over-inflated vote share of
+    any MVP winner</li>
+<li>Voters may have corrected for failing to give MVP awards to Jordan
+    and Shaq in 1997 and 1999, respectively, by rewarding the players
+    with the MVP in the subsequent year</li>
+</ul>
+<p>Download a .pdf of this <a href="downloads/pdf/nba_mvp_comparisons-part_2.pdf">post</a></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
+</body>
+</html>

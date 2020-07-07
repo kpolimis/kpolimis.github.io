@@ -1,467 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <title>Kivan Polimis - Tutorials category</title>
         <meta charset="utf-8" />
-        <title>Kivan Polimis - Tutorials</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">Kivan Polimis </a></h1>
-                <nav><ul>
-                    <li><a href="../pages/about.html">About</a></li>
-                    <li><a href="../pages/vita.html">Vita</a></li>
-                    <li><a href="../pages/software.html">Software</a></li>
-                    <li><a href="../category/how-to.html">How-to</a></li>
-                    <li><a href="../category/projects.html">Projects</a></li>
-                    <li><a href="../category/review.html">Review</a></li>
-                    <li class="active"><a href="../category/tutorials.html">Tutorials</a></li>
-                </ul></nav>
+                <h1><a href="../">Kivan Polimis <strong></strong></a></h1>
         </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/categories.html">Articles</a></li>
+            <li><a href="/pages/vita.html">Vita</a></li>
+            <li><a href="/pages/software.html">Software</a></li>
+            <li><a href="/pages/projects.html">Projects</a></li>
+            <li><a href="../category/how-to.html">How-to</a></li>
+            <li><a href="../category/review.html">Review</a></li>
+            <li><a href="../category/sports.html">Sports</a></li>
+            <li class="active"><a href="../category/tutorials.html">Tutorials</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content">
+<h2>Articles in the Tutorials category</h2>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../social-media-twitter-api-and-r.html">Social Media, Twitter API, and R</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2016-04-17T05:07:00-07:00">
-                Published: Sun 17 April 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="../category/tutorials.html">Tutorials</a>.</p>
-
-</footer><!-- /.post-info --><p>This post is a workshop that I created for a social media workshop during the 
+<ol id="post-list">
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="../social-media-twitter-api-and-r.html" rel="bookmark" title="Permalink to Social Media, Twitter API, and R">Social Media, Twitter API, and R</a></h2> </header>
+                <footer class="post-info">
+                    <time class="published" datetime="2016-04-17T05:07:00-07:00"> Sun 17 April 2016 </time>
+                    <address class="vcard author">By
+                        <a class="url fn" href="../author/kivan-polimis.html">Kivan Polimis</a>
+                    </address>
+                </footer><!-- /.post-info -->
+                <div class="entry-content"> <p>This post is a workshop that I created for a social media workshop during the 
 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
 <p>All relevant code will eventually be available on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
 <hr>
 
 <h1>Introduction</h1>
-<p>We are going to learn various R functions for gathering, processing and
-analyzing Twitter API data. Our goal is to collect tweets by location
-and subject. This workshop is aimed at graduate students with some
-familiarity with R. The examples explored will gather tweets made in the
-Washington, D.C. area as well as tweets that mention presidential
-candidates Hillary Clinton and Donald Trump. If we have time, we will
-explore methods to map our results nationally and show where people are
-talking about the candidates.</p>
-
-
-<h1>Overview</h1>
-<ol>
-<li>Setup</li>
-<li>Obtain Twitter credentials</li>
-<li>Install R packages</li>
-<li>Search Twitter API</li>
-<li>Map results (optional)</li>
-</ol>
-<h1>Setup</h1>
-<h3>Software</h3>
-<p>Essential: <a href = "https://www.r-project.org/" target ="_blank">R</a>
-<br>
-Recommended:
-<a href = "https://www.rstudio.com/products/rstudio/download/" target="_blank">RStudio</a></p>
-<ul>
-<li>RStudio is a free and open-source integrated development environment (IDE) for R</li>
-</ul>
-<p>If you have never used R before, or if you feel that you need a
-refresher, we recommend that you go over this <a href = "https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf" target="_blank">short R tutorial</a></p>
-<h3>Obtain Twitter credentials</h3>
-<ol>
-<li>Create a <a href = "https://www.twitter.com/signup" target ="_blank">Twitter account</a></li>
-</ol>
-<p><img alt="Twitter-Main" src="../../images/02-TwitterSignUp1.png">
-<br>
-2.  If you have a Twitter account, but it is not verified with a phone,
-    you would need to verify the account, by adding a mobile phone
-    number. Here is a link to the
-    <a href = "https://support.twitter.com/articles/110250" target="_blank">instructions</a>
-<br>
-3.  Create a  <a href = "https://dev.twitter.com" target="_blank">new app</a> Scroll to the bottom of the page and select Manage Your Apps under the Tools column (see highlighted box below)</p>
-<p><img alt="Dev-SignIn" src="../../images/08-TwitterDevSignIn2.png"> </p>
-<ul>
-<li>Fill in your App with the following information</li>
-<li>The App name must be unique, edit "INITIALS" with your initials</li>
-<li>Name: PAA 2016 Test App "INITIALS"</li>
-<li>Description: Test Application for PAA 2016 Social Media and Demographic Methods Workshop</li>
-<li>Website: <a href = "http://www.example.com" target = "_blank">http://www.example.com</a></li>
-<li>You should leave the "callback website" field empty</li>
-</ul>
-<p><img alt="Twitter-App2" src="../../images/10-TwitterCreateApp2.png">
-<br>
-4.  Obtain your consumer key, consumer secret, access token and access
-    token secret. You will insert these credentials below</p>
-<ul>
-<li>Select Keys and Access Tokens tab</li>
-<li>Consumer Key and Consumer Secret are at the top of the page</li>
-<li>Scroll to the bottom of the page to Token actions and create Access
-    Token and Access Token Secret</li>
-</ul>
-<h3>Install R packages</h3>
-<p>You will need to have the following packages installed for the core of this workshop:</p>
-<ul>
-<li><code>twitteR</code></li>
-<li><code>streamR</code></li>
-<li><code>ROAuth</code></li>
-<li><code>RCurl</code></li>
-<li><code>dplyr</code></li>
-</ul>
-<p>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing "FILL ME IN" with the file path of your workshop folder</p>
-<div class="highlight"><pre><span></span><span class="kp">rm</span><span class="p">(</span><span class="kt">list</span><span class="o">=</span><span class="kp">ls</span><span class="p">())</span>
-<span class="kp">setwd</span><span class="p">(</span><span class="s">&quot;FILL ME IN/PAA_2016_SMDM_Workshop/Twitter&quot;</span><span class="p">)</span>
-<span class="c1">#&#39; uncomment the command below to install the necessary packages</span>
-<span class="c1">#install.packages(c(&quot;twitteR&quot;,&quot;streamR&quot;,&quot;ROAuth&quot;,&quot;dplyr&quot;,&quot;base64enc&quot;))</span>
-
-<span class="c1">#&#39; Pablo Barbera, author of streamR, has written additional functions for Twitter analysis</span>
-<span class="c1">#&#39; uncomment the two commands below to download and add these functions to your environment with source</span>
-<span class="c1">#download.file(&quot;https://raw.githubusercontent.com/pablobarbera/social-media-workshop/master/functions.r&quot;,</span>
-              <span class="s">&quot;functions_by_pablobarbera.R&quot;</span><span class="p">)</span>
-<span class="c1">#source(&quot;functions_by_pablobarbera.R&quot;)</span>
-<span class="kn">source</span><span class="p">(</span><span class="s">&quot;twitterFunctions.R&quot;</span><span class="p">)</span> <span class="c1"># few functions to clean data</span>
-<span class="kn">library</span><span class="p">(</span>twitteR<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>streamR<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>ROAuth<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>RCurl<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>base64enc<span class="p">)</span>
-</pre></div>
-
-
-<h3>Twitter API Authentication</h3>
-<p>We will use two packages, streamR and twitteR, to retrieve tweets from the Twitter API. To access the functions in these packages, we will complete two authentication procedures.</p>
-<ul>
-<li><code>streamR</code><ul>
-<li>Allows authorized applications to access <a href =
-"https://dev.twitter.com/streaming/overview" target="_blank">
-Twitter's Streaming API</a></li>
-<li>real-time collection and monitoring of tweets</li>
-<li>uses stored authentication</li>
-</ul>
-</li>
-<li><code>twitteR</code><ul>
-<li>Allows authorized applications to access <a href =
-"https://dev.twitter.com/rest/public" target ="_blank">
-Twitter's API</a></li>
-<li>read and post tweets with API responses</li>
-<li>uses direct authentication</li>
-</ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Twitter credentials for streamR and twitteR authentication</span>
-consumer_key <span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-consumer_secret<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-access_token<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-access_token_secret<span class="o">&lt;-</span> <span class="s">&quot;FILL ME IN&quot;</span>
-
-<span class="c1">#&#39; parameters and URLs for streamR authentication</span>
-reqURL <span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/request_token&quot;</span>
-accessURL<span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/access_token&quot;</span>
-authURL<span class="o">&lt;-</span> <span class="s">&quot;https://api.twitter.com/oauth/authorize&quot;</span>
-
-<span class="c1">#&#39; Note:  You only need to create an authentication object for streamR once</span>
-<span class="c1">#&#39; Microsoft Windows users need to uncomment the following command to download a cert file</span>
-<span class="c1">#download.file(url=&quot;http://curl.haxx.se/ca/cacert.pem&quot;, destfile=&quot;cacert.pem&quot;)</span>
-
-<span class="c1">#&#39; create an object &quot;cred&quot; that will save the authenticated object for later sessions</span>
-twitCred<span class="o">&lt;-</span> OAuthFactory<span class="o">$</span>new<span class="p">(</span>consumerKey<span class="o">=</span>consumer_key<span class="p">,</span>consumerSecret<span class="o">=</span>consumer_secret<span class="p">,</span>
-                            requestURL<span class="o">=</span>reqURL<span class="p">,</span>accessURL<span class="o">=</span>accessURL<span class="p">,</span>authURL<span class="o">=</span>authURL<span class="p">)</span>
-
-<span class="c1">#&#39; executing twitCred$handshake will redirect you to a website and provide your app a PIN</span>
-<span class="c1">#&#39; insert the PIN in the R console after you run this line</span>
-<span class="c1">#&#39; you can save authenticated credentials for later sessions</span>
-<span class="c1">#&#39; for later use, uncomment the following command in a folder that contains twitCred.RData</span>
-<span class="c1">#load(&quot;twitCred.RData&quot;)</span>
-twitCred<span class="o">$</span>handshake<span class="p">(</span>cainfo <span class="o">=</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;CurlSSL&quot;</span><span class="p">,</span> <span class="s">&quot;cacert.pem&quot;</span><span class="p">,</span> package <span class="o">=</span> <span class="s">&quot;RCurl&quot;</span><span class="p">))</span>
-<span class="kp">save</span><span class="p">(</span>twitCred<span class="p">,</span> file <span class="o">=</span> <span class="s">&quot;twitCred.RData&quot;</span><span class="p">)</span>
-
-<span class="c1">#&#39; setup direct Twitter authentication for twitteR functions</span>
-<span class="c1">#&#39; you will be prompted to cache authentication token</span>
-<span class="c1">#&#39; you will need to repeat this step unless you are running analysis from a location with a</span>
-<span class="c1">#&#39; cached authentication token </span>
-setup_twitter_oauth<span class="p">(</span>consumer_key<span class="p">,</span> consumer_secret<span class="p">,</span> access_token<span class="p">,</span> access_token_secret<span class="p">)</span>
-</pre></div>
-
-
-<p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)\
-<img alt="Twitter-Cred-1" src="../../images/16-TwitterCred1.png"></p>
-<h1>Analysis</h1>
-<h3>Search tweets by location</h3>
-<p>Search for tweets by location using <code>twitteR</code> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers
-<a href = "https://developer.yahoo.com/geo/geoplanet/guide/concepts.html" target ="_blank">(WOEID)</a>
-for locations</p>
-<ul>
-<li>availableTrendLocations</li>
-<li>getTrends</li>
-</ul>
-<p>View column names and small subset of observations with <code>glimpse</code> command</p>
-<div class="highlight"><pre><span></span>availableTrendLocations<span class="p">()</span> 
-woeid <span class="o">=</span> availableTrendLocations<span class="p">()</span>
-glimpse<span class="p">(</span>woeid<span class="p">)</span>
-
-<span class="c1">#&#39; get trending D.C. area tweets</span>
-DC_tweets <span class="o">=</span> getTrends<span class="p">(</span><span class="m">2514815</span><span class="p">)</span>
-glimpse<span class="p">(</span>DC_tweets<span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="c1">#&#39; trending hashtags</span>
-<span class="kp">head</span><span class="p">(</span>DC_tweets<span class="o">$</span>name<span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>## [1] &quot;Rockets&quot;       &quot;Dwight Howard&quot; &quot;Paul George&quot;   &quot;#MentorIRL&quot;   
-## [5] &quot;Raptors&quot;       &quot;#DCvTOR&quot;
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>getCommonHashtags<span class="p">(</span>DC_tweets<span class="o">$</span>name<span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>## hashtags
-##                #93KDay              #ADay2016        #brunchofidiots 
-##                      1                      1                      1 
-##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY 
-##                      1                      1                      1 
-##                #DCvTOR             #DevRelCon  #DreamvilleMusicVideo 
-##                      1                      1                      1 
-##    #IrritateMeIn4Words #ItsNoneOfYourBusiness              #LEMONADE 
-##                      1                      1                      1 
-##   #LetMeEntertainYouBy             #MentorIRL                 #NALCS 
-##                      1                      1                      1 
-##     #NashInMyrtleBeach              #NYRvsPIT        #RecordStoreDay 
-##                      1                      1                      1 
-##     #SignACastIn5Words               #SXonFOX 
-##                      1                      1
-</pre></div>
-
-
-<h3>Search Twitter stream by subject</h3>
-<p>Search for tweets by subject using <code>streamR</code> package functions. The <code>streamR</code> functions interact with Twitter's Streaming API to filter tweets by keywords, users, language, and location</p>
-<ul>
-<li><code>filterStream</code></li>
-<li><code>parseTweets</code></li>
-</ul>
-<div class="highlight"><pre><span></span>filterStream<span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> track <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> <span class="s">&quot;Trump&quot;</span><span class="p">),</span> 
-locations <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-125</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">-66</span><span class="p">,</span> <span class="m">50</span><span class="p">),</span> timeout <span class="o">=</span> <span class="m">60</span><span class="p">,</span> oauth <span class="o">=</span> twitCred<span class="p">)</span>
-
-<span class="c1">#&#39; parse .json file of tweets and convert parsed tweets to a data frame </span>
-ClintonTrump_tweets.df <span class="o">&lt;-</span> parseTweets<span class="p">(</span><span class="s">&quot;ClintonTrump_tweets.json&quot;</span><span class="p">,</span> simplify <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-<span class="kp">head</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">)</span>
-
-<span class="c1">#&#39; print the amount of times Clinton and Trump are mentioned</span>
-Clinton_mentions <span class="o">&lt;-</span><span class="kp">length</span><span class="p">(</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
-Trump_mentions <span class="o">&lt;-</span><span class="kp">length</span><span class="p">(</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
-
-<span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Clinton mentioned %d times in %d tweets&quot;</span><span class="p">,</span> Clinton_mentions<span class="p">,</span> <span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">))</span>
-<span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Trump mentioned %d times in %d tweets&quot;</span><span class="p">,</span> Trump_mentions<span class="p">,</span> <span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">))</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>## [1] &quot;Clinton mentioned 397894 times in 5944511 tweets&quot;
-
-## [1] &quot;Trump mentioned 1164798 times in 5944511 tweets&quot;
-</pre></div>
-
-
-<h1>Advanced</h1>
-<h3>Map results</h3>
-<p>use <code>filterStream</code> to search by location</p>
-<ul>
-<li><a href = "http://dev.twitter.com/docs/streaming-apis/parameters#locations" target
-    ="_blank">Twitter location parameters</a></li>
-</ul>
-<p>map tweets with <code>ggplot2</code> and <code>grid</code> packages </p>
-<p><br></p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; uncomment the following line the first time you run this file</span>
-<span class="c1">#install.packages(c(&quot;ggplot2&quot;, &quot;grid&quot;, &quot;maps&quot;, &quot;png&quot;, &quot;lubridate&quot;))</span>
-<span class="kn">library</span><span class="p">(</span>lubridate<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>grid<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>maps<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>png<span class="p">)</span>
-
-<span class="c1">#&#39; clean up tweets to include only english, alphanumeric tweets</span>
-<span class="c1">#&#39; subsets data frame of tweets to smallers subset of relevant variables</span>
-<span class="c1">#&#39; add tweet_timestamp column with lubridate package qualities</span>
-ClintonTrump_tweets.df <span class="o">&lt;-</span> clean_up_tweets<span class="p">(</span>ClintonTrump_tweets.df<span class="p">)</span>
-ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp <span class="o">&lt;-</span> <span class="kp">sapply</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>created_at<span class="p">,</span>tweet_time<span class="p">)</span>
-
-<span class="c1">#&#39; rearrange data by date</span>
-ClintonTrump_tweets.df<span class="o">&lt;-</span>arrange<span class="p">(</span>ClintonTrump_tweets.df<span class="p">,</span> tweet_timestamp<span class="p">)</span>
-
-<span class="c1">#&#39; find tweets start and end date</span>
-tweets_start<span class="o">&lt;-</span> <span class="kp">strsplit</span><span class="p">(</span><span class="kp">unlist</span><span class="p">(</span>
-    ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp<span class="p">)[</span><span class="m">1</span><span class="p">],</span> split <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
-tweets_end<span class="o">&lt;-</span><span class="kp">strsplit</span><span class="p">(</span><span class="kp">unlist</span><span class="p">(</span>
-    ClintonTrump_tweets.df<span class="o">$</span>tweet_timestamp<span class="p">[</span><span class="kp">nrow</span><span class="p">(</span>ClintonTrump_tweets.df<span class="p">)]),</span> split <span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">1</span><span class="p">]</span>
-
-<span class="c1">#&#39; a small percentage of users have location access enabled for their tweets</span>
-<span class="c1">#&#39; increase the timeout number to gather more tweets and increase geo-tagged tweets</span>
-map.data <span class="o">&lt;-</span> map_data<span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
-points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>place_lon<span class="p">),</span> 
-                     y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ClintonTrump_tweets.df<span class="o">$</span>place_lat<span class="p">))</span>
-
-points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
-
-tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="kp">sprintf</span><span class="p">(</span><span class="s">&quot;Map of tweets \n from %s to %s&quot;</span><span class="p">,</span>
-tweets_start<span class="p">,</span> tweets_end<span class="p">))</span> <span class="o">+</span> geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> 
-map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> 
-expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> 
-axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> axis.title <span class="o">=</span> element_blank<span class="p">(),</span>
-panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-geom_point<span class="p">(</span>data <span class="o">=</span> points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.1</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
-
-<span class="c1">#&#39; save map as a .png</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
-
-<span class="c1">#&#39; alternative ways to save map</span>
-<span class="c1">#plot(tweets.map)</span>
-<span class="c1">#dev.print(png, &#39;tweets-map.png&#39;,height = 480 , width = 720, units = &quot;px&quot;) </span>
-<span class="c1">#dev.print(pdf, &#39;tweets-map.pdf&#39;)</span>
-</pre></div>
-
-
-<p><img alt="tweets-map" src="../../images/tweets-map.png"></p>
-<p>Map Clinton only tweets</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Clinton</span>
-Clinton_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Clinton&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
-                                             ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
-
-Clinton_points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Clinton_tweets<span class="o">$</span>place_lon<span class="p">),</span> 
-                     y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Clinton_tweets<span class="o">$</span>place_lat<span class="p">))</span>
-
-<span class="c1">#&#39; subset points to only include locations (roughly) within the United States</span>
-Clinton_points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>Clinton_points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-Clinton_points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>Clinton_points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
-
-Clinton_tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">&quot;Hillary Clinton Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
-  geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
-           color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span>
-  theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> 
-        axis.title <span class="o">=</span> element_blank<span class="p">(),</span> panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-        panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-        plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-  geom_point<span class="p">(</span>data <span class="o">=</span> Clinton_points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
-
-<span class="c1">#&#39; Save map of Clinton only tweets</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;Clinton_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>Clinton_tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
-
-
-<p><img alt="Clinton-tweets-map" src="../../images/Clinton_tweets-map.png"></p>
-<p>Map Trump only tweets</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Create a new data frame that only includes tweets that mentioned Trump</span>
-Trump_tweets <span class="o">&lt;-</span> ClintonTrump_tweets.df<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">&quot;Trump&quot;</span><span class="p">,</span> ClintonTrump_tweets.df<span class="o">$</span>text<span class="p">,</span> 
-                                          ignore.case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="p">]</span>
-
-Trump_points <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Trump_tweets<span class="o">$</span>place_lon<span class="p">),</span> 
-                          y <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>Trump_tweets<span class="o">$</span>place_lat<span class="p">))</span>
-
-<span class="c1">#&#39; subset points to only include locations (roughly) within the United States</span>
-Trump_points <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>Trump_points<span class="p">,</span> y <span class="o">&gt;</span> <span class="m">25</span> <span class="o">&amp;</span> y <span class="o">&lt;</span><span class="m">50</span><span class="p">)</span> 
-Trump_points<span class="o">&lt;-</span><span class="kp">subset</span><span class="p">(</span>Trump_points<span class="p">,</span> x<span class="o">&gt;</span> <span class="m">-125</span> <span class="o">&amp;</span> x<span class="o">&lt;</span> <span class="m">-66</span><span class="p">)</span>
-
-Trump_tweets.map<span class="o">&lt;-</span>ggplot<span class="p">(</span>map.data<span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">&quot;Donald Trump Tweets Map&quot;</span><span class="p">)</span> <span class="o">+</span>
-  geom_map<span class="p">(</span>aes<span class="p">(</span>map_id <span class="o">=</span> region<span class="p">),</span> map <span class="o">=</span> map.data<span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span> 
-           color <span class="o">=</span> <span class="s">&quot;grey20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span> expand_limits<span class="p">(</span>x <span class="o">=</span> map.data<span class="o">$</span>long<span class="p">,</span> y <span class="o">=</span> map.data<span class="o">$</span>lat<span class="p">)</span> <span class="o">+</span>
-  theme<span class="p">(</span>axis.line <span class="o">=</span> element_blank<span class="p">(),</span> axis.text <span class="o">=</span> element_blank<span class="p">(),</span> axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span> 
-        axis.title <span class="o">=</span> element_blank<span class="p">(),</span> panel.background <span class="o">=</span> element_blank<span class="p">(),</span> panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
-        panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span> plot.background <span class="o">=</span> element_blank<span class="p">(),</span>
-        plot.margin <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span> <span class="o">*</span> <span class="kt">c</span><span class="p">(</span><span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">,</span> <span class="m">-1.5</span><span class="p">),</span> <span class="s">&quot;lines&quot;</span><span class="p">))</span> <span class="o">+</span> 
-  geom_point<span class="p">(</span>data <span class="o">=</span> Trump_points<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span> y <span class="o">=</span> y<span class="p">),</span> size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
-
-<span class="c1">#&#39; Save map of Trump only tweets</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;Trump_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">480</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">720</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>Trump_tweets.map<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
-
-
-<p><img alt="Trump-tweets-map" src="../../images/Trump_tweets-map.png"></p>
-<p>Compare Clinton and Trump tweet maps side-by-side</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; View Clinton and Trump maps side-by-side</span>
-grid.arrange<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">,</span> ncol<span class="o">=</span><span class="m">2</span><span class="p">)</span>
-dev.off<span class="p">()</span>
-
-<span class="c1">#&#39; Save Clinton and Trump comparison map</span>
-<span class="kn">require</span><span class="p">(</span>gridExtra<span class="p">)</span>
-ggsave<span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">,</span> arrangeGrob<span class="p">(</span>Clinton_tweets.map<span class="p">,</span>Trump_tweets.map<span class="p">),</span> dpi <span class="o">=</span> <span class="m">300</span><span class="p">)</span>
-
-<span class="c1">#&#39; Improve comparison map image quality by rasterization</span>
-img <span class="o">&lt;-</span> readPNG<span class="p">(</span><span class="s">&quot;combined_tweets-raw.png&quot;</span><span class="p">)</span>
-grid.raster<span class="p">(</span>img<span class="p">)</span>
-dev.off<span class="p">()</span>
-
-<span class="c1">#&#39; Save raster comparison map</span>
-png<span class="p">(</span>filename<span class="o">=</span><span class="s">&quot;combined_tweets-map.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">720</span> <span class="p">,</span> width <span class="o">=</span> <span class="m">1200</span><span class="p">,</span> units <span class="o">=</span> <span class="s">&quot;px&quot;</span><span class="p">)</span>
-grid.raster<span class="p">(</span>img<span class="p">)</span>
-dev.off<span class="p">()</span>
-</pre></div>
-
-
-<p><img alt="combined-tweets-map" src="../../images/combined_tweets-map.png"><!-- --></p>
-<p>Save all objects in your current workspace and read back from file in
-the future</p>
-<div class="highlight"><pre><span></span><span class="kp">save.image</span><span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;PAA_2016_Twitter.RData&quot;</span><span class="p">)</span>
-
-<span class="c1">#&#39; future R sessions will require you to reload necessary libraries</span>
-<span class="c1">#&#39; uncomment the command below to load saved objects in future workspace sessions</span>
-<span class="c1">#load(&quot;PAA_2016_Twitter.RData&quot;)</span>
-</pre></div>
-
-
-<h1>References</h1>
-<ol>
-<li><a href = "https://www.r-project.org/" target ="_blank">R</a></li>
-<li><a href = "https://www.rstudio.com/products/rstudio/download/" target="_blank">RStudio</a> is a free and open-source integrated development environment (IDE) for R</li>
-<li><a href = "https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf" target="_blank">short R tutorial</a></li>
-<li>Make a <a href = "https://www.twitter.com/signup" target ="_blank">Twitter account</a></li>
-<li><a href = "https://support.twitter.com/articles/110250" target="_blank">instructions</a> to register phone with Twitter account</li>
-<li>create a <a href = "https://dev.twitter.com" target="_blank">new application</a> </li>
-<li><a href =  "https://dev.twitter.com/streaming/overview" target="_blank">Twitter's Streaming API</a></li>
-<li><a href ="https://dev.twitter.com/rest/public" target ="_blank">Twitter's API</a></li>
-<li>Where on Earth Identifiers
-<a href = "https://developer.yahoo.com/geo/geoplanet/guide/concepts.html" target ="_blank">(WOEID)</a> for locations</li>
-<li><a href = "http://dev.twitter.com/docs/streaming-apis/parameters#locations" target
-="_blank">Twitter location parameters</a></li>
-<li><a href = "http://pablobarbera.com/code/streamR.html" target="_blank">streamR vignette</a> by Pablo Barbera</li>
-</ol>
-<h1>Acknowledgements</h1>
-<p>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
-
+<p>We are going to learn various R functions for gathering, processing and …</p> </div><!-- /.entry-content -->
+        </article></li>
+</ol><!-- /#posts-list -->
+</section><!-- /#content -->
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
-
-    <script type="text/javascript">
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-104881568-1', 'auto');
-    ga('send', 'pageview');
-    </script>
 </body>
 </html>
