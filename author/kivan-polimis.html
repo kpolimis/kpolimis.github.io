@@ -1,620 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>Kivan Polimis - Kivan Polimis</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content=" Kivan Polimis">
+        <meta name="keywords" content="">
+        <link rel="icon" href="../favicon.ico">
+        <!-- Canonical -->
+        <link rel="canonical" href="../author/kivan-polimis.html">
+        <!-- /Canonical -->
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <title> Kivan Polimis - Kivan Polimis</title>
+
+        <!-- Stylesheets -->
+        <link href="../theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-</head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Kivan Polimis </a></h1>
-                <nav><ul>
-                    <li><a href="/pages/about.html">About</a></li>
-                    <li><a href="/pages/vita.html">Vita</a></li>
-                    <li><a href="/category/how-to.html">How-to</a></li>
-                    <li><a href="/category/projects.html">Projects</a></li>
-                    <li><a href="/category/review.html">Review</a></li>
-                    <li><a href="/category/tutorials.html">Tutorials</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/location-data-exploration-1.html">Location Data Exploration #1</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2016-09-30T05:07:00-07:00">
-                Published: Fri 30 September 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="/category/how-to.html">How-to</a>.</p>
-
-</footer><!-- /.post-info --><p>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The goal of this post is to visualize flights taken from Google location data using Python</p>
-<ul>
-<li>This post utilizes code from Tyler Hartley's <a href="http://beneathdata.com/how-to/visualizing-my-location-history/">visualizing location history blog post</a> </li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Overview">Overview<a class="anchor-link" href="#Overview">&#182;</a></h1><ol>
-<li>Setup<ul>
-<li>download data</li>
-<li>install modules</li>
-</ul>
-</li>
-<li>Data Wrangling<ul>
-<li>data extraction</li>
-<li>data manipulation</li>
-</ul>
-</li>
-<li>Flight Algorithm</li>
-<li>Visualize Flights</li>
-<li>Conclusion</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Setup">Setup<a class="anchor-link" href="#Setup">&#182;</a></h1><ol>
-<li>Use Google Takout to download your Google location history</li>
-<li>Downloading your Google location history if you've previously enabled Google location reporting on your smartphone, your GPS data will be periodically uploaded to <a href="https://support.google.com/accounts/answer/3118687?hl=en&amp;visit_id=1-636109809748631344-4285616029&amp;rd=1">Google's servers</a>. <ul>
-<li>The decisions of when and how to upload this data are entirely obfuscated to the end user, but as you'll see below, Android appears to upload a GPS location every 60 seconds. That's plenty of data to work with.</li>
-</ul>
-</li>
-<li>Then install the required modules</li>
-</ol>
-<h2 id="Google-Takeout">Google Takeout<a class="anchor-link" href="#Google-Takeout">&#182;</a></h2><p>Google provides a service called <a href="https://takeout.google.com/settings/takeout">Takeout</a> that allows us to export any personal Google data. We'll use Takeout to download our raw location history as a one-time snapshot. Since Latitude was retired, no API exists to access location history in real-time.</p>
-<p>Here's what to do:</p>
-<ul>
-<li>Go to <a href="https://www.google.com/settings/takeout">takeout</a>. Uncheck all services except "Location History" </li>
-<li>The data will be in a json format, which works great for us. Download it in your favorite compression type.</li>
-<li>When Google has finished creating your archive, you'll get an email notification and a link to download. </li>
-<li>Download and unzip the file, and you should be looking at a <code>LocationHistory.json</code> file. Working with location data in <a href="http://pandas.pydata.org/">Pandas</a>. Pandas is an incredibly powerful tool that simplifies working with complex datatypes and performing statistical analysis in the style of R. Chris Albon has great primers on using Pandas <a href="http://chrisalbon.com/#Python">here</a> under the "Data Wrangling" section.</li>
-</ul>
-<h2 id="Install-modules">Install modules<a class="anchor-link" href="#Install-modules">&#182;</a></h2><ul>
-<li>If you use Anaconda to manage your Python packages, I recommend creating a virtual environment with anaconda to install the dependencies. Copying the lines below the instruction into the terminal creates the environment, requirements.txt, etc.<ul>
-<li>conda create -n test-env python=2.7 anaconda</li>
-<li>source activate test-env</li>
-</ul>
-</li>
-<li>make a requirements.txt file for dependencies <ul>
-<li>(echo matplotlib; echo numpy; echo pandas; echo descartes; echo IPython; echo shapely; echo fiona) &gt;&gt; requirements.txt  </li>
-</ul>
-</li>
-<li>install requirements.txt<ul>
-<li>pip install -r requirements.txt</li>
-</ul>
-</li>
-<li>install Basemap with Anaconda<ul>
-<li>conda install Basemap</li>
-</ul>
-</li>
-</ul>
-<p>After completing the setup, we'll read in the <code>LocationHistory.json</code> file from Google Takeout and create a DataFrame.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.basemap</span> <span class="kn">import</span> <span class="n">Basemap</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPoint</span><span class="p">,</span> <span class="n">MultiPolygon</span>
-<span class="kn">from</span> <span class="nn">shapely.prepared</span> <span class="kn">import</span> <span class="n">prep</span>
-<span class="kn">import</span> <span class="nn">fiona</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
-<span class="kn">from</span> <span class="nn">descartes</span> <span class="kn">import</span> <span class="n">PolygonPatch</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/kivan/anaconda3/envs/py27/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
-  warnings.warn(&#39;Matplotlib is building the font cache using fc-list. This may take a moment.&#39;)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Data-Wrangling">Data Wrangling<a class="anchor-link" href="#Data-Wrangling">&#182;</a></h1><ul>
-<li>data extraction</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;LocationHistory.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-    <span class="n">raw</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-<span class="c1"># ld is an abbreviation for location data</span>
-<span class="n">ld</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;locations&#39;</span><span class="p">])</span>
-<span class="k">del</span> <span class="n">raw</span> <span class="c1">#free up some memory</span>
-
-<span class="c1"># convert to typical units</span>
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;latitudeE7&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="p">[</span><span class="s1">&#39;latitudeE7&#39;</span><span class="p">]</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mf">1e7</span><span class="p">)</span> 
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;longitudeE7&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="p">[</span><span class="s1">&#39;longitudeE7&#39;</span><span class="p">]</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mf">1e7</span><span class="p">)</span>
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;timestampMs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="p">[</span><span class="s1">&#39;timestampMs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span> <span class="c1">#to seconds</span>
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">timestampMs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">)</span>
-
-<span class="c1"># Rename fields based on the conversions we just did</span>
-<span class="n">ld</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;latitudeE7&#39;</span><span class="p">:</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;longitudeE7&#39;</span><span class="p">:</span><span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;timestampMs&#39;</span><span class="p">:</span><span class="s1">&#39;timestamp&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">ld</span> <span class="o">=</span> <span class="n">ld</span><span class="p">[</span><span class="n">ld</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">]</span> <span class="c1">#Ignore locations with accuracy estimates over 1000m</span>
-<span class="n">ld</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>data manipulation</li>
-</ul>
-<h3 id="Degrees-and-Radians">Degrees and Radians<a class="anchor-link" href="#Degrees-and-Radians">&#182;</a></h3><ul>
-<li>We're going to convert the degree-based geo data to radians to calculate distance traveled.<br>
-Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-degrees-and-radians/">this post</a> for more info about degrees and radians in distance calculation.<ul>
-<li>Degrees are arbitrary because they’re based on the sun (365 days ~ 360 degrees), but they are backwards because they are from the observer’s perspective.</li>
-<li>Because radians are in terms of the mover, equations “click into place”. Converting rotational to linear speed is easy, and ideas like sin(x)/x make sense.</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>convert degrees to radians</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">degrees_to_radians</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span> 
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span> <span class="o">-</span> <span class="n">ld</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span> <span class="o">*</span> <span class="n">degrees_to_radians</span> 
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">longitude</span> <span class="o">*</span> <span class="n">degrees_to_radians</span>
-<span class="c1"># Compute distance between two GPS points on a unit sphere</span>
-<span class="n">ld</span><span class="p">[</span><span class="s1">&#39;distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span> 
-    <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="n">ld</span><span class="o">.</span><span class="n">theta</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> 
-    <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-    <span class="p">)</span> <span class="o">*</span> <span class="mf">6378.100</span> <span class="c1"># radius of earth in km</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>calculate speed during trips (in km/hr)</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">ld</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ld</span><span class="o">.</span><span class="n">distance</span><span class="o">/</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">-</span> <span class="n">ld</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="mi">3600</span> <span class="c1">#km/hr</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>Make a new dataframe containing the difference in location between each pair of points. </li>
-<li>Any one of these pairs is a potential flight</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">flightdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;endlat&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                             <span class="s1">&#39;endlon&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
-                             <span class="s1">&#39;enddatetime&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                             <span class="s1">&#39;distance&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">distance</span><span class="p">,</span>
-                             <span class="s1">&#39;speed&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span>
-                             <span class="s1">&#39;startlat&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                             <span class="s1">&#39;startlon&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
-                             <span class="s1">&#39;startdatetime&#39;</span><span class="p">:</span><span class="n">ld</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                             <span class="p">}</span>
-                       <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>Now flightdata contains a comparison of each adjacent GPS location. </li>
-<li>All that's left to do is filter out the true flight instances from the rest of them.</li>
-</ul>
-<h3 id="spherical-distance-function">spherical distance function<a class="anchor-link" href="#spherical-distance-function">&#182;</a></h3><ul>
-<li>function to calculate straight-line distance traveled on a sphere</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">distance_on_unit_sphere</span><span class="p">(</span><span class="n">lat1</span><span class="p">,</span> <span class="n">long1</span><span class="p">,</span> <span class="n">lat2</span><span class="p">,</span> <span class="n">long2</span><span class="p">):</span>
-    <span class="c1"># http://www.johndcook.com/python_longitude_latitude.html</span>
-    <span class="c1"># Convert latitude and longitude to spherical coordinates in radians.</span>
-    <span class="n">degrees_to_radians</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span>  
-    <span class="c1"># phi = 90 - latitude</span>
-    <span class="n">phi1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span> <span class="o">-</span> <span class="n">lat1</span><span class="p">)</span><span class="o">*</span><span class="n">degrees_to_radians</span>
-    <span class="n">phi2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span> <span class="o">-</span> <span class="n">lat2</span><span class="p">)</span><span class="o">*</span><span class="n">degrees_to_radians</span>
-    <span class="c1"># theta = longitude</span>
-    <span class="n">theta1</span> <span class="o">=</span> <span class="n">long1</span><span class="o">*</span><span class="n">degrees_to_radians</span>
-    <span class="n">theta2</span> <span class="o">=</span> <span class="n">long2</span><span class="o">*</span><span class="n">degrees_to_radians</span>
-
-    <span class="n">cos</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta1</span> <span class="o">-</span> <span class="n">theta2</span><span class="p">)</span> <span class="o">+</span> 
-           <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi2</span><span class="p">))</span>
-    <span class="n">arc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span> <span class="n">cos</span> <span class="p">)</span>
-    <span class="c1"># Remember to multiply arc by the radius of the earth </span>
-    <span class="c1"># in your favorite set of units to get length.</span>
-    <span class="k">return</span> <span class="n">arc</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Flight-algorithm">Flight algorithm<a class="anchor-link" href="#Flight-algorithm">&#182;</a></h1><ul>
-<li>filter flights<ul>
-<li>remove flights using conservative selection criteria</li>
-</ul>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">flights</span> <span class="o">=</span> <span class="n">flightdata</span><span class="p">[(</span><span class="n">flightdata</span><span class="o">.</span><span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">flightdata</span><span class="o">.</span><span class="n">distance</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-<span class="c1"># Combine instances of flight that are directly adjacent </span>
-<span class="c1"># Find the indices of flights that are directly adjacent</span>
-<span class="n">_f</span> <span class="o">=</span> <span class="n">flights</span><span class="p">[</span><span class="n">flights</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">adjacent_flight_groups</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="p">(</span><span class="n">_f</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
-
-<span class="c1"># Now iterate through the groups of adjacent flights and merge their data into</span>
-<span class="c1"># one flight entry</span>
-<span class="k">for</span> <span class="n">flight_group</span> <span class="ow">in</span> <span class="n">adjacent_flight_groups</span><span class="p">:</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">flight_group</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1">#the index of flight termination</span>
-    <span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;startlat&#39;</span><span class="p">,</span> <span class="s1">&#39;startlon&#39;</span><span class="p">,</span> <span class="s1">&#39;startdatetime&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">flight_group</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startlat</span><span class="p">,</span> 
-                                                         <span class="n">flight_group</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startlon</span><span class="p">,</span> 
-                                                         <span class="n">flight_group</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startdatetime</span><span class="p">]</span>
-    <span class="c1"># Recompute total distance of flight</span>
-    <span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_on_unit_sphere</span><span class="p">(</span><span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">startlat</span><span class="p">,</span>
-                                                           <span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">startlon</span><span class="p">,</span>
-                                                           <span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">endlat</span><span class="p">,</span>
-                                                           <span class="n">flights</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">endlon</span><span class="p">)</span><span class="o">*</span><span class="mf">6378.1</span>   
-
-<span class="c1"># Now remove the &quot;flight&quot; entries we don&#39;t need anymore.</span>
-<span class="n">flights</span> <span class="o">=</span> <span class="n">flights</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">_f</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="c1"># Finally, we can be confident that we&#39;ve removed instances of flights broken up by</span>
-<span class="c1"># GPS data points during flight. We can now be more liberal in our constraints for what</span>
-<span class="c1"># constitutes flight. Let&#39;s remove any instances below 200km as a final measure.</span>
-<span class="n">flights</span> <span class="o">=</span> <span class="n">flights</span><span class="p">[</span><span class="n">flights</span><span class="o">.</span><span class="n">distance</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This algorithm worked 100% of the time for me - no false positives or negatives. But the adjacency-criteria of the algorithm is fairly brittle. The core of it centers around the assumption that inter-flight GPS data will be directly adjacent to one another. That's why the initial screening on line 2 had to be so liberal.</p>
-<p>Now, the flights DataFrame contains only instances of true flight. All that's left to do is plot them.</p>
-<p>Matplotlib's Basemap again comes to the rescue. If we plot on a flat projection like tmerc, the drawgreatcircle function will produce a true path arc just like we see in the in-flight magazines.</p>
-<h1 id="Visualize-Flights">Visualize Flights<a class="anchor-link" href="#Visualize-Flights">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.basemap</span> <span class="kn">import</span> <span class="n">Basemap</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
-
-<span class="c1"># Plotting across the international dateline is tough. One option is to break up flights</span>
-<span class="c1"># by hemisphere. Otherwise, you&#39;d need to plot using a different projection like &#39;robin&#39;</span>
-<span class="c1"># and potentially center on the Int&#39;l Dateline (lon_0=-180)</span>
-<span class="c1"># flights = flights[(flights.startlon &lt; 0) &amp; (flights.endlon &lt; 0)]# Western Hemisphere Flights</span>
-<span class="c1"># flights = flights[(flights.startlon &gt; 0) &amp; (flights.endlon &gt; 0)] # Eastern Hemisphere Flights</span>
-
-<span class="n">xbuf</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="n">ybuf</span> <span class="o">=</span> <span class="mf">0.35</span>
-<span class="n">minlat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">flights</span><span class="o">.</span><span class="n">endlat</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">flights</span><span class="o">.</span><span class="n">startlat</span><span class="o">.</span><span class="n">min</span><span class="p">()])</span>
-<span class="n">minlon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">flights</span><span class="o">.</span><span class="n">endlon</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">flights</span><span class="o">.</span><span class="n">startlon</span><span class="o">.</span><span class="n">min</span><span class="p">()])</span>
-<span class="n">maxlat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">flights</span><span class="o">.</span><span class="n">endlat</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">flights</span><span class="o">.</span><span class="n">startlat</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
-<span class="n">maxlon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">flights</span><span class="o">.</span><span class="n">endlon</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">flights</span><span class="o">.</span><span class="n">startlon</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
-<span class="n">width</span> <span class="o">=</span> <span class="n">maxlon</span> <span class="o">-</span> <span class="n">minlon</span>
-<span class="n">height</span> <span class="o">=</span> <span class="n">maxlat</span> <span class="o">-</span> <span class="n">minlat</span>
-
-<span class="n">m</span> <span class="o">=</span> <span class="n">Basemap</span><span class="p">(</span><span class="n">llcrnrlon</span><span class="o">=</span><span class="n">minlon</span> <span class="o">-</span> <span class="n">width</span><span class="o">*</span> <span class="n">xbuf</span><span class="p">,</span>
-            <span class="n">llcrnrlat</span><span class="o">=</span><span class="n">minlat</span> <span class="o">-</span> <span class="n">height</span><span class="o">*</span><span class="n">ybuf</span><span class="p">,</span>
-            <span class="n">urcrnrlon</span><span class="o">=</span><span class="n">maxlon</span> <span class="o">+</span> <span class="n">width</span><span class="o">*</span> <span class="n">xbuf</span><span class="p">,</span>
-            <span class="n">urcrnrlat</span><span class="o">=</span><span class="n">maxlat</span> <span class="o">+</span> <span class="n">height</span><span class="o">*</span><span class="n">ybuf</span><span class="p">,</span>
-            <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;merc&#39;</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;l&#39;</span><span class="p">,</span>
-            <span class="n">lat_0</span><span class="o">=</span><span class="n">minlat</span> <span class="o">+</span> <span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">lon_0</span><span class="o">=</span><span class="n">minlon</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,)</span>
-
-
-<span class="n">m</span><span class="o">.</span><span class="n">drawmapboundary</span><span class="p">(</span><span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;#EBF4FA&#39;</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">drawcoastlines</span><span class="p">()</span>
-<span class="n">m</span><span class="o">.</span><span class="n">drawstates</span><span class="p">()</span>
-<span class="n">m</span><span class="o">.</span><span class="n">drawcountries</span><span class="p">()</span>
-<span class="n">m</span><span class="o">.</span><span class="n">fillcontinents</span><span class="p">()</span>
-
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flights</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">drawgreatcircle</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">startlon</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">startlat</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">endlon</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">endlat</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span> <span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">startlon</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">startlat</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">endlon</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">endlat</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span> <span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="s2">&quot;Data collected from 2013-2016 on Android </span><span class="se">\n</span><span class="s2">Plotted using Python, Basemap&quot;</span><span class="p">,</span>
-        <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#555555&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;italic&#39;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s2">&quot;kivanpolimis.com&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#555555&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;flights.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div></p>
-<p><img alt="flight-map" src="../../images/flights.png" /></p>
-<p>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>You've now got the code to go ahead and reproduce these maps. I'm working on creating functions to automate these visualizations</p>
-<h2 id="Potential-future-directions">Potential future directions<a class="anchor-link" href="#Potential-future-directions">&#182;</a></h2><ul>
-<li>Figure out where you usually go on the weekends</li>
-<li>Calculate your fastest commute route</li>
-<li>measure the amount of time you spend driving vs. walking.</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Download this <a href="downloads/notebooks/map_of_flights.ipynb">notebook</a>, or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/map_of_flights.ipynb">here</a></p>
-
-</div>
-</div>
-</div></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/positions-matter.html" rel="bookmark"
-                           title="Permalink to Positions Matter">Positions Matter</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-08-01T03:06:00-07:00">
-                Published: Mon 01 August 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="/category/projects.html">Projects</a>.</p>
-
-</footer><!-- /.post-info -->                <h1>The Combine's Positional Variability in Predicting Career NFL Performance</h1>
-<p>collaborators: Long Chen, Melaku Dubie, Rich Lee and Kivan Polimis</p>
-<h2>Background</h2>
-<p>Every year, hundreds of collegiate football players are invited to participate in a week-long scouting combine. Players are evaluated by NFL personnel departments on a series of physical and ...</p>
-                <a class="readmore" href="/positions-matter.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/social-media-twitter-api-and-r.html" rel="bookmark"
-                           title="Permalink to Social Media, Twitter API, and R">Social Media, Twitter API, and R</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-17T05:07:00-07:00">
-                Published: Sun 17 April 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="/category/tutorials.html">Tutorials</a>.</p>
-
-</footer><!-- /.post-info -->                <p>This post is a workshop that I created for a social media workshop during the 
-2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
-<p>All relevant code will eventually be available on <a href = "http://www.github.com/kpolimis" target = "_blank">my github</a></p>
-<hr>
-
-<h1>Introduction</h1>
-<p>We are going to learn various R functions for gathering, processing and ...</p>
-                <a class="readmore" href="/social-media-twitter-api-and-r.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/make-a-pelican-blog.html" rel="bookmark"
-                           title="Permalink to make a Pelican blog">make a Pelican blog</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-03-24T17:07:00-07:00">
-                Published: Thu 24 March 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="/category/how-to.html">How-to</a>.</p>
-
-</footer><!-- /.post-info -->                <h1>How to setup Pelican to build a blog with Travis-CI</h1>
-<p>The goal of this post is to use Pelican, a static-blogging Python package, and Travis-CI to automatically deploy a Github-hosted blog. Your blog's URL will be <code>username.github.io</code>. You will need <a href = "https://github.com" target="_blank">Github</a> and <a href = "https://travis-ci.org/" target="_blanks">Travis-CI </a>accounts.</p>
-<p>I chose to ...</p>
-                <a class="readmore" href="/make-a-pelican-blog.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/my-first-post.html" rel="bookmark"
-                           title="Permalink to My First Post">My First Post</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-03-21T03:06:00-07:00">
-                Published: Mon 21 March 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/kivan-polimis.html">Kivan Polimis</a>
-        </address>
-<p>In <a href="/category/review.html">Review</a>.</p>
-
-</footer><!-- /.post-info -->                <p>This is my personal blog, built with Pelican and hosted on Github</p>
-                <a class="readmore" href="/my-first-post.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-</body>
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-104881568-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+        <!-- /Google Analytics -->
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="../"><img class="mr20" src="../images/jade_mountain.png" alt="logo">Kivan Polimis</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="../index.html">Home</a>
+                                <a href="../categories.html">Articles</a>
+                                <a href="../pages/vita.html">Vita</a>
+                                <a href="../pages/software.html">Software</a>
+                                <a href="../pages/projects.html">Projects</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title text-uppercase">Kivan Polimis</h1>
+                      <div class="header-underline"></div>
+                      <p class="header-subtitle header-subtitle-homepage"></p>
+                  </div>
+              </div>
+        </div>
+    </div>
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="archive-container">
+        <div class="container content archive">
+            <h2><a href="../author/kivan-polimis.html"></a></h2>
+            <dl class="dl-horizontal">
+            	<dt>Thu 07 January 2021</dt>
+            	<dd><a href="../covid-19-mortality-and-disinformation.html">COVID-19 Mortality and Disinformation</a></dd>
+            	<dt>Wed 06 March 2019</dt>
+            	<dd><a href="../nba-mvp-comparisons-part-3.html">NBA MVP Comparisons - Part 3</a></dd>
+            	<dt>Wed 27 February 2019</dt>
+            	<dd><a href="../nba-mvp-comparisons-part-2.html">NBA MVP Comparisons - Part 2</a></dd>
+            	<dt>Tue 25 December 2018</dt>
+            	<dd><a href="../nba-mvp-comparisons-part-1.html">NBA MVP Comparisons - Part 1</a></dd>
+            	<dt>Tue 06 March 2018</dt>
+            	<dd><a href="../milano-location-history.html">Milano Location History</a></dd>
+            	<dt>Mon 21 August 2017</dt>
+            	<dd><a href="../seattle-location-history.html">Seattle Location History</a></dd>
+            	<dt>Mon 17 July 2017</dt>
+            	<dd><a href="../siccs-debrief.html">SICCS Debrief</a></dd>
+            	<dt>Fri 30 September 2016</dt>
+            	<dd><a href="../flights-analysis.html">Flights Analysis</a></dd>
+            	<dt>Mon 01 August 2016</dt>
+            	<dd><a href="../positions-matter.html">Positions Matter</a></dd>
+            	<dt>Sun 17 April 2016</dt>
+            	<dd><a href="../social-media-twitter-api-and-r.html">Social Media, Twitter API, and R</a></dd>
+            	<dt>Thu 24 March 2016</dt>
+            	<dd><a href="../make-a-pelican-blog.html">Make a Pelican Blog</a></dd>
+            	<dt>Mon 21 March 2016</dt>
+            	<dd><a href="../my-first-post.html">My First Post</a></dd>
+            </dl>
+        </div>
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../categories.html">Articles</a></li>
+                            <li><a href="../pages/vita.html">Vita</a></li>
+                            <li><a href="../pages/software.html">Software</a></li>
+                            <li><a href="../pages/projects.html">Projects</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; Kivan Polimis 2021</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
 </html>
