@@ -90,15 +90,16 @@
         <!-- Content -->
     <div class="container content">
         <h1>Covid Mortality and Disinformation - (Part 1)</h1>
-<p>Recently, I was scrolling through social media when I saw a post that gave me pause. The social media post is presented below:
+<p>Recently, I was scrolling through social media when I saw a post that gave me pause. The social media post is presented below:</p>
 <div>
 <img src="images/social_media_mortality_data_screenshot.png" alt="COVID-19 Mortality Data from Social Media">
 </div>
-The post caught my attention for three reasons: it presented a falsifiable hypothesis, the conclusion was counter-intuitive, and there was an obvious challenge issued. Anyone reading this knows that falsifiable hypotheses are exciting because they deal with evidence and once we agree on the evidence, some hypotheses can be disproven with evidence. Here the falsifiable hypothesis is also the counter-intuitive conclusion, namely that COVID-19 has not affected mortality rates in the United States ("Nothing abnormal [about 2020 mortality rates], corona is like the flu"). What really spurred this blog post to be written was the message being sent in the last sentence of the blog post and the associated references below the table. The implicit challenge was that given data sources, one could also determine that mortality rates had not changed in the U.S. or other countries. As Barney Stinson would say, "Challenge Accepted!"</p>
+
+<p>The post caught my attention for three reasons: it presented a falsifiable hypothesis, the conclusion was counter-intuitive, and there was an obvious challenge issued. Anyone reading this knows that falsifiable hypotheses are exciting because they deal with evidence and once we agree on the evidence, some hypotheses can be disproven with evidence. Here the falsifiable hypothesis is also the counter-intuitive conclusion, namely that COVID-19 has not affected mortality rates in the United States ("Nothing abnormal [about 2020 mortality rates], corona is like the flu"). What really spurred this blog post to be written was the message being sent in the last sentence of the blog post and the associated references below the table. The implicit challenge was that given data sources, one could also determine that mortality rates had not changed in the U.S. or other countries. As Barney Stinson would say, "Challenge Accepted!"</p>
 <p>The comparative concept at play in the mortality claims from social media is: "How bad is this year's mortality rate compared to previous mortality rates?". We can operationalize this concept as mortality rate change and create it by comparing the morality rate for each year (y) to the mortality rate in the previous year (y-1):</p>
 <div class="math">$$\text{Mortality Rate Change}_{y}= \frac{\text{Mortality Rate}_{y}-\text{Mortality Rate}_{y-1}}{\text{Mortality Rate}_{y-1}}$$</div>
-<p>After creating the morality rates for 2014 to 2020, I concluded that the mortality rate change for 2020 is 12 times greater than the average mortality rate change from 2014 to 2019. In short, the falsifiable hypothesis that was presented in the social media post (2020 mortality rates are normal), was falsified, mortality rates in 2020 are far from the average.</p>
-<p>To lead others interesting in getting the data themselves and drawing their own conclusions, I created a multi-part blog series. This blog post represents the first in an attempt to investigate the COVID-19 mortality claims made on social media. To understand changes in U.S. mortality over time, we need to gather (1): U.S. mortality data and (2): U.S population data. Then, we need to (3) create mortality rates with these data sources. Lastly, we need to (4) compare the mortality rates from the social media post to the mortality data obtained from government sources. In this post we complete step 1, gather U.S. mortality data.</p>
+<p>After creating the morality rates for 2014 to 2020, I concluded that the mortality rate change for 2020 is 12 times greater than the average mortality rate change from 2014 to 2019. In short, the falsifiable hypothesis that was presented in the social media post (2020 mortality rates are normal), was falsified; the mortality rate change in 2020 was far from the average.</p>
+<p>To lead others interesting in getting the data themselves and drawing their own conclusions, I created a multi-part blog series. All code to recreate these analyses will be available on <a href="https://github.com/kpolimis/">my Github account</a>. This blog post represents the first in an attempt to investigate the COVID-19 mortality claims made on social media. To understand changes in U.S. mortality over time, we need to gather (1): U.S. mortality data and (2): U.S population data. Then, we need to (3) create mortality rates with these data sources. Lastly, we need to (4) compare the mortality rates from the social media post to the mortality data obtained from government sources. In this post we complete step 1, gather U.S. mortality data.</p>
 <p>Government mortality and population data is available via the open data portal <a href="https://www.tylertech.com/products/socrata">Socrata</a>. You can sign up for a Socrata account <a href="https://support.socrata.com/hc/en-us/articles/115004055807-Signing-up-for-an-Account">here</a> and create a developer application to programmatically download Socrata data by following these <a href="https://support.socrata.com/hc/en-us/articles/210138558-Generating-an-App-Token">instructions</a></p>
 <p>Once you have established your Socrata Developer credentials, you can leverage an R package that connects to the Socrata API called <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a></p>
 <p>First, let's load the libraries we will need for the analysis</p>
@@ -121,8 +122,19 @@ The post caught my attention for three reasons: it presented a falsifiable hypot
 </pre></div>
 
 
-<p>Then we get <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/3yf8-kanr">weekly state mortality data from 2014-2018</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS). The NCHS is a part of the Centers for Disease Control and Prevention (CDC) and provides statistical information for public health policies. The documentation for the NCHS data is available <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">here</a></p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2014-2018 NCHS</span>
+<p>Yearly mortality from 1999 to 2020 does not exist in one dataset, so we will need to combine 3 government datasets to create our own data to answer the challenge presented in the social media post. The first government dataset is <a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu">yearly mortality data from 1999 to 2017</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS). The NCHS is a part of the Centers for Disease Control and Prevention (CDC) and provides statistical information for public health policies. The documentation for the NCHS data is available <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">here</a></p>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Yearly Counts of Deaths by State and Select Causes, 1999-2017</span>
+<span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
+  <span class="s">&quot;https://data.cdc.gov/resource/bi63-dtpu.json&quot;</span><span class="p">,</span>
+  <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
+  <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>Then we get <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/3yf8-kanr">weekly state mortality data from 2014-2018</a></p>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2014-2018</span>
 <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
   <span class="s">&quot;https://data.cdc.gov/resource/3yf8-kanr.json&quot;</span><span class="p">,</span>
   <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
@@ -137,7 +149,7 @@ The post caught my attention for three reasons: it presented a falsifiable hypot
 <p>In general, the births and deaths data we receive from NCHS have a two-year lag. This means that the most recent data we have on births and deaths by geographic and demographic detail for each vintage of estimates refer to the calendar year two years prior to the vintage year. For example, the most current full-detail births and deaths data we used in Vintage 2020 were from calendar year 2018. We also receive preliminary or provisional NCHS total numbers of births and deaths at the national level for the year prior to the vintage (in this example, 2019). Using these data and the data received from the [The Federal-State Cooperative for Population Estimates (FSCPE)], we create short-term projections that approximate the final NCHS data by characteristics, the preliminary NCHS national totals, and the FSCPE data (where available) by geographic distribution. (pg. 4)</p>
 </blockquote>
 <p>This point is important because in the future counts of death may be revised upward or downward and could change the conclusions drawn in this post.</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2019-2020 NCHS</span>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2019-2020</span>
 <span class="n">weekly_deaths_by_state_2019_2020</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
   <span class="s">&quot;https://data.cdc.gov/resource/muzy-jte6.json&quot;</span><span class="p">,</span>
   <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
@@ -147,7 +159,7 @@ The post caught my attention for three reasons: it presented a falsifiable hypot
 </pre></div>
 
 
-<p>Quick glimpse at the one of the data sets</p>
+<p><code>glimpse</code> of the yearly mortality dataset</p>
 <div class="highlight"><pre><span></span><span class="nf">glimpse</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span><span class="p">)</span>
 </pre></div>
 
@@ -191,74 +203,62 @@ The post caught my attention for three reasons: it presented a falsifiable hypot
 </pre></div>
 
 
-<p>Combine the 2014-2018 data with the 2019-2020 data and perform some pre-processing like renaming and subsetting columns</p>
+<p>NCHS datasets often contain mortality data for more  geographic regions than just U.S. states (e.g., national data, or data from Puerto Rico and New York City). We want to filter to only data in the 50 states, the District of Columbia, and the United States. Create a variable leveraging the <code>R</code> built-in <code>state.name</code> to create a list of all state names, the District of Columbia, and the United States and filter mortality data with this list</p>
+<div class="highlight"><pre><span></span><span class="n">state.name_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">,</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
+<span class="n">state.abb_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.abb</span><span class="p">,</span> <span class="s">&quot;DC&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Our goal is to create a yearly 1999 to 2020 mortality data by combining the yearly mortality data from 1999 to 2017 with the weekly 2014 to 2018 data and the weekly 2019 to 2020 data. First, we perform some pre-processing by (1) renaming columns, (2) filtering to only the "All causes" and regions captured in <code>state.name_dc_us</code> list, and (3) subsetting columns.</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2017_subset</span> <span class="o">=</span> <span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">%&gt;%</span>
+  <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;state&#39;</span><span class="p">,</span> <span class="s">&#39;all_deaths&#39;</span><span class="o">=</span><span class="s">&#39;deaths&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">cause_name</span><span class="o">==</span><span class="s">&quot;All causes&quot;</span> <span class="o">&amp;</span> <span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Then we combine the weekly 2014-2018 data with the 2019-2020 data with similar pre-processing.</p>
 <div class="highlight"><pre><span></span><span class="n">weekly_deaths_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">jurisdiction_of_occurrence</span><span class="p">,</span> <span class="n">mmwryear</span><span class="p">,</span> <span class="n">allcause</span><span class="p">,</span> <span class="n">naturalcause</span><span class="p">,</span> <span class="n">weekendingdate</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause&#39;</span><span class="o">=</span><span class="s">&#39;allcause&#39;</span><span class="p">,</span> <span class="s">&#39;natural_cause&#39;</span><span class="o">=</span><span class="s">&#39;naturalcause&#39;</span><span class="p">,</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">jurisdiction_of_occurrence</span><span class="p">,</span> <span class="n">mmwryear</span><span class="p">,</span> <span class="n">allcause</span><span class="p">,</span> <span class="n">weekendingdate</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause_deaths&#39;</span><span class="o">=</span><span class="s">&#39;allcause&#39;</span><span class="p">,</span>
          <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">,</span> <span class="s">&#39;week_ending_date&#39;</span> <span class="o">=</span> <span class="s">&#39;weekendingdate&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">week_ending_date</span> <span class="o">=</span> <span class="nf">as.character</span><span class="p">(</span><span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="nf">rbind</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span> <span class="o">%&gt;%</span>
-          <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-          <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause</span><span class="p">,</span> <span class="n">natural_cause</span><span class="p">,</span> <span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
+          <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause_deaths&#39;</span><span class="o">=</span><span class="s">&#39;all_cause&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+          <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause_deaths</span><span class="p">,</span> <span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The <code>weekly_deaths_2014_2020</code> dataset contains mortality data for more than just U.S. states (specifically, national data, Puerto Rico data and data from New York city). We want to filter to only data in the 50 states and the District of Columbia. Create a variable leveraging the <code>R</code> built-in <code>state.name</code> to create a list of all state names and the District of Columbia and filter weekly mortality data with this list</p>
-<div class="highlight"><pre><span></span><span class="n">state.name_dc</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">)</span>
-<span class="n">state.abb_dc</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.abb</span><span class="p">,</span> <span class="s">&quot;DC&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Create two filtered data sets. One with only weekly state (and District of Columbia) data and another data set with only weekly national mortality data</p>
-<div class="highlight"><pre><span></span><span class="n">weekly_deaths_by_state_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc</span><span class="p">)</span>
-
-<span class="n">weekly_deaths_by_national_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span> <span class="o">==</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Create yearly mortality data for states and national data set</p>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_state_2014_2020</span> <span class="o">%&gt;%</span>
+<p>Create yearly mortality data for states and U.S. from 2018 to 2020</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_2018_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2018</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">all_cause_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">all_cause</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span>
-         <span class="n">natural_cause_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">natural_cause</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause_deaths</span><span class="p">,</span> <span class="n">natural_cause_deaths</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">distinct</span><span class="p">()</span>
-
-<span class="n">yearly_deaths_by_national_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_national_2014_2020</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">all_cause_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">all_cause</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span>
-         <span class="n">natural_cause_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">natural_cause</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause_deaths</span><span class="p">,</span> <span class="n">natural_cause_deaths</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">distinct</span><span class="p">()</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">all_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">all_cause_deaths</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">distinct</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">ungroup</span><span class="p">()</span>
 </pre></div>
 
 
-<p>View of <code>yearly_deaths_by_state_2014_2020</code></p>
-<div class="highlight"><pre><span></span><span class="err">## # A tibble: 6 x 4</span>
-<span class="err">##   state_name  year all_cause_deaths natural_cause_deaths</span>
-<span class="err">##   &lt;chr&gt;      &lt;dbl&gt;            &lt;dbl&gt;                &lt;dbl&gt;</span>
-<span class="err">## 1 Alabama     2014            47019                43498</span>
-<span class="err">## 2 Alabama     2015            49054                45257</span>
-<span class="err">## 3 Alabama     2016            51137                47012</span>
-<span class="err">## 4 Alabama     2017            52140                47897</span>
-<span class="err">## 5 Alabama     2018            53158                49061</span>
-<span class="err">## 6 Alabama     2019            53055                48842</span>
+<p>Now we can produce a yearly mortality dataset for states and U.S. from 1999 to 2020 by combining our two yearly datasets from 1999 to 2017 and 2018 to 2020</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2017_subset</span><span class="p">,</span>
+                                         <span class="n">yearly_deaths_by_state_2018_2020</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">arrange</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
 </pre></div>
 
 
-<p>View of <code>yearly_deaths_by_national_2014_2020</code></p>
-<div class="highlight"><pre><span></span><span class="err">## # A tibble: 6 x 4</span>
-<span class="err">##   state_name     year all_cause_deaths natural_cause_deaths</span>
-<span class="err">##   &lt;chr&gt;         &lt;dbl&gt;            &lt;dbl&gt;                &lt;dbl&gt;</span>
-<span class="err">## 1 United States  2014          2646843              2441884</span>
-<span class="err">## 2 United States  2015          2698943              2481524</span>
-<span class="err">## 3 United States  2016          2731848              2496252</span>
-<span class="err">## 4 United States  2017          2810935              2561934</span>
-<span class="err">## 5 United States  2018          2839076              2592261</span>
-<span class="err">## 6 United States  2019          2852609              2599798</span>
+<p>View of <code>yearly_deaths_by_state_1999_2020</code></p>
+<div class="highlight"><pre><span></span><span class="err">## # A tibble: 6 x 3</span>
+<span class="err">##   state_name  year all_deaths</span>
+<span class="err">##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
+<span class="err">## 1 Alabama     1999      44806</span>
+<span class="err">## 2 Alaska      1999       2708</span>
+<span class="err">## 3 Arizona     1999      40050</span>
+<span class="err">## 4 Arkansas    1999      27925</span>
+<span class="err">## 5 California  1999     229380</span>
+<span class="err">## 6 Colorado    1999      27114</span>
 </pre></div>
 
 
