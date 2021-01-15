@@ -90,14 +90,14 @@
         <!-- Content -->
     <div class="container content">
         <h1>Covid Mortality and Disinformation - (Part 2)</h1>
-<p>In the previous post we used <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a> to download mortality data from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) from 1999 to 2020.</p>
-<p>The goal of this post is to pair the mortality data with population data from the same time period to create mortality rates. <a href="https://en.wikipedia.org/wiki/Mortality_rate">Mortality rates</a> (also known as death rates) are a scaled metric that capture the amount of deaths in a population. Typically that scaled population expresses the deaths per 1,000 or 100,000 people in the population (e.g., the mortality rate in US in 2003 was 832 deaths per 100,000). We will combine 3 Census data sets to get U.S. population estimates from 1999 to 2020.</p>
+<p>In the <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-1.html">previous post</a> we used <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a> to download mortality data from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) from 1999 to 2020.</p>
+<p>The goal of this post is to pair the mortality data with population data from the same time period to create mortality rates. <a href="https://en.wikipedia.org/wiki/Mortality_rate">Mortality rates</a> (also known as death rates) are a scaled metric that capture the amount of deaths in a population. Typically that scaled population expresses the deaths per 1,000 or 100,000 people in the population (e.g., the mortality rate in US in 2000 was 854 deaths per 100,000). We will combine 3 Census data sets to get U.S. population estimates from 1999 to 2020.</p>
 <div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 </pre></div>
 
 
-<p>Use the <code>readr</code> package (part of the <a href="https://www.tidyverse.org/">Tidyverse</a>) go from census urls of .csv data to create data frames of census data</p>
+<p>Use the <code>readr</code> package (part of the <a href="https://www.tidyverse.org/">Tidyverse</a>) to go from census urls of .csv data to create data frames of census data</p>
 <ul>
 <li>census urls</li>
 </ul>
@@ -134,13 +134,9 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">state.name_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">,</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
-<span class="n">state.abb_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.abb</span><span class="p">,</span> <span class="s">&quot;DC&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">)</span>
-</pre></div>
-
-
+<p>Let's do some pre-processing and <a href="https://www.tutorialspoint.com/r/r_data_reshaping.htm">reshaping of the data</a> to create a wide data set. Typically, record entry is done using a long data format where multiple variables are stored in one column. However, when analyses need to be performed on long data in a sequential way, for instance, in a time-series, the data needs to be wide. Wide data has each variable occupy it's own column instead of sharing a column as in long data.</p>
 <ul>
-<li>pre-processing to select last month of data in 1999 and all age groups</li>
+<li>pre-process and reshape data by selecting last month of data in 1999 and all age groups</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="n">national_pop_1999_wide</span> <span class="o">=</span> <span class="n">national_pop_1999</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">date</span><span class="o">==</span><span class="s">&quot;1999-12-01&quot;</span> <span class="o">&amp;</span> <span class="n">age_group</span><span class="o">==</span><span class="s">&quot;All Age&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
@@ -151,7 +147,7 @@
 
 
 <ul>
-<li>pre-processing 2000 to 2010 data by filtering on age group that encompasses the entire population</li>
+<li>pre-process 2000 to 2010 data by filtering on age group that encompasses the entire population</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="n">national_pop_2000_2010_filtered</span> <span class="o">=</span> <span class="n">national_pop_2000_2010</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
@@ -164,13 +160,20 @@
 </pre></div>
 
 
-<p>create wide data set</p>
-<p>Why wide data?</p>
+<ul>
+<li>use <code>reshape</code> library to transform 2000 to 2010 census data from long to wide format</li>
+</ul>
 <div class="highlight"><pre><span></span><span class="n">national_pop_2000_2010_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">national_pop_2000_2010_filtered</span><span class="p">,</span>
                                               <span class="n">state_name</span>  <span class="o">~</span> <span class="n">variable</span><span class="p">,</span>
                                               <span class="n">value.var</span> <span class="o">=</span> <span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="n">fun.aggregate</span> <span class="o">=</span> <span class="n">sum</span><span class="p">)</span>
+</pre></div>
 
-<span class="n">national_pop_2010_2020_wide</span> <span class="o">=</span> <span class="n">national_pop_2010_2020</span> <span class="o">%&gt;%</span>
+
+<ul>
+<li>subset 2010 to 2020 data to include on US data and rename columns to match 1999 to 2010 data</li>
+<li>subset will be in wide form</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">national_pop_2010_2020_wide</span> <span class="o">=</span> <span class="n">national_pop_2010_2020</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">NAME</span> <span class="o">%in%</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&quot;state_fips&quot;</span> <span class="o">=</span> <span class="s">&quot;STATE&quot;</span><span class="p">,</span>  <span class="s">&quot;state_name&quot;</span> <span class="o">=</span> <span class="s">&quot;NAME&quot;</span><span class="p">,</span> <span class="s">&quot;census_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;CENSUS2010POP&quot;</span><span class="p">,</span>
          <span class="s">&quot;base_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;ESTIMATESBASE2010&quot;</span><span class="p">,</span> <span class="s">&quot;pop_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2010&quot;</span><span class="p">,</span>
