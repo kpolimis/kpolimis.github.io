@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Covid Mortality and Disinformation - (Part 4) In the previous two posts we downloaded mortality data from the National Center for Health Statistics (NCHS) and population data from the Census from...">
+        <meta name="description" content="Covid Mortality and Disinformation - (Part 4) As part of our investigation into mortality rates reported on social media and mortality data created by combining government data sources, we&#39;ve now...">
         <meta name="keywords" content="">
         <link rel="icon" href="./favicon.ico">
         <!-- Canonical -->
@@ -70,7 +70,7 @@
               <div class="col-lg-12">
                   <div class="header-content">
                       <h1 class="header-title">COVID-19 Mortality and Disinformation - Part 4</h1>
-                      <p class="header-date"> <a href="./author/kivan-polimis.html">Kivan Polimis</a>, Wed 13 January 2021,  <a href="./category/tutorials.html">Tutorials</a></p>
+                      <p class="header-date"> <a href="./author/kivan-polimis.html">Kivan Polimis</a>, Sun 17 January 2021,  <a href="./category/tutorials.html">Tutorials</a></p>
                       <div class="header-underline"></div>
                       <div class="clearfix"></div>
                       <p class="pull-right header-tags">
@@ -90,7 +90,7 @@
         <!-- Content -->
     <div class="container content">
         <h1>Covid Mortality and Disinformation - (Part 4)</h1>
-<p>In the previous two posts we downloaded mortality data from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) and population data from the Census from 1999 to 2020</p>
+<p>As part of our investigation into mortality rates reported on social media and mortality data created by combining government data sources, we've now completed 3 steps. First, we <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-1.html">downloaded mortality data</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) from 1999 to 2020. Then we <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-2.html">downloaded population data</a> from the Census from 1999 to 2020. Using the mortality and population data, we <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-3.html">created mortality rates</a>. Now that we have mortality rates, we can compare the mortality data we have with the mortality data reported on social media that spurred this blog series.</p>
 <p>load libraries</p>
 <div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
@@ -99,79 +99,122 @@
 </pre></div>
 
 
+<p>Our mortality data is stores in the .csv <code>mortality_time_series_national.csv</code>. I manually coded the table reported in the social media blog post in the .csv <code>social_media_mortality_data.csv</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">mortality_time_series_national</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;output/mortality_time_series_national.csv&quot;</span><span class="p">))</span>
 <span class="n">social_media_mortality_data</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/social_media_mortality_data.csv&quot;</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nf">names</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">)</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">social_media_mortality_data</span><span class="p">)</span>
-</pre></div>
-
-
+<p>Let's add a column <code>source</code> to each dataset so that we can tell the data sources apart when we create a comparison data set</p>
 <div class="highlight"><pre><span></span><span class="n">mortality_time_series_national</span><span class="o">$</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;CDC &amp; Census&quot;</span>
 <span class="n">social_media_mortality_data</span><span class="o">$</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;Social Media&quot;</span>
-<span class="n">mortality_comparison_data_long</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">social_media_mortality_data</span><span class="p">)</span>
 </pre></div>
 
 
+<p>Quick look at the datasets. We can see that they have identical column names and the same amount of observations.</p>
+<div class="highlight"><pre><span></span><span class="nf">glimpse</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">)</span>
+<span class="nf">glimpse</span><span class="p">(</span><span class="n">social_media_mortality_data</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">## Rows: 44</span>
+<span class="err">## Columns: 5</span>
+<span class="err">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
+<span class="err">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
+<span class="err">## $ value      &lt;dbl&gt; 280466621, 281424600, 284968955, 287625193, 290107933, 2...</span>
+<span class="err">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
+<span class="err">## $ source     &lt;chr&gt; &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; C...</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">## Rows: 44</span>
+<span class="err">## Columns: 5</span>
+<span class="err">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
+<span class="err">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
+<span class="err">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
+<span class="err">## $ value      &lt;dbl&gt; 279040168, 281421906, 284968955, 287625193, 290107933, 2...</span>
+<span class="err">## $ source     &lt;chr&gt; &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social ...</span>
+</pre></div>
+
+
+<p>Combine our curated mortality data with social media mortality data into one long mortality dataset.</p>
+<div class="highlight"><pre><span></span><span class="n">mortality_comparison_data_long</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">social_media_mortality_data</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Create a wide combined mortality dataset and add three comparison variables: (1) the mortality rate, (2) the mortality rate lag, and (3) the rate of change for the mortality rate</p>
 <div class="highlight"><pre><span></span><span class="n">mortality_comparison_data_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">mortality_comparison_data_long</span><span class="p">,</span> <span class="n">state_name</span> <span class="o">+</span> <span class="n">year</span> <span class="o">+</span> <span class="n">source</span> <span class="o">~</span> <span class="n">variable</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">mortality_rate</span> <span class="o">=</span> <span class="nf">round</span><span class="p">((</span><span class="n">all_deaths</span><span class="o">/</span><span class="n">pop_estimate</span><span class="p">)</span><span class="o">*</span><span class="m">100000</span><span class="p">),</span>
          <span class="n">mortality_rate_lag</span> <span class="o">=</span> <span class="nf">lag</span><span class="p">(</span><span class="n">mortality_rate</span><span class="p">,</span> <span class="n">order_by</span> <span class="o">=</span> <span class="n">year</span><span class="p">),</span>
-         <span class="n">mortality_rate_roc</span> <span class="o">=</span> <span class="m">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">mortality_rate</span> <span class="o">-</span> <span class="n">mortality_rate_lag</span><span class="p">)</span><span class="o">/</span><span class="n">mortality_rate_lag</span><span class="p">)</span>
+         <span class="n">mortality_rate_roc</span> <span class="o">=</span> <span class="p">(</span><span class="n">mortality_rate</span> <span class="o">-</span> <span class="n">mortality_rate_lag</span><span class="p">)</span><span class="o">/</span><span class="n">mortality_rate_lag</span><span class="p">)</span>
 </pre></div>
 
 
+<p>Now we can plot the mortality rate by data source. The mortality rates are near identical with the exception of 2020 (more on this later)</p>
 <div>
 <img src="images/us_mortality_rate_plot.png" alt="Rate of Change: US Mortality Rate Change from 1999 to 2020">
 </div>
 
-<div>
-<img src="images/us_mortality_rate_roc_plot.png" alt="Rate of Change: US Mortality Rate Change from 1999 to 2020">
-</div>
-
-<div>
-<img src="images/us_mortality_rate_facet_plot.png" alt="US Mortality Rate per 100,000 from 1999 to 2020 (Dual Plots)">
-</div>
-
+<p>Let's create facet plots of the mortality rate by source to better see the trend because they so closely overlap and look like one line for most of the time period</p>
 <div>
 <img src="images/us_mortality_rate_roc_facet_plot.png" alt="Rate of Change: US Mortality Rate of Change from 1999 to 2020 (Dual Plots)">
 </div>
 
-<div class="highlight"><pre><span></span><span class="n">mortality_rate_roc_comparison</span> <span class="o">=</span>  <span class="n">mortality_comparison_data_wide</span> <span class="o">%&gt;%</span>
+<p>Here's a plot of mortality rate's rate of change by data source. Similar to the plot of mortality rate, 2020 is the data point where our data sources differ the most.</p>
+<div>
+<img src="images/us_mortality_rate_roc_plot.png" alt="Rate of Change: US Mortality Rate Change from 1999 to 2020">
+</div>
+
+<p>We can create another facet plot to better separate trends</p>
+<div>
+<img src="images/us_mortality_rate_facet_plot.png" alt="US Mortality Rate per 100,000 from 1999 to 2020 (Dual Plots)">
+</div>
+
+<p>We will compare the Social Media data and Government data by cohort and period. <a href="https://www.publichealth.columbia.edu/research/population-health-methods/age-period-cohort-analysis">Period and cohort analysis</a> is a method common to epidemiology; while we are not using the terms in their exact public health sense, these terms can be helpful for separating time-varying elements. The period comparison will compare the mortality rate of change from 1999 to 2019 with the mortality rate of change from 2020, recalling the central point of contention from our poster that 2020 mortality is inline with the time period 1999 to 2019. Secondly, we will split the time period 1999 to 2020 into 5-year cohorts for a more granular analysis of the trends within proximate years.</p>
+<div class="highlight"><pre><span></span><span class="n">cohort_period_comparisons</span> <span class="o">=</span>  <span class="n">mortality_comparison_data_wide</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">period</span> <span class="o">=</span> <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&lt;</span><span class="m">2020</span><span class="p">,</span><span class="s">&quot;1999-2019&quot;</span><span class="p">,</span> <span class="s">&quot;2020&quot;</span><span class="p">),</span>
          <span class="n">cohort</span> <span class="o">=</span> <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">1999</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2005</span><span class="p">,</span> <span class="s">&quot;1999-2004&quot;</span><span class="p">,</span>
                          <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2005</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2010</span><span class="p">,</span> <span class="s">&quot;2005-2009&quot;</span><span class="p">,</span>
                                 <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2010</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2015</span><span class="p">,</span> <span class="s">&quot;2010-2014&quot;</span><span class="p">,</span>
                                        <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2015</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2020</span><span class="p">,</span> <span class="s">&quot;2015-2019&quot;</span><span class="p">,</span> <span class="s">&quot;2020&quot;</span><span class="p">)))))</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">cohort</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">cohort_mortality_rate_roc</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate_roc</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span><span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">cohort_mortality_rate</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)),</span>
+         <span class="n">cohort_mortality_rate_roc</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate_roc</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span><span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">period_mortality_rate_roc</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate_roc</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">cohort</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">cohort_mortality_rate_roc</span><span class="p">,</span> <span class="n">period_mortality_rate_roc</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">period_mortality_rate</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)),</span>
+         <span class="n">period_mortality_rate_roc</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">mortality_rate_roc</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">cohort</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">cohort_mortality_rate</span><span class="p">,</span> <span class="n">period_mortality_rate</span><span class="p">,</span>
+         <span class="n">cohort_mortality_rate_roc</span><span class="p">,</span> <span class="n">period_mortality_rate_roc</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">distinct</span><span class="p">()</span>
 </pre></div>
 
 
-<!-- Thu Jan 14 19:53:55 2021 -->
+<!-- html table generated in R 3.6.3 by xtable 1.8-4 package -->
+
+<!-- Sat Jan 16 19:31:29 2021 -->
 
 <table border=1>
-<caption align="bottom"> Comparison of US Mortality Rate of Change (ROC) by Data Source, Cohort, and Period </caption>
-<tr> <th> Data Source </th> <th> Cohort </th> <th> Period </th> <th> Cohort Mortality Rate ROC </th> <th> Period Mortality Rate ROC </th>  </tr>
-  <tr> <td> CDC &amp; Census </td> <td> 1999-2004 </td> <td align="center"> 1999-2019 </td> <td align="center"> -0.008 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> CDC &amp; Census </td> <td> 2005-2009 </td> <td align="center"> 1999-2019 </td> <td align="center"> -0.006 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> CDC &amp; Census </td> <td> 2010-2014 </td> <td align="center"> 1999-2019 </td> <td align="center"> 0.008 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> CDC &amp; Census </td> <td> 2015-2019 </td> <td align="center"> 1999-2019 </td> <td align="center"> 0.010 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> CDC &amp; Census </td> <td> 2020 </td> <td align="center"> 2020 </td> <td align="center"> 0.113 </td> <td align="center"> 0.113 </td> </tr>
-  <tr> <td> Social Media </td> <td> 1999-2004 </td> <td align="center"> 1999-2019 </td> <td align="center"> -0.009 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> Social Media </td> <td> 2005-2009 </td> <td align="center"> 1999-2019 </td> <td align="center"> -0.006 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> Social Media </td> <td> 2010-2014 </td> <td align="center"> 1999-2019 </td> <td align="center"> 0.007 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> Social Media </td> <td> 2015-2019 </td> <td align="center"> 1999-2019 </td> <td align="center"> 0.011 </td> <td align="center"> 0.001 </td> </tr>
-  <tr> <td> Social Media </td> <td> 2020 </td> <td align="center"> 2020 </td> <td align="center"> 0.011 </td> <td align="center"> 0.011 </td> </tr>
+<caption align="bottom"> Comparison of US Mortality Rates by Data Source, Cohort, and Period </caption>
+<tr> <th> Data Source </th> <th> Cohort </th> <th> Period </th> <th> Cohort Mortality Rate </th> <th> Period Mortality Rate </th> <th> Cohort Mortality Rate ROC </th> <th> Period Mortality Rate ROC </th>  </tr>
+  <tr> <td> CDC &amp; Census </td> <td> 1999-2004 </td> <td align="center"> 1999-2019 </td> <td align="center"> 845 </td> <td align="center"> 833 </td> <td align="center"> -0.008 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> CDC &amp; Census </td> <td> 2005-2009 </td> <td align="center"> 1999-2019 </td> <td align="center"> 811 </td> <td align="center"> 833 </td> <td align="center"> -0.006 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> CDC &amp; Census </td> <td> 2010-2014 </td> <td align="center"> 1999-2019 </td> <td align="center"> 813 </td> <td align="center"> 833 </td> <td align="center"> 0.008 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> CDC &amp; Census </td> <td> 2015-2019 </td> <td align="center"> 1999-2019 </td> <td align="center"> 860 </td> <td align="center"> 833 </td> <td align="center"> 0.010 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> CDC &amp; Census </td> <td> 2020 </td> <td align="center"> 2020 </td> <td align="center"> 989 </td> <td align="center"> 989 </td> <td align="center"> 0.138 </td> <td align="center"> 0.138 </td> </tr>
+  <tr> <td> Social Media </td> <td> 1999-2004 </td> <td align="center"> 1999-2019 </td> <td align="center"> 845 </td> <td align="center"> 832 </td> <td align="center"> -0.009 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> Social Media </td> <td> 2005-2009 </td> <td align="center"> 1999-2019 </td> <td align="center"> 811 </td> <td align="center"> 832 </td> <td align="center"> -0.006 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> Social Media </td> <td> 2010-2014 </td> <td align="center"> 1999-2019 </td> <td align="center"> 812 </td> <td align="center"> 832 </td> <td align="center"> 0.007 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> Social Media </td> <td> 2015-2019 </td> <td align="center"> 1999-2019 </td> <td align="center"> 859 </td> <td align="center"> 832 </td> <td align="center"> 0.011 </td> <td align="center"> 0.001 </td> </tr>
+  <tr> <td> Social Media </td> <td> 2020 </td> <td align="center"> 2020 </td> <td align="center"> 880 </td> <td align="center"> 880 </td> <td align="center"> 0.011 </td> <td align="center"> 0.011 </td> </tr>
 </table>
+
+<p>In the first blog post of this series, I claimed that (1) the mortality rate in 2020 was almost 20% higher than the period 1999 to 2019 and (2) the rate of change for 2020's mortality rate is 100 times greater than the average rate of change from 1999 to 2019. Now we can see how these numbers were derived. The mortality rate in 2020 was 989 deaths per 100,000 residents while the period mortality rate for 1999 to 2019 was 833 deaths per 100,000 residents. The 2020 mortality rate represents and 18.7% increase from the 1999 to 2019 mortality rate.</p>
+<p>The rate of change comparison is where 2020 sets itself apart. The rate of change for the mortality rate in 2020 was .138 while the period 1999 to 2019 had a rate of change of .001. The 2020 rate of change is 138 times greater than the period rate of change! This is an astounding acceleration in the mortality rate. Moreover, using the social media data, the rate of change in 2020 is vastly different from the time period 1999 to 2019. In the social media data, the rate of change for the mortality rate in 2020 was .011 while the period 1999 to 2019 had a rate of change of .001. With this data set, the 2020 rate of change is 11 times greater than the period rate of change, also cause for alarm.</p>
+<p>Ultimately, the mortality rate conclusions from the social media post are incorrect because the 2020 mortality data is incorrect. The total deaths in 2020 obtained from government data sources was 3,258,883 while the social media post showed 2,913,144 total deaths. The difference between these data sources is 345,739 deaths (11% difference). According to <a href="https://www.cnn.com/2020/12/26/us/1-in-1000-died-coronavirus-timeline/index.html">Johns Hopkins University data</a>, more than 330,000 Americans died from COVID-19, roughly the difference in deaths between the data sources. It appears the author of the social media post used mortality data that did not account for COVID-19 and even with that flawed data set, the 2020 change in mortality rate would still be significantly larger than the average mortality rate (5% greater) or rate of change (11 times greater)</p>
+<p>Aside from conclusions about COVID-19, another important trend emerges from the data. From 1999 to 2009, there were six years were the mortality rate fell and the overall mortality rate for that period declined. However, after 2009, the mortality rate has steadily increased with the largest increase occurring between 2019 and 2020. The changes in mortality rates are reflected in changes in life expectancy and has sparked literature to investigate declines in life expectancy, such as this paper by <a href="https://www.pnas.org/content/112/49/15078">Anne Case and Angus Deaton</a>. Our mortality data is more supportive evidence for why life expectancy has decreased.</p>
 
 
         
