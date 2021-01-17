@@ -103,15 +103,10 @@
 
 <ul>
 <li>read in Census population data</li>
+<li>read in NCHS mortality data</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="n">national_population_1999_2020</span> <span class="o">=</span>  <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/national_population_1999_2020.csv&quot;</span><span class="p">))</span>
-</pre></div>
-
-
-<ul>
-<li>read in NCHS population data</li>
-</ul>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/yearly_deaths_by_state_1999_2020.csv&quot;</span><span class="p">))</span>
+<span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/yearly_deaths_by_state_1999_2020.csv&quot;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -157,7 +152,7 @@
 </pre></div>
 
 
-<p>Now that we have dataset with mortality and population data, we can create a wide data set to calculate mortality rates and rates of change metric for mortality rates</p>
+<p>Now that we have a dataset with mortality and population data, we can create a wide data set to calculate mortality rates and a rate of change metric for the mortality rate</p>
 <ul>
 <li>reshape national mortality and population data into a wide mortality/population dataset from 1999 to 2020</li>
 <li>create mortality rate for each year (y). we will create mortality rates per 100,000 people to compare with the social media post that used the same scale</li>
