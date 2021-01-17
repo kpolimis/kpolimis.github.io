@@ -92,6 +92,9 @@
         <h1>Covid Mortality and Disinformation - (Part 2)</h1>
 <p>In the <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-1.html">previous post</a> we used <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a> to download mortality data from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) from 1999 to 2020.</p>
 <p>The goal of this post is to pair the mortality data with population data from the same time period to create mortality rates. <a href="https://en.wikipedia.org/wiki/Mortality_rate">Mortality rates</a> (also known as death rates) are a scaled metric that capture the amount of deaths in a population. Typically that scaled population expresses the deaths per 1,000 or 100,000 people in the population (e.g., the mortality rate in US in 2000 was 854 deaths per 100,000). We will combine 3 Census data sets to get U.S. population estimates from 1999 to 2020.</p>
+<ul>
+<li>load libraries</li>
+</ul>
 <div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 </pre></div>

@@ -90,8 +90,10 @@
         <!-- Content -->
     <div class="container content">
         <h1>Covid Mortality and Disinformation - (Part 3)</h1>
-<p>In the previous two posts we <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-1.html">downloaded mortality data</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) and <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-2.html">downloaded population data</a> from the Census from 1999 to 2020</p>
-<p>load libraries</p>
+<p>In the previous two posts we <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-1.html">downloaded mortality data</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS) and <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-2.html">downloaded population data</a> from the Census. The goal of this post is to create mortality statistics by combining the mortality data with population data.</p>
+<ul>
+<li>load libraries</li>
+</ul>
 <div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
@@ -119,7 +121,7 @@
 
 
 <ul>
-<li>What are the variable names in each dataset?</li>
+<li>what are the variable names in each dataset?</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="err">##  [1] &quot;state_name&quot;        &quot;pop_estimate_1999&quot; &quot;pop_estimate_2000&quot;</span>
 <span class="err">##  [4] &quot;pop_estimate_2001&quot; &quot;pop_estimate_2002&quot; &quot;pop_estimate_2003&quot;</span>
@@ -137,7 +139,7 @@
 
 
 <ul>
-<li>Create a long data set of mortality data</li>
+<li>reshape mortality and population datasets into long datasets</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020_long</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2020</span><span class="p">,</span> <span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;state_name&quot;</span><span class="p">,</span> <span class="s">&quot;year&quot;</span><span class="p">))</span>
 <span class="n">national_population_1999_2020_long</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">national_population_1999_2020</span><span class="p">,</span> <span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;state_name&quot;</span><span class="p">))</span>
