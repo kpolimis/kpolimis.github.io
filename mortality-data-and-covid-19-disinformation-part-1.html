@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Covid Mortality and Disinformation - (Part 1) Recently, I was scrolling through social media when I saw a post that gave me pause. The social media post is presented below: The post caught my...">
+        <meta name="keywords" content="">
+        <link rel="icon" href="./favicon.ico">
+        <!-- Canonical -->
+        <link rel="canonical" href="./mortality-data-and-covid-19-disinformation-part-1.html">
+        <!-- /Canonical -->
+
+        <title>Mortality Data and COVID-19 Disinformation - Part 1 - Kivan Polimis</title>
+
+        <!-- Stylesheets -->
+        <link href="./theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-104881568-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+        <!-- /Google Analytics -->
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="./"><img class="mr20" src="./images/jade_mountain.png" alt="logo">Kivan Polimis</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="./index.html">Home</a>
+                                <a href="./categories.html">Articles</a>
+                                <a href="./pages/vita.html">Vita</a>
+                                <a href="./pages/software.html">Software</a>
+                                <a href="./pages/projects.html">Projects</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">Mortality Data and COVID-19 Disinformation - Part 1</h1>
+                      <p class="header-date"> <a href="./author/kivan-polimis.html">Kivan Polimis</a>, Thu 07 January 2021,  <a href="./category/tutorials.html">Tutorials</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <h1>Covid Mortality and Disinformation - (Part 1)</h1>
+<p>Recently, I was scrolling through social media when I saw a post that gave me pause. The social media post is presented below:</p>
+<div>
+<img src="images/social_media_mortality_data_screenshot.png" alt="COVID-19 Mortality Data from Social Media">
+</div>
+
+<p>The post caught my attention for three reasons: (1) it presented a falsifiable hypothesis, (2) the conclusion was counter-intuitive, and (3) there was an obvious challenge issued. Anyone reading this that knows me will know that I find falsifiable hypotheses exciting because they deal with evidence and once we agree on the evidence, some hypotheses can be disproven with evidence. Here the falsifiable hypothesis is also the counter-intuitive conclusion, namely that COVID-19 has not affected mortality rates in the United States ("Nothing abnormal [about 2020 mortality rates], corona is like the flu"). What really motivated me to write this blog series was the message being sent in the last sentence of the blog post and the associated references below the table. The implicit challenge was that given government data sources, one could also determine that mortality rates had not changed in the U.S. or other countries. As Barney Stinson would say, "Challenge Accepted!"</p>
+<p>The comparative concept at play in the mortality claims from social media is: "How bad is this year's mortality rate compared to previous mortality rates?". We can operationalize this concept as a rate of change and create it by comparing the morality rate for each year (y) to the mortality rate in the previous year (y-1):</p>
+<div class="math">$$\text{Rate of Change}_{y}= \frac{\text{Mortality Rate}_{y}-\text{Mortality Rate}_{y-1}}{\text{Mortality Rate}_{y-1}}$$</div>
+<p>After creating mortality rate statistics for each year from 1999 to 2020, I concluded that (1) the mortality rate in 2020 was almost 20% higher than the period 1999 to 2019 and (2) the rate of change for 2020's mortality rate is 138 times greater than the average rate of change from 1999 to 2019. In short, the falsifiable hypothesis that was presented in the social media post (2020 mortality rates are normal), was falsified; mortality statistics in 2020 were far from the average for the period 1999 to 2020.</p>
+<p>To lead others interested in getting the data themselves and drawing their own conclusions, I created a multi-part blog series. All code to recreate these analyses are be available on <a href="https://github.com/kpolimis/mortality_data_comparisons">my Github account</a>. This blog post represents the first in an attempt to investigate the COVID-19 mortality claims made on social media. To complete our comparison of mortality statistics from social media with government data, we need to (1) gather U.S. mortality data and (2) gather U.S population data. Then, we need to (3) create mortality rate statistics with these data sources. Lastly, we need to (4) compare the mortality rate statistics from the social media post to the mortality rate statistics obtained from government sources. The rest of this post is dedicated to completing step 1, gather U.S. mortality data.</p>
+<p>Government mortality data is available via the open data portal <a href="https://www.tylertech.com/products/socrata">Socrata</a>. You can sign up for a Socrata account <a href="https://support.socrata.com/hc/en-us/articles/115004055807-Signing-up-for-an-Account">here</a> and create a developer application to programmatically download Socrata data by following these <a href="https://support.socrata.com/hc/en-us/articles/210138558-Generating-an-App-Token">instructions</a></p>
+<p>Once you have established your Socrata Developer credentials, you can leverage an R package that connects to the Socrata API called <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a></p>
+<p>First, let's load the libraries we will need for the analysis</p>
+<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">RSocrata</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Then let's bring in our Socrata credentials from a local file called <code>socrata_app_credentials.yml</code></p>
+<div class="highlight"><pre><span></span><span class="n">socrata_app_credentials</span> <span class="o">=</span> <span class="nf">yaml.load_file</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;credentials/socrata_app_credentials.yml&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<p>contents of <code>socrata_app_credentials.yml</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">app_token</span><span class="o">:</span> <span class="s">&quot;APP_TOKEN&quot;</span>
+<span class="n">email</span><span class="o">:</span> <span class="s">&quot;EMAIL&quot;</span>
+<span class="n">password</span><span class="o">:</span> <span class="s">&quot;PASSWORD&quot;</span>
+</pre></div>
+
+
+<p>Yearly mortality from 1999 to 2020 does not exist in one dataset, so we will need to combine 3 government datasets to create our own data to answer the challenge presented in the social media post. The first government dataset is <a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu">yearly mortality data from 1999 to 2017</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS). The NCHS is a part of the Centers for Disease Control and Prevention (CDC) and provides statistical information for public health policies. The documentation for the NCHS data is available <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">here</a></p>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Yearly Counts of Deaths by State and Select Causes, 1999-2017</span>
+<span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
+  <span class="s">&quot;https://data.cdc.gov/resource/bi63-dtpu.json&quot;</span><span class="p">,</span>
+  <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
+  <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>Then we get <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/3yf8-kanr">weekly state mortality data from 2014-2018</a></p>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2014-2018</span>
+<span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
+  <span class="s">&quot;https://data.cdc.gov/resource/3yf8-kanr.json&quot;</span><span class="p">,</span>
+  <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
+  <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>We follow that up with the <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/muzy-jte6">weekly state mortality data from 2019-2020</a> from NCHS. From the <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">NCHS documentation</a> we learn that the 2019 and 2020 counts of death are provisional and not yet complete because of a data lag:</p>
+<blockquote>
+<p>In general, the births and deaths data we receive from NCHS have a two-year lag. This means that the most recent data we have on births and deaths by geographic and demographic detail for each vintage of estimates refer to the calendar year two years prior to the vintage year. For example, the most current full-detail births and deaths data we used in Vintage 2020 were from calendar year 2018. We also receive preliminary or provisional NCHS total numbers of births and deaths at the national level for the year prior to the vintage (in this example, 2019). Using these data and the data received from the [The Federal-State Cooperative for Population Estimates (FSCPE)], we create short-term projections that approximate the final NCHS data by characteristics, the preliminary NCHS national totals, and the FSCPE data (where available) by geographic distribution. (pg. 4)</p>
+</blockquote>
+<p>This point is important because in the future counts of death may be revised upward or downward and could change the conclusions drawn in this post.</p>
+<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2019-2020</span>
+<span class="n">weekly_deaths_by_state_2019_2020</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
+  <span class="s">&quot;https://data.cdc.gov/resource/muzy-jte6.json&quot;</span><span class="p">,</span>
+  <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
+  <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p><code>glimpse</code> of the yearly mortality dataset</p>
+<div class="highlight"><pre><span></span><span class="nf">glimpse</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">## Rows: 5,616</span>
+<span class="err">## Columns: 34</span>
+<span class="err">## $ jurisdiction_of_occurrence              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alab...</span>
+<span class="err">## $ mmwryear                                &lt;chr&gt; &quot;2019&quot;, &quot;2019&quot;, &quot;2019&quot;, &quot;20...</span>
+<span class="err">## $ mmwrweek                                &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6...</span>
+<span class="err">## $ week_ending_date                        &lt;chr&gt; &quot;2019-01-05&quot;, &quot;2019-01-12&quot;,...</span>
+<span class="err">## $ all_cause                               &lt;chr&gt; &quot;1077&quot;, &quot;1090&quot;, &quot;1114&quot;, &quot;10...</span>
+<span class="err">## $ natural_cause                           &lt;chr&gt; &quot;993&quot;, &quot;994&quot;, &quot;1042&quot;, &quot;994&quot;...</span>
+<span class="err">## $ septicemia_a40_a41                      &lt;chr&gt; &quot;30&quot;, &quot;25&quot;, &quot;22&quot;, &quot;21&quot;, &quot;18...</span>
+<span class="err">## $ malignant_neoplasms_c00_c97             &lt;chr&gt; &quot;198&quot;, &quot;187&quot;, &quot;238&quot;, &quot;165&quot;,...</span>
+<span class="err">## $ diabetes_mellitus_e10_e14               &lt;chr&gt; &quot;22&quot;, &quot;24&quot;, &quot;18&quot;, &quot;22&quot;, &quot;19...</span>
+<span class="err">## $ alzheimer_disease_g30                   &lt;chr&gt; &quot;60&quot;, &quot;49&quot;, &quot;48&quot;, &quot;50&quot;, &quot;52...</span>
+<span class="err">## $ influenza_and_pneumonia_j09_j18         &lt;chr&gt; &quot;21&quot;, &quot;18&quot;, &quot;31&quot;, &quot;22&quot;, &quot;19...</span>
+<span class="err">## $ chronic_lower_respiratory               &lt;chr&gt; &quot;63&quot;, &quot;85&quot;, &quot;80&quot;, &quot;113&quot;, &quot;8...</span>
+<span class="err">## $ other_diseases_of_respiratory           &lt;chr&gt; &quot;14&quot;, &quot;21&quot;, &quot;30&quot;, &quot;14&quot;, &quot;20...</span>
+<span class="err">## $ nephritis_nephrotic_syndrome            &lt;chr&gt; &quot;21&quot;, &quot;13&quot;, &quot;25&quot;, &quot;25&quot;, &quot;24...</span>
+<span class="err">## $ symptoms_signs_and_abnormal             &lt;chr&gt; &quot;27&quot;, &quot;11&quot;, &quot;15&quot;, &quot;23&quot;, &quot;21...</span>
+<span class="err">## $ diseases_of_heart_i00_i09               &lt;chr&gt; &quot;261&quot;, &quot;275&quot;, &quot;283&quot;, &quot;279&quot;,...</span>
+<span class="err">## $ cerebrovascular_diseases                &lt;chr&gt; &quot;53&quot;, &quot;65&quot;, &quot;53&quot;, &quot;56&quot;, &quot;50...</span>
+<span class="err">## $ covid_19_u071_multiple_cause_of_death   &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...</span>
+<span class="err">## $ covid_19_u071_underlying_cause_of_death &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...</span>
+<span class="err">## $ flag_otherresp                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_otherunk                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_nephr                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_inflpn                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_cov19mcod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_cov19ucod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_sept                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_diab                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_alz                                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_clrd                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_stroke                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_hd                                 &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_neopl                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_natcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+<span class="err">## $ flag_allcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
+</pre></div>
+
+
+<p>NCHS datasets often contain mortality data for more  geographic regions than just U.S. states (e.g., national data, or data from Puerto Rico and New York City). We want to filter to only data in the 50 states, the District of Columbia, and the United States. Create a variable leveraging the <code>R</code> built-in <code>state.name</code> to create a list of all state names, the District of Columbia, and the United States and filter mortality data with this list</p>
+<div class="highlight"><pre><span></span><span class="n">state.name_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">,</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
+<span class="n">state.abb_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.abb</span><span class="p">,</span> <span class="s">&quot;DC&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Our goal is to create a yearly 1999 to 2020 mortality data by combining the yearly mortality data from 1999 to 2017 with the weekly 2014 to 2018 data and the weekly 2019 to 2020 data. First, we perform some pre-processing by (1) renaming columns, (2) filtering to include only the "All causes" deaths data and regions captured in <code>state.name_dc_us</code> list, and (3) subsetting columns.</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2017_subset</span> <span class="o">=</span> <span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">%&gt;%</span>
+  <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;state&#39;</span><span class="p">,</span> <span class="s">&#39;all_deaths&#39;</span><span class="o">=</span><span class="s">&#39;deaths&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">cause_name</span><span class="o">==</span><span class="s">&quot;All causes&quot;</span> <span class="o">&amp;</span> <span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Then we combine the weekly 2014-2018 data with the 2019-2020 data with similar pre-processing.</p>
+<div class="highlight"><pre><span></span><span class="n">weekly_deaths_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">jurisdiction_of_occurrence</span><span class="p">,</span> <span class="n">mmwryear</span><span class="p">,</span> <span class="n">allcause</span><span class="p">,</span> <span class="n">weekendingdate</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause_deaths&#39;</span><span class="o">=</span><span class="s">&#39;allcause&#39;</span><span class="p">,</span>
+         <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">,</span> <span class="s">&#39;week_ending_date&#39;</span> <span class="o">=</span> <span class="s">&#39;weekendingdate&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">week_ending_date</span> <span class="o">=</span> <span class="nf">as.character</span><span class="p">(</span><span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">rbind</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span> <span class="o">%&gt;%</span>
+          <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span>
+                 <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause_deaths&#39;</span><span class="o">=</span><span class="s">&#39;all_cause&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+          <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause_deaths</span><span class="p">,</span> <span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">arrange</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Aggregate weekly mortality data by year and create yearly mortality data for states and U.S. from 2018 to 2020</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_2018_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2018</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">all_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">all_cause_deaths</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">distinct</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">ungroup</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Now we can produce a yearly mortality dataset for states and U.S. from 1999 to 2020 by combining our two yearly datasets from 1999 to 2017 and 2018 to 2020</p>
+<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2017_subset</span><span class="p">,</span>
+                                         <span class="n">yearly_deaths_by_state_2018_2020</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">arrange</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+</pre></div>
+
+
+<p>View of <code>yearly_deaths_by_state_1999_2020</code></p>
+<div class="highlight"><pre><span></span><span class="err">## # A tibble: 6 x 3</span>
+<span class="err">##   state_name  year all_deaths</span>
+<span class="err">##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
+<span class="err">## 1 Alabama     1999      44806</span>
+<span class="err">## 2 Alaska      1999       2708</span>
+<span class="err">## 3 Arizona     1999      40050</span>
+<span class="err">## 4 Arkansas    1999      27925</span>
+<span class="err">## 5 California  1999     229380</span>
+<span class="err">## 6 Colorado    1999      27114</span>
+</pre></div>
+
+
+<p>In the <a href="http://kivanpolimis.com/covid-19-mortality-and-disinformation-part-2.html">next blog post</a>, we will gather the population U.S. population data necessary to create mortality rate statistics.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="./index.html">Home</a></li>
+                            <li><a href="./categories.html">Articles</a></li>
+                            <li><a href="./pages/vita.html">Vita</a></li>
+                            <li><a href="./pages/software.html">Software</a></li>
+                            <li><a href="./pages/projects.html">Projects</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; Kivan Polimis 2021</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>
