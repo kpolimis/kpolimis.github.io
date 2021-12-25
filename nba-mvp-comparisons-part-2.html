@@ -100,7 +100,6 @@
 </script>
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-
 <p></head></p>
 <h1>NBA MVP Comparisons - Part 2</h1>
 <h2>Part 2</h2>
@@ -208,12 +207,11 @@ language such as robbed/robbery.</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><span class="err">RMSE = function(actual, predicted) {</span>
-<span class="err">  RMSE = sqrt(sum(mean(actual-predicted)^2))</span>
-<span class="err">  return(RMSE)</span>
-<span class="err">  }</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="nv">RMSE</span> <span class="o">=</span> <span class="nv">function</span><span class="ss">(</span><span class="nv">actual</span>, <span class="nv">predicted</span><span class="ss">)</span> {
+  <span class="nv">RMSE</span> <span class="o">=</span> <span class="nv">sqrt</span><span class="ss">(</span><span class="nv">sum</span><span class="ss">(</span><span class="nv">mean</span><span class="ss">(</span><span class="nv">actual</span><span class="o">-</span><span class="nv">predicted</span><span class="ss">)</span><span class="o">^</span><span class="mi">2</span><span class="ss">))</span>
+  <span class="k">return</span><span class="ss">(</span><span class="nv">RMSE</span><span class="ss">)</span>
+  }
+</code></pre></div>
 
 <table style="width:53%;">
 <caption>RMSE Table</caption>
@@ -274,12 +272,11 @@ for this analysis, there were no ties.</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
-<span class="err">  group_by(Year) %&gt;% </span>
-<span class="err">  mutate(`LDA MVP` = ifelse(`LDA Prediction` == max(`LDA Prediction`), 1,</span>
-<span class="err">                     ifelse(`LDA Prediction` != max(`LDA Prediction`), 0,0)))</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>mvp_finalist_data = mvp_finalist_data %&gt;% 
+  group_by(Year) %&gt;% 
+  mutate(`LDA MVP` = ifelse(`LDA Prediction` == max(`LDA Prediction`), 1,
+                     ifelse(`LDA Prediction` != max(`LDA Prediction`), 0,0)))
+</code></pre></div>
 
 <ul>
 <li>What did the LDA model do well?<ul>
@@ -650,10 +647,9 @@ Identify controversial MVPs</p>
 </ul>
 <!-- -->
 
-<div class="highlight"><pre><span></span><span class="err">mvp_finalist_data = mvp_finalist_data %&gt;% </span>
-<span class="err">  mutate(Residual = abs(`Vote Share`-`LDA Prediction`))</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>mvp_finalist_data = mvp_finalist_data %&gt;% 
+  mutate(Residual = abs(`Vote Share`-`LDA Prediction`))
+</code></pre></div>
 
 <table>
 <caption>Controversial MVPs</caption>
@@ -930,11 +926,14 @@ Identify controversial MVPs</p>
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -948,6 +947,8 @@ Identify controversial MVPs</p>
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -968,6 +969,8 @@ Identify controversial MVPs</p>
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>

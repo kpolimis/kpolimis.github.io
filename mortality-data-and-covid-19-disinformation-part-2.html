@@ -95,64 +95,58 @@
 <ul>
 <li>load libraries</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Use the <code>readr</code> package (part of the <a href="https://www.tidyverse.org/packages/">Tidyverse</a>) to go from census urls of .csv data to create data frames of census data</p>
 <ul>
 <li>census urls</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_1999_url</span> <span class="o">=</span> <span class="s">&quot;https://www2.census.gov/programs-surveys/popest/datasets/1990-2000/intercensal/national/us-est90int-07-1999.csv&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_1999_url</span> <span class="o">=</span> <span class="s">&quot;https://www2.census.gov/programs-surveys/popest/datasets/1990-2000/intercensal/national/us-est90int-07-1999.csv&quot;</span>
 <span class="n">national_pop_2000_2010_url</span> <span class="o">=</span> <span class="s">&quot;https://www2.census.gov/programs-surveys/popest/datasets/2000-2010/intercensal/national/us-est00int-alldata-5yr.csv&quot;</span>
 <span class="n">national_2010_2020_pop_url</span> <span class="o">=</span> <span class="s">&quot;https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/national/totals/nst-est2020.csv&quot;</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>create data frames from census urls and do some column pre-processing</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_1999</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="n">national_pop_1999_url</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_1999</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="n">national_pop_1999_url</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span>
                              <span class="n">col_names</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;age_group&quot;</span><span class="p">,</span> <span class="s">&quot;total_population&quot;</span><span class="p">,</span>
                                            <span class="s">&quot;male_population&quot;</span><span class="p">,</span> <span class="s">&quot;female_population&quot;</span><span class="p">),</span>
                              <span class="n">col_types</span> <span class="o">=</span> <span class="nf">cols</span><span class="p">(</span><span class="n">date</span>  <span class="o">=</span> <span class="nf">col_date</span><span class="p">(</span><span class="s">&quot;%B %d, %Y&quot;</span><span class="p">)))</span>
 <span class="n">national_pop_2000_2010</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="n">national_pop_2000_2010_url</span><span class="p">)</span>
 <span class="n">national_pop_2010_2020</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="n">national_2010_2020_pop_url</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We know the column names of the <code>national_pop_1999</code> dataframe because we manually added them. What are the column names for other population data?</p>
-<div class="highlight"><pre><span></span><span class="nf">names</span><span class="p">(</span><span class="n">national_pop_2000_2010</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">names</span><span class="p">(</span><span class="n">national_pop_2000_2010</span><span class="p">)</span>
 <span class="nf">names</span><span class="p">(</span><span class="n">national_pop_2010_2020</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
-
-<div class="highlight"><pre><span></span><span class="err">##  [1] &quot;SUMLEV&quot;            &quot;REGION&quot;            &quot;DIVISION&quot;         </span>
-<span class="err">##  [4] &quot;STATE&quot;             &quot;NAME&quot;              &quot;CENSUS2010POP&quot;    </span>
-<span class="err">##  [7] &quot;ESTIMATESBASE2010&quot; &quot;POPESTIMATE2010&quot;   &quot;POPESTIMATE2011&quot;  </span>
-<span class="err">## [10] &quot;POPESTIMATE2012&quot;   &quot;POPESTIMATE2013&quot;   &quot;POPESTIMATE2014&quot;  </span>
-<span class="err">## [13] &quot;POPESTIMATE2015&quot;   &quot;POPESTIMATE2016&quot;   &quot;POPESTIMATE2017&quot;  </span>
-<span class="err">## [16] &quot;POPESTIMATE2018&quot;   &quot;POPESTIMATE2019&quot;   &quot;POPESTIMATE2020&quot;</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>##  [1] &quot;SUMLEV&quot;            &quot;REGION&quot;            &quot;DIVISION&quot;         
+##  [4] &quot;STATE&quot;             &quot;NAME&quot;              &quot;CENSUS2010POP&quot;    
+##  [7] &quot;ESTIMATESBASE2010&quot; &quot;POPESTIMATE2010&quot;   &quot;POPESTIMATE2011&quot;  
+## [10] &quot;POPESTIMATE2012&quot;   &quot;POPESTIMATE2013&quot;   &quot;POPESTIMATE2014&quot;  
+## [13] &quot;POPESTIMATE2015&quot;   &quot;POPESTIMATE2016&quot;   &quot;POPESTIMATE2017&quot;  
+## [16] &quot;POPESTIMATE2018&quot;   &quot;POPESTIMATE2019&quot;   &quot;POPESTIMATE2020&quot;
+</code></pre></div>
 
 <p>Let's do some pre-processing and <a href="https://www.tutorialspoint.com/r/r_data_reshaping.htm">reshaping of the data</a> to create a wide data set. Typically, record entry is done using a long data format where multiple variables are stored in one column. However, when analyses need to be performed on long data in a sequential way, for instance, in a time-series, the data needs to be wide. Wide data has each variable occupy it's own column instead of sharing a column as in long data.</p>
 <ul>
 <li>pre-process and reshape data by selecting last month of data in 1999 and all age groups</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_1999_wide</span> <span class="o">=</span> <span class="n">national_pop_1999</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_1999_wide</span> <span class="o">=</span> <span class="n">national_pop_1999</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">date</span><span class="o">==</span><span class="s">&quot;1999-12-01&quot;</span> <span class="o">&amp;</span> <span class="n">age_group</span><span class="o">==</span><span class="s">&quot;All Age&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">state_name</span> <span class="o">=</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&quot;pop_estimate_1999&quot;</span><span class="o">=</span><span class="s">&quot;total_population&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">pop_estimate_1999</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>pre-process 2000 to 2010 data by filtering on age group that encompasses the entire population</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_2000_2010_filtered</span> <span class="o">=</span> <span class="n">national_pop_2000_2010</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_2000_2010_filtered</span> <span class="o">=</span> <span class="n">national_pop_2000_2010</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">AGEGRP</span><span class="o">==</span><span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="o">=</span><span class="s">&quot;TOT_POP&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
@@ -160,23 +154,21 @@
   <span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>use <code>reshape</code> library to transform 2000 to 2010 census data from long to wide format</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_2000_2010_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">national_pop_2000_2010_filtered</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_2000_2010_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">national_pop_2000_2010_filtered</span><span class="p">,</span>
                                               <span class="n">state_name</span>  <span class="o">~</span> <span class="n">variable</span><span class="p">,</span>
                                               <span class="n">value.var</span> <span class="o">=</span> <span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="n">fun.aggregate</span> <span class="o">=</span> <span class="n">sum</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>subset 2010 to 2020 data to include on US data and rename columns to match 1999 to 2010 data</li>
 <li>subset will be in wide form</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_pop_2010_2020_wide</span> <span class="o">=</span> <span class="n">national_pop_2010_2020</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_pop_2010_2020_wide</span> <span class="o">=</span> <span class="n">national_pop_2010_2020</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">NAME</span> <span class="o">%in%</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&quot;state_fips&quot;</span> <span class="o">=</span> <span class="s">&quot;STATE&quot;</span><span class="p">,</span>  <span class="s">&quot;state_name&quot;</span> <span class="o">=</span> <span class="s">&quot;NAME&quot;</span><span class="p">,</span> <span class="s">&quot;census_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;CENSUS2010POP&quot;</span><span class="p">,</span>
          <span class="s">&quot;base_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;ESTIMATESBASE2010&quot;</span><span class="p">,</span> <span class="s">&quot;pop_estimate_2010&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2010&quot;</span><span class="p">,</span>
@@ -186,35 +178,32 @@
          <span class="s">&quot;pop_estimate_2017&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2017&quot;</span><span class="p">,</span> <span class="s">&quot;pop_estimate_2018&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2018&quot;</span><span class="p">,</span>
          <span class="s">&quot;pop_estimate_2019&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2019&quot;</span><span class="p">,</span> <span class="s">&quot;pop_estimate_2020&quot;</span> <span class="o">=</span> <span class="s">&quot;POPESTIMATE2020&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">state_fips</span><span class="o">:</span><span class="n">pop_estimate_2020</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>combine all 3 census population data sets into one wide data set of 1999 to 2020 population data. select only columns available across all 3 population data sets</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_1999_2020_pop_wide</span> <span class="o">=</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">national_pop_1999_wide</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_1999_2020_pop_wide</span> <span class="o">=</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">national_pop_1999_wide</span><span class="p">,</span>
                                     <span class="n">national_pop_2000_2010_wide</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">state_name</span><span class="p">),</span>
                                     <span class="n">national_pop_2010_2020_wide</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">state_fips</span><span class="o">:-</span><span class="n">pop_estimate_2010</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>View of population data from 1999 to 2020</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="err">##      state_name pop_estimate_1999 pop_estimate_2000 pop_estimate_2001</span>
-<span class="err">## 1 United States         280466621         281424600         284968955</span>
-<span class="err">##   pop_estimate_2002 pop_estimate_2003 pop_estimate_2004 pop_estimate_2005</span>
-<span class="err">## 1         287625193         290107933         292805298         295516599</span>
-<span class="err">##   pop_estimate_2006 pop_estimate_2007 pop_estimate_2008 pop_estimate_2009</span>
-<span class="err">## 1         298379912         301231207         304093966         306771529</span>
-<span class="err">##   pop_estimate_2010 pop_estimate_2011 pop_estimate_2012 pop_estimate_2013</span>
-<span class="err">## 1         308745538         311583481         313877662         316059947</span>
-<span class="err">##   pop_estimate_2014 pop_estimate_2015 pop_estimate_2016 pop_estimate_2017</span>
-<span class="err">## 1         318386329         320738994         323071755         325122128</span>
-<span class="err">##   pop_estimate_2018 pop_estimate_2019 pop_estimate_2020</span>
-<span class="err">## 1         326838199         328329953         329484123</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>##      state_name pop_estimate_1999 pop_estimate_2000 pop_estimate_2001
+## 1 United States         280466621         281424600         284968955
+##   pop_estimate_2002 pop_estimate_2003 pop_estimate_2004 pop_estimate_2005
+## 1         287625193         290107933         292805298         295516599
+##   pop_estimate_2006 pop_estimate_2007 pop_estimate_2008 pop_estimate_2009
+## 1         298379912         301231207         304093966         306771529
+##   pop_estimate_2010 pop_estimate_2011 pop_estimate_2012 pop_estimate_2013
+## 1         308745538         311583481         313877662         316059947
+##   pop_estimate_2014 pop_estimate_2015 pop_estimate_2016 pop_estimate_2017
+## 1         318386329         320738994         323071755         325122128
+##   pop_estimate_2018 pop_estimate_2019 pop_estimate_2020
+## 1         326838199         328329953         329484123
+</code></pre></div>
 
 <p>In the <a href="http://kivanpolimis.com/mortality-data-and-covid-19-disinformation-part-3.html">next post</a> we will combine the mortality and population data to create mortality rates.</p>
 

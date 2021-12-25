@@ -94,63 +94,56 @@
 <ul>
 <li>load libraries</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>read in Census population data</li>
 <li>read in NCHS mortality data</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">national_population_1999_2020</span> <span class="o">=</span>  <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/national_population_1999_2020.csv&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">national_population_1999_2020</span> <span class="o">=</span>  <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/national_population_1999_2020.csv&quot;</span><span class="p">))</span>
 <span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/yearly_deaths_by_state_1999_2020.csv&quot;</span><span class="p">))</span>
-</pre></div>
+</code></pre></div>
 
-
-<div class="highlight"><pre><span></span><span class="nf">names</span><span class="p">(</span><span class="n">national_population_1999_2020</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">names</span><span class="p">(</span><span class="n">national_population_1999_2020</span><span class="p">)</span>
 <span class="nf">names</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2020</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>what are the variable names in each dataset?</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="err">##  [1] &quot;state_name&quot;        &quot;pop_estimate_1999&quot; &quot;pop_estimate_2000&quot;</span>
-<span class="err">##  [4] &quot;pop_estimate_2001&quot; &quot;pop_estimate_2002&quot; &quot;pop_estimate_2003&quot;</span>
-<span class="err">##  [7] &quot;pop_estimate_2004&quot; &quot;pop_estimate_2005&quot; &quot;pop_estimate_2006&quot;</span>
-<span class="err">## [10] &quot;pop_estimate_2007&quot; &quot;pop_estimate_2008&quot; &quot;pop_estimate_2009&quot;</span>
-<span class="err">## [13] &quot;pop_estimate_2010&quot; &quot;pop_estimate_2011&quot; &quot;pop_estimate_2012&quot;</span>
-<span class="err">## [16] &quot;pop_estimate_2013&quot; &quot;pop_estimate_2014&quot; &quot;pop_estimate_2015&quot;</span>
-<span class="err">## [19] &quot;pop_estimate_2016&quot; &quot;pop_estimate_2017&quot; &quot;pop_estimate_2018&quot;</span>
-<span class="err">## [22] &quot;pop_estimate_2019&quot; &quot;pop_estimate_2020&quot;</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code>##  [1] &quot;state_name&quot;        &quot;pop_estimate_1999&quot; &quot;pop_estimate_2000&quot;
+##  [4] &quot;pop_estimate_2001&quot; &quot;pop_estimate_2002&quot; &quot;pop_estimate_2003&quot;
+##  [7] &quot;pop_estimate_2004&quot; &quot;pop_estimate_2005&quot; &quot;pop_estimate_2006&quot;
+## [10] &quot;pop_estimate_2007&quot; &quot;pop_estimate_2008&quot; &quot;pop_estimate_2009&quot;
+## [13] &quot;pop_estimate_2010&quot; &quot;pop_estimate_2011&quot; &quot;pop_estimate_2012&quot;
+## [16] &quot;pop_estimate_2013&quot; &quot;pop_estimate_2014&quot; &quot;pop_estimate_2015&quot;
+## [19] &quot;pop_estimate_2016&quot; &quot;pop_estimate_2017&quot; &quot;pop_estimate_2018&quot;
+## [22] &quot;pop_estimate_2019&quot; &quot;pop_estimate_2020&quot;
+</code></pre></div>
 
-
-<div class="highlight"><pre><span></span><span class="err">## [1] &quot;state_name&quot; &quot;year&quot;       &quot;all_deaths&quot;</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>## [1] &quot;state_name&quot; &quot;year&quot;       &quot;all_deaths&quot;
+</code></pre></div>
 
 <ul>
 <li>reshape mortality and population datasets into long datasets</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020_long</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2020</span><span class="p">,</span> <span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;state_name&quot;</span><span class="p">,</span> <span class="s">&quot;year&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">yearly_deaths_by_state_1999_2020_long</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2020</span><span class="p">,</span> <span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;state_name&quot;</span><span class="p">,</span> <span class="s">&quot;year&quot;</span><span class="p">))</span>
 <span class="n">national_population_1999_2020_long</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">national_population_1999_2020</span><span class="p">,</span> <span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;state_name&quot;</span><span class="p">))</span>
 <span class="n">national_population_1999_2020_long</span><span class="o">$</span><span class="n">year</span> <span class="o">=</span> <span class="nf">mapply</span><span class="p">(</span><span class="n">FUN</span><span class="o">=</span> <span class="nf">function</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span> <span class="nf">strsplit</span><span class="p">(</span><span class="nf">as.character</span><span class="p">(</span><span class="n">variable</span><span class="p">),</span><span class="s">&quot;estimate_&quot;</span><span class="p">)[[</span><span class="m">1</span><span class="p">]][</span><span class="m">2</span><span class="p">],</span> <span class="n">national_population_1999_2020_long</span><span class="o">$</span><span class="n">variable</span><span class="p">)</span>
 <span class="n">national_population_1999_2020_long</span><span class="o">$</span><span class="n">variable</span> <span class="o">=</span> <span class="nf">mapply</span><span class="p">(</span><span class="n">FUN</span><span class="o">=</span> <span class="nf">function</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span> <span class="nf">substr</span><span class="p">(</span><span class="nf">as.character</span><span class="p">(</span><span class="n">variable</span><span class="p">),</span><span class="m">1</span><span class="p">,</span><span class="m">12</span><span class="p">),</span> <span class="n">national_population_1999_2020_long</span><span class="o">$</span><span class="n">variable</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li>create national mortality and population data</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="n">mortality_time_series_national</span> <span class="o">=</span> <span class="nf">rbindlist</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">national_population_1999_2020_long</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">mortality_time_series_national</span> <span class="o">=</span> <span class="nf">rbindlist</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">national_population_1999_2020_long</span><span class="p">,</span>
                                                 <span class="n">yearly_deaths_by_state_1999_2020_long</span><span class="p">),</span>
                                            <span class="n">use.names</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span><span class="o">==</span><span class="s">&quot;United States&quot;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now that we have a dataset with mortality and population data, we can create a wide data set to calculate mortality rates and a rate of change metric for the mortality rate</p>
 <ul>
@@ -160,19 +153,16 @@
 </ul>
 <div class="math">$$\text{Mortality Rate}_{y}= \frac{\text{All Deaths}_{y}}{\text{Population Estimate}_{y}} * \text{100, 000}$$</div>
 <div class="math">$$\text{Rate of Change}_{y}= \frac{\text{Mortality Rate}_{y}-\text{Mortality Rate}_{y-1}}{\text{Mortality Rate}_{y-1}}$$</div>
-<div class="highlight"><pre><span></span><span class="n">us_mortality_data_1999_2020</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">state_name</span> <span class="o">+</span> <span class="n">year</span> <span class="o">~</span> <span class="n">variable</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">us_mortality_data_1999_2020</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">state_name</span> <span class="o">+</span> <span class="n">year</span> <span class="o">~</span> <span class="n">variable</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">mortality_rate</span> <span class="o">=</span> <span class="nf">round</span><span class="p">((</span><span class="n">all_deaths</span><span class="o">/</span><span class="n">pop_estimate</span><span class="p">)</span><span class="o">*</span><span class="m">100000</span><span class="p">),</span>
          <span class="n">mortality_rate_lag</span> <span class="o">=</span> <span class="nf">lag</span><span class="p">(</span><span class="n">mortality_rate</span><span class="p">,</span> <span class="n">order_by</span> <span class="o">=</span> <span class="n">year</span><span class="p">),</span>
          <span class="n">mortality_rate_roc</span> <span class="o">=</span> <span class="p">(</span><span class="n">mortality_rate</span> <span class="o">-</span> <span class="n">mortality_rate_lag</span><span class="p">)</span><span class="o">/</span><span class="n">mortality_rate_lag</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Let's use the government data to recreate the table from the social media post that spurred this blog series</p>
 <!-- html table generated in R 3.6.3 by xtable 1.8-4 package -->
-
 <!-- Fri Jan 15 16:55:38 2021 -->
-
 <table border=1>
 <caption align="bottom"> US Mortality Rate 1999 to 2020 </caption>
 <tr> <th> Year </th> <th> Population </th> <th> Deaths </th> <th> Mortality Rate </th>  </tr>
@@ -215,11 +205,14 @@
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -233,6 +226,8 @@
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -253,6 +248,8 @@
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>

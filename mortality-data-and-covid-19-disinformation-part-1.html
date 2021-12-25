@@ -103,122 +103,112 @@
 <p>Government mortality data is available via the open data portal <a href="https://www.tylertech.com/products/socrata">Socrata</a>. You can sign up for a Socrata account <a href="https://support.socrata.com/hc/en-us/articles/115004055807-Signing-up-for-an-Account">here</a> and create a developer application to programmatically download Socrata data by following these <a href="https://support.socrata.com/hc/en-us/articles/210138558-Generating-an-App-Token">instructions</a></p>
 <p>Once you have established your Socrata Developer credentials, you can leverage an R package that connects to the Socrata API called <a href="https://cran.r-project.org/web/packages/RSocrata/index.html">RSocrata</a></p>
 <p>First, let's load the libraries we will need for the analysis</p>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">RSocrata</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Then let's bring in our Socrata credentials from a local file called <code>socrata_app_credentials.yml</code></p>
-<div class="highlight"><pre><span></span><span class="n">socrata_app_credentials</span> <span class="o">=</span> <span class="nf">yaml.load_file</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;credentials/socrata_app_credentials.yml&quot;</span><span class="p">))</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">socrata_app_credentials</span> <span class="o">=</span> <span class="nf">yaml.load_file</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;credentials/socrata_app_credentials.yml&quot;</span><span class="p">))</span>
+</code></pre></div>
 
 <p>contents of <code>socrata_app_credentials.yml</code>:</p>
-<div class="highlight"><pre><span></span><span class="n">app_token</span><span class="o">:</span> <span class="s">&quot;APP_TOKEN&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">app_token</span><span class="o">:</span> <span class="s">&quot;APP_TOKEN&quot;</span>
 <span class="n">email</span><span class="o">:</span> <span class="s">&quot;EMAIL&quot;</span>
 <span class="n">password</span><span class="o">:</span> <span class="s">&quot;PASSWORD&quot;</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Yearly mortality from 1999 to 2020 does not exist in one dataset, so we will need to combine 3 government datasets to create our own data to answer the challenge presented in the social media post. The first government dataset is <a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu">yearly mortality data from 1999 to 2017</a> from the <a href="https://www.cdc.gov/nchs/about/50th_anniversary.htm">National Center for Health Statistics</a> (NCHS). The NCHS is a part of the Centers for Disease Control and Prevention (CDC) and provides statistical information for public health policies. The documentation for the NCHS data is available <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">here</a></p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Yearly Counts of Deaths by State and Select Causes, 1999-2017</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Yearly Counts of Deaths by State and Select Causes, 1999-2017</span>
 <span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
   <span class="s">&quot;https://data.cdc.gov/resource/bi63-dtpu.json&quot;</span><span class="p">,</span>
   <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
   <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
   <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
 <span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Then we get <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/3yf8-kanr">weekly state mortality data from 2014-2018</a></p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2014-2018</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2014-2018</span>
 <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
   <span class="s">&quot;https://data.cdc.gov/resource/3yf8-kanr.json&quot;</span><span class="p">,</span>
   <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
   <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
   <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
 <span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We follow that up with the <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/muzy-jte6">weekly state mortality data from 2019-2020</a> from NCHS. From the <a href="https://www2.census.gov/programs-surveys/popest/technical-documentation/methodology/2010-2020/methods-statement-v2020-final.pdf">NCHS documentation</a> we learn that the 2019 and 2020 counts of death are provisional and not yet complete because of a data lag:</p>
 <blockquote>
 <p>In general, the births and deaths data we receive from NCHS have a two-year lag. This means that the most recent data we have on births and deaths by geographic and demographic detail for each vintage of estimates refer to the calendar year two years prior to the vintage year. For example, the most current full-detail births and deaths data we used in Vintage 2020 were from calendar year 2018. We also receive preliminary or provisional NCHS total numbers of births and deaths at the national level for the year prior to the vintage (in this example, 2019). Using these data and the data received from the [The Federal-State Cooperative for Population Estimates (FSCPE)], we create short-term projections that approximate the final NCHS data by characteristics, the preliminary NCHS national totals, and the FSCPE data (where available) by geographic distribution. (pg. 4)</p>
 </blockquote>
 <p>This point is important because in the future counts of death may be revised upward or downward and could change the conclusions drawn in this post.</p>
-<div class="highlight"><pre><span></span><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2019-2020</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#&#39; Weekly Counts of Deaths by State and Select Causes, 2019-2020</span>
 <span class="n">weekly_deaths_by_state_2019_2020</span> <span class="o">&lt;-</span> <span class="nf">read.socrata</span><span class="p">(</span>
   <span class="s">&quot;https://data.cdc.gov/resource/muzy-jte6.json&quot;</span><span class="p">,</span>
   <span class="n">app_token</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">app_token</span><span class="p">,</span>
   <span class="n">email</span> <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">email</span><span class="p">,</span>
   <span class="n">password</span>  <span class="o">=</span> <span class="n">socrata_app_credentials</span><span class="o">$</span><span class="n">password</span>
 <span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p><code>glimpse</code> of the yearly mortality dataset</p>
-<div class="highlight"><pre><span></span><span class="nf">glimpse</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span><span class="p">)</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">glimpse</span><span class="p">(</span><span class="n">weekly_deaths_by_state_2019_2020</span><span class="p">)</span>
+</code></pre></div>
 
-
-<div class="highlight"><pre><span></span><span class="err">## Rows: 5,616</span>
-<span class="err">## Columns: 34</span>
-<span class="err">## $ jurisdiction_of_occurrence              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alab...</span>
-<span class="err">## $ mmwryear                                &lt;chr&gt; &quot;2019&quot;, &quot;2019&quot;, &quot;2019&quot;, &quot;20...</span>
-<span class="err">## $ mmwrweek                                &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6...</span>
-<span class="err">## $ week_ending_date                        &lt;chr&gt; &quot;2019-01-05&quot;, &quot;2019-01-12&quot;,...</span>
-<span class="err">## $ all_cause                               &lt;chr&gt; &quot;1077&quot;, &quot;1090&quot;, &quot;1114&quot;, &quot;10...</span>
-<span class="err">## $ natural_cause                           &lt;chr&gt; &quot;993&quot;, &quot;994&quot;, &quot;1042&quot;, &quot;994&quot;...</span>
-<span class="err">## $ septicemia_a40_a41                      &lt;chr&gt; &quot;30&quot;, &quot;25&quot;, &quot;22&quot;, &quot;21&quot;, &quot;18...</span>
-<span class="err">## $ malignant_neoplasms_c00_c97             &lt;chr&gt; &quot;198&quot;, &quot;187&quot;, &quot;238&quot;, &quot;165&quot;,...</span>
-<span class="err">## $ diabetes_mellitus_e10_e14               &lt;chr&gt; &quot;22&quot;, &quot;24&quot;, &quot;18&quot;, &quot;22&quot;, &quot;19...</span>
-<span class="err">## $ alzheimer_disease_g30                   &lt;chr&gt; &quot;60&quot;, &quot;49&quot;, &quot;48&quot;, &quot;50&quot;, &quot;52...</span>
-<span class="err">## $ influenza_and_pneumonia_j09_j18         &lt;chr&gt; &quot;21&quot;, &quot;18&quot;, &quot;31&quot;, &quot;22&quot;, &quot;19...</span>
-<span class="err">## $ chronic_lower_respiratory               &lt;chr&gt; &quot;63&quot;, &quot;85&quot;, &quot;80&quot;, &quot;113&quot;, &quot;8...</span>
-<span class="err">## $ other_diseases_of_respiratory           &lt;chr&gt; &quot;14&quot;, &quot;21&quot;, &quot;30&quot;, &quot;14&quot;, &quot;20...</span>
-<span class="err">## $ nephritis_nephrotic_syndrome            &lt;chr&gt; &quot;21&quot;, &quot;13&quot;, &quot;25&quot;, &quot;25&quot;, &quot;24...</span>
-<span class="err">## $ symptoms_signs_and_abnormal             &lt;chr&gt; &quot;27&quot;, &quot;11&quot;, &quot;15&quot;, &quot;23&quot;, &quot;21...</span>
-<span class="err">## $ diseases_of_heart_i00_i09               &lt;chr&gt; &quot;261&quot;, &quot;275&quot;, &quot;283&quot;, &quot;279&quot;,...</span>
-<span class="err">## $ cerebrovascular_diseases                &lt;chr&gt; &quot;53&quot;, &quot;65&quot;, &quot;53&quot;, &quot;56&quot;, &quot;50...</span>
-<span class="err">## $ covid_19_u071_multiple_cause_of_death   &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...</span>
-<span class="err">## $ covid_19_u071_underlying_cause_of_death &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...</span>
-<span class="err">## $ flag_otherresp                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_otherunk                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_nephr                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_inflpn                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_cov19mcod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_cov19ucod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_sept                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_diab                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_alz                                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_clrd                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_stroke                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_hd                                 &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_neopl                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_natcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-<span class="err">## $ flag_allcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>## Rows: 5,616
+## Columns: 34
+## $ jurisdiction_of_occurrence              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alab...
+## $ mmwryear                                &lt;chr&gt; &quot;2019&quot;, &quot;2019&quot;, &quot;2019&quot;, &quot;20...
+## $ mmwrweek                                &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6...
+## $ week_ending_date                        &lt;chr&gt; &quot;2019-01-05&quot;, &quot;2019-01-12&quot;,...
+## $ all_cause                               &lt;chr&gt; &quot;1077&quot;, &quot;1090&quot;, &quot;1114&quot;, &quot;10...
+## $ natural_cause                           &lt;chr&gt; &quot;993&quot;, &quot;994&quot;, &quot;1042&quot;, &quot;994&quot;...
+## $ septicemia_a40_a41                      &lt;chr&gt; &quot;30&quot;, &quot;25&quot;, &quot;22&quot;, &quot;21&quot;, &quot;18...
+## $ malignant_neoplasms_c00_c97             &lt;chr&gt; &quot;198&quot;, &quot;187&quot;, &quot;238&quot;, &quot;165&quot;,...
+## $ diabetes_mellitus_e10_e14               &lt;chr&gt; &quot;22&quot;, &quot;24&quot;, &quot;18&quot;, &quot;22&quot;, &quot;19...
+## $ alzheimer_disease_g30                   &lt;chr&gt; &quot;60&quot;, &quot;49&quot;, &quot;48&quot;, &quot;50&quot;, &quot;52...
+## $ influenza_and_pneumonia_j09_j18         &lt;chr&gt; &quot;21&quot;, &quot;18&quot;, &quot;31&quot;, &quot;22&quot;, &quot;19...
+## $ chronic_lower_respiratory               &lt;chr&gt; &quot;63&quot;, &quot;85&quot;, &quot;80&quot;, &quot;113&quot;, &quot;8...
+## $ other_diseases_of_respiratory           &lt;chr&gt; &quot;14&quot;, &quot;21&quot;, &quot;30&quot;, &quot;14&quot;, &quot;20...
+## $ nephritis_nephrotic_syndrome            &lt;chr&gt; &quot;21&quot;, &quot;13&quot;, &quot;25&quot;, &quot;25&quot;, &quot;24...
+## $ symptoms_signs_and_abnormal             &lt;chr&gt; &quot;27&quot;, &quot;11&quot;, &quot;15&quot;, &quot;23&quot;, &quot;21...
+## $ diseases_of_heart_i00_i09               &lt;chr&gt; &quot;261&quot;, &quot;275&quot;, &quot;283&quot;, &quot;279&quot;,...
+## $ cerebrovascular_diseases                &lt;chr&gt; &quot;53&quot;, &quot;65&quot;, &quot;53&quot;, &quot;56&quot;, &quot;50...
+## $ covid_19_u071_multiple_cause_of_death   &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...
+## $ covid_19_u071_underlying_cause_of_death &lt;chr&gt; &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0...
+## $ flag_otherresp                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_otherunk                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_nephr                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_inflpn                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_cov19mcod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_cov19ucod                          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_sept                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_diab                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_alz                                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_clrd                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_stroke                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_hd                                 &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_neopl                              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_natcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+## $ flag_allcause                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,...
+</code></pre></div>
 
 <p>NCHS datasets often contain mortality data for more  geographic regions than just U.S. states (e.g., national data, or data from Puerto Rico and New York City). We want to filter to only data in the 50 states, the District of Columbia, and the United States. Create a variable leveraging the <code>R</code> built-in <code>state.name</code> to create a list of all state names, the District of Columbia, and the United States and filter mortality data with this list</p>
-<div class="highlight"><pre><span></span><span class="n">state.name_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">,</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">state.name_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.name</span><span class="p">,</span> <span class="s">&quot;District of Columbia&quot;</span><span class="p">,</span> <span class="s">&quot;United States&quot;</span><span class="p">)</span>
 <span class="n">state.abb_dc_us</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">state.abb</span><span class="p">,</span> <span class="s">&quot;DC&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Our goal is to create a yearly 1999 to 2020 mortality data by combining the yearly mortality data from 1999 to 2017 with the weekly 2014 to 2018 data and the weekly 2019 to 2020 data. First, we perform some pre-processing by (1) renaming columns, (2) filtering to include only the "All causes" deaths data and regions captured in <code>state.name_dc_us</code> list, and (3) subsetting columns.</p>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2017_subset</span> <span class="o">=</span> <span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">yearly_deaths_by_state_1999_2017_subset</span> <span class="o">=</span> <span class="n">yearly_deaths_by_state_1999_2017</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;state&#39;</span><span class="p">,</span> <span class="s">&#39;all_deaths&#39;</span><span class="o">=</span><span class="s">&#39;deaths&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">cause_name</span><span class="o">==</span><span class="s">&quot;All causes&quot;</span> <span class="o">&amp;</span> <span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Then we combine the weekly 2014-2018 data with the 2019-2020 data with similar pre-processing.</p>
-<div class="highlight"><pre><span></span><span class="n">weekly_deaths_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">weekly_deaths_2014_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_by_state_2014_2018</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">jurisdiction_of_occurrence</span><span class="p">,</span> <span class="n">mmwryear</span><span class="p">,</span> <span class="n">allcause</span><span class="p">,</span> <span class="n">weekendingdate</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="s">&#39;state_name&#39;</span><span class="o">=</span><span class="s">&#39;jurisdiction_of_occurrence&#39;</span><span class="p">,</span> <span class="s">&#39;all_cause_deaths&#39;</span><span class="o">=</span><span class="s">&#39;allcause&#39;</span><span class="p">,</span>
          <span class="s">&#39;year&#39;</span><span class="o">=</span><span class="s">&#39;mmwryear&#39;</span><span class="p">,</span> <span class="s">&#39;week_ending_date&#39;</span> <span class="o">=</span> <span class="s">&#39;weekendingdate&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
@@ -229,39 +219,35 @@
           <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_cause_deaths</span><span class="p">,</span> <span class="n">week_ending_date</span><span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">state_name</span> <span class="o">%in%</span> <span class="n">state.name_dc_us</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Aggregate weekly mortality data by year and create yearly mortality data for states and U.S. from 2018 to 2020</p>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_2018_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">yearly_deaths_by_state_2018_2020</span> <span class="o">=</span> <span class="n">weekly_deaths_2014_2020</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2018</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">all_deaths</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">all_cause_deaths</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">all_deaths</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">distinct</span><span class="p">()</span> <span class="o">%&gt;%</span>
   <span class="nf">ungroup</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now we can produce a yearly mortality dataset for states and U.S. from 1999 to 2020 by combining our two yearly datasets from 1999 to 2017 and 2018 to 2020</p>
-<div class="highlight"><pre><span></span><span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2017_subset</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">yearly_deaths_by_state_1999_2020</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">yearly_deaths_by_state_1999_2017_subset</span><span class="p">,</span>
                                          <span class="n">yearly_deaths_by_state_2018_2020</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>View of <code>yearly_deaths_by_state_1999_2020</code></p>
-<div class="highlight"><pre><span></span><span class="err">## # A tibble: 6 x 3</span>
-<span class="err">##   state_name  year all_deaths</span>
-<span class="err">##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="err">## 1 Alabama     1999      44806</span>
-<span class="err">## 2 Alaska      1999       2708</span>
-<span class="err">## 3 Arizona     1999      40050</span>
-<span class="err">## 4 Arkansas    1999      27925</span>
-<span class="err">## 5 California  1999     229380</span>
-<span class="err">## 6 Colorado    1999      27114</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>## # A tibble: 6 x 3
+##   state_name  year all_deaths
+##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Alabama     1999      44806
+## 2 Alaska      1999       2708
+## 3 Arizona     1999      40050
+## 4 Arkansas    1999      27925
+## 5 California  1999     229380
+## 6 Colorado    1999      27114
+</code></pre></div>
 
 <p>In the <a href="http://kivanpolimis.com/mortality-data-and-covid-19-disinformation-part-2.html">next blog post</a>, we will gather the population U.S. population data necessary to create mortality rate statistics.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
@@ -278,11 +264,14 @@
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -296,6 +285,8 @@
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -316,6 +307,8 @@
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>

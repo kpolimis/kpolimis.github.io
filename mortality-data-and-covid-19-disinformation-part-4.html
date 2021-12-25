@@ -94,65 +94,57 @@
 <ul>
 <li>load libraries</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Our mortality data is in the .csv <code>mortality_time_series_national.csv</code>. I manually coded the table reported in the social media blog post in the .csv <code>social_media_mortality_data.csv</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">mortality_time_series_national</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;output/mortality_time_series_national.csv&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">mortality_time_series_national</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;output/mortality_time_series_national.csv&quot;</span><span class="p">))</span>
 <span class="n">social_media_mortality_data</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="nf">here</span><span class="p">(</span><span class="s">&quot;data/social_media_mortality_data.csv&quot;</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Let's add a column, <code>source</code>, to each dataset so that we can tell the data sources apart when we create a comparison data set</p>
-<div class="highlight"><pre><span></span><span class="n">mortality_time_series_national</span><span class="o">$</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;CDC &amp; Census&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">mortality_time_series_national</span><span class="o">$</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;CDC &amp; Census&quot;</span>
 <span class="n">social_media_mortality_data</span><span class="o">$</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;Social Media&quot;</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Quick look at the datasets. We can see that they have identical column names and the same amount of observations.</p>
-<div class="highlight"><pre><span></span><span class="nf">glimpse</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">glimpse</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">)</span>
 <span class="nf">glimpse</span><span class="p">(</span><span class="n">social_media_mortality_data</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
+<div class="highlight"><pre><span></span><code><span class="c1">## Rows: 44</span>
+<span class="c1">## Columns: 5</span>
+<span class="c1">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
+<span class="c1">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
+<span class="c1">## $ value      &lt;dbl&gt; 280466621, 281424600, 284968955, 287625193, 290107933, 2...</span>
+<span class="c1">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
+<span class="c1">## $ source     &lt;chr&gt; &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; C...</span>
+</code></pre></div>
 
-<div class="highlight"><pre><span></span><span class="err">## Rows: 44</span>
-<span class="err">## Columns: 5</span>
-<span class="err">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
-<span class="err">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
-<span class="err">## $ value      &lt;dbl&gt; 280466621, 281424600, 284968955, 287625193, 290107933, 2...</span>
-<span class="err">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
-<span class="err">## $ source     &lt;chr&gt; &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; Census&quot;, &quot;CDC &amp; C...</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="err">## Rows: 44</span>
-<span class="err">## Columns: 5</span>
-<span class="err">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
-<span class="err">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
-<span class="err">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
-<span class="err">## $ value      &lt;dbl&gt; 279040168, 281421906, 284968955, 287625193, 290107933, 2...</span>
-<span class="err">## $ source     &lt;chr&gt; &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social ...</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="c1">## Rows: 44</span>
+<span class="c1">## Columns: 5</span>
+<span class="c1">## $ state_name &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United States&quot;, &quot;Unit...</span>
+<span class="c1">## $ year       &lt;dbl&gt; 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 20...</span>
+<span class="c1">## $ variable   &lt;chr&gt; &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_estimate&quot;, &quot;pop_est...</span>
+<span class="c1">## $ value      &lt;dbl&gt; 279040168, 281421906, 284968955, 287625193, 290107933, 2...</span>
+<span class="c1">## $ source     &lt;chr&gt; &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social Media&quot;, &quot;Social ...</span>
+</code></pre></div>
 
 <p>Combine our curated mortality data with social media mortality data into one long mortality dataset.</p>
-<div class="highlight"><pre><span></span><span class="n">mortality_comparison_data_long</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">social_media_mortality_data</span><span class="p">)</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">mortality_comparison_data_long</span> <span class="o">=</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">mortality_time_series_national</span><span class="p">,</span> <span class="n">social_media_mortality_data</span><span class="p">)</span>
+</code></pre></div>
 
 <p>Create a wide combined mortality dataset and add three comparison variables: (1) the mortality rate, (2) the mortality rate lag, and (3) the rate of change for the mortality rate</p>
-<div class="highlight"><pre><span></span><span class="n">mortality_comparison_data_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">mortality_comparison_data_long</span><span class="p">,</span> <span class="n">state_name</span> <span class="o">+</span> <span class="n">year</span> <span class="o">+</span> <span class="n">source</span> <span class="o">~</span> <span class="n">variable</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">mortality_comparison_data_wide</span> <span class="o">=</span> <span class="n">reshape2</span><span class="o">::</span><span class="nf">dcast</span><span class="p">(</span><span class="n">mortality_comparison_data_long</span><span class="p">,</span> <span class="n">state_name</span> <span class="o">+</span> <span class="n">year</span> <span class="o">+</span> <span class="n">source</span> <span class="o">~</span> <span class="n">variable</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">arrange</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">mortality_rate</span> <span class="o">=</span> <span class="nf">round</span><span class="p">((</span><span class="n">all_deaths</span><span class="o">/</span><span class="n">pop_estimate</span><span class="p">)</span><span class="o">*</span><span class="m">100000</span><span class="p">),</span>
          <span class="n">mortality_rate_lag</span> <span class="o">=</span> <span class="nf">lag</span><span class="p">(</span><span class="n">mortality_rate</span><span class="p">,</span> <span class="n">order_by</span> <span class="o">=</span> <span class="n">year</span><span class="p">),</span>
          <span class="n">mortality_rate_roc</span> <span class="o">=</span> <span class="p">(</span><span class="n">mortality_rate</span> <span class="o">-</span> <span class="n">mortality_rate_lag</span><span class="p">)</span><span class="o">/</span><span class="n">mortality_rate_lag</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now we can plot the mortality rate by data source. The mortality rates are near identical with the exception of 2020 (more on this later)</p>
 <div>
@@ -175,7 +167,7 @@
 </div>
 
 <p>We will compare the social media mortality data and the mortality data we created by cohort and period. <a href="https://www.publichealth.columbia.edu/research/population-health-methods/age-period-cohort-analysis">Period and cohort analysis</a> is a method common to epidemiology; while we are not using the terms in their exact public health sense, these terms can be helpful for separating time-varying elements. The period comparison will compare the mortality rate of change from 1999 to 2019 with the mortality rate of change from 2020, recalling the central point of contention from the social media post that 2020 mortality is inline with the time period 1999 to 2019. Secondly, we will split the time period 1999 to 2020 into 5-year cohorts for a more granular analysis of the trends within proximate years.</p>
-<div class="highlight"><pre><span></span><span class="n">cohort_period_comparisons</span> <span class="o">=</span>  <span class="n">mortality_comparison_data_wide</span> <span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">cohort_period_comparisons</span> <span class="o">=</span>  <span class="n">mortality_comparison_data_wide</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">period</span> <span class="o">=</span> <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&lt;</span><span class="m">2020</span><span class="p">,</span><span class="s">&quot;1999-2019&quot;</span><span class="p">,</span> <span class="s">&quot;2020&quot;</span><span class="p">),</span>
          <span class="n">cohort</span> <span class="o">=</span> <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">1999</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2005</span><span class="p">,</span> <span class="s">&quot;1999-2004&quot;</span><span class="p">,</span>
                          <span class="nf">ifelse</span><span class="p">(</span><span class="n">year</span><span class="o">&gt;=</span><span class="m">2005</span> <span class="o">&amp;</span> <span class="n">year</span><span class="o">&lt;</span><span class="m">2010</span><span class="p">,</span> <span class="s">&quot;2005-2009&quot;</span><span class="p">,</span>
@@ -191,13 +183,10 @@
   <span class="nf">select</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">cohort</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">cohort_mortality_rate</span><span class="p">,</span> <span class="n">period_mortality_rate</span><span class="p">,</span>
          <span class="n">cohort_mortality_rate_roc</span><span class="p">,</span> <span class="n">period_mortality_rate_roc</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">distinct</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <!-- html table generated in R 3.6.3 by xtable 1.8-4 package -->
-
 <!-- Sat Jan 16 19:31:29 2021 -->
-
 <table border=1>
 <caption align="bottom"> Comparison of US Mortality Rates by Data Source, Cohort, and Period </caption>
 <tr> <th> Data Source </th> <th> Cohort </th> <th> Period </th> <th> Cohort Mortality Rate </th> <th> Period Mortality Rate </th> <th> Cohort Mortality Rate ROC </th> <th> Period Mortality Rate ROC </th>  </tr>
