@@ -16757,7 +16757,7 @@ Freq: A-DEC, Name: triple_double, dtype: float64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Westbrook recorded </span><span class="si">{</span><span class="n">triple_doubles_with_kd</span><span class="si">}</span><span class="s2"> triple doubles in </span><span class="si">{</span><span class="n">triple_double_games_gb_df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">with_kd_mask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> seasons with Kevin Durant as a teammate&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Westbrook recorded </span><span class="si">{</span><span class="n">triple_doubles_without_kd</span><span class="si">}</span><span class="s2"> triple doubles in </span><span class="si">{</span><span class="n">triple_double_games_gb_df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">without_kd_mask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">+ seasons with Kevin Durant as a teammate&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Westbrook has created </span><span class="si">{</span><span class="n">triple_doubles_without_kd</span><span class="si">}</span><span class="s2"> triple doubles in </span><span class="si">{</span><span class="n">triple_double_games_gb_df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">without_kd_mask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">+ seasons without Kevin Durant as a teammate&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16778,7 +16778,7 @@ Freq: A-DEC, Name: triple_double, dtype: float64</pre>
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>Westbrook recorded 37.0 triple doubles in 7 seasons with Kevin Durant as a teammate
-Westbrook recorded 156.0 triple doubles in 6+ seasons with Kevin Durant as a teammate
+Westbrook has created 156.0 triple doubles in 6+ seasons without Kevin Durant as a teammate
 </pre>
 </div>
 </div>
@@ -16925,7 +16925,7 @@ Westbrook recorded 156.0 triple doubles in 6+ seasons with Kevin Durant as a tea
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>originally published 2022-03-06 11:43
-last updated: 2022-03-05 19:25:17 
+last updated: 2022-03-05 19:39:26 
 
 Python version: sys.version_info(major=3, minor=9, micro=7, releaselevel=&#39;final&#39;, serial=0)
 matplotlib version: 3.4.3
