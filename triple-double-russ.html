@@ -15754,7 +15754,7 @@ Westbrook has 811 games without a triple double
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">westbrook_active_win_pct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">westbrook_active_games_df</span><span class="p">[</span><span class="s1">&#39;result_b&#39;</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams have win </span><span class="si">{</span><span class="n">westbrook_active_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he is active&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams win </span><span class="si">{</span><span class="n">westbrook_active_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he is active&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15774,7 +15774,7 @@ Westbrook has 811 games without a triple double
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Russell Westbrook&#39;s teams have win 59.16% of their games when he is active
+<pre>Russell Westbrook&#39;s teams win 59.16% of their games when he is active
 </pre>
 </div>
 </div>
@@ -15799,7 +15799,7 @@ Westbrook has 811 games without a triple double
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">triple_double_win_pct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">triple_double_games_df</span><span class="p">[</span><span class="s1">&#39;result_b&#39;</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams have win </span><span class="si">{</span><span class="n">triple_double_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he records a triple double&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams win </span><span class="si">{</span><span class="n">triple_double_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he DOES record a triple double&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15819,7 +15819,7 @@ Westbrook has 811 games without a triple double
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Russell Westbrook&#39;s teams have win 73.58% of their games when he records a triple double
+<pre>Russell Westbrook&#39;s teams win 73.58% of their games when he DOES record a triple double
 </pre>
 </div>
 </div>
@@ -15843,7 +15843,7 @@ Westbrook has 811 games without a triple double
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">non_triple_double_win_pct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">non_triple_double_games_df</span><span class="p">[</span><span class="s1">&#39;result_b&#39;</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams have win </span><span class="si">{</span><span class="n">non_triple_double_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he DOES NOT record a triple double&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Russell Westbrook&#39;s teams win </span><span class="si">{</span><span class="n">non_triple_double_win_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of their games when he DOES NOT record a triple double&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15863,7 +15863,7 @@ Westbrook has 811 games without a triple double
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Russell Westbrook&#39;s teams have win 55.73% of their games when he DOES NOT record a triple double
+<pre>Russell Westbrook&#39;s teams win 55.73% of their games when he DOES NOT record a triple double
 </pre>
 </div>
 </div>
@@ -16927,7 +16927,7 @@ Westbrook has created 156.0 triple doubles in 6+ seasons without Kevin Durant as
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>originally published 2022-03-06 11:43
-last updated: 2022-03-05 21:00:28 
+last updated: 2022-03-05 21:23:53 
 
 Python version: sys.version_info(major=3, minor=9, micro=7, releaselevel=&#39;final&#39;, serial=0)
 matplotlib version: 3.4.3
