@@ -15060,11 +15060,11 @@ getting game log data from 2022
       <th>age</th>
       <th>season</th>
       <th>date</th>
+      <th>box_score_link</th>
       <th>team</th>
       <th>opponent</th>
       <th>location</th>
       <th>result</th>
-      <th>game_number</th>
       <th>...</th>
       <th>three_pt_attempted</th>
       <th>three_pt_pct</th>
@@ -15073,9 +15073,9 @@ getting game log data from 2022
       <th>turnovers</th>
       <th>plus_minus</th>
       <th>game_score</th>
-      <th>active</th>
       <th>margin</th>
       <th>result_b</th>
+      <th>active</th>
     </tr>
   </thead>
   <tbody>
@@ -15086,11 +15086,11 @@ getting game log data from 2022
       <td>19-352</td>
       <td>2008-09</td>
       <td>2008-10-29</td>
+      <td>/boxscores/200810290OKC.html</td>
       <td>OKC</td>
       <td>MIL</td>
       <td>1</td>
       <td>L (-11)</td>
-      <td>1</td>
       <td>...</td>
       <td>2.0</td>
       <td>0.5</td>
@@ -15099,9 +15099,9 @@ getting game log data from 2022
       <td>2.0</td>
       <td>5.0</td>
       <td>11.0</td>
-      <td>1</td>
       <td>-11.0</td>
       <td>0.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>1</th>
@@ -15110,11 +15110,11 @@ getting game log data from 2022
       <td>19-355</td>
       <td>2008-09</td>
       <td>2008-11-01</td>
+      <td>/boxscores/200811010HOU.html</td>
       <td>OKC</td>
       <td>HOU</td>
       <td>0</td>
       <td>L (-12)</td>
-      <td>2</td>
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -15123,9 +15123,9 @@ getting game log data from 2022
       <td>2.0</td>
       <td>-19.0</td>
       <td>2.8</td>
-      <td>1</td>
       <td>-12.0</td>
       <td>0.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>2</th>
@@ -15134,11 +15134,11 @@ getting game log data from 2022
       <td>19-356</td>
       <td>2008-09</td>
       <td>2008-11-02</td>
+      <td>/boxscores/200811020OKC.html</td>
       <td>OKC</td>
       <td>MIN</td>
       <td>1</td>
       <td>W (+3)</td>
-      <td>3</td>
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -15147,9 +15147,9 @@ getting game log data from 2022
       <td>3.0</td>
       <td>7.0</td>
       <td>7.6</td>
-      <td>1</td>
       <td>3.0</td>
       <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>3</th>
@@ -15158,11 +15158,11 @@ getting game log data from 2022
       <td>19-359</td>
       <td>2008-09</td>
       <td>2008-11-05</td>
+      <td>/boxscores/200811050OKC.html</td>
       <td>OKC</td>
       <td>BOS</td>
       <td>1</td>
       <td>L (-13)</td>
-      <td>4</td>
       <td>...</td>
       <td>5.0</td>
       <td>0.6</td>
@@ -15171,9 +15171,9 @@ getting game log data from 2022
       <td>2.0</td>
       <td>-3.0</td>
       <td>6.7</td>
-      <td>1</td>
       <td>-13.0</td>
       <td>0.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>4</th>
@@ -15182,11 +15182,11 @@ getting game log data from 2022
       <td>19-361</td>
       <td>2008-09</td>
       <td>2008-11-07</td>
+      <td>/boxscores/200811070UTA.html</td>
       <td>OKC</td>
       <td>UTA</td>
       <td>0</td>
       <td>L (-7)</td>
-      <td>5</td>
       <td>...</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -15195,13 +15195,13 @@ getting game log data from 2022
       <td>2.0</td>
       <td>-5.0</td>
       <td>-0.2</td>
-      <td>1</td>
       <td>-7.0</td>
       <td>0.0</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 36 columns</p>
+<p>5 rows × 37 columns</p>
 </div>
 </div>
 
@@ -15239,7 +15239,7 @@ getting game log data from 2022
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
 Int64Index: 1092 entries, 0 to 61
-Data columns (total 36 columns):
+Data columns (total 37 columns):
  #   Column              Non-Null Count  Dtype         
 ---  ------              --------------  -----         
  0   player_name         1092 non-null   object        
@@ -15247,39 +15247,40 @@ Data columns (total 36 columns):
  2   age                 1092 non-null   object        
  3   season              1092 non-null   object        
  4   date                1092 non-null   datetime64[ns]
- 5   team                1092 non-null   object        
- 6   opponent            1092 non-null   object        
- 7   location            1092 non-null   int64         
- 8   result              1092 non-null   object        
- 9   game_number         1092 non-null   int64         
- 10  game                1092 non-null   float64       
- 11  started_game        1092 non-null   float64       
- 12  minutes_played      1092 non-null   object        
- 13  points              1092 non-null   float64       
- 14  field_goals_made    1092 non-null   float64       
- 15  field_goals_att     1092 non-null   float64       
- 16  field_goal_pct      1092 non-null   float64       
- 17  free_throws_made    1092 non-null   float64       
- 18  free_throw_att      1092 non-null   float64       
- 19  free_throw_pct      1092 non-null   float64       
- 20  personal_fouls      1092 non-null   float64       
- 21  assists             1092 non-null   float64       
- 22  total_rebs          1092 non-null   float64       
- 23  offensive_rebs      1092 non-null   float64       
- 24  defensive_rebs      1092 non-null   float64       
- 25  three_pt_made       1092 non-null   float64       
- 26  three_pt_attempted  1092 non-null   float64       
- 27  three_pt_pct        1092 non-null   float64       
- 28  steals              1092 non-null   float64       
- 29  blocks              1092 non-null   float64       
- 30  turnovers           1092 non-null   float64       
- 31  plus_minus          1092 non-null   float64       
- 32  game_score          1092 non-null   float64       
- 33  active              1092 non-null   int64         
+ 5   box_score_link      1092 non-null   object        
+ 6   team                1092 non-null   object        
+ 7   opponent            1092 non-null   object        
+ 8   location            1092 non-null   int64         
+ 9   result              1092 non-null   object        
+ 10  game_number         1092 non-null   int64         
+ 11  game                1092 non-null   float64       
+ 12  started_game        1092 non-null   float64       
+ 13  minutes_played      1092 non-null   object        
+ 14  points              1092 non-null   float64       
+ 15  field_goals_made    1092 non-null   float64       
+ 16  field_goals_att     1092 non-null   float64       
+ 17  field_goal_pct      1092 non-null   float64       
+ 18  free_throws_made    1092 non-null   float64       
+ 19  free_throw_att      1092 non-null   float64       
+ 20  free_throw_pct      1092 non-null   float64       
+ 21  personal_fouls      1092 non-null   float64       
+ 22  assists             1092 non-null   float64       
+ 23  total_rebs          1092 non-null   float64       
+ 24  offensive_rebs      1092 non-null   float64       
+ 25  defensive_rebs      1092 non-null   float64       
+ 26  three_pt_made       1092 non-null   float64       
+ 27  three_pt_attempted  1092 non-null   float64       
+ 28  three_pt_pct        1092 non-null   float64       
+ 29  steals              1092 non-null   float64       
+ 30  blocks              1092 non-null   float64       
+ 31  turnovers           1092 non-null   float64       
+ 32  plus_minus          1092 non-null   float64       
+ 33  game_score          1092 non-null   float64       
  34  margin              1092 non-null   float64       
  35  result_b            1092 non-null   float64       
-dtypes: datetime64[ns](1), float64(24), int64(3), object(8)
-memory usage: 315.7+ KB
+ 36  active              1092 non-null   int64         
+dtypes: datetime64[ns](1), float64(24), int64(3), object(9)
+memory usage: 324.2+ KB
 </pre>
 </div>
 </div>
@@ -15316,42 +15317,43 @@ memory usage: 315.7+ KB
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>player_name             Russell Westbrook
-basketball_ref_id             w/westbru01
-age                                19-352
-season                            2008-09
-date                  2008-10-29 00:00:00
-team                                  OKC
-opponent                              MIL
-location                                1
-result                            L (-11)
-game_number                             1
-game                                  1.0
-started_game                          0.0
-minutes_played                      21:56
-points                               13.0
-field_goals_made                      4.0
-field_goals_att                       9.0
-field_goal_pct                      0.444
-free_throws_made                      4.0
-free_throw_att                        6.0
-free_throw_pct                      0.667
-personal_fouls                        2.0
-assists                               4.0
-total_rebs                            4.0
-offensive_rebs                        4.0
-defensive_rebs                        0.0
-three_pt_made                         1.0
-three_pt_attempted                    2.0
-three_pt_pct                          0.5
-steals                                0.0
-blocks                                1.0
-turnovers                             2.0
-plus_minus                            5.0
-game_score                           11.0
-active                                  1
-margin                              -11.0
-result_b                              0.0
+<pre>player_name                      Russell Westbrook
+basketball_ref_id                      w/westbru01
+age                                         19-352
+season                                     2008-09
+date                           2008-10-29 00:00:00
+box_score_link        /boxscores/200810290OKC.html
+team                                           OKC
+opponent                                       MIL
+location                                         1
+result                                     L (-11)
+game_number                                      1
+game                                           1.0
+started_game                                   0.0
+minutes_played                               21:56
+points                                        13.0
+field_goals_made                               4.0
+field_goals_att                                9.0
+field_goal_pct                               0.444
+free_throws_made                               4.0
+free_throw_att                                 6.0
+free_throw_pct                               0.667
+personal_fouls                                 2.0
+assists                                        4.0
+total_rebs                                     4.0
+offensive_rebs                                 4.0
+defensive_rebs                                 0.0
+three_pt_made                                  1.0
+three_pt_attempted                             2.0
+three_pt_pct                                   0.5
+steals                                         0.0
+blocks                                         1.0
+turnovers                                      2.0
+plus_minus                                     5.0
+game_score                                    11.0
+margin                                       -11.0
+result_b                                       0.0
+active                                           1
 Name: 0, dtype: object</pre>
 </div>
 
@@ -16925,7 +16927,7 @@ Westbrook has created 156.0 triple doubles in 6+ seasons without Kevin Durant as
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>originally published 2022-03-06 11:43
-last updated: 2022-03-05 19:55:14 
+last updated: 2022-03-05 21:00:28 
 
 Python version: sys.version_info(major=3, minor=9, micro=7, releaselevel=&#39;final&#39;, serial=0)
 matplotlib version: 3.4.3
