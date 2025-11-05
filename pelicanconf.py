@@ -38,7 +38,7 @@ NEST_HEADER_LOGO = '/images/jade_mountain.png'
 
 DISPLAY_PAGES_ON_MENU = False
 # MENUITEMS = [('Home', '/index.html'), ('Articles', '/categories.html')]
-MENUITEMS = [('Home', '/index.html'),('Articles','/categories.html'),
+MENUITEMS = [('Home', '/index.html'),('Articles','/pages/categories.html'),
 ('Vita','/pages/vita.html'),('Teaching','/pages/teaching.html'), 
  ('Software','/pages/software.html'), ('Projects','/pages/projects.html')]
 
@@ -51,7 +51,7 @@ NEST_CATEGORIES_HEADER_SUBTITLE = u'Articles listed by category'
 
 # Footer
 NEST_SITEMAP_COLUMN_TITLE = u'Sitemap'
-NEST_SITEMAP_MENU = [('Home', '/index.html'),('Articles','/categories.html'),
+NEST_SITEMAP_MENU = [('Home', '/index.html'),('Articles','pages/categories.html'),
 ('Vita','/pages/vita.html'),('Teaching','/pages/teaching.html'), 
  ('Software','/pages/software.html'), ('Projects','/pages/projects.html')]
 NEST_SITEMAP_ATOM_LINK = u'Atom Feed'
