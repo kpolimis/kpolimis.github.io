@@ -1,7 +1,7 @@
 ---
 Title: Vita
-sortorder: 002
----
+sortorder: 003
+
 [Kivan Polimis Curriculum Vitae.pdf](../../docs/Kivan_Polimis_Curriculum_Vitae.pdf)  
 [Kivan Polimis Resume.pdf](../../docs/Kivan_Polimis_Resume.pdf)  
 [Software Carpentry Certification](../../docs/Software_Carpentry_Certification.pdf)  

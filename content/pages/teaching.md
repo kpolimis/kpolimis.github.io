@@ -1,6 +1,6 @@
 ---
 Title: Teaching
-sortorder: 003
+sortorder: 004
 ---
 My research focuses on combining computational social science approaches with alternative data (e.g., demographic data from the Facebook Marketing API) and traditional data (e.g., American Community Survey, Census) to evaluate population dynamics such as migration patterns during a disaster. As a computational social scientist, my interests include structural inequality, natural language processing, and developing programming solutions (policy and software) to social problems. I'm passionate about growing the community of computational social scientists and teach in <a href="https://software-carpentry.org" target="_blank">Software Carpentry</a> and <a href="https://datacarpentry.org" target="_blank">Data Carpentry</a> Workshops. 
 
