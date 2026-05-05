@@ -1,0 +1,13 @@
+---
+title: "Seattle Location History"
+date: "2017-08-21"
+author: "Kivan Polimis"
+description: ""
+categories: [how-to]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: seattle_location_history.md -->
+
+{% notebook ../../downloads/notebooks/seattle_location_history.ipynb %}

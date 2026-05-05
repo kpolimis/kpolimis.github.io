@@ -1,0 +1,13 @@
+---
+title: "Milano Location History"
+date: "2018-03-06"
+author: "Kivan Polimis"
+description: ""
+categories: [how-to]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: milano_location_history.md -->
+
+{% notebook ../../downloads/notebooks/milano_location_history.ipynb %}

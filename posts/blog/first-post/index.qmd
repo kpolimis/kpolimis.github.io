@@ -1,0 +1,13 @@
+---
+title: "My First Post"
+date: "2016-03-21"
+author: "Kivan Polimis"
+description: ""
+categories: [review]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: first_post.md -->
+
+This is my personal blog, built with Pelican and hosted on Github

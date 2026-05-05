@@ -1,0 +1,17 @@
+---
+title: "Flights Analysis"
+date: "2016-09-30"
+author: "Kivan Polimis"
+description: ""
+categories: [how-to]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: flights_analysis.md -->
+
+{% notebook ../../downloads/notebooks/flights_analysis.ipynb cells[0:27] %}
+
+<img src="./flights2018.gif" alt="Gif of Flights">
+
+{% notebook ../../downloads/notebooks/flights_analysis.ipynb cells[28:] %}

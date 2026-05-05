@@ -1,0 +1,50 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Kivan Polimis"
+  description: "Data Scientist | ML Engineer | Public Policy Researcher"
+  site-url: https://kivanpolimis.com
+  favicon: images/favicon.ico
+
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Technical Articles"
+        href: technical.qmd
+      - text: "Blog"
+        href: blog.qmd
+      - text: "Vita"
+        href: vita.qmd
+      - text: "Teaching"
+        href: teaching.qmd
+      - text: "Software"
+        href: software.qmd
+      - text: "Projects"
+        href: projects.qmd
+    right:
+      - icon: github
+        href: https://github.com/kpolimis
+      - icon: linkedin
+        href: https://www.linkedin.com/in/kivanpolimis
+      - icon: twitter-x
+        href: https://twitter.com/kpolimis
+
+  page-footer:
+    center: "© Kivan Polimis. Built with [Quarto](https://quarto.org)."
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    highlight-style: github
+
+execute:
+  freeze: auto
+  cache: true

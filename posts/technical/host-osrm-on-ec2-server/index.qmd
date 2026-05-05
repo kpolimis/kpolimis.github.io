@@ -1,0 +1,23 @@
+---
+title: "How to Host OSRM on Amazon EC2 Server"
+date: "2017-02-25"
+author: "Kivan Polimis"
+description: ""
+categories: [how-to]
+image: ""
+draft: true
+---
+
+<!-- migrated from pelican: host-osrm-on-ec2-server.md -->
+
+<!--
+{% notebook google_location_history.ipynb cells[1:7] %}
+
+![flight-map](../../images/chloropleth.png )
+
+
+![flight-map](../../images/hexbin.png)
+
+{% notebook google_location_history.ipynbcells[12:] %}
+
+-->

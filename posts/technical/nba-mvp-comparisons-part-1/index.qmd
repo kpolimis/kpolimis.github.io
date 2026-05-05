@@ -1,0 +1,13 @@
+---
+title: "NBA MVP Comparisons - Part 1"
+date: "2018-12-25"
+author: "Kivan Polimis"
+description: ""
+categories: [sports-analytics, python]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: nba_mvp_comparisons-part_1.md -->
+
+{% notebook nba_mvp_comparisons-part_1.ipynb %}

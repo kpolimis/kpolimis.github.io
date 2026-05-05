@@ -100,3 +100,8 @@ output/theme/
 
 # folders
 .vscode/
+
+# Quarto build artifacts
+_site/
+.quarto/
+_freeze/

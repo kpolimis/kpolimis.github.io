@@ -1,10 +1,19 @@
-pelican==3.7.1
-markdown==2.6.9
-fabric==1.14.0
-beautifulsoup4==4.6.0
-typogrify==2.0.7
-pillow==4.3.0
-webassets==0.12.1
-ipython==5.1.0
-sphinx==1.6.5
-nbconvert==5.3.1
+# --- Quarto Core ---
+jupyter>=1.0.0
+ipykernel>=6.0.0
+nbformat>=5.0.0
+nbclient>=0.5.0
+
+# --- Data Science Standard Stack ---
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+statsmodels
+scipy
+
+# --- Utilities ---
+requests
+beautifulsoup4  # Often used for scraping (like your NFL data)
+pyyaml         # Useful if we need to script your migration

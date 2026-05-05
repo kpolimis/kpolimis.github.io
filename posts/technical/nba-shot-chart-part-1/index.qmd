@@ -1,0 +1,13 @@
+---
+title: "NBA Shot Charts - Part 1"
+date: "2022-02-27"
+author: "Kivan Polimis"
+description: ""
+categories: [sports-analytics, python]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: nba_shot_chart_part_1.md -->
+
+{% notebook nba_shot_charts_part_1.ipynb %}

@@ -1,0 +1,47 @@
+---
+title: "Kivan Polimis"
+page-layout: full
+title-block-banner: false
+---
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px; margin-bottom: 40px;">
+
+<div style="flex: 2; min-width: 300px;">
+
+I'm a Data Scientist and ML Engineer working at the intersection of **public policy** and **scalable machine learning systems**.
+
+Currently: Data Scientist at [Karna](https://karna.com), Chief Data Scientist at [Atlas Analytics](https://www.analyticsbyatlas.com/), and Regional Affiliate at the University of Washington's [Center for the Study of Demography and Ecology (CSDE)](https://csde.washington.edu).
+
+**My Philosophy:** I operate at the intersection of *Public Policy* and *Machine Learning Engineering*. My background in rigorous academic research (Demography/Causal Inference) allows me to ask the right questions, while my engineering experience allows me to build the scalable systems to answer them.
+
+</div>
+
+<div style="flex: 1; text-align: center; min-width: 250px;">
+<img src="images/kivan_polimis_headshot.png" alt="Kivan Polimis" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;">
+</div>
+
+</div>
+
+<hr>
+
+### Featured Work & Open Source
+
+- **Generative AI for Healthcare (Private):** Architected a privacy-first, **multi-agent LLM orchestration framework** using RAG to automate clinical documentation, reducing provider administrative load by 40%.
+- **Real-Time Sports Analytics (Private):** Designed an **end-to-end MLOps pipeline on AWS** handling live data ingestion to model non-stationary performance metrics for the 2024-2025 NBA season.
+- **Scikit-Learn Ecosystem:** Contributor to [forest-confidence-interval](https://github.com/scikit-learn-contrib/forest-confidence-interval) and author of the associated [JOSS paper](https://joss.theoj.org/papers/10.21105/joss.00124) for calculating variance in Random Forest predictions.
+- **Large-Scale Optimization:** Former Technical Lead for [Data Science for Social Good](https://github.com/DSSG-paratransit/main_repo), architecting paratransit routing systems that optimized thousands of daily trips.
+- **Financial Transaction NLP:** Developed a **transformer-based microservice** to categorize noisy financial text, utilizing custom loss functions to solve extreme class imbalance.
+
+<hr>
+
+### Writing
+
+[**Technical Articles →**](technical.qmd)
+Reproducible analyses, tutorials, and deep dives in Python and R.
+
+[**Blog →**](blog.qmd)
+Notes, reviews, and shorter pieces.
+
+<hr>
+
+**Contact:** [kivan.polimis@gmail.com](mailto:kivan.polimis@gmail.com)

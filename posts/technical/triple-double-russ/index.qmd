@@ -1,0 +1,13 @@
+---
+title: "Triple Double Russ"
+date: "2022-03-06"
+author: "Kivan Polimis"
+description: ""
+categories: [sports-analytics, python]
+image: ""
+draft: false
+---
+
+<!-- migrated from pelican: triple_double_russ.md -->
+
+{% notebook triple_double_russ.ipynb %}
