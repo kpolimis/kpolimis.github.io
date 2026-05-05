@@ -92,6 +92,8 @@ ENV/
 pelican-plugins/
 pelican-themes/
 output/theme/
+.content-archive/
+.drafts/
 
 # files
 
@@ -105,3 +107,6 @@ output/theme/
 _site/
 .quarto/
 _freeze/
+
+/.quarto/
+**/*.quarto_ipynb
