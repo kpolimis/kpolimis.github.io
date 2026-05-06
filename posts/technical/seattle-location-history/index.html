@@ -63,7 +63,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -108,6 +108,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -186,9 +189,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../../../downloads/notebooks/seattle_location_history-preview.html"><i class="bi bi-journal-code"></i>Seattle Location History</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -227,7 +230,431 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- migrated from pelican: seattle_location_history.md -->
-<p>{% notebook ../../downloads/notebooks/seattle_location_history.ipynb %}</p>
+<div class="quarto-embed-nb-cell">
+<section id="seattle-location-history" class="level1">
+<h1>Seattle Location History</h1>
+<p>The goal of this post is to visualize time spent in various Seattle neighborhoods using Google location data and Python * This post utilizes code from Tyler Hartley’s <a href="http://beneathdata.com/how-to/visualizing-my-location-history/">visualizing location history blog post</a></p>
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<ol type="1">
+<li>Setup
+<ul>
+<li>download data</li>
+<li>install modules</li>
+</ul></li>
+<li>Data wrangling
+<ul>
+<li>data extraction</li>
+<li>data exploration</li>
+</ul></li>
+<li>Working with Shapefiles in Python</li>
+<li>Prep data and pare down locations</li>
+<li>Compute your measurement metric</li>
+<li>Choropleth Plot</li>
+<li>Hexbin Map</li>
+</ol>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<ol type="1">
+<li>Use Google Takout to download your Google location history</li>
+</ol>
+<ul>
+<li>If you’ve previously enabled Google location reporting on your smartphone, your GPS data will be periodically uploaded to <a href="https://support.google.com/accounts/answer/3118687?hl=en&amp;visit_id=1-636109809748631344-4285616029&amp;rd=1">Google’s servers</a>. Use Google Takeout to download your location history.
+<ul>
+<li>The decisions of when and how to upload this data are entirely obfuscated to the end user, but as you’ll see below, Android appears to upload a GPS location every 60 seconds. That’s plenty of data to work with.</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li>After downloading your data, install the required modules</li>
+</ol>
+<section id="google-takeout" class="level2">
+<h2 class="anchored" data-anchor-id="google-takeout">Google Takeout</h2>
+<p>Google <a href="https://takeout.google.com/settings/takeout">Takeout</a> is a Google service that allows users to export any personal Google data. We’ll use Takeout to download our raw location history as a one-time snapshot. Since Latitude was retired, no API exists to access location history in real-time.</p>
+<p>Download location data: * Go to <a href="https://www.google.com/settings/takeout">takeout</a>. Uncheck all services except “Location History” * The data will be in a json format, which works great for us. Download it in your favorite compression type. * When Google has finished creating your archive, you’ll get an email notification and a link to download. * Download and unzip the file, and you should be looking at a <code>LocationHistory.json</code> file. Working with location data in <a href="http://pandas.pydata.org/">Pandas</a>. Pandas is an incredibly powerful tool that simplifies working with complex datatypes and performing statistical analysis in the style of R. Chris Albon has great primers on using Pandas <a href="http://chrisalbon.com/#Python">here</a> under the “Data Wrangling” section.</p>
+</section>
+<section id="install-modules" class="level2">
+<h2 class="anchored" data-anchor-id="install-modules">Install modules</h2>
+<ul>
+<li>If you use Anaconda to manage your Python packages, I recommend creating a virtual environment with anaconda to install the dependencies. Copying the lines below the instruction into the terminal creates the environment, requirements.txt, etc.
+<ul>
+<li>conda create -n test-env python=3.5 anaconda</li>
+<li>source activate test-env</li>
+</ul></li>
+<li>make a requirements.txt file for dependencies
+<ul>
+<li>(echo descartes; echo IPython; echo shapely; echo fiona; echo Basemap) &gt;&gt; requirements.txt<br>
+</li>
+</ul></li>
+<li>install requirements.txt
+<ul>
+<li>conda install –yes –file requirements.txt</li>
+</ul></li>
+<li>Windows users:
+<ul>
+<li>create a python2.7 environment to install relevant modules
+<ul>
+<li>conda create -n py27 python=2.7 anaconda</li>
+<li>source activate py27</li>
+</ul></li>
+<li>Download and install <a href="https://www.microsoft.com/EN-US/DOWNLOAD/DETAILS.ASPX?ID=44266">Microsoft Visual C++ Compiler for Python 2.7</a></li>
+<li>pysal from https://www.lfd.uci.edu/~gohlke/pythonlibs/</li>
+</ul></li>
+</ul>
+<p>After completing the setup, we’ll read in the <code>LocationHistory.json</code> file from Google Takeout and create a DataFrame.</p>
+</section>
+</section>
+<section id="data-wrangling" class="level1">
+<h1>Data Wrangling</h1>
+<ul>
+<li>data extraction</li>
+</ul>
+<section id="explore-data" class="level2">
+<h2 class="anchored" data-anchor-id="explore-data">Explore Data</h2>
+<ul>
+<li>view data and datatypes</li>
+</ul>
+<div id="cell-7" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy                     int64
+activity                    object
+altitude                   float64
+heading                    float64
+latitude                   float64
+longitude                  float64
+timestamp                  float64
+velocity                   float64
+verticalAccuracy           float64
+datetime            datetime64[ns]
+dtype: object</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">accuracy</th>
+<th data-quarto-table-cell-role="th">altitude</th>
+<th data-quarto-table-cell-role="th">heading</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">timestamp</th>
+<th data-quarto-table-cell-role="th">velocity</th>
+<th data-quarto-table-cell-role="th">verticalAccuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">count</th>
+<td>745660.000000</td>
+<td>101260.000000</td>
+<td>44100.000000</td>
+<td>745660.000000</td>
+<td>745660.000000</td>
+<td>7.456600e+05</td>
+<td>58874.000000</td>
+<td>4921.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>58.997173</td>
+<td>67.057525</td>
+<td>186.597551</td>
+<td>37.748367</td>
+<td>-102.506537</td>
+<td>1.417774e+09</td>
+<td>7.769678</td>
+<td>23.099776</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">std</th>
+<td>125.358984</td>
+<td>242.209547</td>
+<td>101.643968</td>
+<td>9.004123</td>
+<td>23.609836</td>
+<td>3.356510e+07</td>
+<td>11.790783</td>
+<td>45.139324</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">min</th>
+<td>1.000000</td>
+<td>-715.000000</td>
+<td>0.000000</td>
+<td>13.689757</td>
+<td>-123.260751</td>
+<td>1.376790e+09</td>
+<td>0.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">25%</th>
+<td>22.000000</td>
+<td>-18.000000</td>
+<td>98.000000</td>
+<td>29.817569</td>
+<td>-122.306596</td>
+<td>1.391259e+09</td>
+<td>0.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">50%</th>
+<td>31.000000</td>
+<td>2.000000</td>
+<td>181.000000</td>
+<td>29.986634</td>
+<td>-95.246060</td>
+<td>1.413249e+09</td>
+<td>1.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">75%</th>
+<td>50.000000</td>
+<td>60.000000</td>
+<td>270.000000</td>
+<td>47.664284</td>
+<td>-94.995603</td>
+<td>1.428049e+09</td>
+<td>13.000000</td>
+<td>30.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">max</th>
+<td>999.000000</td>
+<td>6738.000000</td>
+<td>359.000000</td>
+<td>50.105984</td>
+<td>23.782015</td>
+<td>1.519330e+09</td>
+<td>208.000000</td>
+<td>473.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>accuracy code “999” may represent missingness<br>
+</li>
+<li>find earliest and latest observations in the data
+<ul>
+<li>save for later</li>
+</ul></li>
+</ul>
+<div id="cell-9" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code>earliest observed date: 08-17-2013
+latest observed date: 02-22-2018</code></pre>
+</div>
+</div>
+<ul>
+<li><code>location_data</code> is a Pandas DataFrame containing all your location history and related info.</li>
+<li>columns include latitude, longitude, and a timestamp. additional columns are accuracy, activity, altitude, heading, and velocity.</li>
+<li>all we’ll need is latitude, longitude, and time.</li>
+</ul>
+</section>
+</section>
+<section id="working-with-shapefiles-in-python" class="level1">
+<h1>Working with Shapefiles in Python</h1>
+<p><a href="https://en.wikipedia.org/wiki/Shapefile">Shapefile</a> is a widely-used data format for describing points, lines, and polygons. To work with shapefiles, Python gives us <a href="https://pypi.python.org/pypi/Shapely"><code>shapely</code></a>. To read and write shapefiles, we’ll use <a href="https://pypi.python.org/pypi/Fiona"><code>fiona</code></a>.</p>
+<p>To learn Shapely and write this blog post, I leaned heavily on <a href="http://sensitivecities.com/so-youd-like-to-make-a-map-using-python-EN.html#.WZsuZ5OGP_S">this article</a> from <a href="http://www.sensitivecities.com">sensitivecities.com</a>.</p>
+<p>First up, you’ll need to download shapefile data for the part of the world you’re interested in plotting. I wanted to focus on my current home of Seattle, which like many cities provides <a href="https://data.seattle.gov/dataset/data-seattle-gov-GIS-shapefile-datasets/f7tb-rnup">city shapefile map data for free</a>. It’s even broken into city neighborhoods! The US Census Bureau provides a ton of national shapefiles <a href="https://www.census.gov/geo/maps-data/data/tiger.html">here</a>. Your city likely provides this kind of data too. Tom MacWright has <a href="https://macwright.org/2012/10/31/gis-with-python-shapely-fiona.html">GIS with Python, Shapely, and Fiona</a> overview for more detail on Python mapping with these tools</p>
+<p>Next, we’ll need to import the Shapefile data we downloaded from the data.seattle.gov link above</p>
+<ul>
+<li>Use Basemap to plot the shapefiles</li>
+</ul>
+</section>
+<section id="prep-data-and-pare-down-locations" class="level1">
+<h1>Prep data and pare down locations</h1>
+<p>The first step is to pare down your location history to only contain points within the map’s borders.</p>
+<div id="cell-17" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/..-..-..-downloads-notebooks-seattle_location_history-cell-9-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-18" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">poly</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">116</th>
+<td>North College Park</td>
+<td>POLYGON ((7030.064427988187 23557.22768257541,...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">117</th>
+<td>Maple Leaf</td>
+<td>POLYGON ((8132.346719668341 23955.72380106724,...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">118</th>
+<td>Crown Hill</td>
+<td>POLYGON ((5426.118400335106 23570.62258083521,...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">119</th>
+<td>Greenwood</td>
+<td>POLYGON ((5823.505256228594 23565.2412308001, ...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">120</th>
+<td>Sunset Hill</td>
+<td>POLYGON ((2720.630502400637 22739.9815489253, ...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-19" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>total data points in this period: 745660
+total data points in the city shape file for this period: 295384
+40.0% of points this period are in the city shape file</code></pre>
+</div>
+</div>
+<p>Now, city_points contains a list of all points that fall within the map and hood_polygons is a collection of polygons representing, in my case, each neighborhood in Seattle.</p>
+</section>
+<section id="compute-your-measurement-metric" class="level1">
+<h1>Compute your measurement metric</h1>
+<p>The raw data for my choropleth should be “number of points in each neighborhood.” With Pandas, again, it’s easy. (Warning - depending on the size of the city_points array, this could take a few minutes.)</p>
+<ul>
+<li>view most popular neighborhoods by counts</li>
+</ul>
+<div id="cell-23" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">poly</th>
+<th data-quarto-table-cell-role="th">hood_count</th>
+<th data-quarto-table-cell-role="th">hood_hours</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">41</th>
+<td>University District</td>
+<td>POLYGON ((10922.33681717942 18686.63646881728,...</td>
+<td>271440</td>
+<td>4524.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">31</th>
+<td>Wallingford</td>
+<td>POLYGON ((6833.376859863444 19104.80491920538,...</td>
+<td>7627</td>
+<td>127.116667</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">40</th>
+<td>Roosevelt</td>
+<td>POLYGON ((9772.031684135412 21918.84443397688,...</td>
+<td>2611</td>
+<td>43.516667</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">35</th>
+<td>Ravenna</td>
+<td>POLYGON ((9870.257357118362 21917.81373987568,...</td>
+<td>2487</td>
+<td>41.450000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">99</th>
+<td>Broadway</td>
+<td>POLYGON ((8668.473681980502 16293.21876424036,...</td>
+<td>1461</td>
+<td>24.350000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-24" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-stdout">
+<pre><code>92.0% of points this in the city shape file are from the University District</code></pre>
+</div>
+</div>
+<p>So now, df_map.hood_count contains a count of the number of GPS points located within each neighborhood. But what do those counts really mean? It’s not very meaningful knowing that I spent any n “counts” in a neighborhood, except to compare neighborhood counts against each other. And we could do that. Or we could convert hood_count into time</p>
+<p>Turns out, converting counts into time is straightforward. From investigating the location history, it seems that unless the phone is off or without reception, Android reports you location exactly every 60 seconds. Not usually 60 seconds, not sometimes 74 seconds, every 60 seconds. It’s been true on Android 4.2+. Hopefully that means it holds true for you, too. So if we make the assumption that my phone is on 24/7 (true) and I have city-wide cellular reception (also true), then all we need to do is hood_count/60.0, as shown above, and now we’ve converted counts to hours.</p>
+</section>
+<section id="choropleth-plot" class="level1">
+<h1>Choropleth Plot</h1>
+<ul>
+<li>The code for creating this hexbin map below is in <code>choropleth.py</code></li>
+</ul>
+<div id="cell-30" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/..-..-..-downloads-notebooks-seattle_location_history-cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="hexbin-map" class="level1">
+<h1>Hexbin Map</h1>
+<p>We can also take a different approach to choropleths, and instead of using each neighborhood polygon as a bin, let Basemap generate uniform hexagonal bins for us. Hexbin maps are great way to visualize point density because all bins are equally sized. Best of all, it requires essentially no extra work as we’ve already defined our neighborhood Patches and paired down our location data. The code for creating this hexbin map below is in <code>hexbin.py</code></p>
+<div id="cell-34" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/..-..-..-downloads-notebooks-seattle_location_history-cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="potential-future-directions" class="level2">
+<h2 class="anchored" data-anchor-id="potential-future-directions">Potential future directions</h2>
+<ul>
+<li>Figure out where you usually go on the weekends</li>
+<li>Investigate your commute time by day of the week</li>
+<li>measure the amount of time you spend driving vs.&nbsp;walking vs.&nbsp;biking</li>
+</ul>
+<p>Download this <a href="downloads/notebooks/seattle_location_history.ipynb">notebook</a>, or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/seattle_location_history.ipynb">here</a></p>
+<div id="cell-37" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-stdout">
+<pre><code>System and module version information: 
+
+Python version: 
+ sys.version_info(major=2, minor=7, micro=14, releaselevel='final', serial=0) 
+
+last updated: Thu, 15 Mar 2018 04:09</code></pre>
+</div>
+</div>
+</section>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../../../downloads/notebooks/seattle_location_history-preview.html#cell-0">Source: Seattle Location History</a></div>
 
 
 <!-- -->
@@ -686,19 +1113,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Seattle Location History"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2017-08-21"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [how-to]</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: seattle_location_history.md --&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>{% notebook ../../downloads/notebooks/seattle_location_history.ipynb %}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Seattle Location History"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2017-08-21"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [how-to]</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: seattle_location_history.md --&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>{{&lt; embed ../../../downloads/notebooks/seattle_location_history.ipynb &gt;}}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

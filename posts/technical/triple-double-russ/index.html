@@ -63,7 +63,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -108,6 +108,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -186,9 +189,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../../../downloads/notebooks/triple_double_russ-preview.html"><i class="bi bi-journal-code"></i>Triple Double Russ</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -228,7 +231,957 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- migrated from pelican: triple_double_russ.md -->
-<p>{% notebook triple_double_russ.ipynb %}</p>
+<div class="quarto-embed-nb-cell">
+<section id="triple-double-russ" class="level1">
+<h1>Triple Double Russ</h1>
+<p>In this post, we use webscraping to analyze Russell Westbrook’s (Russ) team performance when he records a triple double. We will use multiple Python modules and focus on <code>BeautifulSoup</code>, <code>pandas</code>, <code>matplotlib</code>, and <code>seaborn</code></p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<ul>
+<li>Background</li>
+<li>Data Collection</li>
+<li>Main Analysis</li>
+<li>Data Visualization</li>
+<li>Secondary Analysis</li>
+<li>Review</li>
+<li>Footnotes</li>
+</ul>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p><a href="https://en.wikipedia.org/wiki/Russell_Westbrook">Russell Westbrook</a> is a lightning rod for discussion in the NBA because of his style of play and clashes with popular players like his <a href="https://www.essentiallysports.com/nba-basketball-news-how-kevin-durant-and-russell-westbrook-went-from-close-teammates-to-having-beef-with-each-other/">beef with former teammate Kevin Durant</a>. Westbrook’s high energy, domineering style of play is best characterized by the the statistic he is known for, the triple double.</p>
+<section id="what-is-a-triple-double" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-triple-double">What is a triple double?</h3>
+<p>Traditional NBA <a href="https://en.wikipedia.org/wiki/Box_score">box scores</a> collect statistics on 5 individual player categories: points, rebounds, assists, steals, and blocks<a href="#fn1"><sup>1</sup></a>. When a player has 10 or more instances of each category (“double”) in 3 categories (“triple), the collective statisitcal feat is known as a triple double. Westbrook is the <a href="https://www.basketball-reference.com/leaders/trp_dbl_career.html">NBA leader in career triple doubles</a> and recently <a href="https://www.usatoday.com/story/sports/nba/wizards/2021/05/10/russell-westbrook-breaks-oscar-robertsons-nba-triple-double-record/5031401001/">broke Hall of Famer Oscar Robertson’s 47 year-old record</a> in the 2020-21 season. Robertson was the original”Mr.&nbsp;Triple Double” and <a href="https://www.foxsports.com/stories/nba/russell-westbrook-is-officially-mr-triple-double-but-his-legacy-is-complicated">some have used the moniker</a> with Russ.</p>
+</section>
+<section id="what-is-controverisial-about-russ-and-the-triple-double" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-controverisial-about-russ-and-the-triple-double">What is controverisial about Russ and the triple double?</h3>
+<p>While there are many supporters of Westbrook in print and video, including <a href="https://www.youtube.com/watch?v=Na8lIRryd-o">videos praising Russ</a> for his ability to create triple doubles, there is also considerable pushback of Russ’ pursuit of a triple double. Check the <a href="https://www.youtube.com/watch?v=N8erK7T_LIQ">plays compiled in this video</a> for instance. At the time of the compiled plays, Westbrook is 2 assists shy of a triple double and declines to take several open shots in order to pass the ball to a teammate in the hopes of getting an assist. Several plays are awkward with Westbrook putting teammates in bad positions and some plays ending in turnovers. For me, the most egregious example of a player selfishly pursuing a triple double is <a href="https://twitter.com/TheHoopCentral/status/1169419607158841344">Ricky Davis in 2003</a>. With seconds remaining in the game his team was winning by 25, Davis attempted a shot on his team’s basket in order to secure what he hoped would be his 10th rebound and a triple double (Davis was not credited with the rebound or triple double). That Westbrook video is nothing near the cynicism of Davis, but the discussion prompted by Russ’ triple double ability is: “Do Westbrook’s teams win more games when he creates a triple double?”</p>
+<p>In order to investigate Russ’ team performance when he creates a triple double we need to gather his individual statistics and team performance during his games. We can gather both sources of information from <a href="https://www.basketball-reference.com/">Basketball-Reference.com</a> and create a function to tabulate triple doubles. Then we will compare the win percentage of Westbrook’s teams when he does and does not have a triple double to assess if his pursuit of a triple doubles negatively impacts team performance. We will subset our analysis to only Westbrook’s Regular Season games</p>
+</section>
+</section>
+<section id="data-collection" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
+<p>Russell Westbrook’s player data is available at the following link: https://www.basketball-reference.com/players/w/westbru01.html. We can use the <code>webbrowser</code> module to open this url with the code below</p>
+<div id="cell-3" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p>In order to create a dataset that includes Westbrook’s individual and team performance, we need to scrape his yearly game log data. An example yearly game log is, https://www.basketball-reference.com/players/w/westbru01/gamelog/2022, the game log for this current season. To accomplish this task, we need to * Find out how many years of game log data is available * Create an empty list that will contain all yearly game log dataframes * Create a list to store any errors that may come up while scraping yearly game log web pages</p>
+<p>I’ve written a helper function, <code>get_player_metadata</code> that we can use to scrape a player’s main <a href="https://www.basketball-reference.com/">Basketball-Reference.com</a> page. <code>get_player_metadata</code> returns a dictionary of the years available for the player (in the form of a list) and the player’s name</p>
+<div id="cell-6" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>{'years_available': ['2009',
+  '2010',
+  '2011',
+  '2012',
+  '2013',
+  '2014',
+  '2015',
+  '2016',
+  '2017',
+  '2018',
+  '2019',
+  '2020',
+  '2021',
+  '2022'],
+ 'player_name': 'Russell Westbrook'}</code></pre>
+</div>
+</div>
+<ul>
+<li><p>lists for aggregating yearly game logs and errors while webscraping</p></li>
+<li><p>Now we can pass the <code>years_available_list</code> and iterate through each year of game log data and extract player statistical information on the individual game basis with the function <code>extract_player_game_logs</code>. We can also get team results from the same function</p>
+<ul>
+<li>Note: These functions collect the latest available data so you may have more games and slightly different win percentage statistics when running this notebook after 2022-03-06</li>
+</ul></li>
+</ul>
+<div id="cell-10" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-stdout">
+<pre><code>getting game log data from 2009
+getting game log data from 2010
+getting game log data from 2011
+getting game log data from 2012
+getting game log data from 2013
+getting game log data from 2014
+getting game log data from 2015
+getting game log data from 2016
+getting game log data from 2017
+getting game log data from 2018
+getting game log data from 2019
+getting game log data from 2020
+getting game log data from 2021
+getting game log data from 2022</code></pre>
+</div>
+</div>
+<ul>
+<li>check if there were any errors while scraping game log web pages</li>
+</ul>
+<div id="cell-12" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>[]</code></pre>
+</div>
+</div>
+<ul>
+<li>no errors found, we can concatenate our list of yearly game log dataframes, <code>westbrook_career_game_logs_df_list</code> into a single data frame with the concat function from the <code>pandas</code> module.</li>
+<li>we can double check to see if we collected the same amount of yearly game logs as years of data available with a boolean comparison</li>
+</ul>
+<div id="cell-14" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-stdout">
+<pre><code>True
+14</code></pre>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>collected data for 1093 games for Russell Westbrook</code></pre>
+</div>
+</div>
+<ul>
+<li>let’s take a look at the data set we created and the column names/data types</li>
+</ul>
+<div id="cell-18" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">player_name</th>
+<th data-quarto-table-cell-role="th">basketball_ref_id</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">box_score_link</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">opponent</th>
+<th data-quarto-table-cell-role="th">location</th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">three_pt_attempted</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">steals</th>
+<th data-quarto-table-cell-role="th">blocks</th>
+<th data-quarto-table-cell-role="th">turnovers</th>
+<th data-quarto-table-cell-role="th">plus_minus</th>
+<th data-quarto-table-cell-role="th">game_score</th>
+<th data-quarto-table-cell-role="th">margin</th>
+<th data-quarto-table-cell-role="th">result_b</th>
+<th data-quarto-table-cell-role="th">active</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-352</td>
+<td>2008-09</td>
+<td>2008-10-29</td>
+<td>/boxscores/200810290OKC.html</td>
+<td>OKC</td>
+<td>MIL</td>
+<td>1</td>
+<td>L (-11)</td>
+<td>...</td>
+<td>2.0</td>
+<td>0.5</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>2.0</td>
+<td>5.0</td>
+<td>11.0</td>
+<td>-11.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-355</td>
+<td>2008-09</td>
+<td>2008-11-01</td>
+<td>/boxscores/200811010HOU.html</td>
+<td>OKC</td>
+<td>HOU</td>
+<td>0</td>
+<td>L (-12)</td>
+<td>...</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-19.0</td>
+<td>2.8</td>
+<td>-12.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-356</td>
+<td>2008-09</td>
+<td>2008-11-02</td>
+<td>/boxscores/200811020OKC.html</td>
+<td>OKC</td>
+<td>MIN</td>
+<td>1</td>
+<td>W (+3)</td>
+<td>...</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>0.0</td>
+<td>3.0</td>
+<td>7.0</td>
+<td>7.6</td>
+<td>3.0</td>
+<td>1.0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-359</td>
+<td>2008-09</td>
+<td>2008-11-05</td>
+<td>/boxscores/200811050OKC.html</td>
+<td>OKC</td>
+<td>BOS</td>
+<td>1</td>
+<td>L (-13)</td>
+<td>...</td>
+<td>5.0</td>
+<td>0.6</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-3.0</td>
+<td>6.7</td>
+<td>-13.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-361</td>
+<td>2008-09</td>
+<td>2008-11-07</td>
+<td>/boxscores/200811070UTA.html</td>
+<td>OKC</td>
+<td>UTA</td>
+<td>0</td>
+<td>L (-7)</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-5.0</td>
+<td>-0.2</td>
+<td>-7.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 37 columns</p>
+</div>
+</div>
+</div>
+<div id="cell-19" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 1093 entries, 0 to 62
+Data columns (total 37 columns):
+ #   Column              Non-Null Count  Dtype         
+---  ------              --------------  -----         
+ 0   player_name         1093 non-null   object        
+ 1   basketball_ref_id   1093 non-null   object        
+ 2   age                 1093 non-null   object        
+ 3   season              1093 non-null   object        
+ 4   date                1093 non-null   datetime64[ns]
+ 5   box_score_link      1093 non-null   object        
+ 6   team                1093 non-null   object        
+ 7   opponent            1093 non-null   object        
+ 8   location            1093 non-null   int64         
+ 9   result              1093 non-null   object        
+ 10  game_number         1093 non-null   int64         
+ 11  game                1093 non-null   float64       
+ 12  started_game        1093 non-null   float64       
+ 13  minutes_played      1093 non-null   object        
+ 14  points              1093 non-null   float64       
+ 15  field_goals_made    1093 non-null   float64       
+ 16  field_goals_att     1093 non-null   float64       
+ 17  field_goal_pct      1093 non-null   float64       
+ 18  free_throws_made    1093 non-null   float64       
+ 19  free_throw_att      1093 non-null   float64       
+ 20  free_throw_pct      1093 non-null   float64       
+ 21  personal_fouls      1093 non-null   float64       
+ 22  assists             1093 non-null   float64       
+ 23  total_rebs          1093 non-null   float64       
+ 24  offensive_rebs      1093 non-null   float64       
+ 25  defensive_rebs      1093 non-null   float64       
+ 26  three_pt_made       1093 non-null   float64       
+ 27  three_pt_attempted  1093 non-null   float64       
+ 28  three_pt_pct        1093 non-null   float64       
+ 29  steals              1093 non-null   float64       
+ 30  blocks              1093 non-null   float64       
+ 31  turnovers           1093 non-null   float64       
+ 32  plus_minus          1093 non-null   float64       
+ 33  game_score          1093 non-null   float64       
+ 34  margin              1093 non-null   float64       
+ 35  result_b            1093 non-null   float64       
+ 36  active              1093 non-null   int64         
+dtypes: datetime64[ns](1), float64(24), int64(3), object(9)
+memory usage: 324.5+ KB</code></pre>
+</div>
+</div>
+<div id="cell-20" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>player_name                      Russell Westbrook
+basketball_ref_id                      w/westbru01
+age                                         19-352
+season                                     2008-09
+date                           2008-10-29 00:00:00
+box_score_link        /boxscores/200810290OKC.html
+team                                           OKC
+opponent                                       MIL
+location                                         1
+result                                     L (-11)
+game_number                                      1
+game                                           1.0
+started_game                                   0.0
+minutes_played                               21:56
+points                                        13.0
+field_goals_made                               4.0
+field_goals_att                                9.0
+field_goal_pct                               0.444
+free_throws_made                               4.0
+free_throw_att                                 6.0
+free_throw_pct                               0.667
+personal_fouls                                 2.0
+assists                                        4.0
+total_rebs                                     4.0
+offensive_rebs                                 4.0
+defensive_rebs                                 0.0
+three_pt_made                                  1.0
+three_pt_attempted                             2.0
+three_pt_pct                                   0.5
+steals                                         0.0
+blocks                                         1.0
+turnovers                                      2.0
+plus_minus                                     5.0
+game_score                                    11.0
+margin                                       -11.0
+result_b                                       0.0
+active                                           1
+Name: 0, dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="main-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="main-analysis">Main Analysis</h2>
+<ul>
+<li>now that we have all of Westbrook’s individual and team statistics, we need to
+<ul>
+<li>create a triple double metric</li>
+<li>compare win percentage across games where Westbrook does and does not generate a triple double</li>
+</ul></li>
+<li>our triple double metric, <code>triple_double</code>, is a binary indicator with a value of 1 when a triple double is achieved through one of 7 scenarios:
+<ul>
+<li>points, rebounds, and assists</li>
+<li>points, rebounds, and steals</li>
+<li>points, rebounds, and blocks</li>
+<li>points, assists, and steals</li>
+<li>points, assists, and blocks</li>
+<li>rebounds, assists, and blocks</li>
+<li>rebounds, assists, and steals</li>
+</ul></li>
+</ul>
+<div id="cell-23" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0     0
+1     0
+2     0
+3     0
+4     0
+     ..
+58    0
+59    0
+60    0
+61    0
+62    0
+Name: triple_double, Length: 1093, dtype: int64</code></pre>
+</div>
+</div>
+<ul>
+<li>percentage of career games westbrook records a triple double and number of games he has recorded a triple double</li>
+</ul>
+<div id="cell-25" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>17.657822506861848</code></pre>
+</div>
+</div>
+<div id="cell-26" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>193.0</code></pre>
+</div>
+</div>
+<ul>
+<li>I calculated 193 triple doubles for Westbrook (17% of his career games) which matches the count found here on basketball-reference.com: https://www.basketball-reference.com/leaders/trp_dbl_career.html
+<ul>
+<li>Note these numbers are current as of 2022-03-06</li>
+</ul></li>
+<li>now we can calculate win percentage for games where Westbrook did and did not have a triple double</li>
+<li>let’s isolate only games westbrook was active for
+<ul>
+<li>players can miss games for injury, personal reasons, suspension, and more</li>
+</ul></li>
+<li>separate triple double games from other games</li>
+</ul>
+<section id="win-percentage-by-triple-double-occurrence" class="level3">
+<h3 class="anchored" data-anchor-id="win-percentage-by-triple-double-occurrence">Win Percentage by Triple Double Occurrence</h3>
+<ul>
+<li>Active games only</li>
+</ul>
+<div id="cell-28" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook has been active for 91.95% of his teams' games</code></pre>
+</div>
+</div>
+<ul>
+<li>Westbrook is defined by his regular availability for his team (playing in 92% of his teams’ games), he is so remarkably durable that he once had a <a href="https://thesportsrush.com/nba-news-russell-westbrook-is-a-true-ironman-wizards-star-has-a-whopping-availability-record-that-met-an-unceremonious-end/">10 year streak</a> of no missed games</li>
+</ul>
+<div id="cell-32" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook has been active for 91.95% of his teams' games
+He has played in 1005 of 1093 potential games
+Westbrook has recorded a triple double in 193 games, 19.20% of his active games
+Westbrook has 812 games without a triple double</code></pre>
+</div>
+</div>
+<p>To complete our comparison, we need Westbrook’s win percentage in 4 scenarios * Westbrook’s career win percentage * Westbrook’s active win percentage * Westbrook’s triple double games win percentage * Westbrook’s non-triple double games win percentage</p>
+<p>We can use the <code>result_b</code> column, a binary indicator of results where 0 indicates a loss and 1 indicates a win to calculate these win percentages across our different data frames. The mean for <code>result_b</code> is the percentage (after multiplying by 100) of games won under the scenario</p>
+<ul>
+<li>First, Westbrook’s career win percentage for his teams regardless of his activity status</li>
+</ul>
+<div id="cell-34" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams have won 54.44% of their games</code></pre>
+</div>
+</div>
+<ul>
+<li>Now scenario 2, win percentage when Russ is active</li>
+</ul>
+<div id="cell-36" class="cell" data-execution_count="23">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 59.20% of their games when he is active</code></pre>
+</div>
+</div>
+<ul>
+<li>We can see that Westbrook’s teams win 5% more games when he is active than when he doesn’t play, a good sign for an impactful palyer</li>
+<li>Now let’s calculate Westbrook’s team win percentage in games he has a triple double</li>
+</ul>
+<div id="cell-38" class="cell" data-execution_count="24">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 73.58% of their games when he DOES record a triple double</code></pre>
+</div>
+</div>
+<ul>
+<li>Lastly, let’s calculate Westbrook’s win percentage when he does not record a triple double</li>
+</ul>
+<div id="cell-40" class="cell" data-execution_count="25">
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 55.79% of their games when he DOES NOT record a triple double</code></pre>
+</div>
+</div>
+<div id="cell-41" class="cell" data-execution_count="26">
+<div class="cell-output cell-output-display" data-execution_count="26">
+<table class="caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td>Career Win Pct</td>
+<td>54.44%</td>
+</tr>
+<tr class="even">
+<td>Active Win Pct</td>
+<td>59.20%</td>
+</tr>
+<tr class="odd">
+<td>Triple Double Win Pct</td>
+<td>73.58%</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Win Pct</td>
+<td>55.79%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>We can add a z-test of proportions to compare the win percentages in different scenarios to see if they are stastically significant.</li>
+<li>The null hypothesis for this test is that the win percentages are equal in both scenarios (games with a triple double vs games without a triple double)</li>
+</ul>
+<div id="cell-43" class="cell" data-execution_count="27">
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">triple_double</th>
+<th data-quarto-table-cell-role="th">0.0</th>
+<th data-quarto-table-cell-role="th">1.0</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">result_b</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0.0</th>
+<td>359</td>
+<td>51</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1.0</th>
+<td>453</td>
+<td>142</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="28">
+<div class="cell-output cell-output-stdout">
+<pre><code>z_stat: -4.520, p_value: 0.000
+Reject the null hypothesis - suggest the alternative hypothesis is true</code></pre>
+</div>
+</div>
+<ul>
+<li>The difference in win percentage for games with a triple double and without a triple double is statistically significant</li>
+</ul>
+</section>
+</section>
+<section id="data-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="data-visualization">Data visualization</h2>
+<ul>
+<li>Chart of triple doubles over time</li>
+<li>Where is Russ having triple doubles: home or away?
+<ul>
+<li>Note these counts are across the NBA season and not the calendar year</li>
+</ul></li>
+</ul>
+<div id="cell-47" class="cell" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>year
+2008-12-31     1.0
+2009-12-31     1.0
+2010-12-31     3.0
+2011-12-31     0.0
+2012-12-31     1.0
+2013-12-31     2.0
+2014-12-31    11.0
+2015-12-31    18.0
+2016-12-31    42.0
+2017-12-31    25.0
+2018-12-31    34.0
+2019-12-31     8.0
+2020-12-31    38.0
+2021-12-31     9.0
+Freq: A-DEC, Name: triple_double, dtype: float64</code></pre>
+</div>
+</div>
+<div id="cell-48" class="cell" data-execution_count="31">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/..-..-..-downloads-notebooks-triple_double_russ-cell-32-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>to find the frequency of triple doubles by location (home vs away), we need to
+<ul>
+<li>create a <code>year</code> variable from the <code>date</code> variable</li>
+<li>group by three variables of interest and fill the observations without a triple double with 0 instead of NaN</li>
+</ul></li>
+</ul>
+<div id="cell-52" class="cell" data-execution_count="34">
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">triple_double</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">1.0</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">location</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2008</th>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2009</th>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2010</th>
+<td>0.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2012</th>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2013</th>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2014</th>
+<td>2.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2015</th>
+<td>7.0</td>
+<td>11.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2016</th>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2017</th>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2018</th>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2019</th>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020</th>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2021</th>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li><p>optional bar plot of triple doubles by game location</p></li>
+<li><p>line plot of triple doubles over time by location</p></li>
+</ul>
+<div id="cell-56" class="cell" data-execution_count="36">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/..-..-..-downloads-notebooks-triple_double_russ-cell-37-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="secondary-analysis" class="level1">
+<h1>Secondary Analysis</h1>
+<p>Let’s look at two scenarios that add to the Russ/triple double debate. 1. Russ’ play post-partnership with Kevin Durant 2. The margin of wins/losses when Russ records a triple double</p>
+<section id="triple-double-occurrence-with-and-without-kevin-durant" class="level3">
+<h3 class="anchored" data-anchor-id="triple-double-occurrence-with-and-without-kevin-durant">Triple Double Occurrence with and without Kevin Durant</h3>
+<p>Since teammate Kevin Durant left in Free Agency before the 2016 season, Westbrook won his only MVP and started to define his play with triple doubles * How many triple doubles has Russ created when he was teammates with Kevin Durant in comparison to the years after they were no longer teammates? + Note: Westbrook is an older player and more established in seasons post playing with Durant and it will not be surprising if he records more triple doubles as a tenured player than as a younger player</p>
+<div id="cell-58" class="cell" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">Away</th>
+<th data-quarto-table-cell-role="th">Home</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2008</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2009</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2010</td>
+<td>0.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2012</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013</td>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>2014</td>
+<td>2.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>2015</td>
+<td>7.0</td>
+<td>11.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>2016</td>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>2017</td>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>2018</td>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>2019</td>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>2020</td>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>2021</td>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-60" class="cell" data-execution_count="39">
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">Away</th>
+<th data-quarto-table-cell-role="th">Home</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>2016</td>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>2017</td>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>2018</td>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>2019</td>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">11</th>
+<td>2020</td>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>2021</td>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>count triple doubles with and without Kevin Durant as a teammate</li>
+</ul>
+<div id="cell-64" class="cell" data-execution_count="42">
+<div class="cell-output cell-output-stdout">
+<pre><code>Westbrook recorded 37.0 triple doubles in 7 seasons with Kevin Durant as a teammate
+Westbrook has created 156.0 triple doubles in 6+ seasons without Kevin Durant as a teammate</code></pre>
+</div>
+</div>
+</section>
+<section id="game-margin-by-triple-double-occurrence" class="level3">
+<h3 class="anchored" data-anchor-id="game-margin-by-triple-double-occurrence">Game margin by Triple Double Occurrence</h3>
+<p>Lastly, the game margin during triple double games can provide a naive comparison about how Russ’ pursuit of a triple double affects his team. For instance, if Russ is selfishly pursuing triple doubles at the expense of team success, we could expect that the margin of loss is greater in loses where he records a triple double than in loses where a triple double is not achieved. Similarly, smaller win margins in games with a triple double than without a triple double could suggest a negative team effect when Russ creates a triple double. * what is the margin difference in games that are won/lost, but a triple double is recorded? * compare to margin for games won/lost without a triple double</p>
+<div id="cell-67" class="cell" data-execution_count="44">
+<div class="cell-output cell-output-display" data-execution_count="44">
+<table class="caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td>Triple Double Win Margin</td>
+<td style="text-align: right;">11.55</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Win Margin</td>
+<td style="text-align: right;">11.59</td>
+</tr>
+<tr class="odd">
+<td>Triple Double Loss Margin</td>
+<td style="text-align: right;">-7.27</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Loss Margin</td>
+<td style="text-align: right;">-9.96</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>When Russ’s teams lose, they (on average) lose by a smaller margin (-7.27) when he records a triple double than when he does not (-9.96)</li>
+<li>Unlike the margin in losses, the win margin is nearly identical in games Russ’ teams win when Russ records a triple double (11.55) than when he does not (11.6)</li>
+</ul>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>In all honesty, these results are surprising (to me) and speak well for Russ and his supporters</p>
+<ul>
+<li>Westbrook’s teams win a far greater percentage of games when he has a triple double than when he doesn’t
+<ul>
+<li>74% of games won when a triple double is recorded vs 55% of games won without a triple double</li>
+</ul></li>
+<li>Additionally, game margins suggests that when Westbrook creates a triple double, the team performance is not negatively impacted.
+<ul>
+<li>When Westbrook’s teams lose but he records a triple double are smaller than game margins when a triple double is not recorded in a loss.</li>
+<li>Furthermore, Russ’ teams win at a similar margin when he does and does not record a triple double.</li>
+<li>Together, the game margin evidence suggests that Russ is not pursuing triple doubles in blowouts and not <a href="https://en.wikipedia.org/wiki/Stat_padding#:~:text=In%20sports%2C%20stat%20padding%20is,or%20its%20chance%20of%20winning.">stat padding</a> as suggested in <a href="https://www.youtube.com/watch?v=N8erK7T_LIQ">this video</a></li>
+</ul></li>
+<li>Westbrook recently became a triple double machine, amassing 156 of his 193 triple doubles in the last 6+ seasons alone alone
+<ul>
+<li>Westbrook’s increased pursuit of the triple double occurs after the Oklahoma City Thunder lost Kevin Durant during Free Agency in the summer of 2016</li>
+<li>For reference, LeBron James (4<sup>th</sup> all time in triple doubles) has recorded 103 total triple doubles in a 19-year NBA career
+<ul>
+<li>Westbrook is 12<sup>th</sup> all time in assists while LeBron is 7<sup>th</sup> (source: <a href="http://www.espn.com/nba/history/leaders/_/stat/assists">ESPN</a>)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="footnotes" class="level2">
+<h2 class="anchored" data-anchor-id="footnotes">Footnotes</h2>
+<p><a href="#fn1-back"><sup id="fn1">1</sup></a>steals and blocks were added to the box score almost a decade after points, rebounds, and assists. <a href="https://www.blazersedge.com/2017/1/19/13755264/nba-box-score-history">This blazersedge.com article</a> has excellent documentation of the NBA box score’s evolution</p>
+<div id="cell-69" class="cell" data-execution_count="45">
+<div class="cell-output cell-output-stdout">
+<pre><code>originally published 2022-03-06 11:43
+last updated: 2022-03-06 19:22 
+
+Python version: sys.version_info(major=3, minor=9, micro=7, releaselevel='final', serial=0)
+matplotlib version: 3.4.3
+iPython version: 7.29.0
+urllib version: 3.9
+seaborn version: 0.11.2
+pandas version: 1.4.1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../../../downloads/notebooks/triple_double_russ-preview.html#cell-0">Source: Triple Double Russ</a></div>
 
 
 <!-- -->
@@ -687,19 +1640,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Triple Double Russ"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2022-03-06"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports-analytics, python]</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: triple_double_russ.md --&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>{% notebook triple_double_russ.ipynb %}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Triple Double Russ"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2022-03-06"</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports-analytics, python]</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: triple_double_russ.md --&gt;</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>{{&lt; embed ../../../downloads/notebooks/triple_double_russ.ipynb &gt;}}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

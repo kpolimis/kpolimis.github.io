@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.9.37">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+    <title>Triple Double Russ – Kivan Polimis</title>
+    <style>
+      /* Default styles provided by pandoc.
+      ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+      */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = '/';
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-13638beb95dfda4e1912baf1c05b0f4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+     <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>  
+        <link rel="stylesheet" href="../../styles.css">
+      </head>
+
+  <body class="floating nav-fixed quarto-notebook quarto-light">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link"><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Triple Double Russ</h6>
+
+            <a href="../../downloads/notebooks/triple_double_russ.ipynb" class="btn btn-primary quarto-download-embed" download="triple_double_russ.ipynb">Download Notebook</a>
+          </div>
+
+     <div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivanpolimis"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#main-analysis" id="toc-main-analysis" class="nav-link active" data-scroll-target="#main-analysis">Main Analysis</a></li>
+  <li><a href="#secondary-analysis" id="toc-secondary-analysis" class="nav-link" data-scroll-target="#secondary-analysis">Secondary Analysis</a>
+  <ul class="collapse">
+  <li><a href="#triple-double-occurrence-with-and-without-kevin-durant" id="toc-triple-double-occurrence-with-and-without-kevin-durant" class="nav-link" data-scroll-target="#triple-double-occurrence-with-and-without-kevin-durant">Triple Double Occurrence with and without Kevin Durant</a></li>
+  </ul></li>
+  <li><a href="#game-margin-by-triple-double-occurrence" id="toc-game-margin-by-triple-double-occurrence" class="nav-link" data-scroll-target="#game-margin-by-triple-double-occurrence">Game margin by Triple Double Occurrence</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">      <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Triple Double Russ</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>     <div id="cell-1" class="cell markdown">
+<p>In this post, we use webscraping to analyze Russell Westbrook’s (Russ) team performance when he records a triple double. We will use multiple Python modules and focus on <code>BeautifulSoup</code>, <code>pandas</code>, <code>matplotlib</code>, and <code>seaborn</code></p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<ul>
+<li>Background</li>
+<li>Data Collection</li>
+<li>Main Analysis</li>
+<li>Data Visualization</li>
+<li>Secondary Analysis</li>
+<li>Review</li>
+<li>Footnotes</li>
+</ul>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p><a href="https://en.wikipedia.org/wiki/Russell_Westbrook">Russell Westbrook</a> is a lightning rod for discussion in the NBA because of his style of play and clashes with popular players like his <a href="https://www.essentiallysports.com/nba-basketball-news-how-kevin-durant-and-russell-westbrook-went-from-close-teammates-to-having-beef-with-each-other/">beef with former teammate Kevin Durant</a>. Westbrook’s high energy, domineering style of play is best characterized by the the statistic he is known for, the triple double.</p>
+<section id="what-is-a-triple-double" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-triple-double">What is a triple double?</h3>
+<p>Traditional NBA <a href="https://en.wikipedia.org/wiki/Box_score">box scores</a> collect statistics on 5 individual player categories: points, rebounds, assists, steals, and blocks<a href="#fn1"><sup>1</sup></a>. When a player has 10 or more instances of each category (“double”) in 3 categories (“triple), the collective statisitcal feat is known as a triple double. Westbrook is the <a href="https://www.basketball-reference.com/leaders/trp_dbl_career.html">NBA leader in career triple doubles</a> and recently <a href="https://www.usatoday.com/story/sports/nba/wizards/2021/05/10/russell-westbrook-breaks-oscar-robertsons-nba-triple-double-record/5031401001/">broke Hall of Famer Oscar Robertson’s 47 year-old record</a> in the 2020-21 season. Robertson was the original”Mr.&nbsp;Triple Double” and <a href="https://www.foxsports.com/stories/nba/russell-westbrook-is-officially-mr-triple-double-but-his-legacy-is-complicated">some have used the moniker</a> with Russ.</p>
+</section>
+<section id="what-is-controverisial-about-russ-and-the-triple-double" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-controverisial-about-russ-and-the-triple-double">What is controverisial about Russ and the triple double?</h3>
+<p>While there are many supporters of Westbrook in print and video, including <a href="https://www.youtube.com/watch?v=Na8lIRryd-o">videos praising Russ</a> for his ability to create triple doubles, there is also considerable pushback of Russ’ pursuit of a triple double. Check the <a href="https://www.youtube.com/watch?v=N8erK7T_LIQ">plays compiled in this video</a> for instance. At the time of the compiled plays, Westbrook is 2 assists shy of a triple double and declines to take several open shots in order to pass the ball to a teammate in the hopes of getting an assist. Several plays are awkward with Westbrook putting teammates in bad positions and some plays ending in turnovers. For me, the most egregious example of a player selfishly pursuing a triple double is <a href="https://twitter.com/TheHoopCentral/status/1169419607158841344">Ricky Davis in 2003</a>. With seconds remaining in the game his team was winning by 25, Davis attempted a shot on his team’s basket in order to secure what he hoped would be his 10th rebound and a triple double (Davis was not credited with the rebound or triple double). That Westbrook video is nothing near the cynicism of Davis, but the discussion prompted by Russ’ triple double ability is: “Do Westbrook’s teams win more games when he creates a triple double?”</p>
+<p>In order to investigate Russ’ team performance when he creates a triple double we need to gather his individual statistics and team performance during his games. We can gather both sources of information from <a href="https://www.basketball-reference.com/">Basketball-Reference.com</a> and create a function to tabulate triple doubles. Then we will compare the win percentage of Westbrook’s teams when he does and does not have a triple double to assess if his pursuit of a triple doubles negatively impacts team performance. We will subset our analysis to only Westbrook’s Regular Season games</p>
+</section>
+</section>
+<section id="data-collection" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-2" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> <span class="op">*</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> constants <span class="im">as</span> c </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div id="cell-3" class="cell markdown">
+<p>Russell Westbrook’s player data is available at the following link: https://www.basketball-reference.com/players/w/westbru01.html. We can use the <code>webbrowser</code> module to open this url with the code below</p>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-4" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>westbrook_basketball_reference_url <span class="op">=</span> <span class="st">"https://www.basketball-reference.com/players/w/westbru01.html"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>webbrowser.<span class="bu">open</span>(westbrook_basketball_reference_url)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>True</code></pre>
+</div>
+</div></div>
+<div id="cell-5" class="cell markdown">
+<p>In order to create a dataset that includes Westbrook’s individual and team performance, we need to scrape his yearly game log data. An example yearly game log is, https://www.basketball-reference.com/players/w/westbru01/gamelog/2022, the game log for this current season. To accomplish this task, we need to * Find out how many years of game log data is available * Create an empty list that will contain all yearly game log dataframes * Create a list to store any errors that may come up while scraping yearly game log web pages</p>
+<p>I’ve written a helper function, <code>get_player_metadata</code> that we can use to scrape a player’s main <a href="https://www.basketball-reference.com/">Basketball-Reference.com</a> page. <code>get_player_metadata</code> returns a dictionary of the years available for the player (in the form of a list) and the player’s name</p>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-6" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>player_metadata <span class="op">=</span> get_player_metadata(westbrook_basketball_reference_url)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>years_available_list <span class="op">=</span> player_metadata.get(<span class="st">"years_available"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>total_years_of_data <span class="op">=</span> <span class="bu">len</span>(years_available_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>player_metadata</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>{'years_available': ['2009',
+  '2010',
+  '2011',
+  '2012',
+  '2013',
+  '2014',
+  '2015',
+  '2016',
+  '2017',
+  '2018',
+  '2019',
+  '2020',
+  '2021',
+  '2022'],
+ 'player_name': 'Russell Westbrook'}</code></pre>
+</div>
+</div></div>
+<div id="cell-8" class="cell markdown">
+<ul>
+<li>lists for aggregating yearly game logs and errors while webscraping</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-9" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df_list <span class="op">=</span> []</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>errors_list <span class="op">=</span> []</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div id="cell-10" class="cell markdown">
+<ul>
+<li>Now we can pass the <code>years_available_list</code> and iterate through each year of game log data and extract player statistical information on the individual game basis with the function <code>extract_player_game_logs</code>. We can also get team results from the same function
+<ul>
+<li>Note: These functions collect the latest available data so you may have more games and slightly different win percentage statistics when running this notebook after 2022-03-06</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-11" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The url template that we pass in year info</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>url_template <span class="op">=</span> <span class="st">'https://www.basketball-reference.com/players/w/westbru01/gamelog/</span><span class="sc">{year}</span><span class="st">'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for each year of data avaialable, gather game log data</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> years_available_list: </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use try/except block to catch and inspect any urls that cause an error</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'getting game log data from </span><span class="sc">{</span>year<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># get the formatted game log data url</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        formatted_url <span class="op">=</span> url_template.<span class="bu">format</span>(year<span class="op">=</span>year)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        westbrook_yearly_game_logs <span class="op">=</span> extract_player_game_logs(formatted_url)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># append the current dataframe to the list of dataframes</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        westbrook_career_game_logs_df_list.append(westbrook_yearly_game_logs)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Store the url and the error it causes in a list</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        error <span class="op">=</span>[formatted_url, e] </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># then append it to the list of errors</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        errors_list.append(error)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>getting game log data from 2009
+getting game log data from 2010
+getting game log data from 2011
+getting game log data from 2012
+getting game log data from 2013
+getting game log data from 2014
+getting game log data from 2015
+getting game log data from 2016
+getting game log data from 2017
+getting game log data from 2018
+getting game log data from 2019
+getting game log data from 2020
+getting game log data from 2021
+getting game log data from 2022</code></pre>
+</div>
+</div></div>
+<div id="cell-12" class="cell markdown">
+<ul>
+<li>check if there were any errors while scraping game log web pages</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>errors_list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>[]</code></pre>
+</div>
+</div></div>
+<div id="cell-14" class="cell markdown">
+<ul>
+<li>no errors found, we can concatenate our list of yearly game log dataframes, <code>westbrook_career_game_logs_df_list</code> into a single data frame with the concat function from the <code>pandas</code> module.</li>
+<li>we can double check to see if we collected the same amount of yearly game logs as years of data available with a boolean comparison</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-15" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(westbrook_career_game_logs_df_list)<span class="op">==</span><span class="bu">len</span>(years_available_list))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(westbrook_career_game_logs_df_list))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>True
+14</code></pre>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-16" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df <span class="op">=</span> pd.concat(westbrook_career_game_logs_df_list, axis<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-17" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>total_career_games <span class="op">=</span> westbrook_career_game_logs_df.shape[<span class="dv">0</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"collected data for </span><span class="sc">{</span>total_career_games<span class="sc">}</span><span class="ss"> games for </span><span class="sc">{</span>player_metadata<span class="sc">.</span>get(<span class="st">'player_name'</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>collected data for 1093 games for Russell Westbrook</code></pre>
+</div>
+</div></div>
+<div id="cell-18" class="cell markdown">
+<ul>
+<li>let’s take a look at the data set we created and the column names/data types</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-19" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">player_name</th>
+<th data-quarto-table-cell-role="th">basketball_ref_id</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">box_score_link</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">opponent</th>
+<th data-quarto-table-cell-role="th">location</th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">three_pt_attempted</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">steals</th>
+<th data-quarto-table-cell-role="th">blocks</th>
+<th data-quarto-table-cell-role="th">turnovers</th>
+<th data-quarto-table-cell-role="th">plus_minus</th>
+<th data-quarto-table-cell-role="th">game_score</th>
+<th data-quarto-table-cell-role="th">margin</th>
+<th data-quarto-table-cell-role="th">result_b</th>
+<th data-quarto-table-cell-role="th">active</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-352</td>
+<td>2008-09</td>
+<td>2008-10-29</td>
+<td>/boxscores/200810290OKC.html</td>
+<td>OKC</td>
+<td>MIL</td>
+<td>1</td>
+<td>L (-11)</td>
+<td>...</td>
+<td>2.0</td>
+<td>0.5</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>2.0</td>
+<td>5.0</td>
+<td>11.0</td>
+<td>-11.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-355</td>
+<td>2008-09</td>
+<td>2008-11-01</td>
+<td>/boxscores/200811010HOU.html</td>
+<td>OKC</td>
+<td>HOU</td>
+<td>0</td>
+<td>L (-12)</td>
+<td>...</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-19.0</td>
+<td>2.8</td>
+<td>-12.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-356</td>
+<td>2008-09</td>
+<td>2008-11-02</td>
+<td>/boxscores/200811020OKC.html</td>
+<td>OKC</td>
+<td>MIN</td>
+<td>1</td>
+<td>W (+3)</td>
+<td>...</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>0.0</td>
+<td>3.0</td>
+<td>7.0</td>
+<td>7.6</td>
+<td>3.0</td>
+<td>1.0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-359</td>
+<td>2008-09</td>
+<td>2008-11-05</td>
+<td>/boxscores/200811050OKC.html</td>
+<td>OKC</td>
+<td>BOS</td>
+<td>1</td>
+<td>L (-13)</td>
+<td>...</td>
+<td>5.0</td>
+<td>0.6</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-3.0</td>
+<td>6.7</td>
+<td>-13.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Russell Westbrook</td>
+<td>w/westbru01</td>
+<td>19-361</td>
+<td>2008-09</td>
+<td>2008-11-07</td>
+<td>/boxscores/200811070UTA.html</td>
+<td>OKC</td>
+<td>UTA</td>
+<td>0</td>
+<td>L (-7)</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>-5.0</td>
+<td>-0.2</td>
+<td>-7.0</td>
+<td>0.0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 37 columns</p>
+</div>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-20" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 1093 entries, 0 to 62
+Data columns (total 37 columns):
+ #   Column              Non-Null Count  Dtype         
+---  ------              --------------  -----         
+ 0   player_name         1093 non-null   object        
+ 1   basketball_ref_id   1093 non-null   object        
+ 2   age                 1093 non-null   object        
+ 3   season              1093 non-null   object        
+ 4   date                1093 non-null   datetime64[ns]
+ 5   box_score_link      1093 non-null   object        
+ 6   team                1093 non-null   object        
+ 7   opponent            1093 non-null   object        
+ 8   location            1093 non-null   int64         
+ 9   result              1093 non-null   object        
+ 10  game_number         1093 non-null   int64         
+ 11  game                1093 non-null   float64       
+ 12  started_game        1093 non-null   float64       
+ 13  minutes_played      1093 non-null   object        
+ 14  points              1093 non-null   float64       
+ 15  field_goals_made    1093 non-null   float64       
+ 16  field_goals_att     1093 non-null   float64       
+ 17  field_goal_pct      1093 non-null   float64       
+ 18  free_throws_made    1093 non-null   float64       
+ 19  free_throw_att      1093 non-null   float64       
+ 20  free_throw_pct      1093 non-null   float64       
+ 21  personal_fouls      1093 non-null   float64       
+ 22  assists             1093 non-null   float64       
+ 23  total_rebs          1093 non-null   float64       
+ 24  offensive_rebs      1093 non-null   float64       
+ 25  defensive_rebs      1093 non-null   float64       
+ 26  three_pt_made       1093 non-null   float64       
+ 27  three_pt_attempted  1093 non-null   float64       
+ 28  three_pt_pct        1093 non-null   float64       
+ 29  steals              1093 non-null   float64       
+ 30  blocks              1093 non-null   float64       
+ 31  turnovers           1093 non-null   float64       
+ 32  plus_minus          1093 non-null   float64       
+ 33  game_score          1093 non-null   float64       
+ 34  margin              1093 non-null   float64       
+ 35  result_b            1093 non-null   float64       
+ 36  active              1093 non-null   int64         
+dtypes: datetime64[ns](1), float64(24), int64(3), object(9)
+memory usage: 324.5+ KB</code></pre>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-21" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df.iloc[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>player_name                      Russell Westbrook
+basketball_ref_id                      w/westbru01
+age                                         19-352
+season                                     2008-09
+date                           2008-10-29 00:00:00
+box_score_link        /boxscores/200810290OKC.html
+team                                           OKC
+opponent                                       MIL
+location                                         1
+result                                     L (-11)
+game_number                                      1
+game                                           1.0
+started_game                                   0.0
+minutes_played                               21:56
+points                                        13.0
+field_goals_made                               4.0
+field_goals_att                                9.0
+field_goal_pct                               0.444
+free_throws_made                               4.0
+free_throw_att                                 6.0
+free_throw_pct                               0.667
+personal_fouls                                 2.0
+assists                                        4.0
+total_rebs                                     4.0
+offensive_rebs                                 4.0
+defensive_rebs                                 0.0
+three_pt_made                                  1.0
+three_pt_attempted                             2.0
+three_pt_pct                                   0.5
+steals                                         0.0
+blocks                                         1.0
+turnovers                                      2.0
+plus_minus                                     5.0
+game_score                                    11.0
+margin                                       -11.0
+result_b                                       0.0
+active                                           1
+Name: 0, dtype: object</code></pre>
+</div>
+</div></div>
+<div id="cell-22" class="cell markdown">
+<section id="main-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="main-analysis">Main Analysis</h2>
+<ul>
+<li>now that we have all of Westbrook’s individual and team statistics, we need to
+<ul>
+<li>create a triple double metric</li>
+<li>compare win percentage across games where Westbrook does and does not generate a triple double</li>
+</ul></li>
+<li>our triple double metric, <code>triple_double</code>, is a binary indicator with a value of 1 when a triple double is achieved through one of 7 scenarios:
+<ul>
+<li>points, rebounds, and assists</li>
+<li>points, rebounds, and steals</li>
+<li>points, rebounds, and blocks</li>
+<li>points, assists, and steals</li>
+<li>points, assists, and blocks</li>
+<li>rebounds, assists, and blocks</li>
+<li>rebounds, assists, and steals</li>
+</ul></li>
+</ul>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-23" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> triple_double(row):</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'points'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'total_rebs'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'assists'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'points'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'total_rebs'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'blocks'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'points'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'total_rebs'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'steals'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'points'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'assists'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'steals'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'points'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'assists'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'blocks'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'total_rebs'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'assists'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'blocks'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'total_rebs'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'assists'</span>]<span class="op">&gt;=</span><span class="dv">10</span> <span class="kw">and</span> row[<span class="st">'steals'</span>]<span class="op">&gt;=</span><span class="dv">10</span>:</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-24" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df[<span class="st">"triple_double"</span>] <span class="op">=</span> westbrook_career_game_logs_df.<span class="bu">apply</span>(triple_double, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df.loc[:, <span class="st">"triple_double"</span>] <span class="op">=</span> westbrook_career_game_logs_df.loc[:, <span class="st">"triple_double"</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df[<span class="st">"triple_double"</span>].astype(<span class="bu">int</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0     0
+1     0
+2     0
+3     0
+4     0
+     ..
+58    0
+59    0
+60    0
+61    0
+62    0
+Name: triple_double, Length: 1093, dtype: int64</code></pre>
+</div>
+</div></div>
+<div id="cell-25" class="cell markdown">
+<ul>
+<li>percentage of career games westbrook records a triple double and number of games he has recorded a triple double</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-26" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>np.mean(westbrook_career_game_logs_df[<span class="st">"triple_double"</span>])<span class="op">*</span><span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>17.657822506861848</code></pre>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-27" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_game_logs_df.shape[<span class="dv">0</span>]<span class="op">*</span>np.mean(westbrook_career_game_logs_df[<span class="st">"triple_double"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>193.0</code></pre>
+</div>
+</div></div>
+<div id="cell-28" class="cell markdown">
+<ul>
+<li>I calculated 193 triple doubles for Westbrook (17% of his career games) which matches the count found here on basketball-reference.com: https://www.basketball-reference.com/leaders/trp_dbl_career.html
+<ul>
+<li>Note these numbers are current as of 2022-03-06</li>
+</ul></li>
+<li>now we can calculate win percentage for games where Westbrook did and did not have a triple double</li>
+<li>let’s isolate only games westbrook was active for
+<ul>
+<li>players can miss games for injury, personal reasons, suspension, and more</li>
+</ul></li>
+<li>separate triple double games from other games</li>
+</ul>
+<section id="win-percentage-by-triple-double-occurrence" class="level3">
+<h3 class="anchored" data-anchor-id="win-percentage-by-triple-double-occurrence">Win Percentage by Triple Double Occurrence</h3>
+<ul>
+<li>Active games only</li>
+</ul>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="cell-29" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_pct <span class="op">=</span> np.mean(westbrook_career_game_logs_df[<span class="st">"active"</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook has been active for </span><span class="sc">{</span>westbrook_active_games_pct<span class="sc">:.2f}</span><span class="ss">% of his teams' games"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook has been active for 91.95% of his teams' games</code></pre>
+</div>
+</div></div>
+<div id="cell-30" class="cell markdown">
+<ul>
+<li>Westbrook is defined by his regular availability for his team (playing in 92% of his teams’ games), he is so remarkably durable that he once had a <a href="https://thesportsrush.com/nba-news-russell-westbrook-is-a-true-ironman-wizards-star-has-a-whopping-availability-record-that-met-an-unceremonious-end/">10 year streak</a> of no missed games</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="cell-31" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_df <span class="op">=</span> westbrook_career_game_logs_df.loc[westbrook_career_game_logs_df[<span class="st">"active"</span>]<span class="op">==</span><span class="dv">1</span>]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>triple_double_games_df <span class="op">=</span> westbrook_active_games_df.loc[westbrook_active_games_df[<span class="st">"triple_double"</span>]<span class="op">==</span><span class="dv">1</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>non_triple_double_games_df <span class="op">=</span> westbrook_active_games_df.loc[westbrook_active_games_df[<span class="st">"triple_double"</span>]<span class="op">!=</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="cell-32" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_pct <span class="op">=</span> np.mean(westbrook_career_game_logs_df[<span class="st">"active"</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>westbrook_career_games <span class="op">=</span> westbrook_career_game_logs_df.shape[<span class="dv">0</span>]</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>westbrook_active_games <span class="op">=</span> westbrook_active_games_df.shape[<span class="dv">0</span>]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>triple_double_games <span class="op">=</span> triple_double_games_df.shape[<span class="dv">0</span>]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>non_triple_double_games <span class="op">=</span> non_triple_double_games_df.shape[<span class="dv">0</span>]</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>active_triple_double_pct <span class="op">=</span> np.mean(westbrook_active_games_df[<span class="st">"triple_double"</span>])<span class="op">*</span><span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="cell-33" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook has been active for </span><span class="sc">{</span>westbrook_active_games_pct<span class="sc">:.2f}</span><span class="ss">% of his teams' games"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"He has played in </span><span class="sc">{</span>westbrook_active_games<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>westbrook_career_games<span class="sc">}</span><span class="ss"> potential games"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Westbrook has recorded a triple double in </span><span class="sc">{</span>triple_double_games<span class="sc">}</span><span class="ss"> games, </span><span class="sc">{</span>active_triple_double_pct<span class="sc">:.2f}</span><span class="ss">% of his active games"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Westbrook has </span><span class="sc">{</span>non_triple_double_games<span class="sc">}</span><span class="ss"> games without a triple double"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook has been active for 91.95% of his teams' games
+He has played in 1005 of 1093 potential games
+Westbrook has recorded a triple double in 193 games, 19.20% of his active games
+Westbrook has 812 games without a triple double</code></pre>
+</div>
+</div></div>
+<div id="cell-34" class="cell markdown">
+<p>To complete our comparison, we need Westbrook’s win percentage in 4 scenarios * Westbrook’s career win percentage * Westbrook’s active win percentage * Westbrook’s triple double games win percentage * Westbrook’s non-triple double games win percentage</p>
+<p>We can use the <code>result_b</code> column, a binary indicator of results where 0 indicates a loss and 1 indicates a win to calculate these win percentages across our different data frames. The mean for <code>result_b</code> is the percentage (after multiplying by 100) of games won under the scenario</p>
+<ul>
+<li>First, Westbrook’s career win percentage for his teams regardless of his activity status</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [22]:</pre></div><div id="cell-35" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>westbrook_career_win_pct <span class="op">=</span> np.mean(westbrook_career_game_logs_df[<span class="st">'result_b'</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook's teams have won </span><span class="sc">{</span>westbrook_career_win_pct<span class="sc">:.2f}</span><span class="ss">% of their games"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams have won 54.44% of their games</code></pre>
+</div>
+</div></div>
+<div id="cell-36" class="cell markdown">
+<ul>
+<li>Now scenario 2, win percentage when Russ is active</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [23]:</pre></div><div id="cell-37" class="cell" data-execution_count="23">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>westbrook_active_win_pct <span class="op">=</span> np.mean(westbrook_active_games_df[<span class="st">'result_b'</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook's teams win </span><span class="sc">{</span>westbrook_active_win_pct<span class="sc">:.2f}</span><span class="ss">% of their games when he is active"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 59.20% of their games when he is active</code></pre>
+</div>
+</div></div>
+<div id="cell-38" class="cell markdown">
+<ul>
+<li>We can see that Westbrook’s teams win 5% more games when he is active than when he doesn’t play, a good sign for an impactful palyer</li>
+<li>Now let’s calculate Westbrook’s team win percentage in games he has a triple double</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [24]:</pre></div><div id="cell-39" class="cell" data-execution_count="24">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>triple_double_win_pct <span class="op">=</span> np.mean(triple_double_games_df[<span class="st">'result_b'</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook's teams win </span><span class="sc">{</span>triple_double_win_pct<span class="sc">:.2f}</span><span class="ss">% of their games when he DOES record a triple double"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 73.58% of their games when he DOES record a triple double</code></pre>
+</div>
+</div></div>
+<div id="cell-40" class="cell markdown">
+<ul>
+<li>Lastly, let’s calculate Westbrook’s win percentage when he does not record a triple double</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [25]:</pre></div><div id="cell-41" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>non_triple_double_win_pct <span class="op">=</span> np.mean(non_triple_double_games_df[<span class="st">'result_b'</span>])<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Russell Westbrook's teams win </span><span class="sc">{</span>non_triple_double_win_pct<span class="sc">:.2f}</span><span class="ss">% of their games when he DOES NOT record a triple double"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Russell Westbrook's teams win 55.79% of their games when he DOES NOT record a triple double</code></pre>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [26]:</pre></div><div id="cell-42" class="cell" data-execution_count="26">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tabulate</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [[<span class="st">"Career Win Pct"</span>, <span class="ss">f"</span><span class="sc">{</span>westbrook_career_win_pct<span class="sc">:.2f}</span><span class="ss">%"</span>],</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>         [<span class="st">"Active Win Pct"</span>, <span class="ss">f"</span><span class="sc">{</span>westbrook_active_win_pct<span class="sc">:.2f}</span><span class="ss">%"</span>],</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>         [<span class="st">"Triple Double Win Pct"</span>, <span class="ss">f"</span><span class="sc">{</span>triple_double_win_pct<span class="sc">:.2f}</span><span class="ss">%"</span>],</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>         [<span class="st">"Non-Triple Double Win Pct"</span>, <span class="ss">f"</span><span class="sc">{</span>non_triple_double_win_pct<span class="sc">:.2f}</span><span class="ss">%"</span>]]</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> tabulate.tabulate(data, tablefmt<span class="op">=</span><span class="st">'html'</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<table class="caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td>Career Win Pct</td>
+<td>54.44%</td>
+</tr>
+<tr class="even">
+<td>Active Win Pct</td>
+<td>59.20%</td>
+</tr>
+<tr class="odd">
+<td>Triple Double Win Pct</td>
+<td>73.58%</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Win Pct</td>
+<td>55.79%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<div id="cell-43" class="cell markdown">
+<ul>
+<li>We can add a z-test of proportions to compare the win percentages in different scenarios to see if they are stastically significant.</li>
+<li>The null hypothesis for this test is that the win percentages are equal in both scenarios (games with a triple double vs games without a triple double)</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [27]:</pre></div><div id="cell-44" class="cell" data-execution_count="27">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>contingency_table <span class="op">=</span> pd.crosstab(westbrook_active_games_df.result_b,westbrook_active_games_df.triple_double) <span class="co">#Contingency Table</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>contingency_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">triple_double</th>
+<th data-quarto-table-cell-role="th">0.0</th>
+<th data-quarto-table-cell-role="th">1.0</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">result_b</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0.0</th>
+<td>359</td>
+<td>51</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1.0</th>
+<td>453</td>
+<td>142</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [28]:</pre></div><div id="cell-45" class="cell" data-execution_count="28">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>z_stat, p_value <span class="op">=</span> create_proportions_ztest(contingency_table)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>z_stat: -4.520, p_value: 0.000
+Reject the null hypothesis - suggest the alternative hypothesis is true</code></pre>
+</div>
+</div></div>
+<div id="cell-46" class="cell markdown">
+<ul>
+<li>The difference in win percentage for games with a triple double and without a triple double is statistically significant</li>
+</ul>
+<section id="data-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="data-visualization">Data visualization</h2>
+<ul>
+<li>Chart of triple doubles over time</li>
+<li>Where is Russ having triple doubles: home or away?
+<ul>
+<li>Note these counts are across the NBA season and not the calendar year</li>
+</ul></li>
+</ul>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [29]:</pre></div><div id="cell-47" class="cell" data-execution_count="29">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_df <span class="op">=</span> copy.deepcopy(westbrook_active_games_df)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_df[<span class="st">"year"</span>] <span class="op">=</span> westbrook_active_games_df[<span class="st">"season"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">0</span>:<span class="dv">4</span>])</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>westbrook_active_games_df[<span class="st">"year"</span>] <span class="op">=</span>  pd.DatetimeIndex(westbrook_active_games_df[<span class="st">"year"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [30]:</pre></div><div id="cell-48" class="cell" data-execution_count="30">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>yearly_triple_double_counts <span class="op">=</span> westbrook_active_games_df.resample(rule<span class="op">=</span><span class="st">'Y'</span>, on<span class="op">=</span><span class="st">'year'</span>)[<span class="st">'triple_double'</span>].<span class="bu">sum</span>()</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>yearly_triple_double_counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>year
+2008-12-31     1.0
+2009-12-31     1.0
+2010-12-31     3.0
+2011-12-31     0.0
+2012-12-31     1.0
+2013-12-31     2.0
+2014-12-31    11.0
+2015-12-31    18.0
+2016-12-31    42.0
+2017-12-31    25.0
+2018-12-31    34.0
+2019-12-31     8.0
+2020-12-31    38.0
+2021-12-31     9.0
+Freq: A-DEC, Name: triple_double, dtype: float64</code></pre>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [31]:</pre></div><div id="cell-49" class="cell" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"white"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>sns.set_color_codes()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure and plot space</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add x-axis and y-axis</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>ax.bar(yearly_triple_double_counts.index.year,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>       yearly_triple_double_counts.values,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>       color<span class="op">=</span><span class="st">'Blue'</span>)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Set title and labels for axes</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Season"</span>,</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Games with a Triple Double"</span>,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span> <span class="st">"Seasonal Counts of Triple Doubles by Russell Westbrook"</span>)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="co"># add '2008' to years_available_list so that we have the Seasons shown on x-axis </span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>years_available_list <span class="op">=</span> [<span class="st">'2008'</span>] <span class="op">+</span> years_available_list</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>ax.xaxis.set_ticks([<span class="bu">int</span>(year) <span class="cf">for</span> year <span class="kw">in</span> years_available_list]) </span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Call add values function </span></span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>add_value_labels(ax)</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="triple_double_russ_files/figure-html/cell-32-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="cell-50" class="cell markdown">
+<ul>
+<li>to find the frequency of triple doubles by location (home vs away), we need to
+<ul>
+<li>create a <code>year</code> variable from the <code>date</code> variable</li>
+<li>group by three variables of interest and fill the observations without a triple double with 0 instead of NaN</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [32]:</pre></div><div id="cell-51" class="cell" data-execution_count="32">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># westbrook_active_games_df = copy.deepcopy(westbrook_active_games_df)</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># westbrook_active_games_df["year"] =  pd.DatetimeIndex(westbrook_active_games_df["date"]).year</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [33]:</pre></div><div id="cell-52" class="cell" data-execution_count="33">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>triple_double_games_df <span class="op">=</span> copy.deepcopy(triple_double_games_df)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>triple_double_games_df[<span class="st">"year"</span>] <span class="op">=</span> triple_double_games_df[<span class="st">"season"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">0</span>:<span class="dv">4</span>])</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>triple_double_games_df[<span class="st">"year"</span>] <span class="op">=</span>  pd.DatetimeIndex(triple_double_games_df[<span class="st">"year"</span>]).year</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [34]:</pre></div><div id="cell-53" class="cell" data-execution_count="34">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df <span class="op">=</span> triple_double_games_df.groupby([<span class="st">'triple_double'</span>, <span class="st">'location'</span>, <span class="st">'year'</span>]).size().unstack(level<span class="op">=</span><span class="dv">2</span>).fillna(<span class="dv">0</span>).T</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">triple_double</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">1.0</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">location</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2008</th>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2009</th>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2010</th>
+<td>0.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2012</th>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2013</th>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2014</th>
+<td>2.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2015</th>
+<td>7.0</td>
+<td>11.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2016</th>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2017</th>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2018</th>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2019</th>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020</th>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2021</th>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+<div id="cell-54" class="cell markdown">
+<ul>
+<li>optional bar plot of triple doubles by game location</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [35]:</pre></div><div id="cell-55" class="cell" data-execution_count="35">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># triple_double_games_gb_df.plot(kind = 'bar')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div id="cell-56" class="cell markdown">
+<ul>
+<li>line plot of triple doubles over time by location</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [36]:</pre></div><div id="cell-57" class="cell" data-execution_count="36">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"white"</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>sns.set_color_codes()</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>fig.subplots_adjust(hspace<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>plot_title <span class="op">=</span> <span class="st">'Seasonal Counts of Triple Doubles by Russell Westbrook </span><span class="ch">\n</span><span class="st"> Home vs Away'</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df.iloc[:,].plot(ax <span class="op">=</span> ax, title <span class="op">=</span> plot_title,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                                        ylabel <span class="op">=</span> <span class="st">"Games with a Triple Double"</span>,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                                        xlabel<span class="op">=</span> <span class="st">"Season"</span>)</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span><span class="fl">2015.5</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>plt.xticks([<span class="bu">int</span>(year) <span class="cf">for</span> year <span class="kw">in</span> years_available_list])</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"Away"</span>, <span class="st">"Home"</span>, <span class="st">"Kevin Durant Leaves OKC"</span>], loc <span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><img src="triple_double_russ_files/figure-html/cell-37-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="cell-58" class="cell markdown">
+<section id="secondary-analysis" class="level1">
+<h1>Secondary Analysis</h1>
+<p>Let’s look at two scenarios that add to the Russ/triple double debate. 1. Russ’ play post-partnership with Kevin Durant 2. The margin of wins/losses when Russ records a triple double</p>
+<section id="triple-double-occurrence-with-and-without-kevin-durant" class="level3">
+<h3 class="anchored" data-anchor-id="triple-double-occurrence-with-and-without-kevin-durant">Triple Double Occurrence with and without Kevin Durant</h3>
+<p>Since teammate Kevin Durant left in Free Agency before the 2016 season, Westbrook won his only MVP and started to define his play with triple doubles * How many triple doubles has Russ created when he was teammates with Kevin Durant in comparison to the years after they were no longer teammates? + Note: Westbrook is an older player and more established in seasons post playing with Durant and it will not be surprising if he records more triple doubles as a tenured player than as a younger player</p>
+</section>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [37]:</pre></div><div id="cell-59" class="cell" data-execution_count="37">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df2 <span class="op">=</span> triple_double_games_gb_df[<span class="dv">1</span>].reset_index(level<span class="op">=</span><span class="st">"year"</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df2.keys().name <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df2.rename(columns<span class="op">=</span>{<span class="dv">0</span>:<span class="st">"Away"</span>, <span class="dv">1</span>:<span class="st">"Home"</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">Away</th>
+<th data-quarto-table-cell-role="th">Home</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2008</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2009</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2010</td>
+<td>0.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2012</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013</td>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>2014</td>
+<td>2.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>2015</td>
+<td>7.0</td>
+<td>11.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>2016</td>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>2017</td>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>2018</td>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>2019</td>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>2020</td>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>2021</td>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [38]:</pre></div><div id="cell-60" class="cell" data-execution_count="38">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>with_kd_mask <span class="op">=</span> triple_double_games_gb_df2[<span class="st">"year"</span>]<span class="op">&lt;</span><span class="dv">2016</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>without_kd_mask <span class="op">=</span> triple_double_games_gb_df2[<span class="st">"year"</span>]<span class="op">&gt;=</span><span class="dv">2016</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [39]:</pre></div><div id="cell-61" class="cell" data-execution_count="39">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>triple_double_games_gb_df2.loc[without_kd_mask]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">Away</th>
+<th data-quarto-table-cell-role="th">Home</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>2016</td>
+<td>17.0</td>
+<td>25.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>2017</td>
+<td>16.0</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>2018</td>
+<td>15.0</td>
+<td>19.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>2019</td>
+<td>3.0</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">11</th>
+<td>2020</td>
+<td>17.0</td>
+<td>21.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>2021</td>
+<td>4.0</td>
+<td>5.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [40]:</pre></div><div id="cell-62" class="cell" data-execution_count="40">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># triple_double_games_gb_df2.loc[with_kd_mask]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div id="cell-63" class="cell markdown">
+<ul>
+<li>count triple doubles with and without Kevin Durant as a teammate</li>
+</ul>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [41]:</pre></div><div id="cell-64" class="cell" data-execution_count="41">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>triple_doubles_without_kd <span class="op">=</span> <span class="bu">sum</span>(triple_double_games_gb_df2.loc[without_kd_mask][<span class="st">"Away"</span>])<span class="op">+</span> <span class="bu">sum</span>(triple_double_games_gb_df2.loc[without_kd_mask][<span class="st">"Home"</span>])</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>triple_doubles_with_kd <span class="op">=</span> <span class="bu">sum</span>(triple_double_games_gb_df2.loc[with_kd_mask][<span class="st">"Away"</span>])<span class="op">+</span> <span class="bu">sum</span>(triple_double_games_gb_df2.loc[with_kd_mask][<span class="st">"Home"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [42]:</pre></div><div id="cell-65" class="cell" data-execution_count="42">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Westbrook recorded </span><span class="sc">{</span>triple_doubles_with_kd<span class="sc">}</span><span class="ss"> triple doubles in </span><span class="sc">{</span>triple_double_games_gb_df2<span class="sc">.</span>loc[with_kd_mask]<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> seasons with Kevin Durant as a teammate"</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Westbrook has created </span><span class="sc">{</span>triple_doubles_without_kd<span class="sc">}</span><span class="ss"> triple doubles in </span><span class="sc">{</span>triple_double_games_gb_df2<span class="sc">.</span>loc[without_kd_mask]<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">+ seasons without Kevin Durant as a teammate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Westbrook recorded 37.0 triple doubles in 7 seasons with Kevin Durant as a teammate
+Westbrook has created 156.0 triple doubles in 6+ seasons without Kevin Durant as a teammate</code></pre>
+</div>
+</div></div>
+<div id="cell-66" class="cell markdown">
+<section id="game-margin-by-triple-double-occurrence" class="level3">
+<h3 class="anchored" data-anchor-id="game-margin-by-triple-double-occurrence">Game margin by Triple Double Occurrence</h3>
+<p>Lastly, the game margin during triple double games can provide a naive comparison about how Russ’ pursuit of a triple double affects his team. For instance, if Russ is selfishly pursuing triple doubles at the expense of team success, we could expect that the margin of loss is greater in loses where he records a triple double than in loses where a triple double is not achieved. Similarly, smaller win margins in games with a triple double than without a triple double could suggest a negative team effect when Russ creates a triple double. * what is the margin difference in games that are won/lost, but a triple double is recorded? * compare to margin for games won/lost without a triple double</p>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [43]:</pre></div><div id="cell-67" class="cell" data-execution_count="43">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>triple_double_win_margin <span class="op">=</span> np.mean(triple_double_games_df.loc[triple_double_games_df[<span class="st">"result_b"</span>]<span class="op">==</span><span class="dv">1</span>][<span class="st">"margin"</span>])</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>triple_double_loss_margin <span class="op">=</span> np.mean(triple_double_games_df.loc[triple_double_games_df[<span class="st">"result_b"</span>]<span class="op">==</span><span class="dv">0</span>][<span class="st">"margin"</span>])</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>non_triple_double_win_margin <span class="op">=</span> np.mean(non_triple_double_games_df.loc[non_triple_double_games_df[<span class="st">"result_b"</span>]<span class="op">==</span><span class="dv">1</span>][<span class="st">"margin"</span>])</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>non_triple_double_loss_margin <span class="op">=</span> np.mean(non_triple_double_games_df.loc[non_triple_double_games_df[<span class="st">"result_b"</span>]<span class="op">==</span><span class="dv">0</span>][<span class="st">"margin"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [44]:</pre></div><div id="cell-68" class="cell" data-execution_count="44">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>margin_data <span class="op">=</span> [[<span class="st">"Triple Double Win Margin"</span>, <span class="ss">f"</span><span class="sc">{</span>triple_double_win_margin<span class="sc">:.2f}</span><span class="ss">"</span>],</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>               [<span class="st">"Non-Triple Double Win Margin"</span>, <span class="ss">f"</span><span class="sc">{</span>non_triple_double_win_margin<span class="sc">:.2f}</span><span class="ss">"</span>],</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>               [<span class="st">"Triple Double Loss Margin"</span>, <span class="ss">f"</span><span class="sc">{</span>triple_double_loss_margin<span class="sc">:.2f}</span><span class="ss">"</span>],</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>               [<span class="st">"Non-Triple Double Loss Margin"</span>, <span class="ss">f"</span><span class="sc">{</span>non_triple_double_loss_margin<span class="sc">:.2f}</span><span class="ss">"</span>]]</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>margin_table <span class="op">=</span> tabulate.tabulate(margin_data, tablefmt<span class="op">=</span><span class="st">'html'</span>)</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>margin_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<table class="caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td>Triple Double Win Margin</td>
+<td style="text-align: right;">11.55</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Win Margin</td>
+<td style="text-align: right;">11.59</td>
+</tr>
+<tr class="odd">
+<td>Triple Double Loss Margin</td>
+<td style="text-align: right;">-7.27</td>
+</tr>
+<tr class="even">
+<td>Non-Triple Double Loss Margin</td>
+<td style="text-align: right;">-9.96</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<div id="cell-69" class="cell markdown">
+<ul>
+<li>When Russ’s teams lose, they (on average) lose by a smaller margin (-7.27) when he records a triple double than when he does not (-9.96)</li>
+<li>Unlike the margin in losses, the win margin is nearly identical in games Russ’ teams win when Russ records a triple double (11.55) than when he does not (11.6)</li>
+</ul>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>In all honesty, these results are surprising (to me) and speak well for Russ and his supporters</p>
+<ul>
+<li>Westbrook’s teams win a far greater percentage of games when he has a triple double than when he doesn’t
+<ul>
+<li>74% of games won when a triple double is recorded vs 55% of games won without a triple double</li>
+</ul></li>
+<li>Additionally, game margins suggests that when Westbrook creates a triple double, the team performance is not negatively impacted.
+<ul>
+<li>When Westbrook’s teams lose but he records a triple double are smaller than game margins when a triple double is not recorded in a loss.</li>
+<li>Furthermore, Russ’ teams win at a similar margin when he does and does not record a triple double.</li>
+<li>Together, the game margin evidence suggests that Russ is not pursuing triple doubles in blowouts and not <a href="https://en.wikipedia.org/wiki/Stat_padding#:~:text=In%20sports%2C%20stat%20padding%20is,or%20its%20chance%20of%20winning.">stat padding</a> as suggested in <a href="https://www.youtube.com/watch?v=N8erK7T_LIQ">this video</a></li>
+</ul></li>
+<li>Westbrook recently became a triple double machine, amassing 156 of his 193 triple doubles in the last 6+ seasons alone alone
+<ul>
+<li>Westbrook’s increased pursuit of the triple double occurs after the Oklahoma City Thunder lost Kevin Durant during Free Agency in the summer of 2016</li>
+<li>For reference, LeBron James (4<sup>th</sup> all time in triple doubles) has recorded 103 total triple doubles in a 19-year NBA career
+<ul>
+<li>Westbrook is 12<sup>th</sup> all time in assists while LeBron is 7<sup>th</sup> (source: <a href="http://www.espn.com/nba/history/leaders/_/stat/assists">ESPN</a>)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="footnotes" class="level2">
+<h2 class="anchored" data-anchor-id="footnotes">Footnotes</h2>
+<p><a href="#fn1-back"><sup id="fn1">1</sup></a>steals and blocks were added to the box score almost a decade after points, rebounds, and assists. <a href="https://www.blazersedge.com/2017/1/19/13755264/nba-box-score-history">This blazersedge.com article</a> has excellent documentation of the NBA box score’s evolution</p>
+</section>
+</div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [45]:</pre></div><div id="cell-70" class="cell" data-execution_count="45">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> IPython</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'originally published 2022-03-06 11:43'</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'last updated: </span><span class="sc">{</span>datetime<span class="sc">.</span>now()<span class="sc">.</span>strftime(<span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M"</span>)<span class="sc">}</span><span class="ss"> </span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Python version: </span><span class="sc">{</span>sys<span class="sc">.</span>version_info<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'matplotlib version: </span><span class="sc">{</span>mpl<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'iPython version: </span><span class="sc">{</span>IPython<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'urllib version: </span><span class="sc">{</span>urllib<span class="sc">.</span>request<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'seaborn version: </span><span class="sc">{</span>sns<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'pandas version: </span><span class="sc">{</span>pd<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>originally published 2022-03-06 11:43
+last updated: 2022-03-06 19:22 
+
+Python version: sys.version_info(major=3, minor=9, micro=7, releaselevel='final', serial=0)
+matplotlib version: 3.4.3
+iPython version: 7.29.0
+urllib version: 3.9
+seaborn version: 0.11.2
+pandas version: 1.4.1</code></pre>
+</div>
+</div></div>
+
+
+     </main> <!-- /main -->  <script src="bayesian-waves-bg.js"></script>  <script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>  </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer> 
+  
+</body></html>

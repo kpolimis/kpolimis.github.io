@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Flights Analysis – Kivan Polimis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-13638beb95dfda4e1912baf1c05b0f4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivanpolimis"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#google-takeout" id="toc-google-takeout" class="nav-link" data-scroll-target="#google-takeout">Google Takeout</a></li>
+  <li><a href="#install-modules" id="toc-install-modules" class="nav-link" data-scroll-target="#install-modules">Install modules</a></li>
+  </ul></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#data-extraction" id="toc-data-extraction" class="nav-link" data-scroll-target="#data-extraction">Data Extraction</a></li>
+  <li><a href="#explore-data" id="toc-explore-data" class="nav-link" data-scroll-target="#explore-data">Explore Data</a></li>
+  <li><a href="#data-manipulation" id="toc-data-manipulation" class="nav-link" data-scroll-target="#data-manipulation">Data manipulation</a>
+  <ul class="collapse">
+  <li><a href="#degrees-and-radians" id="toc-degrees-and-radians" class="nav-link" data-scroll-target="#degrees-and-radians">Degrees and Radians</a></li>
+  <li><a href="#spherical-distance-function" id="toc-spherical-distance-function" class="nav-link" data-scroll-target="#spherical-distance-function">spherical distance function</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#flight-algorithm" id="toc-flight-algorithm" class="nav-link" data-scroll-target="#flight-algorithm">Flight algorithm</a></li>
+  <li><a href="#visualize-flights" id="toc-visualize-flights" class="nav-link" data-scroll-target="#visualize-flights">Visualize Flights</a></li>
+  <li><a href="#create-.gif-and-.png-of-all-flights" id="toc-create-.gif-and-.png-of-all-flights" class="nav-link" data-scroll-target="#create-.gif-and-.png-of-all-flights">Create .gif and .png of all flights</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#potential-future-directions" id="toc-potential-future-directions" class="nav-link" data-scroll-target="#potential-future-directions">Potential future directions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Flights Analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The goal of this post is to visualize flights taken from Google location data using Python * We will create a .gif progressing through individual flights and a .png of all flights * This post utilizes code from Tyler Hartley’s <a href="http://beneathdata.com/how-to/visualizing-my-location-history/">visualizing location history blog post</a></p>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<ol type="1">
+<li>Setup
+<ul>
+<li>download data</li>
+<li>install modules</li>
+</ul></li>
+<li>Data Wrangling
+<ul>
+<li>data extraction</li>
+<li>data exploration</li>
+<li>data manipulation</li>
+</ul></li>
+<li>Flight Algorithm</li>
+<li>Visualize Flights
+<ul>
+<li>create individual .png of each flight to combine into .gif</li>
+<li>create .png of all flights plotted at once</li>
+</ul></li>
+<li>Conclusion</li>
+</ol>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<ol type="1">
+<li>Use Google Takout to download your Google location history</li>
+</ol>
+<ul>
+<li>If you’ve previously enabled Google location reporting on your smartphone, your GPS data will be periodically uploaded to <a href="https://support.google.com/accounts/answer/3118687?hl=en&amp;visit_id=1-636109809748631344-4285616029&amp;rd=1">Google’s servers</a>. Use Google Takeout to download your location history.
+<ul>
+<li>The decisions of when and how to upload this data are entirely obfuscated to the end user, but as you’ll see below, Android appears to upload a GPS location every 60 seconds. That’s plenty of data to work with.</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li>After downloading your data, install the required modules</li>
+</ol>
+<section id="google-takeout" class="level2">
+<h2 class="anchored" data-anchor-id="google-takeout">Google Takeout</h2>
+<p>Google <a href="https://takeout.google.com/settings/takeout">Takeout</a> is a Google service that allows users to export any personal Google data. We’ll use Takeout to download our raw location history as a one-time snapshot. Since Latitude was retired, no API exists to access location history in real-time.</p>
+<p>Download location data: * Go to <a href="https://www.google.com/settings/takeout">takeout</a>. Uncheck all services except “Location History” * The data will be in a json format, which works great for us. Download it in your favorite compression type. * When Google has finished creating your archive, you’ll get an email notification and a link to download. * Download and unzip the file, and you should be looking at a <code>LocationHistory.json</code> file. Working with location data in <a href="http://pandas.pydata.org/">Pandas</a>. Pandas is an incredibly powerful tool that simplifies working with complex datatypes and performing statistical analysis in the style of R. Chris Albon has great primers on using Pandas <a href="http://chrisalbon.com/#Python">here</a> under the “Data Wrangling” section.</p>
+</section>
+<section id="install-modules" class="level2">
+<h2 class="anchored" data-anchor-id="install-modules">Install modules</h2>
+<ul>
+<li>If you use Anaconda to manage your Python packages, I recommend creating a virtual environment with anaconda to install the dependencies. Copying the lines below the instruction into the terminal creates the environment, requirements.txt, etc.
+<ul>
+<li>conda create -n test-env python=3.5 anaconda</li>
+<li>source activate test-env</li>
+</ul></li>
+<li>make a requirements.txt file for dependencies
+<ul>
+<li>(echo descartes; echo IPython; echo shapely; echo fiona; echo Basemap) &gt;&gt; requirements.txt<br>
+</li>
+</ul></li>
+<li>install requirements.txt
+<ul>
+<li>conda install –yes –file requirements.txt</li>
+</ul></li>
+<li>Windows users:
+<ul>
+<li>create a python2.7 environment to install relevant modules
+<ul>
+<li>conda create -n py27 python=2.7 anaconda</li>
+<li>source activate py27</li>
+</ul></li>
+<li>Download and install <a href="https://www.microsoft.com/EN-US/DOWNLOAD/DETAILS.ASPX?ID=44266">Microsoft Visual C++ Compiler for Python 2.7</a></li>
+<li>install fiona, Shapely, GDAL, descartes, and basemap from https://www.lfd.uci.edu/~gohlke/pythonlibs/</li>
+</ul></li>
+</ul>
+<p>After completing the setup, we’ll read in the <code>LocationHistory.json</code> file from Google Takeout and create a DataFrame.</p>
+<div id="cell-4" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> __future__ <span class="im">import</span> division</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> <span class="op">*</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="data-wrangling" class="level1">
+<h1>Data Wrangling</h1>
+<section id="data-extraction" class="level2">
+<h2 class="anchored" data-anchor-id="data-extraction">Data Extraction</h2>
+<div id="cell-6" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'data/LocationHistory/2018/LocationHistory.json'</span>, <span class="st">'r'</span>) <span class="im">as</span> location_file:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> json.loads(location_file.read())</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># use location_data as an abbreviation for location data</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>location_data <span class="op">=</span> pd.DataFrame(raw[<span class="st">'locations'</span>])</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> raw <span class="co">#free up some memory</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to typical units</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'latitudeE7'</span>] <span class="op">=</span> location_data[<span class="st">'latitudeE7'</span>]<span class="op">/</span><span class="bu">float</span>(<span class="fl">1e7</span>) </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'longitudeE7'</span>] <span class="op">=</span> location_data[<span class="st">'longitudeE7'</span>]<span class="op">/</span><span class="bu">float</span>(<span class="fl">1e7</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># convert timestampMs to seconds</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'timestampMs'</span>] <span class="op">=</span> location_data[<span class="st">'timestampMs'</span>].<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="bu">float</span>(x)<span class="op">/</span><span class="dv">1000</span>) </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'datetime'</span>] <span class="op">=</span> location_data.timestampMs.<span class="bu">map</span>(datetime.datetime.fromtimestamp)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename fields based on the conversions</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>location_data.rename(columns<span class="op">=</span>{<span class="st">'latitudeE7'</span>:<span class="st">'latitude'</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                              <span class="st">'longitudeE7'</span>:<span class="st">'longitude'</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                              <span class="st">'timestampMs'</span>:<span class="st">'timestamp'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Ignore locations with accuracy estimates over 1000m</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>location_data <span class="op">=</span> location_data[location_data.accuracy <span class="op">&lt;</span> <span class="dv">1000</span>]</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>location_data.reset_index(drop<span class="op">=</span><span class="va">True</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="explore-data" class="level2">
+<h2 class="anchored" data-anchor-id="explore-data">Explore Data</h2>
+<ul>
+<li>view data and datatypes</li>
+</ul>
+<div id="cell-8" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(location_data.dtypes)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>location_data.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy                     int64
+activity                    object
+altitude                   float64
+heading                    float64
+latitude                   float64
+longitude                  float64
+timestamp                  float64
+velocity                   float64
+verticalAccuracy           float64
+datetime            datetime64[ns]
+dtype: object</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">accuracy</th>
+<th data-quarto-table-cell-role="th">altitude</th>
+<th data-quarto-table-cell-role="th">heading</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">timestamp</th>
+<th data-quarto-table-cell-role="th">velocity</th>
+<th data-quarto-table-cell-role="th">verticalAccuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">count</th>
+<td>745660.000000</td>
+<td>101260.000000</td>
+<td>44100.000000</td>
+<td>745660.000000</td>
+<td>745660.000000</td>
+<td>7.456600e+05</td>
+<td>58874.000000</td>
+<td>4921.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>58.997173</td>
+<td>67.057525</td>
+<td>186.597551</td>
+<td>37.748367</td>
+<td>-102.506537</td>
+<td>1.417774e+09</td>
+<td>7.769678</td>
+<td>23.099776</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">std</th>
+<td>125.358984</td>
+<td>242.209547</td>
+<td>101.643968</td>
+<td>9.004123</td>
+<td>23.609836</td>
+<td>3.356510e+07</td>
+<td>11.790783</td>
+<td>45.139324</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">min</th>
+<td>1.000000</td>
+<td>-715.000000</td>
+<td>0.000000</td>
+<td>13.689757</td>
+<td>-123.260751</td>
+<td>1.376790e+09</td>
+<td>0.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">25%</th>
+<td>22.000000</td>
+<td>-18.000000</td>
+<td>98.000000</td>
+<td>29.817569</td>
+<td>-122.306596</td>
+<td>1.391259e+09</td>
+<td>0.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">50%</th>
+<td>31.000000</td>
+<td>2.000000</td>
+<td>181.000000</td>
+<td>29.986634</td>
+<td>-95.246060</td>
+<td>1.413249e+09</td>
+<td>1.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">75%</th>
+<td>50.000000</td>
+<td>60.000000</td>
+<td>270.000000</td>
+<td>47.664284</td>
+<td>-94.995603</td>
+<td>1.428049e+09</td>
+<td>13.000000</td>
+<td>30.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">max</th>
+<td>999.000000</td>
+<td>6738.000000</td>
+<td>359.000000</td>
+<td>50.105984</td>
+<td>23.782015</td>
+<td>1.519330e+09</td>
+<td>208.000000</td>
+<td>473.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>accuracy code “999” may represent missingness<br>
+</li>
+<li>find earliest and latest observations in the data
+<ul>
+<li>save for later</li>
+</ul></li>
+</ul>
+<div id="cell-10" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"earliest observed date: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">min</span>(location_data[<span class="st">"datetime"</span>]).strftime(<span class="st">'%m-</span><span class="sc">%d</span><span class="st">-%Y'</span>)))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"latest observed date: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">max</span>(location_data[<span class="st">"datetime"</span>]).strftime(<span class="st">'%m-</span><span class="sc">%d</span><span class="st">-%Y'</span>)))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>earliest_obs <span class="op">=</span> <span class="bu">min</span>(location_data[<span class="st">"datetime"</span>]).strftime(<span class="st">'%m-</span><span class="sc">%d</span><span class="st">-%Y'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>latest_obs <span class="op">=</span> <span class="bu">max</span>(location_data[<span class="st">"datetime"</span>]).strftime(<span class="st">'%m-</span><span class="sc">%d</span><span class="st">-%Y'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>earliest observed date: 08-17-2013
+latest observed date: 02-22-2018</code></pre>
+</div>
+</div>
+</section>
+<section id="data-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="data-manipulation">Data manipulation</h2>
+<section id="degrees-and-radians" class="level3">
+<h3 class="anchored" data-anchor-id="degrees-and-radians">Degrees and Radians</h3>
+<ul>
+<li>We’re going to convert the degree-based geo data to radians to calculate distance traveled. I’m going to paraphrase an explanation (source below) about why the degree-to-radians conversion is necessary
+<ul>
+<li>Degrees are arbitrary because they’re based on the sun and backwards because they are from the observer’s perspective.</li>
+<li>Radians are in terms of the mover allowing equations to “click into place”. Converting rotational to linear speed is easy, and ideas like sin(x)/x make sense.</li>
+</ul></li>
+</ul>
+<p>Consult <a href="https://betterexplained.com/articles/intuitive-guide-to-angles-degrees-and-radians/">this post</a> for more info about degrees and radians in distance calculation.</p>
+<ul>
+<li>convert degrees to radians</li>
+</ul>
+<div id="cell-12" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>degrees_to_radians <span class="op">=</span> np.pi<span class="op">/</span><span class="fl">180.0</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'phi'</span>] <span class="op">=</span> (<span class="fl">90.0</span> <span class="op">-</span> location_data.latitude) <span class="op">*</span> degrees_to_radians </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'theta'</span>] <span class="op">=</span> location_data.longitude <span class="op">*</span> degrees_to_radians</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute distance between two GPS points on a unit sphere</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'distance'</span>] <span class="op">=</span> np.arccos(np.sin(location_data.phi)<span class="op">*</span>np.sin(location_data.phi.shift(<span class="op">-</span><span class="dv">1</span>)) <span class="op">*</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                                      np.cos(location_data.theta <span class="op">-</span> location_data.theta.shift(<span class="op">-</span><span class="dv">1</span>)) <span class="op">+</span>  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                                      np.cos(location_data.phi)<span class="op">*</span>np.cos(location_data.phi.shift(<span class="op">-</span><span class="dv">1</span>))) <span class="op">*</span> <span class="fl">6378.100</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 6378.100  is the radius of earth in km</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li>calculate speed during trips (in km/hr)</li>
+</ul>
+<div id="cell-14" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>location_data[<span class="st">'speed'</span>] <span class="op">=</span> (location_data.distance<span class="op">/</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          (location_data.timestamp <span class="op">-</span> location_data.timestamp.shift(<span class="op">-</span><span class="dv">1</span>))<span class="op">*</span><span class="dv">3600</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li>Make a new dataframe containing the difference in location between each pair of points.</li>
+<li>Any one of these pairs is a potential flight</li>
+</ul>
+<div id="cell-16" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>flight_data <span class="op">=</span> pd.DataFrame(data<span class="op">=</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                           {<span class="st">'end_lat'</span>:location_data.latitude,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'end_lon'</span>:location_data.longitude,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'end_datetime'</span>:location_data.datetime,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'distance'</span>:location_data.distance,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'speed'</span>:location_data.speed,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'start_lat'</span>:location_data.shift(<span class="op">-</span><span class="dv">1</span>).latitude,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'start_lon'</span>:location_data.shift(<span class="op">-</span><span class="dv">1</span>).longitude,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                            <span class="st">'start_datetime'</span>:location_data.shift(<span class="op">-</span><span class="dv">1</span>).datetime,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                           }).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li>Now flightdata contains a comparison of each adjacent GPS location.</li>
+<li>All that’s left to do is filter out the true flight instances from the rest of them.</li>
+</ul>
+</section>
+<section id="spherical-distance-function" class="level3">
+<h3 class="anchored" data-anchor-id="spherical-distance-function">spherical distance function</h3>
+<ul>
+<li>distance_on_unit_sphere: function to calculate straight-line distance traveled on a sphere</li>
+<li>see utils.py for function documentation</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="flight-algorithm" class="level1">
+<h1>Flight algorithm</h1>
+<ul>
+<li>filter flights
+<ul>
+<li>remove flights using conservative selection criteria</li>
+</ul></li>
+</ul>
+<div id="cell-18" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flight_data[(flight_data.speed <span class="op">&gt;</span> <span class="dv">40</span>) <span class="op">&amp;</span> (flight_data.distance <span class="op">&gt;</span> <span class="dv">80</span>)].reset_index()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine instances of flight that are directly adjacent </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the indices of flights that are directly adjacent</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>_f <span class="op">=</span> flights[flights[<span class="st">'index'</span>].diff() <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>adjacent_flight_groups <span class="op">=</span> np.split(_f, (_f[<span class="st">'index'</span>].diff() <span class="op">&gt;</span> <span class="dv">1</span>).nonzero()[<span class="dv">0</span>])</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now iterate through the groups of adjacent flights and merge their data into</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># one flight entry</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> flight_group <span class="kw">in</span> adjacent_flight_groups:</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> flight_group.index[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span> <span class="co">#the index of flight termination</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    flights.loc[idx, [<span class="st">'start_lat'</span>, <span class="st">'start_lon'</span>, <span class="st">'start_datetime'</span>]] <span class="op">=</span> [flight_group.iloc[<span class="op">-</span><span class="dv">1</span>].start_lat, </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                                                         flight_group.iloc[<span class="op">-</span><span class="dv">1</span>].start_lon, </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                                                         flight_group.iloc[<span class="op">-</span><span class="dv">1</span>].start_datetime]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recompute total distance of flight</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    flights.loc[idx, <span class="st">'distance'</span>] <span class="op">=</span> distance_on_unit_sphere(flights.loc[idx].start_lat,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                                                           flights.loc[idx].start_lon,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                                                           flights.loc[idx].end_lat,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                                                           flights.loc[idx].end_lon)<span class="op">*</span><span class="fl">6378.1</span>   </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Now remove the "flight" entries we don't need anymore.</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flights.drop(_f.index).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Finally, we can be confident that we've removed instances of flights broken up by</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co"># GPS data points during flight. We can now be more liberal in our constraints for what</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># constitutes flight. Let's remove any instances below 200km as a final measure.</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flights[flights.distance <span class="op">&gt;</span> <span class="dv">200</span>].reset_index(drop<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>This algorithm worked nearly 100% of the time for me with less than 5 false positives or negatives; however, the adjacency-criteria of the algorithm is fairly brittle. The core of it centers around the assumption that inter-flight GPS data will be directly adjacent to one another. That’s why the initial screening on line 1 of the previous cell had to be so liberal.</p>
+<p>Now, the flights DataFrame contains only instances of true flights which facilitates plotting with Matplotlib’s Basemap. If we plot on a flat projection like tmerc, the drawgreatcircle function will produce a true path arc just like we see in the in-flight magazines.</p>
+</section>
+<section id="visualize-flights" class="level1">
+<h1>Visualize Flights</h1>
+<ul>
+<li>Reset the flight index and change index values by adding a leading 0 for index items 0-9 (e.g., 1 becomes 01)</li>
+<li>This new index is important for correctly ordering images as we create a gif</li>
+</ul>
+<div id="cell-20" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flights.sort_values(by<span class="op">=</span><span class="st">"start_datetime"</span>).reset_index()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">"index"</span>] <span class="op">=</span> flights.index</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">"index"</span>] <span class="op">=</span> flights[<span class="st">"index"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{0:0&gt;2}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>flights.index <span class="op">=</span> flights[<span class="st">"index"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li>view the first observation in the flights dataframe</li>
+</ul>
+<div id="cell-22" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>flights.iloc[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>level_0                                  114
+index                                     00
+distance                             255.032
+end_datetime      2013-09-08 11:00:26.190000
+end_lat                              30.4372
+end_lon                             -95.4975
+speed                                117.789
+start_datetime    2013-09-08 08:50:31.631000
+start_lat                            32.4222
+start_lon                           -96.8384
+Name: 00, dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="create-.gif-and-.png-of-all-flights" class="level1">
+<h1>Create .gif and .png of all flights</h1>
+<ol type="1">
+<li>Create a folder called <code>flights2018</code> within the <code>output</code> directory to save all .pngs</li>
+<li>Loop through each flight and create a .png with the following characteristics
+<ul>
+<li>the origin of the current flight is a green circle</li>
+<li>the destination of the current flight is red circle</li>
+<li>the current flight is gold</li>
+<li>previous flights are purple
+<ul>
+<li>the origin and destination of previous flights are black circles</li>
+</ul></li>
+</ul></li>
+<li>The .png of all flights loops through the flights data frame and plots each flight simultaneously</li>
+</ol>
+<div id="cell-24" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(<span class="st">'output/flights2018'</span>):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">'output/flights2018'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="cell-25" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">18</span>,<span class="dv">12</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>current_date <span class="op">=</span> time.strftime(<span class="st">"printed: %a, </span><span class="sc">%d</span><span class="st"> %b %Y"</span>, time.localtime())</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting across the international dateline is tough. </span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># One option is to break up flights by hemisphere. </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Otherwise, you'd need to plot using a different projection like 'robin' and </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># potentially center on the Int'l Dateline (lon_0=-180)</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Western Hemisphere Flights</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># flights = flights[(flights.start_lon &lt; 0) &amp; (flights.end_lon &lt; 0)]</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Eastern Hemisphere Flights</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># flights = flights[(flights.start_lon &gt; 0) &amp; (flights.end_lon &gt; 0)] </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>xbuf <span class="op">=</span> <span class="fl">0.2</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>ybuf <span class="op">=</span> <span class="fl">0.35</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>min_lat <span class="op">=</span> np.<span class="bu">min</span>([flights.end_lat.<span class="bu">min</span>(), flights.start_lat.<span class="bu">min</span>()])</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>min_lon <span class="op">=</span> np.<span class="bu">min</span>([flights.end_lon.<span class="bu">min</span>(), flights.start_lon.<span class="bu">min</span>()])</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>max_lat <span class="op">=</span> np.<span class="bu">max</span>([flights.end_lat.<span class="bu">max</span>(), flights.start_lat.<span class="bu">max</span>()])</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>max_lon <span class="op">=</span> np.<span class="bu">max</span>([flights.end_lon.<span class="bu">max</span>(), flights.start_lon.<span class="bu">max</span>()])</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> max_lon <span class="op">-</span> min_lon</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> max_lat <span class="op">-</span> min_lat</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> Basemap(llcrnrlon<span class="op">=</span>min_lon <span class="op">-</span> width<span class="op">*</span> xbuf,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>            llcrnrlat<span class="op">=</span>min_lat <span class="op">-</span> height<span class="op">*</span>ybuf,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>            urcrnrlon<span class="op">=</span>max_lon <span class="op">+</span> width<span class="op">*</span> xbuf,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>            urcrnrlat<span class="op">=</span>max_lat <span class="op">+</span> height<span class="op">*</span>ybuf,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>            projection<span class="op">=</span><span class="st">'merc'</span>,</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>            resolution<span class="op">=</span><span class="st">'l'</span>,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            lat_0<span class="op">=</span>min_lat <span class="op">+</span> height<span class="op">/</span><span class="dv">2</span>,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            lon_0<span class="op">=</span>min_lon <span class="op">+</span> width<span class="op">/</span><span class="dv">2</span>,)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>m.drawmapboundary(fill_color<span class="op">=</span><span class="st">'#EBF4FA'</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>m.drawcoastlines()</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>m.drawstates()</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>m.drawcountries()</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>m.fillcontinents()</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, f <span class="kw">in</span> flights.iterrows():</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>    m.drawgreatcircle(f.start_lon, f.start_lat, f.end_lon,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>                      f.end_lat, linewidth<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'#ffd700'</span> )</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.start_lon, f.start_lat), color<span class="op">=</span><span class="st">'g'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, marker<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.end_lon, f.end_lat), color<span class="op">=</span><span class="st">'r'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, marker<span class="op">=</span><span class="st">'o'</span> )</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    fig.text(<span class="fl">0.125</span>, <span class="fl">.24</span>, <span class="st">"kivanpolimis.com"</span>, color<span class="op">=</span><span class="st">'#555555'</span>, fontsize<span class="op">=</span><span class="dv">15</span>, ha<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    fig.text(<span class="fl">0.125</span>,<span class="fl">.2</span>,</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Plotted using Python, Basemap </span><span class="ch">\n</span><span class="st"> Collected from </span><span class="sc">{0}</span><span class="st"> to </span><span class="sc">{1}</span><span class="st"> on Android </span><span class="ch">\n</span><span class="st"> </span><span class="sc">{2}</span><span class="st">"</span>.</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>         <span class="bu">format</span>(earliest_obs, latest_obs, current_date),</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>         ha<span class="op">=</span><span class="st">'left'</span>, color<span class="op">=</span><span class="st">'#555555'</span>, style<span class="op">=</span><span class="st">'italic'</span>)</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">'output/flights2018/flights_</span><span class="sc">{}</span><span class="st">.png'</span>.<span class="bu">format</span>(idx),</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>                dpi<span class="op">=</span><span class="dv">150</span>, frameon<span class="op">=</span><span class="va">False</span>, transparent<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>                bbox_inches<span class="op">=</span><span class="st">'tight'</span>, pad_inches<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    m.drawgreatcircle(f.start_lon, f.start_lat, f.end_lon, f.end_lat,</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>                      linewidth<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'#800080'</span> )</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>    m.drawgreatcircle(f.start_lon, f.start_lat, f.end_lon, f.end_lat,</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>                      linewidth<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'b'</span> )</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.start_lon, f.start_lat), color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, marker<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.end_lon, f.end_lat), color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, marker<span class="op">=</span><span class="st">'o'</span> )</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li>create a .gif by combing all the (ordered) .pngs in the <code>flights2018</code> directory with the glob</li>
+<li>use <a href="https://www.imagemagick.org/script/download.php">ImageMagick</a> to create the .gif
+<ul>
+<li>ImageMagick is a free and open-source software suite for displaying, converting, and editing raster image and vector image files. It can read and write over 200 image file formats.</li>
+<li>source: https://en.wikipedia.org/wiki/ImageMagick</li>
+</ul></li>
+</ul>
+<div id="cell-27" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># code to create .gif from:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># http://superfluoussextant.com/making-gifs-with-python.html</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>gif_name <span class="op">=</span> <span class="st">'flights2018'</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all the .pngs in the `flights2018` directory</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>file_list <span class="op">=</span> glob.glob(<span class="st">'output/flights2018/*.png'</span>) </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the images by number</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>.sort(file_list, key<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">int</span>(x.split(<span class="st">'_'</span>)[<span class="dv">1</span>].split(<span class="st">'.png'</span>)[<span class="dv">0</span>])) </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'image_list.txt'</span>, <span class="st">'w'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> item <span class="kw">in</span> file_list:</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">file</span>.write(<span class="st">"</span><span class="sc">%s</span><span class="ch">\n</span><span class="st">"</span> <span class="op">%</span> item)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># On Windows convert is 'magick'</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">'magick -loop 0 -delay "10" @image_list.txt output/</span><span class="sc">{}</span><span class="st">.gif'</span>.<span class="bu">format</span>(gif_name)) </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># On Unix/Mac use convert </span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#os.system('convert -loop 0 -delay "10" @image_list.txt output/{}.gif'.format(gif_name))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div id="cell-28" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Image(url<span class="op">=</span><span class="st">'output/</span><span class="sc">{}</span><span class="st">.gif'</span>.<span class="bu">format</span>(gif_name)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<img src="output/flights2018.gif">
+</div>
+</div>
+<ul>
+<li>create .png of all flights</li>
+</ul>
+<div id="cell-30" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">18</span>,<span class="dv">12</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>current_date <span class="op">=</span> time.strftime(<span class="st">"printed: %a, </span><span class="sc">%d</span><span class="st"> %b %Y"</span>, time.localtime())</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>png_name <span class="op">=</span> <span class="st">'flights2018'</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>xbuf <span class="op">=</span> <span class="fl">0.2</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>ybuf <span class="op">=</span> <span class="fl">0.35</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>min_lat <span class="op">=</span> np.<span class="bu">min</span>([flights.end_lat.<span class="bu">min</span>(), flights.start_lat.<span class="bu">min</span>()])</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>min_lon <span class="op">=</span> np.<span class="bu">min</span>([flights.end_lon.<span class="bu">min</span>(), flights.start_lon.<span class="bu">min</span>()])</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>max_lat <span class="op">=</span> np.<span class="bu">max</span>([flights.end_lat.<span class="bu">max</span>(), flights.start_lat.<span class="bu">max</span>()])</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>max_lon <span class="op">=</span> np.<span class="bu">max</span>([flights.end_lon.<span class="bu">max</span>(), flights.start_lon.<span class="bu">max</span>()])</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> max_lon <span class="op">-</span> min_lon</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> max_lat <span class="op">-</span> min_lat</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> Basemap(llcrnrlon<span class="op">=</span>min_lon <span class="op">-</span> width<span class="op">*</span> xbuf,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>            llcrnrlat<span class="op">=</span>min_lat <span class="op">-</span> height<span class="op">*</span>ybuf,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>            urcrnrlon<span class="op">=</span>max_lon <span class="op">+</span> width<span class="op">*</span> xbuf,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>            urcrnrlat<span class="op">=</span>max_lat <span class="op">+</span> height<span class="op">*</span>ybuf,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>            projection<span class="op">=</span><span class="st">'merc'</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>            resolution<span class="op">=</span><span class="st">'l'</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>            lat_0<span class="op">=</span>min_lat <span class="op">+</span> height<span class="op">/</span><span class="dv">2</span>,</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>            lon_0<span class="op">=</span>min_lon <span class="op">+</span> width<span class="op">/</span><span class="dv">2</span>,)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>m.drawmapboundary(fill_color<span class="op">=</span><span class="st">'#EBF4FA'</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>m.drawcoastlines()</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>m.drawstates()</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>m.drawcountries()</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>m.fillcontinents()</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, f <span class="kw">in</span> flights.iterrows():</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    m.drawgreatcircle(f.start_lon, f.start_lat, f.end_lon, f.end_lat,</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>                      linewidth<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.start_lon, f.start_lat), color<span class="op">=</span><span class="st">'g'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, marker<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    m.plot(<span class="op">*</span>m(f.end_lon, f.end_lat), color<span class="op">=</span><span class="st">'r'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, marker<span class="op">=</span><span class="st">'o'</span> )</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>fig.text(<span class="fl">0.125</span>, <span class="fl">.24</span>, <span class="st">"kivanpolimis.com"</span>, color<span class="op">=</span><span class="st">'#555555'</span>, fontsize<span class="op">=</span><span class="dv">15</span>, ha<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>fig.text(<span class="fl">0.125</span>,<span class="fl">.2</span>,</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Plotted using Python, Basemap </span><span class="ch">\n</span><span class="st"> Collected from </span><span class="sc">{0}</span><span class="st"> to </span><span class="sc">{1}</span><span class="st"> on Android </span><span class="ch">\n</span><span class="st"> </span><span class="sc">{2}</span><span class="st">"</span>.</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>         <span class="bu">format</span>(earliest_obs, latest_obs, current_date),</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>         ha<span class="op">=</span><span class="st">'left'</span>, color<span class="op">=</span><span class="st">'#555555'</span>, style<span class="op">=</span><span class="st">'italic'</span>)</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'output/</span><span class="sc">{}</span><span class="st">.png'</span>.<span class="bu">format</span>(png_name),</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>            dpi<span class="op">=</span><span class="dv">150</span>, frameon<span class="op">=</span><span class="va">False</span>, transparent<span class="op">=</span><span class="va">False</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, pad_inches<span class="op">=</span><span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="cell-31" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Image(filename<span class="op">=</span><span class="st">'output/</span><span class="sc">{}</span><span class="st">.png'</span>.<span class="bu">format</span>(png_name)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+<figure class="figure">
+<p><img src="flights_analysis_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Calculate all the miles you have traveled in the years observed with a single line of code:</li>
+</ul>
+<div id="cell-33" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distance column is in km, convert to miles</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>flights_in_miles <span class="op">=</span> <span class="bu">round</span>(flights.distance.<span class="bu">sum</span>()<span class="op">*</span><span class="fl">.621371</span>) </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="sc">{0}</span><span class="st"> miles traveled from </span><span class="sc">{1}</span><span class="st"> to </span><span class="sc">{2}</span><span class="st">"</span>.<span class="bu">format</span>(flights_in_miles, earliest_obs, latest_obs))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>172130.0 miles traveled from 08-17-2013 to 02-22-2018</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>You can leverage this notebook, scripts, and cited sources to reproduce these maps.<br>
+I’m working on creating functions to automate these visualizations</p>
+<section id="potential-future-directions" class="level2">
+<h2 class="anchored" data-anchor-id="potential-future-directions">Potential future directions</h2>
+<ul>
+<li>label airports
+<ul>
+<li>can use <a href="https://openflights.org/data.html">open flights dataset</a></li>
+</ul></li>
+<li>add flight information (origin, destination, etc.) in the legend of each .png that is used to create the .gif</li>
+</ul>
+<p>Download this <a href="downloads/notebooks/flights_analysis.ipynb">notebook</a>, or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/flights_analysis.ipynb">here</a></p>
+<div id="cell-35" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"System and module version information: </span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Python version: </span><span class="ch">\n</span><span class="st"> </span><span class="sc">{}</span><span class="st"> </span><span class="ch">\n</span><span class="st">'</span>.<span class="bu">format</span>(sys.version_info))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"last updated: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(time.strftime(<span class="st">"%a, </span><span class="sc">%d</span><span class="st"> %b %Y %H:%M"</span>, time.localtime())))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>System and module version information: 
+
+Python version: 
+ sys.version_info(major=2, minor=7, micro=14, releaselevel='final', serial=0) 
+
+last updated: Thu, 15 Mar 2018 04:28</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="bayesian-waves-bg.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

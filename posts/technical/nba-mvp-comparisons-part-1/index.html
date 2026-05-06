@@ -63,7 +63,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -108,6 +108,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -186,9 +189,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../../../downloads/notebooks/nba_mvp_comparisons-part_1-preview.html"><i class="bi bi-journal-code"></i>NBA MVP Comparisons</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -228,7 +231,1634 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- migrated from pelican: nba_mvp_comparisons-part_1.md -->
-<p>{% notebook nba_mvp_comparisons-part_1.ipynb %}</p>
+<div class="quarto-embed-nb-cell">
+<section id="nba-mvp-comparisons" class="level1">
+<h1>NBA MVP Comparisons</h1>
+<section id="part-1" class="level2">
+<h2 class="anchored" data-anchor-id="part-1">Part 1</h2>
+<ul>
+<li>25 <sup>th</sup> December 2018</li>
+</ul>
+<p>It’s Christmas and that means a full slate of NBA games. This time of year also provokes some great NBA discussions and the best NBA discussions are comparative. Arguments like: would Jordan’s ’96 Bulls would beat the ’17 Warriors?</p>
+<p>Another comparison that is sure to create great debate is who had the best (or worst) Most Valuable Player (MVP) season in history? This question has a strong empirical dimension, in that we can observe quantifiable aspects across seasons, and can leverage programming to both gather and and analyze the data.</p>
+<p>The MVP data will gather comes from <a href="https://www.basketball-reference.com">basketball-reference.com</a>. Basketball-reference is part of the Sports-Reference sites, “a group of sites providing both basic and sabermetric statistics and resources for sports fans everywhere. [Sports-Reference aims] to be the easiest-to-use, fastest, most complete sources for sports statistics anywhere” (<a href="https://www.sports-reference.com/">sports-reference.com</a>).</p>
+<p>In this post, we will gather and pre-process all the data for the a multi-part series to determine: 1. the MVP finalist with best case for winning their year 2. predict the 2018-2019 MVP</p>
+<p>Let the shade begin</p>
+</section>
+</section>
+<section id="outline" class="level1">
+<h1>Outline</h1>
+<ol type="1">
+<li>Import modules</li>
+<li>Examine html structure of webpage</li>
+<li>Use a function with <code>Beautiful Soup</code> to parse webpages into .csv</li>
+<li>Analyze .csv of webpage as a <code>Pandas</code> DataFrame</li>
+<li>Process the data</li>
+</ol>
+<ul>
+<li>import relevant modules</li>
+<li>standard library modules:
+<ul>
+<li><a href="https://docs.python.org/3/library/os.html">os</a></li>
+<li><a href="https://docs.python.org/3/library/urllib.html">urllib</a></li>
+<li><a href="https://docs.python.org/3/library/webbrowser.html">webbrowser</a></li>
+<li><a href="https://docs.python.org/3/library/datetime.html">datetime</a></li>
+</ul></li>
+<li>open source modules:
+<ul>
+<li><a href="http://pandas.pydata.org">pandas</a></li>
+<li><a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a></li>
+</ul></li>
+<li>Let’s examine the webpage with all the MVP data from the 1966-1956 season to the 2017-2018 season</li>
+</ul>
+<div id="cell-6" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>True</code></pre>
+</div>
+</div>
+<section id="scraping-the-column-headers" class="level2">
+<h2 class="anchored" data-anchor-id="scraping-the-column-headers">Scraping the Column Headers</h2>
+<p>The column headers we need for our <code>DataFrame</code> are found in the <code>th</code> element</p>
+<div id="cell-9" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code>['Shooting', 'Advanced', 'Season', 'Lg', 'Player', 'Voting', 'Age', 'Tm', 'G', 'MP', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'WS', 'WS/48', '2017-18', '2016-17', '2015-16', '2014-15', '2013-14', '2012-13', '2011-12']
+['Season', 'Lg', 'Player', 'Voting', 'Age', 'Tm', 'G', 'MP', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'WS', 'WS/48']</code></pre>
+</div>
+</div>
+<div id="cell-10" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>18</code></pre>
+</div>
+</div>
+</section>
+<section id="scraping-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="scraping-the-data">Scraping the Data</h2>
+<ul>
+<li>Note that <code>table_rows</code> is a list of tag elements.</li>
+</ul>
+<div id="cell-12" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'list'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;tr&gt;&lt;th class="left " data-stat="season" scope="row"&gt;&lt;a href="/leagues/NBA_2018.html"&gt;2017-18&lt;/a&gt;&lt;/th&gt;&lt;td class="left " data-stat="lg_id"&gt;&lt;a href="/leagues/NBA_2018.html"&gt;NBA&lt;/a&gt;&lt;/td&gt;&lt;td class="left " csk="Harden,James" data-append-csv="hardeja01" data-stat="player"&gt;&lt;a href="/players/h/hardeja01.html"&gt;James Harden&lt;/a&gt;&lt;/td&gt;&lt;td class="center " data-stat="voting"&gt; (&lt;a href="/awards/awards_2018.html#mvp"&gt;V&lt;/a&gt;)&lt;/td&gt;&lt;td class="right " data-stat="age"&gt;28&lt;/td&gt;&lt;td class="left " data-stat="team_id"&gt;&lt;a href="/teams/HOU/2018.html"&gt;HOU&lt;/a&gt;&lt;/td&gt;&lt;td class="right " data-stat="g"&gt;72&lt;/td&gt;&lt;td class="right " data-stat="mp_per_g"&gt;35.4&lt;/td&gt;&lt;td class="right " data-stat="pts_per_g"&gt;30.4&lt;/td&gt;&lt;td class="right " data-stat="trb_per_g"&gt;5.4&lt;/td&gt;&lt;td class="right " data-stat="ast_per_g"&gt;8.8&lt;/td&gt;&lt;td class="right " data-stat="stl_per_g"&gt;1.8&lt;/td&gt;&lt;td class="right " data-stat="blk_per_g"&gt;0.7&lt;/td&gt;&lt;td class="right " data-stat="fg_pct"&gt;.449&lt;/td&gt;&lt;td class="right " data-stat="fg3_pct"&gt;.367&lt;/td&gt;&lt;td class="right " data-stat="ft_pct"&gt;.858&lt;/td&gt;&lt;td class="right " data-stat="ws"&gt;15.4&lt;/td&gt;&lt;td class="right " data-stat="ws_per_48"&gt;.289&lt;/td&gt;&lt;/tr&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li><p>The data we want for each player is found within the the <code>td</code> (or table data) elements.<br>
+</p></li>
+<li><p>Below I’ve created a function that extracts the data we want from <code>table_rows</code>. The comments should walk you through what each part of the function does.</p></li>
+<li><p>now we can create a <code>DataFrame</code> with the MVP data</p></li>
+</ul>
+<div id="cell-17" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+<th data-quarto-table-cell-role="th">6</th>
+<th data-quarto-table-cell-role="th">7</th>
+<th data-quarto-table-cell-role="th">8</th>
+<th data-quarto-table-cell-role="th">9</th>
+<th data-quarto-table-cell-role="th">10</th>
+<th data-quarto-table-cell-role="th">11</th>
+<th data-quarto-table-cell-role="th">12</th>
+<th data-quarto-table-cell-role="th">13</th>
+<th data-quarto-table-cell-role="th">14</th>
+<th data-quarto-table-cell-role="th">15</th>
+<th data-quarto-table-cell-role="th">16</th>
+<th data-quarto-table-cell-role="th">17</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2017-18</td>
+<td>NBA</td>
+<td>James Harden</td>
+<td>(V)</td>
+<td>28</td>
+<td>HOU</td>
+<td>72</td>
+<td>35.4</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>.449</td>
+<td>.367</td>
+<td>.858</td>
+<td>15.4</td>
+<td>.289</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>rename the columns</li>
+<li>view the data</li>
+</ul>
+<div id="cell-19" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>the MVP dataframe has 113 rows (player-year observations) and  18 columns</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Season</th>
+<th data-quarto-table-cell-role="th">Lg</th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Voting</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Tm</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">MP</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3P%</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">WS</th>
+<th data-quarto-table-cell-role="th">WS/48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2017-18</td>
+<td>NBA</td>
+<td>James Harden</td>
+<td>(V)</td>
+<td>28</td>
+<td>HOU</td>
+<td>72</td>
+<td>35.4</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>.449</td>
+<td>.367</td>
+<td>.858</td>
+<td>15.4</td>
+<td>.289</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2016-17</td>
+<td>NBA</td>
+<td>Russell Westbrook</td>
+<td>(V)</td>
+<td>28</td>
+<td>OKC</td>
+<td>81</td>
+<td>34.6</td>
+<td>31.6</td>
+<td>10.7</td>
+<td>10.4</td>
+<td>1.6</td>
+<td>0.4</td>
+<td>.425</td>
+<td>.343</td>
+<td>.845</td>
+<td>13.1</td>
+<td>.224</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2015-16</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>27</td>
+<td>GSW</td>
+<td>79</td>
+<td>34.2</td>
+<td>30.1</td>
+<td>5.4</td>
+<td>6.7</td>
+<td>2.1</td>
+<td>0.2</td>
+<td>.504</td>
+<td>.454</td>
+<td>.908</td>
+<td>17.9</td>
+<td>.318</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2014-15</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>26</td>
+<td>GSW</td>
+<td>80</td>
+<td>32.7</td>
+<td>23.8</td>
+<td>4.3</td>
+<td>7.7</td>
+<td>2.0</td>
+<td>0.2</td>
+<td>.487</td>
+<td>.443</td>
+<td>.914</td>
+<td>15.7</td>
+<td>.288</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013-14</td>
+<td>NBA</td>
+<td>Kevin Durant</td>
+<td>(V)</td>
+<td>25</td>
+<td>OKC</td>
+<td>81</td>
+<td>38.5</td>
+<td>32.0</td>
+<td>7.4</td>
+<td>5.5</td>
+<td>1.3</td>
+<td>0.7</td>
+<td>.503</td>
+<td>.391</td>
+<td>.873</td>
+<td>19.2</td>
+<td>.295</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>now we need the data on all the finalist for the question:
+<ul>
+<li>which finalist had the best argument for winning that year?</li>
+</ul></li>
+</ul>
+<div id="cell-22" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>raw column names in finalist table: ['Per Game', 'Shooting', 'Advanced', 'Rank', 'Player', 'Age', 'Tm', 'First', 'Pts Won', 'Pts Max', 'Share', 'G', 'MP', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'WS', 'WS/48', '1', '2', '3', '4']
+formatted column names in finalist table: ['Rank', 'Player', 'Age', 'Tm', 'First', 'Pts Won', 'Pts Max', 'Share', 'G', 'MP', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'WS', 'WS/48']
+20 columns in finalist table
+&lt;class 'bs4.element.ResultSet'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>&lt;tr&gt;&lt;th class="right " data-stat="rank" scope="row"&gt;13&lt;/th&gt;&lt;td class="left " csk="Oladipo,Victor" data-append-csv="oladivi01" data-stat="player"&gt;&lt;a href="/players/o/oladivi01.html"&gt;Victor Oladipo&lt;/a&gt;&lt;/td&gt;&lt;td class="right " data-stat="age"&gt;25&lt;/td&gt;&lt;td class="left " data-stat="team_id"&gt;&lt;a href="/teams/IND/2018.html"&gt;IND&lt;/a&gt;&lt;/td&gt;&lt;td class="right " data-stat="votes_first"&gt;0.0&lt;/td&gt;&lt;td class="right " data-stat="points_won"&gt;2.0&lt;/td&gt;&lt;td class="right " data-stat="points_max"&gt;1010&lt;/td&gt;&lt;td class="right " data-stat="award_share"&gt;0.002&lt;/td&gt;&lt;td class="right " data-stat="g"&gt;75&lt;/td&gt;&lt;td class="right " data-stat="mp_per_g"&gt;34.0&lt;/td&gt;&lt;td class="right " data-stat="pts_per_g"&gt;23.1&lt;/td&gt;&lt;td class="right " data-stat="trb_per_g"&gt;5.2&lt;/td&gt;&lt;td class="right " data-stat="ast_per_g"&gt;4.3&lt;/td&gt;&lt;td class="right " data-stat="stl_per_g"&gt;2.4&lt;/td&gt;&lt;td class="right " data-stat="blk_per_g"&gt;0.8&lt;/td&gt;&lt;td class="right " data-stat="fg_pct"&gt;.477&lt;/td&gt;&lt;td class="right " data-stat="fg3_pct"&gt;.371&lt;/td&gt;&lt;td class="right " data-stat="ft_pct"&gt;.799&lt;/td&gt;&lt;td class="right " data-stat="ws"&gt;8.2&lt;/td&gt;&lt;td class="right " data-stat="ws_per_48"&gt;.155&lt;/td&gt;&lt;/tr&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li>create a function to extract MVP finalist data</li>
+</ul>
+<div id="cell-25" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-stdout">
+<pre><code>the MVP finalist dataframe has 13 rows (player-year observations) and  20 columns</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Rank</th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Tm</th>
+<th data-quarto-table-cell-role="th">First</th>
+<th data-quarto-table-cell-role="th">Pts Won</th>
+<th data-quarto-table-cell-role="th">Pts Max</th>
+<th data-quarto-table-cell-role="th">Share</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">MP</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3P%</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">WS</th>
+<th data-quarto-table-cell-role="th">WS/48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>8</td>
+<td>DeMar DeRozan</td>
+<td>28</td>
+<td>TOR</td>
+<td>0.0</td>
+<td>32.0</td>
+<td>1010</td>
+<td>0.032</td>
+<td>80</td>
+<td>33.9</td>
+<td>23.0</td>
+<td>3.9</td>
+<td>5.2</td>
+<td>1.1</td>
+<td>0.3</td>
+<td>.456</td>
+<td>.310</td>
+<td>.825</td>
+<td>9.6</td>
+<td>.170</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>9</td>
+<td>LaMarcus Aldridge</td>
+<td>32</td>
+<td>SAS</td>
+<td>0.0</td>
+<td>6.0</td>
+<td>1010</td>
+<td>0.006</td>
+<td>75</td>
+<td>33.5</td>
+<td>23.1</td>
+<td>8.5</td>
+<td>2.0</td>
+<td>0.6</td>
+<td>1.2</td>
+<td>.510</td>
+<td>.293</td>
+<td>.837</td>
+<td>10.9</td>
+<td>.209</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>10T</td>
+<td>Jimmy Butler</td>
+<td>28</td>
+<td>MIN</td>
+<td>0.0</td>
+<td>5.0</td>
+<td>1010</td>
+<td>0.005</td>
+<td>59</td>
+<td>36.7</td>
+<td>22.2</td>
+<td>5.3</td>
+<td>4.9</td>
+<td>2.0</td>
+<td>0.4</td>
+<td>.474</td>
+<td>.350</td>
+<td>.854</td>
+<td>8.9</td>
+<td>.198</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>10T</td>
+<td>Stephen Curry</td>
+<td>29</td>
+<td>GSW</td>
+<td>0.0</td>
+<td>5.0</td>
+<td>1010</td>
+<td>0.005</td>
+<td>51</td>
+<td>32.0</td>
+<td>26.4</td>
+<td>5.1</td>
+<td>6.1</td>
+<td>1.6</td>
+<td>0.2</td>
+<td>.495</td>
+<td>.423</td>
+<td>.921</td>
+<td>9.1</td>
+<td>.267</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">11</th>
+<td>12</td>
+<td>Joel Embiid</td>
+<td>23</td>
+<td>PHI</td>
+<td>0.0</td>
+<td>4.0</td>
+<td>1010</td>
+<td>0.004</td>
+<td>63</td>
+<td>30.3</td>
+<td>22.9</td>
+<td>11.0</td>
+<td>3.2</td>
+<td>0.6</td>
+<td>1.8</td>
+<td>.483</td>
+<td>.308</td>
+<td>.769</td>
+<td>6.2</td>
+<td>.155</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>13</td>
+<td>Victor Oladipo</td>
+<td>25</td>
+<td>IND</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>1010</td>
+<td>0.002</td>
+<td>75</td>
+<td>34.0</td>
+<td>23.1</td>
+<td>5.2</td>
+<td>4.3</td>
+<td>2.4</td>
+<td>0.8</td>
+<td>.477</td>
+<td>.371</td>
+<td>.799</td>
+<td>8.2</td>
+<td>.155</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="scraping-the-data-for-all-mvp-finalists-since-1956" class="level3">
+<h3 class="anchored" data-anchor-id="scraping-the-data-for-all-mvp-finalists-since-1956">Scraping the Data for All MVP Finalists Since 1956</h3>
+<p>Scraping the for finalist data since 1956 follows is essentially the same process as above, just repeated for each year, using a <code>for</code> loop.</p>
+<ul>
+<li><p>As we loop over the years, we will create a <code>DataFrame</code> for each year of MVP finalist data, and append it to a large list of <code>DataFrame</code>s that contains all the MVP finalists data. We will also have a separate list that will contain any errors and the url associated with that error. This will let us know if there are any issues with our scraper, and which url is causing the error.</p></li>
+<li><p>let’s time how long this loop takes</p></li>
+</ul>
+<div id="cell-29" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-stdout">
+<pre><code>2019-05-25 15:10:57.567450</code></pre>
+</div>
+</div>
+<div id="cell-31" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-stdout">
+<pre><code>2019-05-25 15:12:03.441050
+the loop took 0:01:05.873600</code></pre>
+</div>
+</div>
+<ul>
+<li>the loop took ~ 1 minute</li>
+</ul>
+<div id="cell-33" class="cell" data-scrolled="true" data-execution_count="19">
+<div class="cell-output cell-output-stdout">
+<pre><code>0</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>[]</code></pre>
+</div>
+</div>
+<ul>
+<li>We don’t get any errors, so that’s good.</li>
+<li>Now we can concatenate all the <code>DataFrames</code> we scraped and create one large <code>DataFrame</code> containing all the finalist data</li>
+</ul>
+<div id="cell-35" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'list'&gt;
+63</code></pre>
+</div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>[   Year Rank          Player Age   Tm First Pts Won Pts Max  Share   G  ...   \
+ 0  1956    1      Bob Pettit  23  STL  33.0    33.0      80  0.413  72  ...    
+ 1  1956    2     Paul Arizin  27  PHW  21.0    21.0      80  0.263  72  ...    
+ 2  1956    3       Bob Cousy  27  BOS  11.0    11.0      80  0.138  72  ...    
+ 3  1956    4    Mel Hutchins  27  FTW   9.0     9.0      80  0.113  66  ...    
+ 4  1956   5T   Dolph Schayes  27  SYR   2.0     2.0      80  0.025  72  ...    
+ 5  1956   5T    Bill Sharman  29  BOS   2.0     2.0      80  0.025  72  ...    
+ 6  1956   7T        Tom Gola  23  PHW   1.0     1.0      80  0.013  68  ...    
+ 7  1956   7T  Maurice Stokes  22  ROC   1.0     1.0      80  0.013  67  ...    
+ 
+     PTS   TRB  AST STL BLK   FG% 3P%   FT%    WS WS/48  
+ 0  25.7  16.2  2.6          .429      .736  13.8  .236  
+ 1  24.2   7.5  2.6          .448      .810  12.2  .214  
+ 2  18.8   6.8  8.9          .360      .844   6.8  .119  
+ 3  12.0   7.5  2.7          .425      .643   4.4  .095  
+ 4  20.4  12.4  2.8          .387      .858  11.8  .225  
+ 5  19.9   3.6  4.7          .438      .867   8.8  .157  
+ 6  10.8   9.1  5.9          .412      .733   6.5  .132  
+ 7  16.8  16.3  4.9          .354      .714   6.0  .125  
+ 
+ [8 rows x 21 columns]]</code></pre>
+</div>
+</div>
+<div id="cell-37" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-stdout">
+<pre><code>['Year', 'Rank', 'Player', 'Age', 'Tm', 'First', 'Pts Won', 'Pts Max', 'Share', 'G', 'MP', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'FG%', '3P%', 'FT%', 'WS', 'WS/48']
+21</code></pre>
+</div>
+</div>
+<div id="cell-38" class="cell" data-execution_count="23">
+<div class="cell-output cell-output-stdout">
+<pre><code>(972, 21)</code></pre>
+</div>
+</div>
+<div id="cell-39" class="cell" data-execution_count="24">
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>Year             1956
+Rank                1
+Player     Bob Pettit
+Age                23
+Tm                STL
+First            33.0
+Pts Won          33.0
+Pts Max            80
+Share           0.413
+G                  72
+MP               38.8
+PTS              25.7
+TRB              16.2
+AST               2.6
+STL                  
+BLK                  
+FG%              .429
+3P%                  
+FT%              .736
+WS               13.8
+WS/48            .236
+Name: 0, dtype: object</code></pre>
+</div>
+</div>
+<p>Now that we fixed up the necessary columns, let’s write out the raw data to a CSV file.</p>
+<div id="cell-42" class="cell" data-execution_count="26">
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Rank</th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Tm</th>
+<th data-quarto-table-cell-role="th">First</th>
+<th data-quarto-table-cell-role="th">Pts Won</th>
+<th data-quarto-table-cell-role="th">Pts Max</th>
+<th data-quarto-table-cell-role="th">Share</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3P%</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">WS</th>
+<th data-quarto-table-cell-role="th">WS/48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1956</td>
+<td>1</td>
+<td>Bob Pettit</td>
+<td>23</td>
+<td>STL</td>
+<td>33.0</td>
+<td>33.0</td>
+<td>80</td>
+<td>0.413</td>
+<td>72</td>
+<td>...</td>
+<td>25.7</td>
+<td>16.2</td>
+<td>2.6</td>
+<td></td>
+<td></td>
+<td>.429</td>
+<td></td>
+<td>.736</td>
+<td>13.8</td>
+<td>.236</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1956</td>
+<td>2</td>
+<td>Paul Arizin</td>
+<td>27</td>
+<td>PHW</td>
+<td>21.0</td>
+<td>21.0</td>
+<td>80</td>
+<td>0.263</td>
+<td>72</td>
+<td>...</td>
+<td>24.2</td>
+<td>7.5</td>
+<td>2.6</td>
+<td></td>
+<td></td>
+<td>.448</td>
+<td></td>
+<td>.810</td>
+<td>12.2</td>
+<td>.214</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1956</td>
+<td>3</td>
+<td>Bob Cousy</td>
+<td>27</td>
+<td>BOS</td>
+<td>11.0</td>
+<td>11.0</td>
+<td>80</td>
+<td>0.138</td>
+<td>72</td>
+<td>...</td>
+<td>18.8</td>
+<td>6.8</td>
+<td>8.9</td>
+<td></td>
+<td></td>
+<td>.360</td>
+<td></td>
+<td>.844</td>
+<td>6.8</td>
+<td>.119</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1956</td>
+<td>4</td>
+<td>Mel Hutchins</td>
+<td>27</td>
+<td>FTW</td>
+<td>9.0</td>
+<td>9.0</td>
+<td>80</td>
+<td>0.113</td>
+<td>66</td>
+<td>...</td>
+<td>12.0</td>
+<td>7.5</td>
+<td>2.7</td>
+<td></td>
+<td></td>
+<td>.425</td>
+<td></td>
+<td>.643</td>
+<td>4.4</td>
+<td>.095</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1956</td>
+<td>5T</td>
+<td>Dolph Schayes</td>
+<td>27</td>
+<td>SYR</td>
+<td>2.0</td>
+<td>2.0</td>
+<td>80</td>
+<td>0.025</td>
+<td>72</td>
+<td>...</td>
+<td>20.4</td>
+<td>12.4</td>
+<td>2.8</td>
+<td></td>
+<td></td>
+<td>.387</td>
+<td></td>
+<td>.858</td>
+<td>11.8</td>
+<td>.225</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 21 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="cleaning-the-data" class="level1">
+<h1>Cleaning the Data</h1>
+<ul>
+<li>Now that we have the raw MVP data, we need to clean it up a bit for data exploration</li>
+</ul>
+<div id="cell-46" class="cell" data-execution_count="29">
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Season</th>
+<th data-quarto-table-cell-role="th">Lg</th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Voting</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Tm</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">MP</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3P%</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">WS</th>
+<th data-quarto-table-cell-role="th">WS/48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2017-18</td>
+<td>NBA</td>
+<td>James Harden</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>HOU</td>
+<td>72.0</td>
+<td>35.4</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>0.449</td>
+<td>0.367</td>
+<td>0.858</td>
+<td>15.4</td>
+<td>0.289</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2016-17</td>
+<td>NBA</td>
+<td>Russell Westbrook</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>34.6</td>
+<td>31.6</td>
+<td>10.7</td>
+<td>10.4</td>
+<td>1.6</td>
+<td>0.4</td>
+<td>0.425</td>
+<td>0.343</td>
+<td>0.845</td>
+<td>13.1</td>
+<td>0.224</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2015-16</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>27.0</td>
+<td>GSW</td>
+<td>79.0</td>
+<td>34.2</td>
+<td>30.1</td>
+<td>5.4</td>
+<td>6.7</td>
+<td>2.1</td>
+<td>0.2</td>
+<td>0.504</td>
+<td>0.454</td>
+<td>0.908</td>
+<td>17.9</td>
+<td>0.318</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2014-15</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>26.0</td>
+<td>GSW</td>
+<td>80.0</td>
+<td>32.7</td>
+<td>23.8</td>
+<td>4.3</td>
+<td>7.7</td>
+<td>2.0</td>
+<td>0.2</td>
+<td>0.487</td>
+<td>0.443</td>
+<td>0.914</td>
+<td>15.7</td>
+<td>0.288</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013-14</td>
+<td>NBA</td>
+<td>Kevin Durant</td>
+<td>(V)</td>
+<td>25.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>38.5</td>
+<td>32.0</td>
+<td>7.4</td>
+<td>5.5</td>
+<td>1.3</td>
+<td>0.7</td>
+<td>0.503</td>
+<td>0.391</td>
+<td>0.873</td>
+<td>19.2</td>
+<td>0.295</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>create dictionaries for renaming columns</li>
+<li>rename all columns with dictionaries</li>
+</ul>
+<div id="cell-49" class="cell" data-execution_count="31">
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">league</th>
+<th data-quarto-table-cell-role="th">player</th>
+<th data-quarto-table-cell-role="th">voting</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">games_played</th>
+<th data-quarto-table-cell-role="th">avg_minutes</th>
+<th data-quarto-table-cell-role="th">avg_points</th>
+<th data-quarto-table-cell-role="th">avg_rebounds</th>
+<th data-quarto-table-cell-role="th">avg_assists</th>
+<th data-quarto-table-cell-role="th">avg_steals</th>
+<th data-quarto-table-cell-role="th">avg_blocks</th>
+<th data-quarto-table-cell-role="th">field_goal_pct</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">free_throw_pct</th>
+<th data-quarto-table-cell-role="th">win_shares</th>
+<th data-quarto-table-cell-role="th">win_shares_per_48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2017-18</td>
+<td>NBA</td>
+<td>James Harden</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>HOU</td>
+<td>72.0</td>
+<td>35.4</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>0.449</td>
+<td>0.367</td>
+<td>0.858</td>
+<td>15.4</td>
+<td>0.289</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2016-17</td>
+<td>NBA</td>
+<td>Russell Westbrook</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>34.6</td>
+<td>31.6</td>
+<td>10.7</td>
+<td>10.4</td>
+<td>1.6</td>
+<td>0.4</td>
+<td>0.425</td>
+<td>0.343</td>
+<td>0.845</td>
+<td>13.1</td>
+<td>0.224</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2015-16</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>27.0</td>
+<td>GSW</td>
+<td>79.0</td>
+<td>34.2</td>
+<td>30.1</td>
+<td>5.4</td>
+<td>6.7</td>
+<td>2.1</td>
+<td>0.2</td>
+<td>0.504</td>
+<td>0.454</td>
+<td>0.908</td>
+<td>17.9</td>
+<td>0.318</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2014-15</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>26.0</td>
+<td>GSW</td>
+<td>80.0</td>
+<td>32.7</td>
+<td>23.8</td>
+<td>4.3</td>
+<td>7.7</td>
+<td>2.0</td>
+<td>0.2</td>
+<td>0.487</td>
+<td>0.443</td>
+<td>0.914</td>
+<td>15.7</td>
+<td>0.288</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013-14</td>
+<td>NBA</td>
+<td>Kevin Durant</td>
+<td>(V)</td>
+<td>25.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>38.5</td>
+<td>32.0</td>
+<td>7.4</td>
+<td>5.5</td>
+<td>1.3</td>
+<td>0.7</td>
+<td>0.503</td>
+<td>0.391</td>
+<td>0.873</td>
+<td>19.2</td>
+<td>0.295</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-50" class="cell" data-execution_count="32">
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">player</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">first_place_votes</th>
+<th data-quarto-table-cell-role="th">points_won</th>
+<th data-quarto-table-cell-role="th">points_max</th>
+<th data-quarto-table-cell-role="th">vote_share</th>
+<th data-quarto-table-cell-role="th">games_played</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">avg_points</th>
+<th data-quarto-table-cell-role="th">avg_rebounds</th>
+<th data-quarto-table-cell-role="th">avg_assists</th>
+<th data-quarto-table-cell-role="th">avg_steals</th>
+<th data-quarto-table-cell-role="th">avg_blocks</th>
+<th data-quarto-table-cell-role="th">field_goal_pct</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">free_throw_pct</th>
+<th data-quarto-table-cell-role="th">win_shares</th>
+<th data-quarto-table-cell-role="th">win_shares_per_48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1956</td>
+<td>1</td>
+<td>Bob Pettit</td>
+<td>23</td>
+<td>STL</td>
+<td>33.0</td>
+<td>33.0</td>
+<td>80</td>
+<td>0.413</td>
+<td>72</td>
+<td>...</td>
+<td>25.7</td>
+<td>16.2</td>
+<td>2.6</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.429</td>
+<td>NaN</td>
+<td>0.736</td>
+<td>13.8</td>
+<td>0.236</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1956</td>
+<td>2</td>
+<td>Paul Arizin</td>
+<td>27</td>
+<td>PHW</td>
+<td>21.0</td>
+<td>21.0</td>
+<td>80</td>
+<td>0.263</td>
+<td>72</td>
+<td>...</td>
+<td>24.2</td>
+<td>7.5</td>
+<td>2.6</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.448</td>
+<td>NaN</td>
+<td>0.810</td>
+<td>12.2</td>
+<td>0.214</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1956</td>
+<td>3</td>
+<td>Bob Cousy</td>
+<td>27</td>
+<td>BOS</td>
+<td>11.0</td>
+<td>11.0</td>
+<td>80</td>
+<td>0.138</td>
+<td>72</td>
+<td>...</td>
+<td>18.8</td>
+<td>6.8</td>
+<td>8.9</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.360</td>
+<td>NaN</td>
+<td>0.844</td>
+<td>6.8</td>
+<td>0.119</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1956</td>
+<td>4</td>
+<td>Mel Hutchins</td>
+<td>27</td>
+<td>FTW</td>
+<td>9.0</td>
+<td>9.0</td>
+<td>80</td>
+<td>0.113</td>
+<td>66</td>
+<td>...</td>
+<td>12.0</td>
+<td>7.5</td>
+<td>2.7</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.425</td>
+<td>NaN</td>
+<td>0.643</td>
+<td>4.4</td>
+<td>0.095</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1956</td>
+<td>5T</td>
+<td>Dolph Schayes</td>
+<td>27</td>
+<td>SYR</td>
+<td>2.0</td>
+<td>2.0</td>
+<td>80</td>
+<td>0.025</td>
+<td>72</td>
+<td>...</td>
+<td>20.4</td>
+<td>12.4</td>
+<td>2.8</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.387</td>
+<td>NaN</td>
+<td>0.858</td>
+<td>11.8</td>
+<td>0.225</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 21 columns</p>
+</div>
+</div>
+</div>
+<section id="cleaning-up-the-rest-of-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-up-the-rest-of-the-data">Cleaning Up the Rest of the Data</h2>
+<div id="cell-52" class="cell" data-execution_count="33">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 113 entries, 0 to 112
+Data columns (total 18 columns):
+season               113 non-null object
+league               113 non-null object
+player               113 non-null object
+voting               73 non-null object
+age                  73 non-null float64
+team                 73 non-null object
+games_played         73 non-null float64
+avg_minutes          73 non-null float64
+avg_points           73 non-null float64
+avg_rebounds         73 non-null float64
+avg_assists          73 non-null float64
+avg_steals           50 non-null float64
+avg_blocks           50 non-null float64
+field_goal_pct       73 non-null float64
+three_pt_pct         48 non-null float64
+free_throw_pct       73 non-null float64
+win_shares           73 non-null float64
+win_shares_per_48    73 non-null float64
+dtypes: float64(13), object(5)
+memory usage: 16.8+ KB</code></pre>
+</div>
+</div>
+<div id="cell-53" class="cell" data-execution_count="34">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 972 entries, 0 to 971
+Data columns (total 21 columns):
+year                 972 non-null int64
+rank                 972 non-null object
+player               972 non-null object
+age                  972 non-null int64
+team                 972 non-null object
+first_place_votes    972 non-null float64
+points_won           972 non-null float64
+points_max           972 non-null int64
+vote_share           972 non-null float64
+games_played         972 non-null int64
+avg_minutes          972 non-null float64
+avg_points           972 non-null float64
+avg_rebounds         972 non-null float64
+avg_assists          972 non-null float64
+avg_steals           756 non-null float64
+avg_blocks           756 non-null float64
+field_goal_pct       972 non-null float64
+three_pt_pct         621 non-null float64
+free_throw_pct       972 non-null float64
+win_shares           972 non-null float64
+win_shares_per_48    972 non-null float64
+dtypes: float64(14), int64(4), object(3)
+memory usage: 167.1+ KB</code></pre>
+</div>
+</div>
+<p>We are not done yet. A lot of out numeric columns are missing data because players didn’t accumulate any of those stats. For example, the 3 point line is introduced in 1982 and all players in preceding seasons don’t have this statistic. Additionally, we want to select the columns with numeric data and then replace the <code>NaN</code>s (the current value that represents the missing data) with 0s, as that is a more appropriate value.</p>
+<div id="cell-56" class="cell" data-execution_count="36">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 972 entries, 0 to 971
+Data columns (total 21 columns):
+year                 972 non-null int64
+rank                 972 non-null object
+player               972 non-null object
+age                  972 non-null int64
+team                 972 non-null object
+first_place_votes    972 non-null float64
+points_won           972 non-null float64
+points_max           972 non-null int64
+vote_share           972 non-null float64
+games_played         972 non-null int64
+avg_minutes          972 non-null float64
+avg_points           972 non-null float64
+avg_rebounds         972 non-null float64
+avg_assists          972 non-null float64
+avg_steals           972 non-null float64
+avg_blocks           972 non-null float64
+field_goal_pct       972 non-null float64
+three_pt_pct         972 non-null float64
+free_throw_pct       972 non-null float64
+win_shares           972 non-null float64
+win_shares_per_48    972 non-null float64
+dtypes: float64(14), int64(4), object(3)
+memory usage: 167.1+ KB</code></pre>
+</div>
+</div>
+<ul>
+<li>remove ABA winners</li>
+<li>remove MVP summary table</li>
+</ul>
+<p>We are finally done cleaning the data and now we can save it to a CSV file.</p>
+<div id="cell-61" class="cell" data-execution_count="39">
+<div class="cell-output cell-output-stdout">
+<pre><code>(63, 18)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">league</th>
+<th data-quarto-table-cell-role="th">player</th>
+<th data-quarto-table-cell-role="th">voting</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">games_played</th>
+<th data-quarto-table-cell-role="th">avg_minutes</th>
+<th data-quarto-table-cell-role="th">avg_points</th>
+<th data-quarto-table-cell-role="th">avg_rebounds</th>
+<th data-quarto-table-cell-role="th">avg_assists</th>
+<th data-quarto-table-cell-role="th">avg_steals</th>
+<th data-quarto-table-cell-role="th">avg_blocks</th>
+<th data-quarto-table-cell-role="th">field_goal_pct</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">free_throw_pct</th>
+<th data-quarto-table-cell-role="th">win_shares</th>
+<th data-quarto-table-cell-role="th">win_shares_per_48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2017-18</td>
+<td>NBA</td>
+<td>James Harden</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>HOU</td>
+<td>72.0</td>
+<td>35.4</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>0.449</td>
+<td>0.367</td>
+<td>0.858</td>
+<td>15.4</td>
+<td>0.289</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2016-17</td>
+<td>NBA</td>
+<td>Russell Westbrook</td>
+<td>(V)</td>
+<td>28.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>34.6</td>
+<td>31.6</td>
+<td>10.7</td>
+<td>10.4</td>
+<td>1.6</td>
+<td>0.4</td>
+<td>0.425</td>
+<td>0.343</td>
+<td>0.845</td>
+<td>13.1</td>
+<td>0.224</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2015-16</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>27.0</td>
+<td>GSW</td>
+<td>79.0</td>
+<td>34.2</td>
+<td>30.1</td>
+<td>5.4</td>
+<td>6.7</td>
+<td>2.1</td>
+<td>0.2</td>
+<td>0.504</td>
+<td>0.454</td>
+<td>0.908</td>
+<td>17.9</td>
+<td>0.318</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2014-15</td>
+<td>NBA</td>
+<td>Stephen Curry</td>
+<td>(V)</td>
+<td>26.0</td>
+<td>GSW</td>
+<td>80.0</td>
+<td>32.7</td>
+<td>23.8</td>
+<td>4.3</td>
+<td>7.7</td>
+<td>2.0</td>
+<td>0.2</td>
+<td>0.487</td>
+<td>0.443</td>
+<td>0.914</td>
+<td>15.7</td>
+<td>0.288</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013-14</td>
+<td>NBA</td>
+<td>Kevin Durant</td>
+<td>(V)</td>
+<td>25.0</td>
+<td>OKC</td>
+<td>81.0</td>
+<td>38.5</td>
+<td>32.0</td>
+<td>7.4</td>
+<td>5.5</td>
+<td>1.3</td>
+<td>0.7</td>
+<td>0.503</td>
+<td>0.391</td>
+<td>0.873</td>
+<td>19.2</td>
+<td>0.295</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-62" class="cell" data-execution_count="40">
+<div class="cell-output cell-output-stdout">
+<pre><code>(972, 21)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">player</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">team</th>
+<th data-quarto-table-cell-role="th">first_place_votes</th>
+<th data-quarto-table-cell-role="th">points_won</th>
+<th data-quarto-table-cell-role="th">points_max</th>
+<th data-quarto-table-cell-role="th">vote_share</th>
+<th data-quarto-table-cell-role="th">games_played</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">avg_points</th>
+<th data-quarto-table-cell-role="th">avg_rebounds</th>
+<th data-quarto-table-cell-role="th">avg_assists</th>
+<th data-quarto-table-cell-role="th">avg_steals</th>
+<th data-quarto-table-cell-role="th">avg_blocks</th>
+<th data-quarto-table-cell-role="th">field_goal_pct</th>
+<th data-quarto-table-cell-role="th">three_pt_pct</th>
+<th data-quarto-table-cell-role="th">free_throw_pct</th>
+<th data-quarto-table-cell-role="th">win_shares</th>
+<th data-quarto-table-cell-role="th">win_shares_per_48</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">959</th>
+<td>2018</td>
+<td>1</td>
+<td>James Harden</td>
+<td>28</td>
+<td>HOU</td>
+<td>86.0</td>
+<td>965.0</td>
+<td>1010</td>
+<td>0.955</td>
+<td>72</td>
+<td>...</td>
+<td>30.4</td>
+<td>5.4</td>
+<td>8.8</td>
+<td>1.8</td>
+<td>0.7</td>
+<td>0.449</td>
+<td>0.367</td>
+<td>0.858</td>
+<td>15.4</td>
+<td>0.289</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">960</th>
+<td>2018</td>
+<td>2</td>
+<td>LeBron James</td>
+<td>33</td>
+<td>CLE</td>
+<td>15.0</td>
+<td>738.0</td>
+<td>1010</td>
+<td>0.731</td>
+<td>82</td>
+<td>...</td>
+<td>27.5</td>
+<td>8.6</td>
+<td>9.1</td>
+<td>1.4</td>
+<td>0.9</td>
+<td>0.542</td>
+<td>0.367</td>
+<td>0.731</td>
+<td>14.0</td>
+<td>0.221</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">961</th>
+<td>2018</td>
+<td>3</td>
+<td>Anthony Davis</td>
+<td>24</td>
+<td>NOP</td>
+<td>0.0</td>
+<td>445.0</td>
+<td>1010</td>
+<td>0.441</td>
+<td>75</td>
+<td>...</td>
+<td>28.1</td>
+<td>11.1</td>
+<td>2.3</td>
+<td>1.5</td>
+<td>2.6</td>
+<td>0.534</td>
+<td>0.340</td>
+<td>0.828</td>
+<td>13.7</td>
+<td>0.241</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">962</th>
+<td>2018</td>
+<td>4</td>
+<td>Damian Lillard</td>
+<td>27</td>
+<td>POR</td>
+<td>0.0</td>
+<td>207.0</td>
+<td>1010</td>
+<td>0.205</td>
+<td>73</td>
+<td>...</td>
+<td>26.9</td>
+<td>4.5</td>
+<td>6.6</td>
+<td>1.1</td>
+<td>0.4</td>
+<td>0.439</td>
+<td>0.361</td>
+<td>0.916</td>
+<td>12.6</td>
+<td>0.227</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">963</th>
+<td>2018</td>
+<td>5</td>
+<td>Russell Westbrook</td>
+<td>29</td>
+<td>OKC</td>
+<td>0.0</td>
+<td>76.0</td>
+<td>1010</td>
+<td>0.075</td>
+<td>80</td>
+<td>...</td>
+<td>25.4</td>
+<td>10.1</td>
+<td>10.3</td>
+<td>1.8</td>
+<td>0.3</td>
+<td>0.449</td>
+<td>0.298</td>
+<td>0.737</td>
+<td>10.1</td>
+<td>0.166</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 21 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="review" class="level1">
+<h1>Review</h1>
+<ul>
+<li>In this tutorial, we learned how to
+<ul>
+<li>examine the html structure of webpage</li>
+<li>use functions based on the <code>Beautiful Soup</code> module to parse tables on multiple webpage into .csv</li>
+<li>analyzed a .csv file using the <code>Pandas</code> module</li>
+</ul></li>
+</ul>
+<p>Download this <a href="downloads/notebooks/nba_mvp_comparisons-part_1.ipynb">notebook</a> or see a static view <a href="https://github.com/kpolimis/kpolimis.github.io/blob/master/downloads/notebooks/nba_mvp_comparisons-part_1.ipynb">here</a></p>
+<div id="cell-65" class="cell" data-execution_count="41">
+<div class="cell-output cell-output-stdout">
+<pre><code>last updated: 2019-05-27 22:35 
+
+System and module version information: 
+
+Python version: sys.version_info(major=3, minor=7, micro=1, releaselevel='final', serial=0)
+urllib.request version: 3.7
+pandas version: 0.23.4
+Beautiful Soup version: 4.6.3</code></pre>
+</div>
+</div>
+</section>
+<a class="quarto-notebook-link" id="nblink-1" href="../../../downloads/notebooks/nba_mvp_comparisons-part_1-preview.html#cell-0">Source: NBA MVP Comparisons</a></div>
 
 
 <!-- -->
@@ -687,19 +2317,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "NBA MVP Comparisons - Part 1"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2018-12-25"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports-analytics, python]</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: nba_mvp_comparisons-part_1.md --&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>{% notebook nba_mvp_comparisons-part_1.ipynb %}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "NBA MVP Comparisons - Part 1"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2018-12-25"</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports-analytics, python]</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: nba_mvp_comparisons-part_1.md --&gt;</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>{{&lt; embed ../../../downloads/notebooks/nba_mvp_comparisons-part_1.ipynb &gt;}}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
