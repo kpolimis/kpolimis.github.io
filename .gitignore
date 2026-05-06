@@ -12,7 +12,6 @@ env/
 build/
 develop-eggs/
 dist/
-# downloads/
 eggs/
 .eggs/
 lib/
@@ -102,11 +101,12 @@ output/theme/
 
 # folders
 .vscode/
+.idea/
 
 # Quarto build artifacts
 _site/
 .quarto/
 _freeze/
-
 /.quarto/
 **/*.quarto_ipynb
+cache/
