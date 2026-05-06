@@ -37,8 +37,11 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - cosmo
+      - custom.scss
     css: styles.css
+    include-after-body: include-script.html
     toc: true
     toc-depth: 3
     code-fold: true
