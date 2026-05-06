@@ -10,4 +10,4 @@ draft: false
 
 <!-- migrated from pelican: nba_mvp_comparisons-part_1.md -->
 
-{% notebook nba_mvp_comparisons-part_1.ipynb %}
+{{< embed ../../../downloads/notebooks/nba_mvp_comparisons-part_1.ipynb >}}

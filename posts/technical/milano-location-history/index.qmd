@@ -10,4 +10,4 @@ draft: false
 
 <!-- migrated from pelican: milano_location_history.md -->
 
-{% notebook ../../downloads/notebooks/milano_location_history.ipynb %}
+{{< embed ../../../downloads/notebooks/milano_location_history.ipynb >}}

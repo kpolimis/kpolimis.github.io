@@ -10,4 +10,4 @@ draft: false
 
 <!-- migrated from pelican: triple_double_russ.md -->
 
-{% notebook triple_double_russ.ipynb %}
+{{< embed ../../../downloads/notebooks/triple_double_russ.ipynb >}}

@@ -10,4 +10,4 @@ draft: false
 
 <!-- migrated from pelican: nba_shot_chart_part_1.md -->
 
-{% notebook nba_shot_charts_part_1.ipynb %}
+{{< embed ../../../downloads/notebooks/nba_shot_charts_part_1.ipynb >}}

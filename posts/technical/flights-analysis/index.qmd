@@ -10,8 +10,8 @@ draft: false
 
 <!-- migrated from pelican: flights_analysis.md -->
 
-{% notebook ../../downloads/notebooks/flights_analysis.ipynb cells[0:27] %}
+{{< embed ../../../downloads/notebooks/flights_analysis.ipynb >}}
 
 <img src="./flights2018.gif" alt="Gif of Flights">
 
-{% notebook ../../downloads/notebooks/flights_analysis.ipynb cells[28:] %}
+{{< embed ../../../downloads/notebooks/flights_analysis.ipynb >}}
