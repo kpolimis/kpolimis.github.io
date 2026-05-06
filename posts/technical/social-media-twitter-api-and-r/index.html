@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kivan Polimis">
+<meta name="dcterms.date" content="2016-04-17">
+<meta name="description" content="A workshop on gathering, processing, and analyzing Twitter API data with R, created for the 2016 Population Association of America Annual Meeting.">
+
+<title>Social Media, Twitter API, and R – Kivan Polimis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../images/favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-6410e8fd4f85b9c046170c55162db785.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivanpolimis"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
+  <li><a href="#obtain-twitter-credentials" id="toc-obtain-twitter-credentials" class="nav-link" data-scroll-target="#obtain-twitter-credentials">Obtain Twitter credentials</a></li>
+  <li><a href="#install-r-packages" id="toc-install-r-packages" class="nav-link" data-scroll-target="#install-r-packages">Install R packages</a></li>
+  <li><a href="#twitter-api-authentication" id="toc-twitter-api-authentication" class="nav-link" data-scroll-target="#twitter-api-authentication">Twitter API Authentication</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#search-tweets-by-location" id="toc-search-tweets-by-location" class="nav-link" data-scroll-target="#search-tweets-by-location">Search tweets by location</a></li>
+  <li><a href="#search-twitter-stream-by-subject" id="toc-search-twitter-stream-by-subject" class="nav-link" data-scroll-target="#search-twitter-stream-by-subject">Search Twitter stream by subject</a></li>
+  </ul></li>
+  <li><a href="#advanced" id="toc-advanced" class="nav-link" data-scroll-target="#advanced">Advanced</a>
+  <ul class="collapse">
+  <li><a href="#map-results" id="toc-map-results" class="nav-link" data-scroll-target="#map-results">Map results</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Social Media, Twitter API, and R</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">tutorial</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    A workshop on gathering, processing, and analyzing Twitter API data with R, created for the 2016 Population Association of America Annual Meeting.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kivan Polimis </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 17, 2016</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- migrated from pelican: social_media_twitter_API_and_R.md -->
+<p>This post is a workshop that I created for a social media workshop during the 2016 Population Association of America Annual Meeting in Washington, D.C (April).</p>
+<p>All relevant code will eventually be available on <a href="http://www.github.com/kpolimis" target="_blank">my github</a></p>
+<hr>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>We are going to learn various R functions for gathering, processing and analyzing Twitter API data. Our goal is to collect tweets by location and subject. This workshop is aimed at graduate students with some familiarity with R. The examples explored will gather tweets made in the Washington, D.C. area as well as tweets that mention presidential candidates Hillary Clinton and Donald Trump. If we have time, we will explore methods to map our results nationally and show where people are talking about the candidates.</p>
+<!-- PELICAN_END_SUMMARY -->
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<ol type="1">
+<li>Setup</li>
+<li>Obtain Twitter credentials</li>
+<li>Install R packages</li>
+<li>Search Twitter API</li>
+<li>Map results (optional)</li>
+</ol>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<section id="software" class="level3">
+<h3 class="anchored" data-anchor-id="software">Software</h3>
+<p>Essential: <a href="https://www.r-project.org/" target="_blank">R</a> <br> Recommended: <a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">RStudio</a></p>
+<ul>
+<li>RStudio is a free and open-source integrated development environment (IDE) for R</li>
+</ul>
+<p>If you have never used R before, or if you feel that you need a refresher, we recommend that you go over this <a href="https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf" target="_blank">short R tutorial</a></p>
+</section>
+<section id="obtain-twitter-credentials" class="level3">
+<h3 class="anchored" data-anchor-id="obtain-twitter-credentials">Obtain Twitter credentials</h3>
+<ol type="1">
+<li>Create a <a href="https://www.twitter.com/signup" target="_blank">Twitter account</a></li>
+</ol>
+<p><img src="./02-TwitterSignUp1.png" class="img-fluid" alt="Twitter-Main"> <br> 2. If you have a Twitter account, but it is not verified with a phone, you would need to verify the account, by adding a mobile phone number. Here is a link to the <a href="https://support.twitter.com/articles/110250" target="_blank">instructions</a> <br> 3. Create a <a href="https://dev.twitter.com" target="_blank">new app</a> Scroll to the bottom of the page and select Manage Your Apps under the Tools column (see highlighted box below)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./08-TwitterDevSignIn2.png" class="img-fluid figure-img"></p>
+<figcaption>Dev-SignIn</figcaption>
+</figure>
+</div>
+<ul>
+<li>Fill in your App with the following information</li>
+<li>The App name must be unique, edit “INITIALS” with your initials</li>
+<li>Name: PAA 2016 Test App “INITIALS”</li>
+<li>Description: Test Application for PAA 2016 Social Media and Demographic Methods Workshop</li>
+<li>Website: <a href="http://www.example.com" target="_blank">http://www.example.com</a></li>
+<li>You should leave the “callback website” field empty</li>
+</ul>
+<p><img src="./10-TwitterCreateApp2.png" class="img-fluid" alt="Twitter-App2"> <br> 4. Obtain your consumer key, consumer secret, access token and access token secret. You will insert these credentials below</p>
+<ul>
+<li>Select Keys and Access Tokens tab</li>
+<li>Consumer Key and Consumer Secret are at the top of the page</li>
+<li>Scroll to the bottom of the page to Token actions and create Access Token and Access Token Secret</li>
+</ul>
+</section>
+<section id="install-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="install-r-packages">Install R packages</h3>
+<p>You will need to have the following packages installed for the core of this workshop:</p>
+<ul>
+<li><code>twitteR</code></li>
+<li><code>streamR</code></li>
+<li><code>ROAuth</code></li>
+<li><code>RCurl</code></li>
+<li><code>dplyr</code></li>
+</ul>
+<p>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing “FILL ME IN” with the file path of your workshop folder</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"FILL ME IN/PAA_2016_SMDM_Workshop/Twitter"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the command below to install the necessary packages</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(c("twitteR","streamR","ROAuth","dplyr","base64enc"))</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' Pablo Barbera, author of streamR, has written additional functions for Twitter analysis</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the two commands below to download and add these functions to your environment with source</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#download.file("https://raw.githubusercontent.com/pablobarbera/social-media-workshop/master/functions.r",</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">"functions_by_pablobarbera.R"</span><span class="er">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#source("functions_by_pablobarbera.R")</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"twitterFunctions.R"</span>) <span class="co"># few functions to clean data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(twitteR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(streamR)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ROAuth)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(base64enc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="twitter-api-authentication" class="level3">
+<h3 class="anchored" data-anchor-id="twitter-api-authentication">Twitter API Authentication</h3>
+<p>We will use two packages, streamR and twitteR, to retrieve tweets from the Twitter API. To access the functions in these packages, we will complete two authentication procedures.</p>
+<ul>
+<li><code>streamR</code>
+<ul>
+<li>Allows authorized applications to access <a href="https://dev.twitter.com/streaming/overview" target="_blank"> Twitter’s Streaming API</a></li>
+<li>real-time collection and monitoring of tweets</li>
+<li>uses stored authentication</li>
+</ul></li>
+<li><code>twitteR</code>
+<ul>
+<li>Allows authorized applications to access <a href="https://dev.twitter.com/rest/public" target="_blank"> Twitter’s API</a></li>
+<li>read and post tweets with API responses</li>
+<li>uses direct authentication</li>
+</ul></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Twitter credentials for streamR and twitteR authentication</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>consumer_key <span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>consumer_secret<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>access_token<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>access_token_secret<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' parameters and URLs for streamR authentication</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>reqURL <span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/request_token"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>accessURL<span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/access_token"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>authURL<span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/authorize"</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' Note:  You only need to create an authentication object for streamR once</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' Microsoft Windows users need to uncomment the following command to download a cert file</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#download.file(url="http://curl.haxx.se/ca/cacert.pem", destfile="cacert.pem")</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#' create an object "cred" that will save the authenticated object for later sessions</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>twitCred<span class="ot">&lt;-</span> OAuthFactory<span class="sc">$</span><span class="fu">new</span>(<span class="at">consumerKey=</span>consumer_key,<span class="at">consumerSecret=</span>consumer_secret,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                            <span class="at">requestURL=</span>reqURL,<span class="at">accessURL=</span>accessURL,<span class="at">authURL=</span>authURL)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#' executing twitCred$handshake will redirect you to a website and provide your app a PIN</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#' insert the PIN in the R console after you run this line</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#' you can save authenticated credentials for later sessions</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#' for later use, uncomment the following command in a folder that contains twitCred.RData</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#load("twitCred.RData")</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>twitCred<span class="sc">$</span><span class="fu">handshake</span>(<span class="at">cainfo =</span> <span class="fu">system.file</span>(<span class="st">"CurlSSL"</span>, <span class="st">"cacert.pem"</span>, <span class="at">package =</span> <span class="st">"RCurl"</span>))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(twitCred, <span class="at">file =</span> <span class="st">"twitCred.RData"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#' setup direct Twitter authentication for twitteR functions</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#' you will be prompted to cache authentication token</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#' you will need to repeat this step unless you are running analysis from a location with a</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">#' cached authentication token</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">setup_twitter_oauth</span>(consumer_key, consumer_secret, access_token, access_token_secret)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twitter authentication for streamR (Windows output with <code>download.file</code> executed shown)<br>
+<img src="./16-TwitterCred1.png" class="img-fluid" alt="Twitter-Cred-1"></p>
+</section>
+</section>
+<section id="analysis" class="level1">
+<h1>Analysis</h1>
+<section id="search-tweets-by-location" class="level3">
+<h3 class="anchored" data-anchor-id="search-tweets-by-location">Search tweets by location</h3>
+<p>Search for tweets by location using <code>twitteR</code> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers <a href="https://developer.yahoo.com/geo/geoplanet/guide/concepts.html" target="_blank">(WOEID)</a> for locations</p>
+<ul>
+<li>availableTrendLocations</li>
+<li>getTrends</li>
+</ul>
+<p>View column names and small subset of observations with <code>glimpse</code> command</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">availableTrendLocations</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>woeid <span class="ot">=</span> <span class="fu">availableTrendLocations</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(woeid)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' get trending D.C. area tweets</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>DC_tweets <span class="ot">=</span> <span class="fu">getTrends</span>(<span class="dv">2514815</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(DC_tweets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' trending hashtags</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DC_tweets<span class="sc">$</span>name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## [1] "Rockets"       "Dwight Howard" "Paul George"   "#MentorIRL"
+## [5] "Raptors"       "#DCvTOR"</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getCommonHashtags</span>(DC_tweets<span class="sc">$</span>name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## hashtags
+##                #93KDay              #ADay2016        #brunchofidiots
+##                      1                      1                      1
+##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY
+##                      1                      1                      1
+##                #DCvTOR             #DevRelCon  #DreamvilleMusicVideo
+##                      1                      1                      1
+##    #IrritateMeIn4Words #ItsNoneOfYourBusiness              #LEMONADE
+##                      1                      1                      1
+##   #LetMeEntertainYouBy             #MentorIRL                 #NALCS
+##                      1                      1                      1
+##     #NashInMyrtleBeach              #NYRvsPIT        #RecordStoreDay
+##                      1                      1                      1
+##     #SignACastIn5Words               #SXonFOX
+##                      1                      1</code></pre>
+</section>
+<section id="search-twitter-stream-by-subject" class="level3">
+<h3 class="anchored" data-anchor-id="search-twitter-stream-by-subject">Search Twitter stream by subject</h3>
+<p>Search for tweets by subject using <code>streamR</code> package functions. The <code>streamR</code> functions interact with Twitter’s Streaming API to filter tweets by keywords, users, language, and location</p>
+<ul>
+<li><code>filterStream</code></li>
+<li><code>parseTweets</code></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filterStream</span>(<span class="st">"ClintonTrump_tweets.json"</span>, <span class="at">track =</span> <span class="fu">c</span>(<span class="st">"Clinton"</span>, <span class="st">"Trump"</span>),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">locations =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">125</span>, <span class="dv">25</span>, <span class="sc">-</span><span class="dv">66</span>, <span class="dv">50</span>), <span class="at">timeout =</span> <span class="dv">60</span>, <span class="at">oauth =</span> twitCred)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' parse .json file of tweets and convert parsed tweets to a data frame</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df <span class="ot">&lt;-</span> <span class="fu">parseTweets</span>(<span class="st">"ClintonTrump_tweets.json"</span>, <span class="at">simplify =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ClintonTrump_tweets.df)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' print the amount of times Clinton and Trump are mentioned</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>Clinton_mentions <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">grep</span>(<span class="st">"Clinton"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>Trump_mentions <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">grep</span>(<span class="st">"Trump"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"Clinton mentioned %d times in %d tweets"</span>, Clinton_mentions, <span class="fu">nrow</span>(ClintonTrump_tweets.df))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"Trump mentioned %d times in %d tweets"</span>, Trump_mentions, <span class="fu">nrow</span>(ClintonTrump_tweets.df))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## [1] "Clinton mentioned 397894 times in 5944511 tweets"
+
+## [1] "Trump mentioned 1164798 times in 5944511 tweets"</code></pre>
+</section>
+</section>
+<section id="advanced" class="level1">
+<h1>Advanced</h1>
+<section id="map-results" class="level3">
+<h3 class="anchored" data-anchor-id="map-results">Map results</h3>
+<p>use <code>filterStream</code> to search by location</p>
+<ul>
+<li><a href="http://dev.twitter.com/docs/streaming-apis/parameters#locations" target="_blank">Twitter location parameters</a></li>
+</ul>
+<p>map tweets with <code>ggplot2</code> and <code>grid</code> packages</p>
+<p><br></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the following line the first time you run this file</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(c("ggplot2", "grid", "maps", "png", "lubridate"))</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(png)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' clean up tweets to include only english, alphanumeric tweets</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' subsets data frame of tweets to smallers subset of relevant variables</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#' add tweet_timestamp column with lubridate package qualities</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df <span class="ot">&lt;-</span> <span class="fu">clean_up_tweets</span>(ClintonTrump_tweets.df)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ClintonTrump_tweets.df<span class="sc">$</span>created_at,tweet_time)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' rearrange data by date</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df<span class="ot">&lt;-</span><span class="fu">arrange</span>(ClintonTrump_tweets.df, tweet_timestamp)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#' find tweets start and end date</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>tweets_start<span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">unlist</span>(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp)[<span class="dv">1</span>], <span class="at">split =</span><span class="st">' '</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>tweets_end<span class="ot">&lt;-</span><span class="fu">strsplit</span>(<span class="fu">unlist</span>(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp[<span class="fu">nrow</span>(ClintonTrump_tweets.df)]), <span class="at">split =</span><span class="st">' '</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#' a small percentage of users have location access enabled for their tweets</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">#' increase the timeout number to gather more tweets and increase geo-tagged tweets</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>map.data <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">"state"</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(ClintonTrump_tweets.df<span class="sc">$</span>place_lon),</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> <span class="fu">as.numeric</span>(ClintonTrump_tweets.df<span class="sc">$</span>place_lat))</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">subset</span>(points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>points<span class="ot">&lt;-</span><span class="fu">subset</span>(points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Map of tweets </span><span class="sc">\n</span><span class="st"> from %s to %s"</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>tweets_start, tweets_end)) <span class="sc">+</span> <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region),</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(), <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">data =</span> points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">1</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>)</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co">#' save map as a .png</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tweets.map)</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./tweets-map.png" class="img-fluid figure-img"></p>
+<figcaption>tweets-map</figcaption>
+</figure>
+</div>
+<p>Map Clinton only tweets</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Create a new data frame that only includes tweets that mentioned Clinton</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Clinton_tweets <span class="ot">&lt;-</span> ClintonTrump_tweets.df[<span class="fu">grep</span>(<span class="st">"Clinton"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>Clinton_points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(Clinton_tweets<span class="sc">$</span>place_lon),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> <span class="fu">as.numeric</span>(Clinton_tweets<span class="sc">$</span>place_lat))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' subset points to only include locations (roughly) within the United States</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Clinton_points <span class="ot">&lt;-</span> <span class="fu">subset</span>(Clinton_points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>Clinton_points<span class="ot">&lt;-</span><span class="fu">subset</span>(Clinton_points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>Clinton_tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Hillary Clinton Tweets Map"</span>) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region), <span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span> <span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(), <span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> Clinton_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">75</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save map of Clinton only tweets</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"Clinton_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Clinton_tweets.map)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Clinton_tweets-map.png" class="img-fluid figure-img"></p>
+<figcaption>Clinton-tweets-map</figcaption>
+</figure>
+</div>
+<p>Map Trump only tweets</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Create a new data frame that only includes tweets that mentioned Trump</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Trump_tweets <span class="ot">&lt;-</span> ClintonTrump_tweets.df[<span class="fu">grep</span>(<span class="st">"Trump"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Trump_points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(Trump_tweets<span class="sc">$</span>place_lon),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> <span class="fu">as.numeric</span>(Trump_tweets<span class="sc">$</span>place_lat))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' subset points to only include locations (roughly) within the United States</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>Trump_points <span class="ot">&lt;-</span> <span class="fu">subset</span>(Trump_points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>Trump_points<span class="ot">&lt;-</span><span class="fu">subset</span>(Trump_points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>Trump_tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Donald Trump Tweets Map"</span>) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region), <span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span> <span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(), <span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> Trump_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">75</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save map of Trump only tweets</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"Trump_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Trump_tweets.map)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Trump_tweets-map.png" class="img-fluid figure-img"></p>
+<figcaption>Trump-tweets-map</figcaption>
+</figure>
+</div>
+<p>Compare Clinton and Trump tweet maps side-by-side</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' View Clinton and Trump maps side-by-side</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(Clinton_tweets.map,Trump_tweets.map, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save Clinton and Trump comparison map</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"combined_tweets-raw.png"</span>, <span class="fu">arrangeGrob</span>(Clinton_tweets.map,Trump_tweets.map), <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' Improve comparison map image quality by rasterization</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>img <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"combined_tweets-raw.png"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.raster</span>(img)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save raster comparison map</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"combined_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">720</span> , <span class="at">width =</span> <span class="dv">1200</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.raster</span>(img)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="./combined_tweets-map.png" class="img-fluid" alt="combined-tweets-map"><!-- --></p>
+<p>Save all objects in your current workspace and read back from file in the future</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> <span class="st">"PAA_2016_Twitter.RData"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' future R sessions will require you to reload necessary libraries</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the command below to load saved objects in future workspace sessions</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#load("PAA_2016_Twitter.RData")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ol type="1">
+<li><a href="https://www.r-project.org/" target="_blank">R</a></li>
+<li><a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">RStudio</a> is a free and open-source integrated development environment (IDE) for R</li>
+<li><a href="https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf" target="_blank">short R tutorial</a></li>
+<li>Make a <a href="https://www.twitter.com/signup" target="_blank">Twitter account</a></li>
+<li><a href="https://support.twitter.com/articles/110250" target="_blank">instructions</a> to register phone with Twitter account</li>
+<li>create a <a href="https://dev.twitter.com" target="_blank">new application</a></li>
+<li><a href="https://dev.twitter.com/streaming/overview" target="_blank">Twitter’s Streaming API</a></li>
+<li><a href="https://dev.twitter.com/rest/public" target="_blank">Twitter’s API</a></li>
+<li>Where on Earth Identifiers <a href="https://developer.yahoo.com/geo/geoplanet/guide/concepts.html" target="_blank">(WOEID)</a> for locations</li>
+<li><a href="http://dev.twitter.com/docs/streaming-apis/parameters#locations" target="_blank">Twitter location parameters</a></li>
+<li><a href="http://pablobarbera.com/code/streamR.html" target="_blank">streamR vignette</a> by Pablo Barbera</li>
+</ol>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script src="bayesian-waves-bg.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Social Media, Twitter API, and R"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2016-04-17"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "A workshop on gathering, processing, and analyzing Twitter API data with R, created for the 2016 Population Association of America Annual Meeting."</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [tutorial, python]</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> ""</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- migrated from pelican: social_media_twitter_API_and_R.md --&gt;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>This post is a workshop that I created for a social media workshop during the</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>2016 Population Association of America Annual Meeting in Washington, D.C (April).</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>All relevant code will eventually be available on <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"http://www.github.com/kpolimis"</span><span class="ot"> target </span><span class="op">=</span> <span class="st">"_blank"</span><span class="dt">&gt;</span>my github<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>Introduction</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="fu">============</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>We are going to learn various R functions for gathering, processing and</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>analyzing Twitter API data. Our goal is to collect tweets by location</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>and subject. This workshop is aimed at graduate students with some</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>familiarity with R. The examples explored will gather tweets made in the</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>Washington, D.C. area as well as tweets that mention presidential</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>candidates Hillary Clinton and Donald Trump. If we have time, we will</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>explore methods to map our results nationally and show where people are</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>talking about the candidates.</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- PELICAN_END_SUMMARY --&gt;</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>Overview</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="fu">========</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Setup</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Obtain Twitter credentials</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Install R packages</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Search Twitter API</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Map results (optional)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>Setup</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="fu">=====</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### Software</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>Essential: <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.r-project.org/"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>R<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>Recommended:</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.rstudio.com/products/rstudio/download/"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>RStudio<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>RStudio is a free and open-source integrated development environment (IDE) for R</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>If you have never used R before, or if you feel that you need a</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>refresher, we recommend that you go over this <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>short R tutorial<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="fu">### Obtain Twitter credentials</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Create a <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.twitter.com/signup"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter account<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="al">![Twitter-Main](./02-TwitterSignUp1.png)</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>If you have a Twitter account, but it is not verified with a phone,</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    you would need to verify the account, by adding a mobile phone</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    number. Here is a link to the</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://support.twitter.com/articles/110250"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>instructions<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Create a  <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://dev.twitter.com"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>new app<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> Scroll to the bottom of the page and select Manage Your Apps under the Tools column (see highlighted box below)</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="al">![Dev-SignIn](./08-TwitterDevSignIn2.png)</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Fill in your App with the following information</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The App name must be unique, edit "INITIALS" with your initials</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Name: PAA 2016 Test App "INITIALS"</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Description: Test Application for PAA 2016 Social Media and Demographic Methods Workshop</span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Website: <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"http://www.example.com"</span><span class="ot"> target </span><span class="op">=</span> <span class="st">"_blank"</span><span class="dt">&gt;</span>http://www.example.com<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>You should leave the "callback website" field empty</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a><span class="al">![Twitter-App2](./10-TwitterCreateApp2.png)</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Obtain your consumer key, consumer secret, access token and access</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    token secret. You will insert these credentials below</span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Select Keys and Access Tokens tab</span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Consumer Key and Consumer Secret are at the top of the page</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Scroll to the bottom of the page to Token actions and create Access</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>    Token and Access Token Secret</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="fu">### Install R packages</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>You will need to have the following packages installed for the core of this workshop:</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`twitteR`</span></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`streamR`</span></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`ROAuth`</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`RCurl`</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`dplyr`</span></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>Before we can started, we need to clear our workspace, set a working directory, and load packages (you may need to install these packages the first time run this file). Fill in your working directory below by replacing "FILL ME IN" with the file path of your workshop folder</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"FILL ME IN/PAA_2016_SMDM_Workshop/Twitter"</span>)</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the command below to install the necessary packages</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(c("twitteR","streamR","ROAuth","dplyr","base64enc"))</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="co">#' Pablo Barbera, author of streamR, has written additional functions for Twitter analysis</span></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the two commands below to download and add these functions to your environment with source</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="co">#download.file("https://raw.githubusercontent.com/pablobarbera/social-media-workshop/master/functions.r",</span></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>              <span class="st">"functions_by_pablobarbera.R"</span><span class="er">)</span></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a><span class="co">#source("functions_by_pablobarbera.R")</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"twitterFunctions.R"</span>) <span class="co"># few functions to clean data</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(twitteR)</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(streamR)</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ROAuth)</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(base64enc)</span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="fu">### Twitter API Authentication</span></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>We will use two packages, streamR and twitteR, to retrieve tweets from the Twitter API. To access the functions in these packages, we will complete two authentication procedures.</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`streamR`</span></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Allows authorized applications to access <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://dev.twitter.com/streaming/overview"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>    Twitter's Streaming API<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>real-time collection and monitoring of tweets</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>uses stored authentication</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`twitteR`</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Allows authorized applications to access <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://dev.twitter.com/rest/public"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>    Twitter's API<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>read and post tweets with API responses</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>uses direct authentication</span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a><span class="co">#' Twitter credentials for streamR and twitteR authentication</span></span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>consumer_key <span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>consumer_secret<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>access_token<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>access_token_secret<span class="ot">&lt;-</span> <span class="st">"FILL ME IN"</span></span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a><span class="co">#' parameters and URLs for streamR authentication</span></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>reqURL <span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/request_token"</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>accessURL<span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/access_token"</span></span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>authURL<span class="ot">&lt;-</span> <span class="st">"https://api.twitter.com/oauth/authorize"</span></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a><span class="co">#' Note:  You only need to create an authentication object for streamR once</span></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a><span class="co">#' Microsoft Windows users need to uncomment the following command to download a cert file</span></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a><span class="co">#download.file(url="http://curl.haxx.se/ca/cacert.pem", destfile="cacert.pem")</span></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="co">#' create an object "cred" that will save the authenticated object for later sessions</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a>twitCred<span class="ot">&lt;-</span> OAuthFactory<span class="sc">$</span><span class="fu">new</span>(<span class="at">consumerKey=</span>consumer_key,<span class="at">consumerSecret=</span>consumer_secret,</span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a>                            <span class="at">requestURL=</span>reqURL,<span class="at">accessURL=</span>accessURL,<span class="at">authURL=</span>authURL)</span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="co">#' executing twitCred$handshake will redirect you to a website and provide your app a PIN</span></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a><span class="co">#' insert the PIN in the R console after you run this line</span></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a><span class="co">#' you can save authenticated credentials for later sessions</span></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a><span class="co">#' for later use, uncomment the following command in a folder that contains twitCred.RData</span></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a><span class="co">#load("twitCred.RData")</span></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>twitCred<span class="sc">$</span><span class="fu">handshake</span>(<span class="at">cainfo =</span> <span class="fu">system.file</span>(<span class="st">"CurlSSL"</span>, <span class="st">"cacert.pem"</span>, <span class="at">package =</span> <span class="st">"RCurl"</span>))</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(twitCred, <span class="at">file =</span> <span class="st">"twitCred.RData"</span>)</span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a><span class="co">#' setup direct Twitter authentication for twitteR functions</span></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="co">#' you will be prompted to cache authentication token</span></span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a><span class="co">#' you will need to repeat this step unless you are running analysis from a location with a</span></span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a><span class="co">#' cached authentication token</span></span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a><span class="fu">setup_twitter_oauth</span>(consumer_key, consumer_secret, access_token, access_token_secret)</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>Twitter authentication for streamR (Windows output with <span class="in">`download.file`</span> executed shown)\</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="al">![Twitter-Cred-1](./16-TwitterCred1.png)</span></span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>Analysis</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a><span class="fu">========</span></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a><span class="fu">### Search tweets by location</span></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a>Search for tweets by location using <span class="in">`twitteR`</span> package functions. The functions below interact with the trend portion of the Twitter API. Use Where on Earth Identifiers</span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://developer.yahoo.com/geo/geoplanet/guide/concepts.html"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>(WOEID)<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>for locations</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>availableTrendLocations</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>getTrends</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a>View column names and small subset of observations with <span class="in">`glimpse`</span> command</span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a><span class="fu">availableTrendLocations</span>()</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>woeid <span class="ot">=</span> <span class="fu">availableTrendLocations</span>()</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(woeid)</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a><span class="co">#' get trending D.C. area tweets</span></span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>DC_tweets <span class="ot">=</span> <span class="fu">getTrends</span>(<span class="dv">2514815</span>)</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(DC_tweets)</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="co">#' trending hashtags</span></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DC_tweets<span class="sc">$</span>name)</span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a><span class="in">    ## [1] "Rockets"       "Dwight Howard" "Paul George"   "#MentorIRL"</span></span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a><span class="in">    ## [5] "Raptors"       "#DCvTOR"</span></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="fu">getCommonHashtags</span>(DC_tweets<span class="sc">$</span>name)</span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="in">    ## hashtags</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                #93KDay              #ADay2016        #brunchofidiots</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a><span class="in">    ##         #CaratSelcaDay                  #CCCC  #CONGRATULATIONSHARRY</span></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                #DCvTOR             #DevRelCon  #DreamvilleMusicVideo</span></span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a><span class="in">    ##    #IrritateMeIn4Words #ItsNoneOfYourBusiness              #LEMONADE</span></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a><span class="in">    ##   #LetMeEntertainYouBy             #MentorIRL                 #NALCS</span></span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="in">    ##     #NashInMyrtleBeach              #NYRvsPIT        #RecordStoreDay</span></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1                      1</span></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a><span class="in">    ##     #SignACastIn5Words               #SXonFOX</span></span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a><span class="in">    ##                      1                      1</span></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="fu">### Search Twitter stream by subject</span></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a>Search for tweets by subject using <span class="in">`streamR`</span> package functions. The <span class="in">`streamR`</span> functions interact with Twitter's Streaming API to filter tweets by keywords, users, language, and location</span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`filterStream`</span></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parseTweets`</span></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="fu">filterStream</span>(<span class="st">"ClintonTrump_tweets.json"</span>, <span class="at">track =</span> <span class="fu">c</span>(<span class="st">"Clinton"</span>, <span class="st">"Trump"</span>),</span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a><span class="at">locations =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">125</span>, <span class="dv">25</span>, <span class="sc">-</span><span class="dv">66</span>, <span class="dv">50</span>), <span class="at">timeout =</span> <span class="dv">60</span>, <span class="at">oauth =</span> twitCred)</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a><span class="co">#' parse .json file of tweets and convert parsed tweets to a data frame</span></span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df <span class="ot">&lt;-</span> <span class="fu">parseTweets</span>(<span class="st">"ClintonTrump_tweets.json"</span>, <span class="at">simplify =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ClintonTrump_tweets.df)</span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="co">#' print the amount of times Clinton and Trump are mentioned</span></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a>Clinton_mentions <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">grep</span>(<span class="st">"Clinton"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a>Trump_mentions <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">grep</span>(<span class="st">"Trump"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"Clinton mentioned %d times in %d tweets"</span>, Clinton_mentions, <span class="fu">nrow</span>(ClintonTrump_tweets.df))</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"Trump mentioned %d times in %d tweets"</span>, Trump_mentions, <span class="fu">nrow</span>(ClintonTrump_tweets.df))</span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a><span class="in">    ## [1] "Clinton mentioned 397894 times in 5944511 tweets"</span></span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a><span class="in">    ## [1] "Trump mentioned 1164798 times in 5944511 tweets"</span></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a>Advanced</span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="fu">========</span></span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map results</span></span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>use <span class="in">`filterStream`</span> to search by location</span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"http://dev.twitter.com/docs/streaming-apis/parameters#locations"</span><span class="ot"> target</span></span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a><span class="ot">    </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter location parameters<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a>map tweets with <span class="in">`ggplot2`</span> and <span class="in">`grid`</span> packages</span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the following line the first time you run this file</span></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(c("ggplot2", "grid", "maps", "png", "lubridate"))</span></span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(png)</span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a><span class="co">#' clean up tweets to include only english, alphanumeric tweets</span></span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a><span class="co">#' subsets data frame of tweets to smallers subset of relevant variables</span></span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="co">#' add tweet_timestamp column with lubridate package qualities</span></span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df <span class="ot">&lt;-</span> <span class="fu">clean_up_tweets</span>(ClintonTrump_tweets.df)</span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ClintonTrump_tweets.df<span class="sc">$</span>created_at,tweet_time)</span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a><span class="co">#' rearrange data by date</span></span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a>ClintonTrump_tweets.df<span class="ot">&lt;-</span><span class="fu">arrange</span>(ClintonTrump_tweets.df, tweet_timestamp)</span>
+<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a><span class="co">#' find tweets start and end date</span></span>
+<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a>tweets_start<span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">unlist</span>(</span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a>    ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp)[<span class="dv">1</span>], <span class="at">split =</span><span class="st">' '</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a>tweets_end<span class="ot">&lt;-</span><span class="fu">strsplit</span>(<span class="fu">unlist</span>(</span>
+<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a>    ClintonTrump_tweets.df<span class="sc">$</span>tweet_timestamp[<span class="fu">nrow</span>(ClintonTrump_tweets.df)]), <span class="at">split =</span><span class="st">' '</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a><span class="co">#' a small percentage of users have location access enabled for their tweets</span></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a><span class="co">#' increase the timeout number to gather more tweets and increase geo-tagged tweets</span></span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a>map.data <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">"state"</span>)</span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(ClintonTrump_tweets.df<span class="sc">$</span>place_lon),</span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> <span class="fu">as.numeric</span>(ClintonTrump_tweets.df<span class="sc">$</span>place_lat))</span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">subset</span>(points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a>points<span class="ot">&lt;-</span><span class="fu">subset</span>(points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a>tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Map of tweets </span><span class="sc">\n</span><span class="st"> from %s to %s"</span>,</span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a>tweets_start, tweets_end)) <span class="sc">+</span> <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region),</span>
+<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a><span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(), <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a><span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a><span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a><span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">data =</span> points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">1</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>)</span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a><span class="co">#' save map as a .png</span></span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tweets.map)</span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a><span class="al">![tweets-map](./tweets-map.png)</span></span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a>Map Clinton only tweets</span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a><span class="co">#' Create a new data frame that only includes tweets that mentioned Clinton</span></span>
+<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a>Clinton_tweets <span class="ot">&lt;-</span> ClintonTrump_tweets.df[<span class="fu">grep</span>(<span class="st">"Clinton"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text,</span>
+<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a>Clinton_points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(Clinton_tweets<span class="sc">$</span>place_lon),</span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> <span class="fu">as.numeric</span>(Clinton_tweets<span class="sc">$</span>place_lat))</span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a><span class="co">#' subset points to only include locations (roughly) within the United States</span></span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>Clinton_points <span class="ot">&lt;-</span> <span class="fu">subset</span>(Clinton_points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a>Clinton_points<span class="ot">&lt;-</span><span class="fu">subset</span>(Clinton_points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a>Clinton_tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Hillary Clinton Tweets Map"</span>) <span class="sc">+</span></span>
+<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region), <span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span> <span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span></span>
+<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(), <span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> Clinton_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">75</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span>
+<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save map of Clinton only tweets</span></span>
+<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"Clinton_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Clinton_tweets.map)</span>
+<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a><span class="al">![Clinton-tweets-map](./Clinton_tweets-map.png)</span></span>
+<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a>Map Trump only tweets</span>
+<span id="cb15-355"><a href="#cb15-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a><span class="co">#' Create a new data frame that only includes tweets that mentioned Trump</span></span>
+<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a>Trump_tweets <span class="ot">&lt;-</span> ClintonTrump_tweets.df[<span class="fu">grep</span>(<span class="st">"Trump"</span>, ClintonTrump_tweets.df<span class="sc">$</span>text,</span>
+<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-361"><a href="#cb15-361" aria-hidden="true" tabindex="-1"></a>Trump_points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(Trump_tweets<span class="sc">$</span>place_lon),</span>
+<span id="cb15-362"><a href="#cb15-362" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> <span class="fu">as.numeric</span>(Trump_tweets<span class="sc">$</span>place_lat))</span>
+<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a><span class="co">#' subset points to only include locations (roughly) within the United States</span></span>
+<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a>Trump_points <span class="ot">&lt;-</span> <span class="fu">subset</span>(Trump_points, y <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> y <span class="sc">&lt;</span><span class="dv">50</span>)</span>
+<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a>Trump_points<span class="ot">&lt;-</span><span class="fu">subset</span>(Trump_points, x<span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">125</span> <span class="sc">&amp;</span> x<span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">66</span>)</span>
+<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a>Trump_tweets.map<span class="ot">&lt;-</span><span class="fu">ggplot</span>(map.data) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Donald Trump Tweets Map"</span>) <span class="sc">+</span></span>
+<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">map_id =</span> region), <span class="at">map =</span> map.data, <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span> <span class="fu">expand_limits</span>(<span class="at">x =</span> map.data<span class="sc">$</span>long, <span class="at">y =</span> map.data<span class="sc">$</span>lat) <span class="sc">+</span></span>
+<span id="cb15-371"><a href="#cb15-371" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-372"><a href="#cb15-372" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(), <span class="at">panel.background =</span> <span class="fu">element_blank</span>(), <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-373"><a href="#cb15-373" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-374"><a href="#cb15-374" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">0</span> <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">1.5</span>), <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb15-375"><a href="#cb15-375" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> Trump_points, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">size =</span> .<span class="dv">75</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb15-376"><a href="#cb15-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-377"><a href="#cb15-377" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save map of Trump only tweets</span></span>
+<span id="cb15-378"><a href="#cb15-378" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"Trump_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">480</span> , <span class="at">width =</span> <span class="dv">720</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb15-379"><a href="#cb15-379" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Trump_tweets.map)</span>
+<span id="cb15-380"><a href="#cb15-380" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-381"><a href="#cb15-381" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-382"><a href="#cb15-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-383"><a href="#cb15-383" aria-hidden="true" tabindex="-1"></a><span class="al">![Trump-tweets-map](./Trump_tweets-map.png)</span></span>
+<span id="cb15-384"><a href="#cb15-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-385"><a href="#cb15-385" aria-hidden="true" tabindex="-1"></a>Compare Clinton and Trump tweet maps side-by-side</span>
+<span id="cb15-386"><a href="#cb15-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-387"><a href="#cb15-387" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-388"><a href="#cb15-388" aria-hidden="true" tabindex="-1"></a><span class="co">#' View Clinton and Trump maps side-by-side</span></span>
+<span id="cb15-389"><a href="#cb15-389" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(Clinton_tweets.map,Trump_tweets.map, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb15-390"><a href="#cb15-390" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-391"><a href="#cb15-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-392"><a href="#cb15-392" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save Clinton and Trump comparison map</span></span>
+<span id="cb15-393"><a href="#cb15-393" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb15-394"><a href="#cb15-394" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"combined_tweets-raw.png"</span>, <span class="fu">arrangeGrob</span>(Clinton_tweets.map,Trump_tweets.map), <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb15-395"><a href="#cb15-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-396"><a href="#cb15-396" aria-hidden="true" tabindex="-1"></a><span class="co">#' Improve comparison map image quality by rasterization</span></span>
+<span id="cb15-397"><a href="#cb15-397" aria-hidden="true" tabindex="-1"></a>img <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"combined_tweets-raw.png"</span>)</span>
+<span id="cb15-398"><a href="#cb15-398" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.raster</span>(img)</span>
+<span id="cb15-399"><a href="#cb15-399" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-400"><a href="#cb15-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-401"><a href="#cb15-401" aria-hidden="true" tabindex="-1"></a><span class="co">#' Save raster comparison map</span></span>
+<span id="cb15-402"><a href="#cb15-402" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">filename=</span><span class="st">"combined_tweets-map.png"</span>, <span class="at">height =</span> <span class="dv">720</span> , <span class="at">width =</span> <span class="dv">1200</span>, <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb15-403"><a href="#cb15-403" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.raster</span>(img)</span>
+<span id="cb15-404"><a href="#cb15-404" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb15-405"><a href="#cb15-405" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-406"><a href="#cb15-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-407"><a href="#cb15-407" aria-hidden="true" tabindex="-1"></a><span class="al">![combined-tweets-map](./combined_tweets-map.png)</span><span class="co">&lt;!-- --&gt;</span></span>
+<span id="cb15-408"><a href="#cb15-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-409"><a href="#cb15-409" aria-hidden="true" tabindex="-1"></a>Save all objects in your current workspace and read back from file in</span>
+<span id="cb15-410"><a href="#cb15-410" aria-hidden="true" tabindex="-1"></a>the future</span>
+<span id="cb15-411"><a href="#cb15-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-412"><a href="#cb15-412" aria-hidden="true" tabindex="-1"></a><span class="in">``` {.r}</span></span>
+<span id="cb15-413"><a href="#cb15-413" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> <span class="st">"PAA_2016_Twitter.RData"</span>)</span>
+<span id="cb15-414"><a href="#cb15-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-415"><a href="#cb15-415" aria-hidden="true" tabindex="-1"></a><span class="co">#' future R sessions will require you to reload necessary libraries</span></span>
+<span id="cb15-416"><a href="#cb15-416" aria-hidden="true" tabindex="-1"></a><span class="co">#' uncomment the command below to load saved objects in future workspace sessions</span></span>
+<span id="cb15-417"><a href="#cb15-417" aria-hidden="true" tabindex="-1"></a><span class="co">#load("PAA_2016_Twitter.RData")</span></span>
+<span id="cb15-418"><a href="#cb15-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-419"><a href="#cb15-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-420"><a href="#cb15-420" aria-hidden="true" tabindex="-1"></a>References</span>
+<span id="cb15-421"><a href="#cb15-421" aria-hidden="true" tabindex="-1"></a><span class="fu">==========</span></span>
+<span id="cb15-422"><a href="#cb15-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-423"><a href="#cb15-423" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.r-project.org/"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>R<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-424"><a href="#cb15-424" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.rstudio.com/products/rstudio/download/"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>RStudio<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> is a free and open-source integrated development environment (IDE) for R</span>
+<span id="cb15-425"><a href="#cb15-425" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>short R tutorial<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-426"><a href="#cb15-426" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Make a <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://www.twitter.com/signup"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter account<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-427"><a href="#cb15-427" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://support.twitter.com/articles/110250"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>instructions<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> to register phone with Twitter account</span>
+<span id="cb15-428"><a href="#cb15-428" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>create a <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://dev.twitter.com"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>new application<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-429"><a href="#cb15-429" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span>  <span class="st">"https://dev.twitter.com/streaming/overview"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter's Streaming API<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-430"><a href="#cb15-430" aria-hidden="true" tabindex="-1"></a><span class="ss">8. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span><span class="st">"https://dev.twitter.com/rest/public"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter's API<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-431"><a href="#cb15-431" aria-hidden="true" tabindex="-1"></a><span class="ss">9. </span>Where on Earth Identifiers</span>
+<span id="cb15-432"><a href="#cb15-432" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"https://developer.yahoo.com/geo/geoplanet/guide/concepts.html"</span><span class="ot"> target </span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>(WOEID)<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> for locations</span>
+<span id="cb15-433"><a href="#cb15-433" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"http://dev.twitter.com/docs/streaming-apis/parameters#locations"</span><span class="ot"> target</span></span>
+<span id="cb15-434"><a href="#cb15-434" aria-hidden="true" tabindex="-1"></a><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>Twitter location parameters<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb15-435"><a href="#cb15-435" aria-hidden="true" tabindex="-1"></a><span class="ss">11. </span><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href </span><span class="op">=</span> <span class="st">"http://pablobarbera.com/code/streamR.html"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span>streamR vignette<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> by Pablo Barbera</span>
+<span id="cb15-436"><a href="#cb15-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-437"><a href="#cb15-437" aria-hidden="true" tabindex="-1"></a>Acknowledgements</span>
+<span id="cb15-438"><a href="#cb15-438" aria-hidden="true" tabindex="-1"></a><span class="fu">================</span></span>
+<span id="cb15-439"><a href="#cb15-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-440"><a href="#cb15-440" aria-hidden="true" tabindex="-1"></a>I would like to thank workshop collaborators (Nina Cesare, Charles Lanfear, Joan Ryan and Emilio Zagheni) for their questions and feedback while creating this module. Additionally, comments and suggestions from Michele Cadigan, Connor Gilroy, Jerald Herting, Bernease Herman and Valentina Staneva improved the presentation and workshop materials.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,29 @@
+[
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/blog/sicss-debrief/index.html",
+      "/posts/blog/make-a-pelican-blog/index.html",
+      "/posts/blog/first-post/index.html"
+    ]
+  },
+  {
+    "listing": "/technical.html",
+    "items": [
+      "/posts/technical/triple-double-russ/index.html",
+      "/posts/technical/nba-shot-chart-part-1/index.html",
+      "/posts/technical/mortality-data-covid-19-disinformation-part-4/index.html",
+      "/posts/technical/mortality-data-covid-19-disinformation-part-3/index.html",
+      "/posts/technical/mortality-data-covid-19-disinformation-part-2/index.html",
+      "/posts/technical/mortality-data-covid-19-disinformation-part-1/index.html",
+      "/posts/technical/nba-mvp-comparisons-part-3/index.html",
+      "/posts/technical/nba-mvp-comparisons-part-2/index.html",
+      "/posts/technical/nba-mvp-comparisons-part-1/index.html",
+      "/posts/technical/milano-location-history/index.html",
+      "/posts/technical/seattle-location-history/index.html",
+      "/posts/technical/flights-analysis/index.html",
+      "/posts/technical/positions-matter/index.html",
+      "/posts/technical/social-media-twitter-api-and-r/index.html"
+    ]
+  }
+]
