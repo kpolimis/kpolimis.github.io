@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kivan Polimis">
 <meta name="dcterms.date" content="2026-05-06">
-<meta name="description" content="I built this site on Pelican. I’m moving it to Quarto. Not because Pelican is bad (it’s a good static site generator), but because if your brand is “reproducible data science,” your website should run code, not just describe it.">
+<meta name="description" content="I built this site on Pelican in 2016 because I was new to Python and wanted a framework that was simple to configure, fast to deploy, and Markdown-native. A decade later I’m moving to Quarto because static images aren’t reproducible — Quarto makes the code the source of truth.">
 
 <title>Migrating from Pelican to Quarto: A Data Scientist’s Case For The Switch – Kivan Polimis</title>
 <style>
@@ -195,7 +195,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-migration-process" id="toc-the-migration-process" class="nav-link" data-scroll-target="#the-migration-process">The Migration Process</a></li>
   <li><a href="#publishing" id="toc-publishing" class="nav-link" data-scroll-target="#publishing">Publishing</a></li>
   <li><a href="#why-this-matters-for-the-rigor-at-scale-brand" id="toc-why-this-matters-for-the-rigor-at-scale-brand" class="nav-link" data-scroll-target="#why-this-matters-for-the-rigor-at-scale-brand">Why This Matters for the “Rigor at Scale” Brand</a></li>
-  <li><a href="#current-status" id="toc-current-status" class="nav-link" data-scroll-target="#current-status">Current Status</a></li>
   </ul>
 </nav>
     </div>
@@ -217,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    I built this site on Pelican. I’m moving it to Quarto. Not because Pelican is bad (it’s a good static site generator), but because if your brand is “reproducible data science,” your website should run code, not just describe it.
+    I built this site on Pelican in 2016 because I was new to Python and wanted a framework that was simple to configure, fast to deploy, and Markdown-native. A decade later I’m moving to Quarto because static images aren’t reproducible — Quarto makes the code the source of truth.
   </div>
 </div>
 
@@ -246,20 +245,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>I built <a href="kivanpolimis.com">kivanpolimis.com</a> on <a href="https://getpelican.com">Pelican</a> in 2016. That was the right call then: Python-based, simple to configure, fast to deploy, Markdown-native. I’ve been writing posts on it for a decade.</p>
-<p>I’m moving to <a href="https://quarto.org">Quarto</a>. This post explains why, what the migration looks like technically, and what I think it means for data scientists who maintain personal sites.</p>
+<p>I built this website, <a href="kivanpolimis.com">kivanpolimis.com</a>, on <a href="https://getpelican.com">Pelican</a> in 2016. That was the right call then, I was new to Python and wanted a website framework that was simple to configure, fast to deploy, and Markdown-native.</p>
+<p>I’ve used Pelican successfully for a decade, but I’m moving to <a href="https://quarto.org">Quarto</a>. This post explains why, what the migration looks like technically, and what I think it means for data scientists who maintain personal sites.</p>
 <hr>
 <section id="what-pelican-does-well-and-where-it-stops" class="level2">
 <h2 class="anchored" data-anchor-id="what-pelican-does-well-and-where-it-stops">What Pelican Does Well (and Where It Stops)</h2>
-<p>Pelican is a static site generator. You write Markdown, it renders HTML. The workflow for a data science blog is: run your analysis in a notebook or script, export a chart as a PNG, embed the PNG in a Markdown post, deploy. Clean enough.</p>
+<p>Pelican is a static site generator where you write Markdown that is rendered as HTML. The workflow for a data science blog is straightforward: run your analysis in a notebook or script, export a chart as a PNG, embed the PNG in a Markdown post, deploy.</p>
 <p>The problem is that the chart is static. If the underlying data changes, or if you want to show the code that generated the chart, or if you want an interactive visualization, you’re either embedding screenshots or maintaining a separate JavaScript layer that has no connection to your analysis code.</p>
-<p>More fundamentally: a static image of a chart is not reproducible. It’s a claim that some code produced some output at some point. Quarto makes the code the source of truth.</p>
+<p>More fundamentally, a static image of a chart is not reproducible. It’s a claim that some code produced some output at some point. Quarto makes the code the source of truth.</p>
 <hr>
 </section>
 <section id="what-quarto-actually-is" class="level2">
 <h2 class="anchored" data-anchor-id="what-quarto-actually-is">What Quarto Actually Is</h2>
-<p>Quarto is a scientific publishing system. It takes <code>.qmd</code> files (Quarto Markdown) and renders them to HTML, PDF, Word, or slides. Code blocks in <code>.qmd</code> files execute during the render (in Python, R, Julia, or Observable) and their output (tables, plots, printed results) is embedded directly.</p>
-<p>A Quarto blog post that includes a regression table generates that table at build time, from the actual model, every time the site builds. The number in the text and the number in the table are the same number because they’re both computed from the same object.</p>
+<p>Quarto is a scientific publishing system that takes <code>.qmd</code> files (Quarto Markdown) and renders them to HTML, PDF, Word, or slides. Code blocks in <code>.qmd</code> files execute during the render (in Python, R, Julia, or Observable) and their output (tables, plots, printed results) is embedded directly.</p>
+<p>A Quarto blog post that includes a regression table that generates the table at build time, from the actual model, every time the site builds. The number in the text and the number in the table are the same number because they’re both computed from the same object.</p>
 <p>This is not a new idea. R Markdown did this first, and Jupyter notebooks have always supported it. What Quarto adds is:</p>
 <ul>
 <li><strong>Multi-language support</strong> in a single document (Python and R in the same <code>.qmd</code>, sharing a knitr or Jupyter kernel)</li>
@@ -399,14 +398,9 @@ Tags: nba, shot-charts, python</code></pre>
 <section id="why-this-matters-for-the-rigor-at-scale-brand" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-matters-for-the-rigor-at-scale-brand">Why This Matters for the “Rigor at Scale” Brand</h2>
 <p>The websites that shaped my sense of what a data scientist’s personal site should look like (<a href="https://eugeneyan.com">Eugene Yan’s</a>, <a href="https://vickiboykis.com">Vicki Boykis’s</a>, <a href="https://huyenchip.com">Chip Huyen’s</a>) are notable for being genuinely technical. Not just descriptions of technical work, but the work itself, documented with enough specificity that you could reproduce it.</p>
-<p>Quarto makes that easier because the code and the prose live in the same file. The analysis doesn’t exist separately from the writing about it. Every post is its own reproducible artifact.</p>
-<p>That’s the brand case. The practical case is simpler: I’m tired of updating PNG files manually when I fix a bug in a chart. Quarto fixes that permanently.</p>
+<p>Quarto makes that easier because the code and the prose live in the same file. The analysis doesn’t exist separately from the writing about it. The end product is that every post is its own reproducible artifact.</p>
+<p>That’s the brand case, the practical case is simpler: I’m tired of updating PNG files manually when I fix a bug in a chart and Quarto fixes that permanently.</p>
 <hr>
-</section>
-<section id="current-status" class="level2">
-<h2 class="anchored" data-anchor-id="current-status">Current Status</h2>
-<p>The existing Pelican site stays live during the migration. I’m converting posts one category at a time, starting with Tutorials (most code-heavy) and working toward the How-to and Review posts. The target is a fully Quarto-powered site by the end of Q3 2026.</p>
-<p>The Pelican source is archived. The Quarto source is at <code>kpolimis.github.io</code>. PRs welcome if you find something that didn’t migrate cleanly.</p>
 
 
 <!-- -->
@@ -875,7 +869,7 @@ Tags: nba, shot-charts, python</code></pre>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Migrating from Pelican to Quarto: A Data Scientist's Case For The Switch"</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-05-06"</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I built this site on Pelican. I'm moving it to Quarto. Not because Pelican is bad (it's a good static site generator), but because if your brand is \"reproducible data science,\" your website should run code, not just describe it."</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I built this site on Pelican in 2016 because I was new to Python and wanted a framework that was simple to configure, fast to deploy, and Markdown-native. A decade later I'm moving to Quarto because static images aren't reproducible — Quarto makes the code the source of truth."</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [how-to, quarto, pelican, python, r, reproducibility]</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
@@ -883,27 +877,27 @@ Tags: nba, shot-charts, python</code></pre>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>I built <span class="co">[</span><span class="ot">kivanpolimis.com</span><span class="co">](kivanpolimis.com)</span> on <span class="co">[</span><span class="ot">Pelican</span><span class="co">](https://getpelican.com)</span> in 2016. That was the right call then: Python-based, simple to configure, fast to deploy, Markdown-native. I've been writing posts on it for a decade.</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>I built this website, <span class="co">[</span><span class="ot">kivanpolimis.com</span><span class="co">](kivanpolimis.com)</span>, on <span class="co">[</span><span class="ot">Pelican</span><span class="co">](https://getpelican.com)</span> in 2016. That was the right call then, I was new to Python and wanted a website framework that was simple to configure, fast to deploy, and Markdown-native.</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>I'm moving to <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org)</span>. This post explains why, what the migration looks like technically, and what I think it means for data scientists who maintain personal sites.</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>I've used Pelican successfully for a decade, but I'm moving to <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org)</span>. This post explains why, what the migration looks like technically, and what I think it means for data scientists who maintain personal sites.</span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## What Pelican Does Well (and Where It Stops)</span></span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>Pelican is a static site generator. You write Markdown, it renders HTML. The workflow for a data science blog is: run your analysis in a notebook or script, export a chart as a PNG, embed the PNG in a Markdown post, deploy. Clean enough.</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>Pelican is a static site generator where you write Markdown that is rendered as HTML. The workflow for a data science blog is straightforward: run your analysis in a notebook or script, export a chart as a PNG, embed the PNG in a Markdown post, deploy.</span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>The problem is that the chart is static. If the underlying data changes, or if you want to show the code that generated the chart, or if you want an interactive visualization, you're either embedding screenshots or maintaining a separate JavaScript layer that has no connection to your analysis code.</span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>More fundamentally: a static image of a chart is not reproducible. It's a claim that some code produced some output at some point. Quarto makes the code the source of truth.</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>More fundamentally, a static image of a chart is not reproducible. It's a claim that some code produced some output at some point. Quarto makes the code the source of truth.</span>
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## What Quarto Actually Is</span></span>
 <span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>Quarto is a scientific publishing system. It takes <span class="in">`.qmd`</span> files (Quarto Markdown) and renders them to HTML, PDF, Word, or slides. Code blocks in <span class="in">`.qmd`</span> files execute during the render (in Python, R, Julia, or Observable) and their output (tables, plots, printed results) is embedded directly.</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>Quarto is a scientific publishing system that takes <span class="in">`.qmd`</span> files (Quarto Markdown) and renders them to HTML, PDF, Word, or slides. Code blocks in <span class="in">`.qmd`</span> files execute during the render (in Python, R, Julia, or Observable) and their output (tables, plots, printed results) is embedded directly.</span>
 <span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>A Quarto blog post that includes a regression table generates that table at build time, from the actual model, every time the site builds. The number in the text and the number in the table are the same number because they're both computed from the same object.</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>A Quarto blog post that includes a regression table that generates the table at build time, from the actual model, every time the site builds. The number in the text and the number in the table are the same number because they're both computed from the same object.</span>
 <span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>This is not a new idea. R Markdown did this first, and Jupyter notebooks have always supported it. What Quarto adds is:</span>
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
@@ -1099,17 +1093,11 @@ Tags: nba, shot-charts, python</code></pre>
 <span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>The websites that shaped my sense of what a data scientist's personal site should look like (<span class="co">[</span><span class="ot">Eugene Yan's</span><span class="co">](https://eugeneyan.com)</span>, <span class="co">[</span><span class="ot">Vicki Boykis's</span><span class="co">](https://vickiboykis.com)</span>, <span class="co">[</span><span class="ot">Chip Huyen's</span><span class="co">](https://huyenchip.com)</span>) are notable for being genuinely technical. Not just descriptions of technical work, but the work itself, documented with enough specificity that you could reproduce it.</span>
 <span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a>Quarto makes that easier because the code and the prose live in the same file. The analysis doesn't exist separately from the writing about it. Every post is its own reproducible artifact.</span>
+<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a>Quarto makes that easier because the code and the prose live in the same file. The analysis doesn't exist separately from the writing about it. The end product is that every post is its own reproducible artifact.</span>
 <span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>That's the brand case. The practical case is simpler: I'm tired of updating PNG files manually when I fix a bug in a chart. Quarto fixes that permanently.</span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>That's the brand case, the practical case is simpler: I'm tired of updating PNG files manually when I fix a bug in a chart and Quarto fixes that permanently.</span>
 <span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a><span class="fu">## Current Status</span></span>
-<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a>The existing Pelican site stays live during the migration. I'm converting posts one category at a time, starting with Tutorials (most code-heavy) and working toward the How-to and Review posts. The target is a fully Quarto-powered site by the end of Q3 2026.</span>
-<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a>The Pelican source is archived. The Quarto source is at <span class="in">`kpolimis.github.io`</span>. PRs welcome if you find something that didn't migrate cleanly.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a>---</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
