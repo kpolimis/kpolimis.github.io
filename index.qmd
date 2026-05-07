@@ -4,7 +4,7 @@ page-layout: full
 title-block-banner: false
 ---
 
-<p style="font-size: 0.78rem; color: #aaa; letter-spacing: 0.04em; margin-top: -0.5rem; margin-bottom: 2rem;">Princeton &nbsp;•&nbsp; University of Washington &nbsp;•&nbsp; Population Research and Policy Review &nbsp;•&nbsp; PNAS &nbsp;•&nbsp; JOSS</p>
+<p style="font-size: 0.78rem; color: #aaa; letter-spacing: 0.04em; margin-top: -0.5rem; margin-bottom: 2rem;">Princeton &nbsp;•&nbsp; University of Washington &nbsp;•&nbsp; Data Science &nbsp;•&nbsp; Machine Learning &nbsp;•&nbsp; Population Research </p>
 
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px; margin-bottom: 40px;">
 
@@ -26,11 +26,10 @@ My background is in demography and causal inference, and I spend most of my time
 
 ### Selected Work
 
-- **Healthcare documentation (private):** Built a multi-agent LLM framework using RAG to automate clinical documentation. Pilot reduced provider administrative load by 40%. The harder part was the privacy architecture: the system processes notes about real patients.
-- **NBA analytics pipeline (private):** End-to-end MLOps on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game's probability distribution. Monthly retraining isn't fast enough.
-- **forest-confidence-interval (open source):** Contributor to [scikit-learn-contrib/forest-confidence-interval](https://github.com/scikit-learn-contrib/forest-confidence-interval) and author of the [JOSS paper](https://joss.theoj.org/papers/10.21105/joss.00124). Random forests give point estimates without variance. This adds that.
-- **Paratransit routing (open source):** Technical lead for [Data Science for Social Good](https://github.com/DSSG-paratransit/main_repo), building routing systems for riders with disabilities. The constraint set is harder than standard routing: wheelchair requirements, medical time windows, and a population that can't easily rebook if the system gets it wrong.
-- **Financial transaction classification:** Fine-tuned BERT with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.
+- **NBA analytics pipeline (private):** End-to-end [MLOps](https://en.wikipedia.org/wiki/MLOps) on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game's probability distribution. Monthly retraining isn't fast enough.
+- **forest-confidence-interval (open source):** One of the original developers of [scikit-learn-contrib/forest-confidence-interval](https://github.com/scikit-learn-contrib/forest-confidence-interval) and author of the [JOSS paper](https://joss.theoj.org/papers/10.21105/joss.00124). The package brings Stefan Wager's infinitesimal jackknife approach — developed in his [2014 JMLR paper](https://jmlr.org/papers/v15/wager14a.html) with Hastie and Efron and implemented in the [randomForestCI R package](https://github.com/swager/randomForestCI) — to Python's scikit-learn ecosystem.
+- **Paratransit routing (open source):** Team member at [Data Science for Social Good](https://github.com/DSSG-paratransit/main_repo), on a team of five students and two data scientists building routing systems for riders with disabilities. The constraint set is harder than standard routing, with wheelchair requirements, medical time windows, and a population that can't easily rebook if the system gets it wrong.
+- **Financial transaction classification (open source):** Fine-tuned [BERT](https://arxiv.org/abs/1810.04805) with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.
 
 <hr>
 
