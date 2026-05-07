@@ -1,12 +1,234 @@
 ---
 title: "Vita"
 page-layout: full
+toc: true
+toc-depth: 2
 ---
 
-[Kivan Polimis Curriculum Vitae.pdf](docs/Kivan_Polimis_Curriculum_Vitae.pdf)
-
-[Kivan Polimis Resume.pdf](docs/Kivan_Polimis_Resume.pdf)
-
-[Software Carpentry Certification](docs/Software_Carpentry_Certification.pdf)
-
+<p style="margin-bottom: 1.5rem;">
+[Curriculum Vitae (PDF)](docs/Kivan_Polimis_Curriculum_Vitae.pdf) &nbsp;·&nbsp;
+[Resume (PDF)](docs/Kivan_Polimis_Resume.pdf) &nbsp;·&nbsp;
+[Software Carpentry Certification](docs/Software_Carpentry_Certification.pdf) &nbsp;·&nbsp;
 [Data Carpentry Certification](docs/Data_Carpentry_Certification.pdf)
+</p>
+
+---
+
+## Employment
+
+<div class="cv-section">
+
+**2021–** &emsp; Senior Data Scientist, [Karna](https://karna.com), Atlanta, GA
+
+- Designed applications integrating machine learning algorithms for healthcare operations; high-risk patient models reduced costs by approximately 10%.
+- Automated monthly project reporting, saving 40 hours of analyst time.
+- Led cross-functional teams from strategic roadmaps to project milestones.
+- *Awards: 2023 President's Award, 2023 Technical Achievement Award, 2022 Community Engagement Award*
+
+**2021–** &emsp; Lecturer, [University of Washington, Department of Sociology](https://sociology.washington.edu), Seattle, WA
+
+- Lectured on data science topics including Algorithmic Bias, AI Ethics, and Data Visualization.
+- Designed curricula and assessments focused on producing, collecting, and analyzing digital trace data.
+
+**2021–2021** &emsp; Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX
+
+- Implemented county-wide initiatives collaborating across government and the private sector; permanent supportive housing proposals estimated at $6 million annual savings.
+- Developed automated COVID-19 reporting that reduced run time by 90% and improved data quality.
+
+**2020–** &emsp; Principal, [Atlas Analytics](https://www.analyticsbyatlas.com/), Houston, TX
+
+- Applied statistical modeling and NLP to increase referral conversion approximately 20%.
+- Engineered data fusion approaches for market analysis, corporate valuations, and customer analytics.
+- Architected cloud computing solutions for scalable data processing and analysis.
+
+**2018–2020** &emsp; Data Scientist, MAANA, Houston, TX
+
+- Built machine learning micro-services for dynamic shipping constraints; vessel optimization software cut route planning from hours to minutes.
+- Conducted cost baseline analysis of historical trades forecasting $100 million annual savings.
+
+**2017–2018** &emsp; Postdoctoral Researcher, Università Bocconi, Milan, Italy
+
+- Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy
+
+**2016–2017** &emsp; Program Manager, eScience Institute, Data Science for Social Good, Seattle, WA
+
+- Organized program resources, created student selection process, and scheduled activities.
+- Coordinated with industry partners to incorporate real-world data science challenges into projects.
+
+</div>
+
+---
+
+## Education
+
+**2017** &emsp; Ph.D., Sociology, University of Washington
+
+- Center for Statistics and the Social Sciences: Certification in Social Statistics
+- Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
+- Advised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
+
+**2012** &emsp; M.A., Sociology, University of North Carolina at Chapel Hill
+
+- Carolina Population Center Pre-doctoral Fellow
+
+**2009** &emsp; B.A., Sociology, Princeton University
+
+---
+
+## Affiliations
+
+**2019–** &emsp; Regional Affiliate, [Center for the Study of Demography and Ecology](https://csde.washington.edu), University of Washington, Seattle, WA
+
+**2017–2018** &emsp; Postdoctoral Affiliate, [Bocconi Institute for Data Science and Analytics](https://bidsa.unibocconi.eu), Milan, Italy
+
+---
+
+## Fellowships
+
+| Year | Fellowship |
+|---|---|
+| 2017 | Summer Institute in Computational Social Science Fellow, Russell Sage Foundation and Princeton University |
+| 2017 | Civic Technology Fellow, Microsoft Civic Technology and Engagement |
+| 2016 | Pre-doctoral Fellow, Big Data-Scientist Training Enhancement Program, Department of Veterans Affairs, Puget Sound Healthcare |
+| 2015 | Data Science for Social Good Fellow, eScience Institute, University of Washington |
+| 2011 | Graduate Research Fellow, National Science Foundation Graduate Research Fellowship Program |
+| 2010 | Pre-doctoral Fellow, Carolina Population Center, University of North Carolina at Chapel Hill |
+| 2008 | Junior Summer Institute Fellow, Public Policy and International Affairs, Carnegie Mellon University |
+
+---
+
+## Publications
+
+Alexander, Monica, **Kivan Polimis**, and Emilio Zagheni. 2020. "Combining social media and survey data to nowcast migrant stocks in the United States." *Population Research and Policy Review.*
+
+Salganik, Matthew, Ian Lundberg, Alexander T. Kindel, Caitlin E. Ahearn, **et al.** 2020. "Measuring the predictability of life outcomes with a scientific mass collaboration." *Proceedings of the National Academy of Sciences.*
+
+Alexander, Monica, **Kivan Polimis**, and Emilio Zagheni. 2019. "The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook." *Population and Development Review.*
+
+Filippova, Anna, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, **Kivan Polimis**, Adaner Usmani, and Tong Wang. 2019. "Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data." *Socius.*
+
+**Polimis, Kivan**, Ariel Rokem, and Bryna Hazelton. 2017. "Confidence Intervals for Random Forests in Python." *Journal of Open Source Software*, 2(19), 124.
+
+Marsh, Kris and **Kivan Polimis**. 2015. "The Lifecourse Perspective in Explaining Racial Residential Segregation." Chapter 4 in *Race, Space and Exclusion: Segregation and Beyond in Metropolitan America*, edited by Robert Adelman and Christopher Mele. New York: Routledge.
+
+Turner, Robert W., Asheley Skinner, Eliana Perrin, **Kivan Polimis**, and Tamera Coyne-Beasley. 2014. "High School Sports Participation: Risk and Protective Factors for Early Adulthood Physical Activity and Obesity in a Representative Longitudinal Study." *Journal of Adolescent Health*, 54(2, Supplement).
+
+---
+
+## Software
+
+**Polimis, Kivan**. 2017. [yandex-translater](https://github.com/kpolimis/yandex-translater): R package to interface with the Yandex Translate API.
+
+Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-interval](https://github.com/scikit-learn-contrib/forest-confidence-interval): Confidence intervals for Forest algorithms.
+
+---
+
+## Presentations
+
+**2022** &emsp; "Introduction to Application Programming Interfaces." Public Health Data Workshop, Harris County Public Health. Houston, TX.
+
+**2019** &emsp; "Combining Facebook and traditional surveys: A case study with Hurricane Maria and Puerto Rican out-migration" (with Emilio Zagheni, Monica Alexander, Ingmar Weber, and Francesco Billari). Center for Statistics and the Social Sciences, University of Washington. Seattle, WA.
+
+**2019** &emsp; "The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook data" (with Monica Alexander and Emilio Zagheni). Population Association of America. Austin, TX.
+
+**2018** &emsp; "Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data" (with Anna Filippova, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Adaner Usmani, and Tong Wang). International Institute for Social Studies, Erasmus University. The Hague, The Netherlands.
+
+**2018** &emsp; "Can social media assess demographic variations in physical activity attitudes?" Young Demographers Conference. Prague, Czech Republic.
+
+**2018** &emsp; "Comparing typological approaches to family homelessness." Alpine Population Conference. La Thuile, Italy.
+
+**2017** &emsp; "Can social media be used to assess demographic variations in physical activity attitudes?" Population Association of America. Chicago, IL.
+
+**2017** &emsp; "Social Media and Demographic Methods" (with Emilio Zagheni and Lee Fiorio). Workshop at the Population Association of America. Chicago, IL.
+
+**2016** &emsp; "Web, Social Media Data and Demographic Research Workshop: Twitter Module" (with Emilio Zagheni and Monica Alexander). European Population Conference. Mainz, Germany.
+
+**2016** &emsp; "Social Media and Demographic Methods Workshop: Twitter Module" (with Emilio Zagheni, Nina Cesare, Charles Lanfear, and Joan Ryan). Population Association of America. Washington, D.C.
+
+**2012** &emsp; "Junk in the Trunk: Evaluating the Relationship between Body-Mass Index and Interracial Dating." Add Health Users Conference. Bethesda, MD.
+
+**2011** &emsp; "Adolescent Experiences & Adult Neighborhood Attainment" (with Kris Marsh and Kyle Crowder). Population Association of America. Washington, D.C.
+
+---
+
+## Teaching
+
+**2021–** &emsp; University of Washington, Department of Sociology — Data and Society (SOC 225)
+
+**2016** &emsp; University of Washington, CSSS — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant
+
+**2015** &emsp; University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant
+
+---
+
+## Research Positions
+
+| Years | Position |
+|---|---|
+| 2016–2017 | Research Assistant, Center for the Study of Demography and Ecology, University of Washington |
+| 2016–2016 | Research Assistant, Center for Evaluation and Research for STEM Equity, University of Washington |
+| 2015–2016 | Research Assistant, eScience Institute, Gates Foundation, University of Washington |
+| 2013–2014 | Data Analyst, San Francisco 49ers |
+| 2009–2010 | Research Assistant, Office of Population Research, Princeton University |
+
+---
+
+## Consulting and Management
+
+| Years | Position |
+|---|---|
+| 2017 | Program Coordinator, eScience Institute, Data Science for Social Good |
+| 2016–2017 | Consultant, King County Auditor's Office, Seattle, WA |
+| 2016 | Consultant, eScience Institute, Data Science for Social Good |
+| 2014 | Product Development Consultant, Seremedi, Houston, TX |
+| 2013–2014 | Special Projects Manager, Councilman Ed Gonzalez, Houston City Council |
+
+---
+
+## Technical Skills
+
+| | |
+|---|---|
+| **Instructor** | [Software Carpentry](https://software-carpentry.org) Instructor, [Data Carpentry](https://datacarpentry.org) Instructor |
+| **Software** | R, Python, Spark, GraphQL, Docker, Jira, Stata, Microsoft Office Suite |
+| **Tools** | Git, LaTeX, shell scripting, Amazon Web Services, Microsoft Azure |
+
+---
+
+## Professional Service
+
+**Memberships:** American Sociological Association, Population Association of America, International Union for the Scientific Study of Population, Cascadia Urban Analytics Cooperative, Association for the Advancement of Artificial Intelligence
+
+**Refereeing:** *Population Research and Policy Review*, *Population and Environment*, *Social Forces*, *Socius*, *Urban Affairs*
+
+---
+
+## Volunteer
+
+**2023–** &emsp; Communications Vice Chair, Princeton Alumni Association of Houston
+
+---
+
+## Media and Awards
+
+| Year | |
+|---|---|
+| 2023 | Karna — President's Award |
+| 2023 | Karna — Technical Achievement Award |
+| 2022 | Karna — Community Engagement Award |
+| 2018 | Online calculator to help tackle disparities in the criminal justice system in Washington state |
+| 2017 | My eScience Experience |
+| 2017 | GitHub for Collaboration |
+| 2016 | Legal Financial Obligations |
+| 2015 | Budding UW Data Scientists Use Their Powers for Social Good |
+| 2015 | UW students put data science skills to use for social good |
+
+---
+
+## References
+
+Kyle Crowder, Professor, University of Washington — [kylecrow@uw.edu](mailto:kylecrow@uw.edu)
+
+Emilio Zagheni, Managing Director, Max Planck Institute for Demographic Research — [office-zagheni@demogr.mpg.de](mailto:office-zagheni@demogr.mpg.de)
+
+Sarah Stone, Executive Director, eScience Institute, University of Washington — [sstone3@uw.edu](mailto:sstone3@uw.edu)

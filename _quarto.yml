@@ -17,12 +17,12 @@ website:
         href: technical.qmd
       - text: "Blog"
         href: blog.qmd
-      - text: "Vita"
-        href: vita.qmd
       - text: "Teaching"
         href: teaching.qmd
       - text: "Software"
         href: software.qmd
+      - text: "Vita"
+        href: vita.qmd
     right:
       - icon: github
         href: https://github.com/kpolimis
@@ -46,6 +46,7 @@ format:
     code-fold: true
     code-tools: true
     highlight-style: github
+    link-external-newwindow: true
 
 execute:
   freeze: auto

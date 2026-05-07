@@ -4,13 +4,15 @@ page-layout: full
 title-block-banner: false
 ---
 
+<p style="font-size: 0.78rem; color: #aaa; letter-spacing: 0.04em; margin-top: -0.5rem; margin-bottom: 2rem;">Princeton &nbsp;•&nbsp; University of Washington &nbsp;•&nbsp; Population Research and Policy Review &nbsp;•&nbsp; PNAS &nbsp;•&nbsp; JOSS</p>
+
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px; margin-bottom: 40px;">
 
 <div style="flex: 2; min-width: 300px;">
 
-I'm a data scientist and ML engineer. At [Karna](https://karna.com) I build systems that inform public policy decisions. I consult independently through [Atlas Analytics](https://www.analyticsbyatlas.com/) and hold a Regional Affiliate position at UW's [Center for the Study of Demography and Ecology](https://csde.washington.edu).
+I'm a data scientist and ML engineer. At [Karna](https://karna.com) I build systems that inform public policy decisions. I consult independently through [Atlas Analytics](https://www.analyticsbyatlas.com/) and hold a Regional Affiliate position at the University of Washington's [Center for the Study of Demography and Ecology](https://csde.washington.edu).
 
-My training is in demography and causal inference. My work is in production ML systems. The combination produces a specific kind of problem: building things that need to be causally credible and operationally reliable, for audiences who make high-stakes decisions from the output.
+My background is in demography and causal inference, and I spend most of my time building production ML systems. That combination tends to pull me toward problems where the statistical question and the engineering constraint are both hard: predicting patient risk in ways that hold up across demographic groups, building sports models that can update within hours of a roster change, classifying financial transactions where the rare categories carry the highest cost of error.
 
 </div>
 
