@@ -739,14 +739,14 @@
     "href": "software.html#regression-example",
     "title": "Software",
     "section": "\nRegression example\n",
-    "text": "Regression example\n\n\n\nNo variance estimated\n\n\n&lt;img src=“images/plot_mpg_no_variance.png” alt=“plot-mpg-no-variance” style=“width: 50%; height: 50%&gt;"
+    "text": "Regression example\n\n\n\nNo variance estimated\n\n\n\n\n\n\n\nPlot with variance"
   },
   {
     "objectID": "software.html#classification-example",
     "href": "software.html#classification-example",
     "title": "Software",
     "section": "\nClassification example\n",
-    "text": "Classification example\n\n\n\nNo variance estimated\n\n\n&lt;img src=“images/plot_spam_no_variance.png” alt=“plot-spam_no-variance” style=“width: 50%; height: 50%&gt;\n\n\n\n\nPlot with variance\n\n\n&lt;img src=“images/plot_spam.png” alt=“plot-spam-variance” style=“width: 50%; height: 50%&gt;"
+    "text": "Classification example\n\n\n\nNo variance estimated\n\n\n\n\n\n\n\nPlot with variance"
   },
   {
     "objectID": "teaching.html",
