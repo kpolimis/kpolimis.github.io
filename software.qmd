@@ -22,11 +22,11 @@ The regression example uses a slightly modified data-set from the Carnegie Mello
 <h2>Regression example</h2>
 <div id="no-variance-estimated" class="section level3">
 <h3>No variance estimated</h3>
-<p style="text-align:center;"><img src="images/plot_mpg_no_variance.png" alt="plot-mpg-no-variance" style="width: 50%; height: 50%>
+<p style="text-align:center;"><img src="images/plot_mpg_no_variance.png" alt="plot-mpg-no-variance" style="width: 50%; height: 50%;"></p>
 </div>
 <div id="plot-with-variance" class="section level3">
 <h3>Plot with variance</h3>
-<p style="text-align:center;"><img src="images/plot_mpg.png" alt="plot-mpg-variance" style="width: 50%; height: 50%></p>
+<p style="text-align:center;"><img src="images/plot_mpg.png" alt="plot-mpg-variance" style="width: 50%; height: 50%;"></p>
 </div>
 </div>
 
@@ -34,11 +34,11 @@ The regression example uses a slightly modified data-set from the Carnegie Mello
 <h2>Classification example</h2>
 <div id="no-variance-estimated" class="section level3">
 <h3>No variance estimated</h3>
-<p style="text-align:center;"><img src="images/plot_spam_no_variance.png" alt="plot-spam_no-variance" style="width: 50%; height: 50%></p>
+<p style="text-align:center;"><img src="images/plot_spam_no_variance.png" alt="plot-spam_no-variance" style="width: 50%; height: 50%;"></p>
 </div>
 <div id="plot-with-variance" class="section level3">
 <h3>Plot with variance</h3>
-<p style="text-align:center;"><img src="images/plot_spam.png" alt="plot-spam-variance" style="width: 50%; height: 50%></p>
+<p style="text-align:center;"><img src="images/plot_spam.png" alt="plot-spam-variance" style="width: 50%; height: 50%;"></p>
 </div>
 </div>
 
