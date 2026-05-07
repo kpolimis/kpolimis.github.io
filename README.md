@@ -1,10 +1,10 @@
-# kpolimis.github.io-src
+# kpolimis.github.io
 
-[![Deploy](https://github.com/kpolimis/kpolimis.github.io-src/actions/workflows/deploy.yml/badge.svg)](https://github.com/kpolimis/kpolimis.github.io-src/actions/workflows/deploy.yml)
+[![Publish](https://github.com/kpolimis/kpolimis.github.io/actions/workflows/publish.yml/badge.svg)](https://github.com/kpolimis/kpolimis.github.io/actions/workflows/publish.yml)
 
-Source repository for [kivanpolimis.com](https://kivanpolimis.com).
+Source for [kivanpolimis.com](https://kivanpolimis.com), built with [Quarto](https://quarto.org) and deployed to GitHub Pages on every push to `main`.
 
-Built with [Quarto](https://quarto.org). Pushes to [kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io) on every merge to `master`.
+The site migrated from Pelican in 2026.
 
 ## Local development
 
@@ -13,26 +13,29 @@ conda activate blog
 quarto preview
 ```
 
+`quarto preview` starts a local server at `localhost:4848` and live-reloads on file changes. Code blocks with `freeze: auto` won't re-execute unless you edit the source file — run `quarto render <post-dir> --execute` to force re-execution for a specific post.
+
+## Deployment
+
+`publish.yml` renders the site and pushes the output to `gh-pages` on every merge to `main`. GitHub Pages serves from `gh-pages`. No manual deploy step needed.
+
 ## Structure
 
 ```
-├── _quarto.yml          # site config
+├── _quarto.yml          # site config and global execute settings
 ├── index.qmd            # home / about
 ├── technical.qmd        # Technical Articles listing
 ├── blog.qmd             # Blog listing
 ├── vita.qmd             # CV / Resume
 ├── teaching.qmd         # Teaching
 ├── software.qmd         # Software / OSS
-├── projects.qmd         # Projects
 ├── posts/
 │   ├── technical/       # data science, ML, sports analytics posts
-│   └── blog/            # notes, reviews, how-tos
-├── images -> content/images/    # symlink — no duplication
-├── docs -> content/docs/        # symlink — no duplication
-├── downloads -> content/downloads/  # symlink — no duplication
-└── content/             # original Pelican source (kept for reference)
+│   └── blog/            # notes, how-tos, reviews
+├── .drafts/             # posts in progress (not rendered)
+├── images/              # site-wide images (from Pelican migration)
+├── docs/                # PDFs and documents
+└── downloads/           # code, notebooks, downloadable assets
 ```
 
-> `images/`, `docs/`, and `downloads/` are symlinks into `content/` so assets
-> are stored once. Per-post images are copied directly into each post's folder
-> under `posts/`.
+Per-post images go directly into each post's directory under `posts/`.
