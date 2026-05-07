@@ -2,7 +2,7 @@
 title: "Migrating from Pelican to Quarto: A Data Scientist's Case For The Switch"
 date: "2026-05-06"
 author: "Kivan Polimis"
-description: "I built this site on Pelican, but I'm moving it to Quarto. Pelican met my needs earlier because X, I switched to Quarto because Y
+description: "I built this site on Pelican in 2016 because I was new to Python and wanted a framework that was simple to configure, fast to deploy, and Markdown-native. A decade later I'm moving to Quarto because static images aren't reproducible — Quarto makes the code the source of truth."
 categories: [how-to, quarto, pelican, python, r, reproducibility]
 draft: false
 execute:
