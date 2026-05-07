@@ -1,15 +1,5 @@
 [
   {
-    "listing": "/blog.html",
-    "items": [
-      "/posts/blog/algorithmic-bias-health-analytics/index.html",
-      "/posts/blog/migrating-pelican-to-quarto/index.html",
-      "/posts/blog/sicss-debrief/index.html",
-      "/posts/blog/make-a-pelican-blog/index.html",
-      "/posts/blog/first-post/index.html"
-    ]
-  },
-  {
     "listing": "/technical.html",
     "items": [
       "/posts/technical/triple-double-russ/index.html",
@@ -26,6 +16,16 @@
       "/posts/technical/flights-analysis/index.html",
       "/posts/technical/positions-matter/index.html",
       "/posts/technical/social-media-twitter-api-and-r/index.html"
+    ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/blog/algorithmic-bias-health-analytics/index.html",
+      "/posts/blog/migrating-pelican-to-quarto/index.html",
+      "/posts/blog/sicss-debrief/index.html",
+      "/posts/blog/make-a-pelican-blog/index.html",
+      "/posts/blog/first-post/index.html"
     ]
   }
 ]
