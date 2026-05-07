@@ -189,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#featured-work-open-source" id="toc-featured-work-open-source" class="nav-link active" data-scroll-target="#featured-work-open-source">Featured Work &amp; Open Source</a></li>
+  <li><a href="#selected-work" id="toc-selected-work" class="nav-link active" data-scroll-target="#selected-work">Selected Work</a></li>
   <li><a href="#writing" id="toc-writing" class="nav-link" data-scroll-target="#writing">Writing</a></li>
   </ul>
 </nav>
@@ -218,23 +218,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px; margin-bottom: 40px;">
 <div style="flex: 2; min-width: 300px;">
-<p>I’m a Data Scientist and ML Engineer working at the intersection of <strong>public policy</strong> and <strong>scalable machine learning systems</strong>.</p>
-<p>Currently: Data Scientist at <a href="https://karna.com">Karna</a>, Chief Data Scientist at <a href="https://www.analyticsbyatlas.com/">Atlas Analytics</a>, and Regional Affiliate at the University of Washington’s <a href="https://csde.washington.edu">Center for the Study of Demography and Ecology (CSDE)</a>.</p>
-<p><strong>My Philosophy:</strong> I operate at the intersection of <em>Public Policy</em> and <em>Machine Learning Engineering</em>. My background in rigorous academic research (Demography/Causal Inference) allows me to ask the right questions, while my engineering experience allows me to build the scalable systems to answer them.</p>
+<p>I’m a data scientist and ML engineer. At <a href="https://karna.com">Karna</a> I build systems that inform public policy decisions. I consult independently through <a href="https://www.analyticsbyatlas.com/">Atlas Analytics</a> and hold a Regional Affiliate position at UW’s <a href="https://csde.washington.edu">Center for the Study of Demography and Ecology</a>.</p>
+<p>My training is in demography and causal inference. My work is in production ML systems. The combination produces a specific kind of problem: building things that need to be causally credible and operationally reliable, for audiences who make high-stakes decisions from the output.</p>
 </div>
 <div style="flex: 1; text-align: center; min-width: 250px;">
 <p><img src="images/kivan_polimis_headshot.png" alt="Kivan Polimis" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;"></p>
 </div>
 </div>
 <hr>
-<section id="featured-work-open-source" class="level3">
-<h3 class="anchored" data-anchor-id="featured-work-open-source">Featured Work &amp; Open Source</h3>
+<section id="selected-work" class="level3">
+<h3 class="anchored" data-anchor-id="selected-work">Selected Work</h3>
 <ul>
-<li><strong>Generative AI for Healthcare (Private):</strong> Architected a privacy-first, <strong>multi-agent LLM orchestration framework</strong> using RAG to automate clinical documentation, reducing provider administrative load by 40%.</li>
-<li><strong>Real-Time Sports Analytics (Private):</strong> Designed an <strong>end-to-end MLOps pipeline on AWS</strong> handling live data ingestion to model non-stationary performance metrics for the 2024-2025 NBA season.</li>
-<li><strong>Scikit-Learn Ecosystem:</strong> Contributor to <a href="https://github.com/scikit-learn-contrib/forest-confidence-interval">forest-confidence-interval</a> and author of the associated <a href="https://joss.theoj.org/papers/10.21105/joss.00124">JOSS paper</a> for calculating variance in Random Forest predictions.</li>
-<li><strong>Large-Scale Optimization:</strong> Former Technical Lead for <a href="https://github.com/DSSG-paratransit/main_repo">Data Science for Social Good</a>, architecting paratransit routing systems that optimized thousands of daily trips.</li>
-<li><strong>Financial Transaction NLP:</strong> Developed a <strong>transformer-based microservice</strong> to categorize noisy financial text, utilizing custom loss functions to solve extreme class imbalance.</li>
+<li><strong>Healthcare documentation (private):</strong> Built a multi-agent LLM framework using RAG to automate clinical documentation. Pilot reduced provider administrative load by 40%. The harder part was the privacy architecture: the system processes notes about real patients.</li>
+<li><strong>NBA analytics pipeline (private):</strong> End-to-end MLOps on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game’s probability distribution. Monthly retraining isn’t fast enough.</li>
+<li><strong>forest-confidence-interval (open source):</strong> Contributor to <a href="https://github.com/scikit-learn-contrib/forest-confidence-interval">scikit-learn-contrib/forest-confidence-interval</a> and author of the <a href="https://joss.theoj.org/papers/10.21105/joss.00124">JOSS paper</a>. Random forests give point estimates without variance. This adds that.</li>
+<li><strong>Paratransit routing (open source):</strong> Technical lead for <a href="https://github.com/DSSG-paratransit/main_repo">Data Science for Social Good</a>, building routing systems for riders with disabilities. The constraint set is harder than standard routing: wheelchair requirements, medical time windows, and a population that can’t easily rebook if the system gets it wrong.</li>
+<li><strong>Financial transaction classification:</strong> Fine-tuned BERT with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.</li>
 </ul>
 <hr>
 </section>
@@ -713,43 +712,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> style</span><span class="op">=</span><span class="st">"flex: 2; min-width: 300px;"</span><span class="dt">&gt;</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>I'm a Data Scientist and ML Engineer working at the intersection of **public policy** and **scalable machine learning systems**.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>I'm a data scientist and ML engineer. At <span class="co">[</span><span class="ot">Karna</span><span class="co">](https://karna.com)</span> I build systems that inform public policy decisions. I consult independently through <span class="co">[</span><span class="ot">Atlas Analytics</span><span class="co">](https://www.analyticsbyatlas.com/)</span> and hold a Regional Affiliate position at UW's <span class="co">[</span><span class="ot">Center for the Study of Demography and Ecology</span><span class="co">](https://csde.washington.edu)</span>.</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Currently: Data Scientist at <span class="co">[</span><span class="ot">Karna</span><span class="co">](https://karna.com)</span>, Chief Data Scientist at <span class="co">[</span><span class="ot">Atlas Analytics</span><span class="co">](https://www.analyticsbyatlas.com/)</span>, and Regional Affiliate at the University of Washington's <span class="co">[</span><span class="ot">Center for the Study of Demography and Ecology (CSDE)</span><span class="co">](https://csde.washington.edu)</span>.</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>My training is in demography and causal inference. My work is in production ML systems. The combination produces a specific kind of problem: building things that need to be causally credible and operationally reliable, for audiences who make high-stakes decisions from the output.</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>**My Philosophy:** I operate at the intersection of *Public Policy* and *Machine Learning Engineering*. My background in rigorous academic research (Demography/Causal Inference) allows me to ask the right questions, while my engineering experience allows me to build the scalable systems to answer them.</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> style</span><span class="op">=</span><span class="st">"flex: 1; text-align: center; min-width: 250px;"</span><span class="dt">&gt;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"images/kivan_polimis_headshot.png"</span><span class="ot"> alt</span><span class="op">=</span><span class="st">"Kivan Polimis"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;"</span><span class="dt">&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> style</span><span class="op">=</span><span class="st">"flex: 1; text-align: center; min-width: 250px;"</span><span class="dt">&gt;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"images/kivan_polimis_headshot.png"</span><span class="ot"> alt</span><span class="op">=</span><span class="st">"Kivan Polimis"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;"</span><span class="dt">&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### Selected Work</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">### Featured Work &amp; Open Source</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Generative AI for Healthcare (Private):** Architected a privacy-first, **multi-agent LLM orchestration framework** using RAG to automate clinical documentation, reducing provider administrative load by 40%.</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Real-Time Sports Analytics (Private):** Designed an **end-to-end MLOps pipeline on AWS** handling live data ingestion to model non-stationary performance metrics for the 2024-2025 NBA season.</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Scikit-Learn Ecosystem:** Contributor to <span class="co">[</span><span class="ot">forest-confidence-interval</span><span class="co">](https://github.com/scikit-learn-contrib/forest-confidence-interval)</span> and author of the associated <span class="co">[</span><span class="ot">JOSS paper</span><span class="co">](https://joss.theoj.org/papers/10.21105/joss.00124)</span> for calculating variance in Random Forest predictions.</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Large-Scale Optimization:** Former Technical Lead for <span class="co">[</span><span class="ot">Data Science for Social Good</span><span class="co">](https://github.com/DSSG-paratransit/main_repo)</span>, architecting paratransit routing systems that optimized thousands of daily trips.</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Financial Transaction NLP:** Developed a **transformer-based microservice** to categorize noisy financial text, utilizing custom loss functions to solve extreme class imbalance.</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Healthcare documentation (private):** Built a multi-agent LLM framework using RAG to automate clinical documentation. Pilot reduced provider administrative load by 40%. The harder part was the privacy architecture: the system processes notes about real patients.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**NBA analytics pipeline (private):** End-to-end MLOps on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game's probability distribution. Monthly retraining isn't fast enough.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**forest-confidence-interval (open source):** Contributor to <span class="co">[</span><span class="ot">scikit-learn-contrib/forest-confidence-interval</span><span class="co">](https://github.com/scikit-learn-contrib/forest-confidence-interval)</span> and author of the <span class="co">[</span><span class="ot">JOSS paper</span><span class="co">](https://joss.theoj.org/papers/10.21105/joss.00124)</span>. Random forests give point estimates without variance. This adds that.</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Paratransit routing (open source):** Technical lead for <span class="co">[</span><span class="ot">Data Science for Social Good</span><span class="co">](https://github.com/DSSG-paratransit/main_repo)</span>, building routing systems for riders with disabilities. The constraint set is harder than standard routing: wheelchair requirements, medical time windows, and a population that can't easily rebook if the system gets it wrong.</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Financial transaction classification:** Fine-tuned BERT with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Writing</span></span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">### Writing</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">**Technical Articles →**</span><span class="co">](technical.qmd)</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>Reproducible analyses, tutorials, and deep dives in Python and R.</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">**Blog →**</span><span class="co">](blog.qmd)</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Notes, reviews, and shorter pieces.</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">**Technical Articles →**</span><span class="co">](technical.qmd)</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>Reproducible analyses, tutorials, and deep dives in Python and R.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">**Blog →**</span><span class="co">](blog.qmd)</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>Notes, reviews, and shorter pieces.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
 <span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">hr</span><span class="dt">&gt;</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>**Contact:** <span class="co">[</span><span class="ot">kivan.polimis@gmail.com</span><span class="co">](mailto:kivan.polimis@gmail.com)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>**Contact:** <span class="co">[</span><span class="ot">kivan.polimis@gmail.com</span><span class="co">](mailto:kivan.polimis@gmail.com)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
