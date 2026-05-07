@@ -4,7 +4,112 @@
     "href": "vita.html",
     "title": "Vita",
     "section": "",
-    "text": "Kivan Polimis Curriculum Vitae.pdf\nKivan Polimis Resume.pdf\nSoftware Carpentry Certification\nData Carpentry Certification"
+    "text": "Curriculum Vitae (PDF)  ·  Resume (PDF)  ·  Software Carpentry Certification  ·  Data Carpentry Certification"
+  },
+  {
+    "objectID": "vita.html#employment",
+    "href": "vita.html#employment",
+    "title": "Vita",
+    "section": "Employment",
+    "text": "Employment\n\n2021–   Senior Data Scientist, Karna, Atlanta, GA\n\nDesigned applications integrating machine learning algorithms for healthcare operations; high-risk patient models reduced costs by approximately 10%.\nAutomated monthly project reporting, saving 40 hours of analyst time.\nLed cross-functional teams from strategic roadmaps to project milestones.\nAwards: 2023 President’s Award, 2023 Technical Achievement Award, 2022 Community Engagement Award\n\n2021–   Lecturer, University of Washington, Department of Sociology, Seattle, WA\n\nLectured on data science topics including Algorithmic Bias, AI Ethics, and Data Visualization.\nDesigned curricula and assessments focused on producing, collecting, and analyzing digital trace data.\n\n2021–2021   Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX\n\nImplemented county-wide initiatives collaborating across government and the private sector; permanent supportive housing proposals estimated at $6 million annual savings.\nDeveloped automated COVID-19 reporting that reduced run time by 90% and improved data quality.\n\n2020–   Principal, Atlas Analytics, Houston, TX\n\nApplied statistical modeling and NLP to increase referral conversion approximately 20%.\nEngineered data fusion approaches for market analysis, corporate valuations, and customer analytics.\nArchitected cloud computing solutions for scalable data processing and analysis.\n\n2018–2020   Data Scientist, MAANA, Houston, TX\n\nBuilt machine learning micro-services for dynamic shipping constraints; vessel optimization software cut route planning from hours to minutes.\nConducted cost baseline analysis of historical trades forecasting $100 million annual savings.\n\n2017–2018   Postdoctoral Researcher, Università Bocconi, Milan, Italy\n\nCarlo F. Dondena Centre for Research on Social Dynamics and Public Policy\n\n2016–2017   Program Manager, eScience Institute, Data Science for Social Good, Seattle, WA\n\nOrganized program resources, created student selection process, and scheduled activities.\nCoordinated with industry partners to incorporate real-world data science challenges into projects."
+  },
+  {
+    "objectID": "vita.html#education",
+    "href": "vita.html#education",
+    "title": "Vita",
+    "section": "Education",
+    "text": "Education\n2017   Ph.D., Sociology, University of Washington\n\nCenter for Statistics and the Social Sciences: Certification in Social Statistics\nDissertation: Developing Computational Approaches to Investigate Health Inequalities\nAdvised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman\n\n2012   M.A., Sociology, University of North Carolina at Chapel Hill\n\nCarolina Population Center Pre-doctoral Fellow\n\n2009   B.A., Sociology, Princeton University"
+  },
+  {
+    "objectID": "vita.html#affiliations",
+    "href": "vita.html#affiliations",
+    "title": "Vita",
+    "section": "Affiliations",
+    "text": "Affiliations\n2019–   Regional Affiliate, Center for the Study of Demography and Ecology, University of Washington, Seattle, WA\n2017–2018   Postdoctoral Affiliate, Bocconi Institute for Data Science and Analytics, Milan, Italy"
+  },
+  {
+    "objectID": "vita.html#fellowships",
+    "href": "vita.html#fellowships",
+    "title": "Vita",
+    "section": "Fellowships",
+    "text": "Fellowships\n\n\n\n\n\n\n\nYear\nFellowship\n\n\n\n\n2017\nSummer Institute in Computational Social Science Fellow, Russell Sage Foundation and Princeton University\n\n\n2017\nCivic Technology Fellow, Microsoft Civic Technology and Engagement\n\n\n2016\nPre-doctoral Fellow, Big Data-Scientist Training Enhancement Program, Department of Veterans Affairs, Puget Sound Healthcare\n\n\n2015\nData Science for Social Good Fellow, eScience Institute, University of Washington\n\n\n2011\nGraduate Research Fellow, National Science Foundation Graduate Research Fellowship Program\n\n\n2010\nPre-doctoral Fellow, Carolina Population Center, University of North Carolina at Chapel Hill\n\n\n2008\nJunior Summer Institute Fellow, Public Policy and International Affairs, Carnegie Mellon University"
+  },
+  {
+    "objectID": "vita.html#publications",
+    "href": "vita.html#publications",
+    "title": "Vita",
+    "section": "Publications",
+    "text": "Publications\nAlexander, Monica, Kivan Polimis, and Emilio Zagheni. 2020. “Combining social media and survey data to nowcast migrant stocks in the United States.” Population Research and Policy Review.\nSalganik, Matthew, Ian Lundberg, Alexander T. Kindel, Caitlin E. Ahearn, et al. 2020. “Measuring the predictability of life outcomes with a scientific mass collaboration.” Proceedings of the National Academy of Sciences.\nAlexander, Monica, Kivan Polimis, and Emilio Zagheni. 2019. “The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook.” Population and Development Review.\nFilippova, Anna, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Kivan Polimis, Adaner Usmani, and Tong Wang. 2019. “Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data.” Socius.\nPolimis, Kivan, Ariel Rokem, and Bryna Hazelton. 2017. “Confidence Intervals for Random Forests in Python.” Journal of Open Source Software, 2(19), 124.\nMarsh, Kris and Kivan Polimis. 2015. “The Lifecourse Perspective in Explaining Racial Residential Segregation.” Chapter 4 in Race, Space and Exclusion: Segregation and Beyond in Metropolitan America, edited by Robert Adelman and Christopher Mele. New York: Routledge.\nTurner, Robert W., Asheley Skinner, Eliana Perrin, Kivan Polimis, and Tamera Coyne-Beasley. 2014. “High School Sports Participation: Risk and Protective Factors for Early Adulthood Physical Activity and Obesity in a Representative Longitudinal Study.” Journal of Adolescent Health, 54(2, Supplement)."
+  },
+  {
+    "objectID": "vita.html#software",
+    "href": "vita.html#software",
+    "title": "Vita",
+    "section": "Software",
+    "text": "Software\nPolimis, Kivan. 2017. yandex-translater: R package to interface with the Yandex Translate API.\nRokem, Ariel, Kivan Polimis, and Bryna Hazelton. 2016. forest-confidence-interval: Confidence intervals for Forest algorithms."
+  },
+  {
+    "objectID": "vita.html#presentations",
+    "href": "vita.html#presentations",
+    "title": "Vita",
+    "section": "Presentations",
+    "text": "Presentations\n2022   “Introduction to Application Programming Interfaces.” Public Health Data Workshop, Harris County Public Health. Houston, TX.\n2019   “Combining Facebook and traditional surveys: A case study with Hurricane Maria and Puerto Rican out-migration” (with Emilio Zagheni, Monica Alexander, Ingmar Weber, and Francesco Billari). Center for Statistics and the Social Sciences, University of Washington. Seattle, WA.\n2019   “The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook data” (with Monica Alexander and Emilio Zagheni). Population Association of America. Austin, TX.\n2018   “Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data” (with Anna Filippova, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Adaner Usmani, and Tong Wang). International Institute for Social Studies, Erasmus University. The Hague, The Netherlands.\n2018   “Can social media assess demographic variations in physical activity attitudes?” Young Demographers Conference. Prague, Czech Republic.\n2018   “Comparing typological approaches to family homelessness.” Alpine Population Conference. La Thuile, Italy.\n2017   “Can social media be used to assess demographic variations in physical activity attitudes?” Population Association of America. Chicago, IL.\n2017   “Social Media and Demographic Methods” (with Emilio Zagheni and Lee Fiorio). Workshop at the Population Association of America. Chicago, IL.\n2016   “Web, Social Media Data and Demographic Research Workshop: Twitter Module” (with Emilio Zagheni and Monica Alexander). European Population Conference. Mainz, Germany.\n2016   “Social Media and Demographic Methods Workshop: Twitter Module” (with Emilio Zagheni, Nina Cesare, Charles Lanfear, and Joan Ryan). Population Association of America. Washington, D.C.\n2012   “Junk in the Trunk: Evaluating the Relationship between Body-Mass Index and Interracial Dating.” Add Health Users Conference. Bethesda, MD.\n2011   “Adolescent Experiences & Adult Neighborhood Attainment” (with Kris Marsh and Kyle Crowder). Population Association of America. Washington, D.C."
+  },
+  {
+    "objectID": "vita.html#teaching",
+    "href": "vita.html#teaching",
+    "title": "Vita",
+    "section": "Teaching",
+    "text": "Teaching\n2021–   University of Washington, Department of Sociology — Data and Society (SOC 225)\n2016   University of Washington, CSSS — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant\n2015   University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant"
+  },
+  {
+    "objectID": "vita.html#research-positions",
+    "href": "vita.html#research-positions",
+    "title": "Vita",
+    "section": "Research Positions",
+    "text": "Research Positions\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2016–2017\nResearch Assistant, Center for the Study of Demography and Ecology, University of Washington\n\n\n2016–2016\nResearch Assistant, Center for Evaluation and Research for STEM Equity, University of Washington\n\n\n2015–2016\nResearch Assistant, eScience Institute, Gates Foundation, University of Washington\n\n\n2013–2014\nData Analyst, San Francisco 49ers\n\n\n2009–2010\nResearch Assistant, Office of Population Research, Princeton University"
+  },
+  {
+    "objectID": "vita.html#consulting-and-management",
+    "href": "vita.html#consulting-and-management",
+    "title": "Vita",
+    "section": "Consulting and Management",
+    "text": "Consulting and Management\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2017\nProgram Coordinator, eScience Institute, Data Science for Social Good\n\n\n2016–2017\nConsultant, King County Auditor’s Office, Seattle, WA\n\n\n2016\nConsultant, eScience Institute, Data Science for Social Good\n\n\n2014\nProduct Development Consultant, Seremedi, Houston, TX\n\n\n2013–2014\nSpecial Projects Manager, Councilman Ed Gonzalez, Houston City Council"
+  },
+  {
+    "objectID": "vita.html#technical-skills",
+    "href": "vita.html#technical-skills",
+    "title": "Vita",
+    "section": "Technical Skills",
+    "text": "Technical Skills\n\n\n\nInstructor\nSoftware Carpentry Instructor, Data Carpentry Instructor\n\n\nSoftware\nR, Python, Spark, GraphQL, Docker, Jira, Stata, Microsoft Office Suite\n\n\nTools\nGit, LaTeX, shell scripting, Amazon Web Services, Microsoft Azure"
+  },
+  {
+    "objectID": "vita.html#professional-service",
+    "href": "vita.html#professional-service",
+    "title": "Vita",
+    "section": "Professional Service",
+    "text": "Professional Service\nMemberships: American Sociological Association, Population Association of America, International Union for the Scientific Study of Population, Cascadia Urban Analytics Cooperative, Association for the Advancement of Artificial Intelligence\nRefereeing: Population Research and Policy Review, Population and Environment, Social Forces, Socius, Urban Affairs"
+  },
+  {
+    "objectID": "vita.html#volunteer",
+    "href": "vita.html#volunteer",
+    "title": "Vita",
+    "section": "Volunteer",
+    "text": "Volunteer\n2023–   Communications Vice Chair, Princeton Alumni Association of Houston"
+  },
+  {
+    "objectID": "vita.html#media-and-awards",
+    "href": "vita.html#media-and-awards",
+    "title": "Vita",
+    "section": "Media and Awards",
+    "text": "Media and Awards\n\n\n\n\n\n\n\nYear\n\n\n\n\n\n2023\nKarna — President’s Award\n\n\n2023\nKarna — Technical Achievement Award\n\n\n2022\nKarna — Community Engagement Award\n\n\n2018\nOnline calculator to help tackle disparities in the criminal justice system in Washington state\n\n\n2017\nMy eScience Experience\n\n\n2017\nGitHub for Collaboration\n\n\n2016\nLegal Financial Obligations\n\n\n2015\nBudding UW Data Scientists Use Their Powers for Social Good\n\n\n2015\nUW students put data science skills to use for social good"
+  },
+  {
+    "objectID": "vita.html#references",
+    "href": "vita.html#references",
+    "title": "Vita",
+    "section": "References",
+    "text": "References\nKyle Crowder, Professor, University of Washington — kylecrow@uw.edu\nEmilio Zagheni, Managing Director, Max Planck Institute for Demographic Research — office-zagheni@demogr.mpg.de\nSarah Stone, Executive Director, eScience Institute, University of Washington — sstone3@uw.edu"
   },
   {
     "objectID": "posts/blog/algorithmic-bias-health-analytics/index.html",
@@ -354,7 +459,56 @@
     "href": "projects.html",
     "title": "Projects",
     "section": "",
-    "text": "&lt;img “image” src=“images/DisCont_logo_long.jpg” alt=“DisCont” style=“width=1280px height=228px”&gt; \n\nThe DisCont (Discontinuities in Household and Family Formation) project examines the impact of macro-level discontinuities on household and family formation (including fertility) in post-industrial contemporary societies. Household, family and fertility changes are key drivers of population dynamics. Discovering and explaining the velocity of these changes is essential to understand the current situation and to provide scientific evidence on demographic future.\n\n\n &lt;img “image” src=“images/Global_Family_Change_logo.png” alt=“Global Family Change” style=“width=690px height=100px”&gt; \n\nThis project advances the study of global family change (GFC) by exploring the complex ways in which families are changing across low and middle-income countries (LMICs). The innovation of the project lies in the premise that we need better foundations for understanding why and how families change on a global scale"
+    "text": "These are projects where I either shipped something to production or produced peer-reviewed research. Each entry covers the technical stack, what made the problem hard, what it produced, and what I’d do differently. The goal is enough specificity that you can evaluate the engineering and the methodology, not just the headline number."
+  },
+  {
+    "objectID": "projects.html#healthcare-multi-agent-rag-system",
+    "href": "projects.html#healthcare-multi-agent-rag-system",
+    "title": "Projects",
+    "section": "Healthcare Multi-Agent RAG System",
+    "text": "Healthcare Multi-Agent RAG System\nClinical documentation is one of the highest-friction tasks in healthcare operations. Providers spend hours per shift on structured note-taking that follows predictable templates but requires judgment about what to include and how to categorize it. The question was whether a multi-agent LLM system could handle the templated portions reliably enough to be trusted in a live clinical environment.\nStack: Python, FastAPI, LangChain orchestration, Pinecone vector store, HIPAA-compliant Azure deployment. Agent architecture: a router agent that classifies documentation type, specialist agents per template (intake, progress notes, discharge summaries), and a validation agent that checks output against required fields before committing. No patient data touches external model APIs.\nConstraints: HIPAA compliance ruled out any cloud-hosted model with retention policies, which eliminated OpenAI and Anthropic APIs in their standard configurations. All inference runs on Azure-hosted models within a compliant boundary. Latency had to stay under 8 seconds per document or providers would context-switch. The validation agent exists because hallucinated ICD codes in clinical notes are not a recoverable error.\nResults: 40% reduction in provider administrative load in pilot. The measurable outcome was time-on-task for documentation, not model accuracy in isolation, which is the right metric for whether a system is actually useful.\nLessons learned: The router agent was the hardest component to get right, not the specialist agents. Misclassifying a progress note as a discharge summary produces plausible-looking but wrong output that passes automated checks. The solution was few-shot examples for the router drawn from real edge cases, not more complex routing logic."
+  },
+  {
+    "objectID": "projects.html#nba-mlops-pipeline",
+    "href": "projects.html#nba-mlops-pipeline",
+    "title": "Projects",
+    "section": "NBA MLOps Pipeline",
+    "text": "NBA MLOps Pipeline\nSports prediction degrades faster than most ML domains because the data-generating process changes continuously: roster moves, injuries, load management, coaching changes. A model trained on October data is already stale by December. The problem is building infrastructure that updates fast enough to track those changes without introducing the failure modes that come with frequent automated retraining.\nStack: AWS Lambda for daily ingestion (NBA Stats API, Odds API), S3 raw storage, feature computation Lambda writing to DynamoDB feature store, SageMaker Pipelines for automated retraining, FastAPI serving layer. LightGBM ensemble with isotonic calibration. Python throughout.\nConstraints: Training-serving skew is the dominant failure mode in systems like this. If the feature computation logic differs between the training pipeline and the inference pipeline by even a small amount (different lookback window, different handling of back-to-back games), predictions degrade silently. The fix is a shared feature store: one computation path, read by both pipelines. The NBA Stats API has availability issues, so the ingestion Lambda logs and continues rather than failing hard, and the feature store handles missing days explicitly.\nResults: Automated retraining triggers when trailing-30 Brier score exceeds threshold. Pre-game win probabilities served daily for all NBA games. System runs without intervention on stable data days.\nLessons learned: The automated retraining trigger is too coarse. A single Brier threshold doesn’t account for variance in game outcomes: 0.22 on a week of close games means something different than 0.22 on a week of blowouts. The next version needs a monitoring metric that conditions on game competitiveness."
+  },
+  {
+    "objectID": "projects.html#financial-transaction-classifier",
+    "href": "projects.html#financial-transaction-classifier",
+    "title": "Projects",
+    "section": "Financial Transaction Classifier",
+    "text": "Financial Transaction Classifier\nTransaction descriptions are designed for accounting ledgers, not natural language models: SQ *STREET COFFEE HOU, CHECKCARD 0413 WHOLEFDS MKT, APL* APPLE ITUNES. The vocabulary problem is that pre-trained models have rich representations of “Whole Foods Market” but none for “WHOLEFDS MKT.” The class imbalance problem is that Legal Services transactions are 0.3% of volume but the highest-cost misclassifications.\nStack: BERT-base-uncased fine-tuned on labeled transaction data. Custom preprocessing layer to strip processor prefixes and normalize common abbreviations before tokenization. Custom weighted cross-entropy loss with label smoothing (0.1) to handle class imbalance and genuine category ambiguity. ONNX export for inference. FastAPI microservice with model loaded at startup via lifespan context manager.\nConstraints: The preprocessing step is more important than it looks. “SQ *STREET COFFEE HOU” → “STREET COFFEE HOUSE” recovers meaningful text the tokenizer can handle before it ever sees the model. Without it, you’re asking BERT to generalize from truncated strings with no training signal. ONNX reduced inference latency ~60% (45ms → 18ms on CPU), which matters when the microservice is in the critical path of a user-facing application.\nResults: Macro F1 of 0.85 across all categories on held-out test set, including rare categories. Macro F1 rather than accuracy is the right metric here: a model that ignores Legal Services and scores 99% accuracy is useless for this application.\nLessons learned: Transaction amount should be a feature and isn’t yet. A $3.50 transaction has high prior probability of being coffee. A $3,500 transaction classified as coffee should incur a confidence penalty. The amount field is in the API contract for future use."
+  },
+  {
+    "objectID": "projects.html#march-madness-prediction-system",
+    "href": "projects.html#march-madness-prediction-system",
+    "title": "Projects",
+    "section": "March Madness Prediction System",
+    "text": "March Madness Prediction System\nNCAA tournament prediction is structurally different from regular-season prediction. The bracket format means you’re predicting games between teams that may not have played each other all season, using whatever signal you can extract from conference schedules and efficiency metrics. The Kaggle competition is scored on Brier score, which rewards calibration, not just picking winners.\nStack: LightGBM ensemble (LightGBM + XGBoost + Random Forest, equal weight). Feature set: KenPom efficiency metrics, seed differential, conference strength, home/away/neutral splits. Expanding-window cross-validation for model selection. Isotonic regression calibration on validation set outputs.\nConstraints: k-fold cross-validation is wrong for this problem. It leaks future data: a model trained on 2018 data validated on a fold that includes 2016 games has seen outcomes it shouldn’t. The correct approach is expanding-window CV: for each validation year, train only on prior years. Estimated performance difference between k-fold and expanding-window on tournament data is 15–20% overestimation with k-fold.\nResults: 2026 submission completed. Florida picked to win; they exited in the Round of 32. The model performed reasonably on seeds 1–4 and poorly on mid-major upsets, which is where most bracket prediction models fail.\nLessons learned: Calibration trained on historical tournament data fails when the current tournament has an unusual upset rate. 2026 had more upsets than the historical base rate predicted. The next version will use a rolling calibration window and shrink toward a seed-based prior rather than trusting isotonic regression on the full historical distribution."
+  },
+  {
+    "objectID": "projects.html#paratransit-routing-optimization",
+    "href": "projects.html#paratransit-routing-optimization",
+    "title": "Projects",
+    "section": "Paratransit Routing Optimization",
+    "text": "Paratransit Routing Optimization\nParatransit serves riders with disabilities who cannot use fixed-route transit. The routing problem is harder than standard vehicle routing: vehicles have wheelchair capacity constraints, riders have medical time windows (dialysis appointments cannot be missed), and the population cannot easily rebook if the system fails. The DSSG project built optimization infrastructure for a mid-sized US transit agency handling thousands of trips per day.\nStack: Python optimization pipeline using OR-Tools. Data ingestion from agency scheduling system. Constraint formulation: vehicle capacity (standard + wheelchair), pickup/dropoff time windows, driver shift constraints, depot assignment. Output: optimized manifests fed back to dispatch.\nConstraints: The hardest constraint was soft time windows. Riders request pickups in a window but have hard delivery deadlines (you can be late picking someone up for dialysis, not late dropping them off). Standard routing formulations treat windows as symmetric; this one required asymmetric penalties that reflect the actual cost structure.\nResults: Routing efficiency improvements for the pilot agency. Code and methodology documented as open source. The project scope was proof-of-concept at partner scale, not production deployment.\nLessons learned: The gap between an optimized routing solution and a deployed one is mostly change management, not engineering. Dispatchers had years of institutional knowledge about which riders needed extra time, which stops were unreliable, which drivers knew which neighborhoods. The model had none of that. A production version needs a feedback loop for dispatcher corrections."
+  },
+  {
+    "objectID": "projects.html#forest-confidence-interval",
+    "href": "projects.html#forest-confidence-interval",
+    "title": "Projects",
+    "section": "forest-confidence-interval",
+    "text": "forest-confidence-interval\nRandom forests produce point estimates without uncertainty quantification. For research applications where the question is not just “what does the model predict” but “how confident is it,” that gap matters. This package implements the jackknife and infinitesimal jackknife variance estimators for scikit-learn random forest objects.\nStack: Python, scikit-learn integration. Implements Wager, Hastie, and Efron (2014) variance estimation. Works on regression and classification forests. Published to PyPI.\nConstraints: The variance estimator requires access to the in-bag samples for each tree, which scikit-learn doesn’t expose by default. The implementation infers the in-bag matrix from the forest when bootstrapping is enabled, or accepts a user-provided matrix.\nResults: JOSS paper, scikit-learn-contrib inclusion, active use in research applications that need uncertainty bounds on ensemble predictions.\nLessons learned: API design for a research tool requires different tradeoffs than API design for a production tool. The primary users are researchers who need to understand what the estimator is doing, not engineers who need it to be fast. Documentation of the statistical assumptions matters more than performance optimization."
+  },
+  {
+    "objectID": "projects.html#computational-audit-of-conflict-journalism-ongoing",
+    "href": "projects.html#computational-audit-of-conflict-journalism-ongoing",
+    "title": "Projects",
+    "section": "Computational Audit of Conflict Journalism (ongoing)",
+    "text": "Computational Audit of Conflict Journalism (ongoing)\nHerman and Chomsky’s Manufacturing Consent (1988) made a testable prediction: US media covers victims of US-backed states differently than victims of US-opposed states. The prediction has never been tested at scale with a rigorous identification strategy. This project is that test, preregistered at OSF in April 2026 before cross-conflict data collection.\nStack: GDELT DOC API ingestion (async, 8-outlet parallel), 9-strategy body recovery chain (direct → GDELT Full-Text → Media Cloud → Event Registry → Wayback → Common Crawl), spaCy NER and attribution pipeline, IHL accuracy lexicon grounded in Geneva Conventions and ICRC Commentary, Hyland (1996) epistemic hedge taxonomy, NRC Emotion Lexicon. fixest panel regression in R with outlet and event fixed effects. BH-FDR multiple comparisons correction.\nConstraints: The primary identification challenge is that framing differences across outlets could reflect genuine editorial style rather than geopolitical alignment. The design controls for this with outlet fixed effects: what’s estimated is the within-outlet change in framing across conflicts, not the between-outlet difference. The IHL accuracy module uses external legal standards (Geneva Conventions, ICJ advisory opinions) rather than researcher judgment, which makes the primary claims legally grounded rather than theoretically contested.\nResults: Phase 2 Ukraine corpus analysis (3,470 articles, 6 outlets, Feb 2022–Feb 2023) complete. Cross-conflict corpus (Gaza, West Bank, Iran) re-ingestion in progress. Regression not yet estimated on full cross-conflict data.\nLessons learned: The hardest methodological problem is distinguishing IHL terminology frequency from IHL terminology accuracy. Counting how often outlets use “prisoner of war” is not the same as checking whether they use it for situations that actually meet the GCIII Article 4 definition. The module needs a three-way mapping: situation type → legally correct term → outlet’s term. Frequency alone is not the test.\n\nPrivate project details (Karna healthcare system, MAANA vessel optimization) are described at the level of public disclosure appropriate to the work. Full technical details available in interviews."
   },
   {
     "objectID": "blog.html",
@@ -1012,6 +1166,6 @@
     "href": "index.html",
     "title": "Kivan Polimis",
     "section": "",
-    "text": "I’m a data scientist and ML engineer. At Karna I build systems that inform public policy decisions. I consult independently through Atlas Analytics and hold a Regional Affiliate position at UW’s Center for the Study of Demography and Ecology.\nMy training is in demography and causal inference. My work is in production ML systems. The combination produces a specific kind of problem: building things that need to be causally credible and operationally reliable, for audiences who make high-stakes decisions from the output.\n\n\n\n\n\n\n\nSelected Work\n\nHealthcare documentation (private): Built a multi-agent LLM framework using RAG to automate clinical documentation. Pilot reduced provider administrative load by 40%. The harder part was the privacy architecture: the system processes notes about real patients.\nNBA analytics pipeline (private): End-to-end MLOps on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game’s probability distribution. Monthly retraining isn’t fast enough.\nforest-confidence-interval (open source): Contributor to scikit-learn-contrib/forest-confidence-interval and author of the JOSS paper. Random forests give point estimates without variance. This adds that.\nParatransit routing (open source): Technical lead for Data Science for Social Good, building routing systems for riders with disabilities. The constraint set is harder than standard routing: wheelchair requirements, medical time windows, and a population that can’t easily rebook if the system gets it wrong.\nFinancial transaction classification: Fine-tuned BERT with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.\n\n\n\n\nWriting\nTechnical Articles → Reproducible analyses, tutorials, and deep dives in Python and R.\nBlog → Notes, reviews, and shorter pieces.\n\nContact: kivan.polimis@gmail.com"
+    "text": "Princeton  •  University of Washington  •  Population Research and Policy Review  •  PNAS  •  JOSS\n\n\n\nI’m a data scientist and ML engineer. At Karna I build systems that inform public policy decisions. I consult independently through Atlas Analytics and hold a Regional Affiliate position at the University of Washington’s Center for the Study of Demography and Ecology.\nMy background is in demography and causal inference, and I spend most of my time building production ML systems. That combination tends to pull me toward problems where the statistical question and the engineering constraint are both hard: predicting patient risk in ways that hold up across demographic groups, building sports models that can update within hours of a roster change, classifying financial transactions where the rare categories carry the highest cost of error.\n\n\n\n\n\n\n\nSelected Work\n\nHealthcare documentation (private): Built a multi-agent LLM framework using RAG to automate clinical documentation. Pilot reduced provider administrative load by 40%. The harder part was the privacy architecture: the system processes notes about real patients.\nNBA analytics pipeline (private): End-to-end MLOps on AWS for real-time NBA performance prediction. The problem is non-stationarity. A player injury announced at 10 PM changes every subsequent game’s probability distribution. Monthly retraining isn’t fast enough.\nforest-confidence-interval (open source): Contributor to scikit-learn-contrib/forest-confidence-interval and author of the JOSS paper. Random forests give point estimates without variance. This adds that.\nParatransit routing (open source): Technical lead for Data Science for Social Good, building routing systems for riders with disabilities. The constraint set is harder than standard routing: wheelchair requirements, medical time windows, and a population that can’t easily rebook if the system gets it wrong.\nFinancial transaction classification: Fine-tuned BERT with a custom weighted loss function to categorize noisy financial text (truncated merchant names, payment processor prefixes). Class imbalance is the core problem. Legal Services transactions are 0.3% of volume but the highest-cost errors.\n\n\n\n\nWriting\nTechnical Articles → Reproducible analyses, tutorials, and deep dives in Python and R.\nBlog → Notes, reviews, and shorter pieces.\n\nContact: kivan.polimis@gmail.com"
   }
 ]
