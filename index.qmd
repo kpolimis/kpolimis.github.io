@@ -12,7 +12,7 @@ title-block-banner: false
 
 I'm a data scientist and ML engineer. At [Karna](https://karna.com) I build systems that inform public policy decisions. I consult independently through [Atlas Analytics](https://www.analyticsbyatlas.com/) and hold a Regional Affiliate position at the University of Washington's [Center for the Study of Demography and Ecology](https://csde.washington.edu).
 
-My background is in demography and causal inference, and I spend most of my time building production ML systems. That combination tends to pull me toward problems where the statistical question and the engineering constraint are both hard: predicting patient risk in ways that hold up across demographic groups, building sports models that can update within hours of a roster change, classifying financial transactions where the rare categories carry the highest cost of error.
+My background is in demography and causal inference, and I spend most of my time building production ML systems. That combination tends to pull me toward problems where the statistical question and the engineering constraint are both hard: predicting patient risk in ways that hold up across demographic groups, building sports models that can update within minutes of a roster change, classifying financial transactions where the rare categories carry the highest cost of error.
 
 </div>
 

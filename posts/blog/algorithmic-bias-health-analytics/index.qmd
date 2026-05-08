@@ -2,7 +2,7 @@
 title: "When the Model Is the Problem: Algorithmic Bias in Health Analytics"
 date: "2026-05-07"
 author: "Kivan Polimis"
-description: "A widely deployed commercial algorithm systematically underestimated the health needs of Black patients, not because of malicious design, but because cost was used as a proxy for need. This is the story of what went wrong, why it went wrong, and how to build models that don't replicate structural inequity."
+description: "A widely deployed commercial algorithm systematically underestimated the health needs of Black patients because cost was used as a proxy for need — a design choice that encoded decades of structural inequity. The Obermeyer et al. Science paper exposed this; this post works through the analytical framework for building models that don't replicate it."
 categories: [tutorials, health-equity, algorithmic-bias, data-science, causal-inference, machine-learning, public-policy]
 draft: false
 execute:
@@ -10,15 +10,15 @@ execute:
   echo: true
 ---
 
-In 2019, Obermeyer et al. published a paper in *Science* that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients. Higher score = more resources allocated.
+In 2019, Obermeyer et al. published a paper in *Science* that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients where higher score equated to more resources allocated.
 
 They found that Black patients were assigned significantly lower risk scores than white patients with identical underlying health conditions. The algorithm was, in practice, directing resources away from Black patients who needed them.
 
-The cause wasn't racist inputs. There was no race feature in the model. The cause was the choice of target variable: **healthcare cost**.
+There was no race feature in the model — the cause was the choice of target variable: **healthcare cost**.
 
 The algorithm predicted future healthcare costs and used that prediction as a proxy for healthcare need. But Black patients, on average, have lower healthcare costs than white patients with the same conditions, because they face more structural barriers to accessing care. Less access to care → less utilization → lower cost. The model learned the proxy (cost) rather than the underlying construct (need), and the proxy encoded decades of structural inequity.
 
-This is what algorithmic bias looks like in practice. It's rarely intentional. It's almost always structural.
+This is what algorithmic bias looks like in practice. It's rarely intentional and almost always structural.
 
 ---
 
@@ -40,7 +40,7 @@ Bias can enter at every stage, but the highest-leverage points are:
 
 ## A Framework: What Fairness Requires
 
-Fairness in ML is not a single concept. There are multiple definitions, and they are often mutually incompatible. The three most commonly invoked:
+Fairness in ML is not a single concept — the multiple definitions are often mutually incompatible. The three most commonly invoked:
 
 **Demographic parity**: The positive prediction rate is equal across demographic groups.
 ```python
@@ -80,7 +80,7 @@ The standard clinical risk model regresses outcomes on clinical variables: diagn
 
 Social Determinants of Health (SDOH), including housing stability, food security, transportation access, neighborhood environment, and occupational exposure, are typically excluded because they're not in the EHR.
 
-This is not because SDOH are less important than clinical variables. It's because they're harder to collect.
+SDOH are excluded from most models because they're harder to collect, not because they matter less than clinical variables.
 
 A more honest model specification:
 
@@ -176,7 +176,7 @@ None of those assumptions are correct.
 
 Every model deployed in a high-stakes setting (clinical risk stratification, benefit eligibility determination, resource allocation) warrants a fairness audit before deployment and monitoring afterward. That audit needs to be disaggregated by the demographic characteristics most likely to be affected by the structural factors your proxy variables are encoding.
 
-This is not a burden on top of good modeling. It is good modeling.
+A fairness audit isn't a burden on top of good modeling — it is good modeling.
 
 ---
 
