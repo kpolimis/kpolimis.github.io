@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kivan Polimis">
 <meta name="dcterms.date" content="2026-05-07">
-<meta name="description" content="A widely deployed commercial algorithm systematically underestimated the health needs of Black patients, not because of malicious design, but because cost was used as a proxy for need. This is the story of what went wrong, why it went wrong, and how to build models that don’t replicate structural inequity.">
+<meta name="description" content="A widely deployed commercial algorithm systematically underestimated the health needs of Black patients because cost was used as a proxy for need — a design choice that encoded decades of structural inequity. The Obermeyer et al.&nbsp;Science paper exposed this; this post works through the analytical framework for building models that don’t replicate it.">
 
 <title>When the Model Is the Problem: Algorithmic Bias in Health Analytics – Kivan Polimis</title>
 <style>
@@ -215,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    A widely deployed commercial algorithm systematically underestimated the health needs of Black patients, not because of malicious design, but because cost was used as a proxy for need. This is the story of what went wrong, why it went wrong, and how to build models that don’t replicate structural inequity.
+    A widely deployed commercial algorithm systematically underestimated the health needs of Black patients because cost was used as a proxy for need — a design choice that encoded decades of structural inequity. The Obermeyer et al.&nbsp;Science paper exposed this; this post works through the analytical framework for building models that don’t replicate it.
   </div>
 </div>
 
@@ -244,11 +244,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In 2019, Obermeyer et al.&nbsp;published a paper in <em>Science</em> that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients. Higher score = more resources allocated.</p>
+<p>In 2019, Obermeyer et al.&nbsp;published a paper in <em>Science</em> that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients where higher score equated to more resources allocated.</p>
 <p>They found that Black patients were assigned significantly lower risk scores than white patients with identical underlying health conditions. The algorithm was, in practice, directing resources away from Black patients who needed them.</p>
-<p>The cause wasn’t racist inputs. There was no race feature in the model. The cause was the choice of target variable: <strong>healthcare cost</strong>.</p>
+<p>There was no race feature in the model — the cause was the choice of target variable: <strong>healthcare cost</strong>.</p>
 <p>The algorithm predicted future healthcare costs and used that prediction as a proxy for healthcare need. But Black patients, on average, have lower healthcare costs than white patients with the same conditions, because they face more structural barriers to accessing care. Less access to care → less utilization → lower cost. The model learned the proxy (cost) rather than the underlying construct (need), and the proxy encoded decades of structural inequity.</p>
-<p>This is what algorithmic bias looks like in practice. It’s rarely intentional. It’s almost always structural.</p>
+<p>This is what algorithmic bias looks like in practice. It’s rarely intentional and almost always structural.</p>
 <hr>
 <section id="analytical-practices-and-where-bias-enters" class="level2">
 <h2 class="anchored" data-anchor-id="analytical-practices-and-where-bias-enters">Analytical Practices and Where Bias Enters</h2>
@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="a-framework-what-fairness-requires" class="level2">
 <h2 class="anchored" data-anchor-id="a-framework-what-fairness-requires">A Framework: What Fairness Requires</h2>
-<p>Fairness in ML is not a single concept. There are multiple definitions, and they are often mutually incompatible. The three most commonly invoked:</p>
+<p>Fairness in ML is not a single concept — the multiple definitions are often mutually incompatible. The three most commonly invoked:</p>
 <p><strong>Demographic parity</strong>: The positive prediction rate is equal across demographic groups.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking demographic parity</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>group_positive_rates <span class="op">=</span> df.groupby(<span class="st">"race"</span>)[<span class="st">"predicted_high_risk"</span>].mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="sdoh-aware-regression-a-better-starting-point">SDOH-Aware Regression: A Better Starting Point</h2>
 <p>The standard clinical risk model regresses outcomes on clinical variables: diagnosis codes, lab values, medication lists, prior utilization. These variables are all endogenous to the healthcare system. They measure what the system has done, not what the patient’s health status actually is.</p>
 <p>Social Determinants of Health (SDOH), including housing stability, food security, transportation access, neighborhood environment, and occupational exposure, are typically excluded because they’re not in the EHR.</p>
-<p>This is not because SDOH are less important than clinical variables. It’s because they’re harder to collect.</p>
+<p>SDOH are excluded from most models because they’re harder to collect, not because they matter less than clinical variables.</p>
 <p>A more honest model specification:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fixest)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -372,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The Obermeyer et al.&nbsp;finding wasn’t about a rogue algorithm or a bad actor. It was about the field’s default assumptions: that cost is a reasonable proxy for need, that a model that performs well on aggregate metrics is performing well for everyone, that checking for race as an input is sufficient for fairness.</p>
 <p>None of those assumptions are correct.</p>
 <p>Every model deployed in a high-stakes setting (clinical risk stratification, benefit eligibility determination, resource allocation) warrants a fairness audit before deployment and monitoring afterward. That audit needs to be disaggregated by the demographic characteristics most likely to be affected by the structural factors your proxy variables are encoding.</p>
-<p>This is not a burden on top of good modeling. It is good modeling.</p>
+<p>A fairness audit isn’t a burden on top of good modeling — it is good modeling.</p>
 <hr>
 <p><em>References: Obermeyer, Z., et al.&nbsp;(2019). Dissecting racial bias in an algorithm used to manage the health of populations. Science, 366(6464), 447–453. Vyas, D.A., et al.&nbsp;(2020). Hidden in plain sight — reconsidering the use of race correction in clinical algorithms. NEJM, 383(9), 874–882.</em></p>
 
@@ -843,7 +843,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "When the Model Is the Problem: Algorithmic Bias in Health Analytics"</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-05-07"</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "A widely deployed commercial algorithm systematically underestimated the health needs of Black patients, not because of malicious design, but because cost was used as a proxy for need. This is the story of what went wrong, why it went wrong, and how to build models that don't replicate structural inequity."</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "A widely deployed commercial algorithm systematically underestimated the health needs of Black patients because cost was used as a proxy for need — a design choice that encoded decades of structural inequity. The Obermeyer et al. Science paper exposed this; this post works through the analytical framework for building models that don't replicate it."</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [tutorials, health-equity, algorithmic-bias, data-science, causal-inference, machine-learning, public-policy]</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
@@ -851,15 +851,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>In 2019, Obermeyer et al. published a paper in *Science* that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients. Higher score = more resources allocated.</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>In 2019, Obermeyer et al. published a paper in *Science* that should have been uncomfortable reading for anyone who builds healthcare models. They analyzed a commercial algorithm used by major US health systems to identify patients for high-risk care management programs. The algorithm assigned risk scores to patients where higher score equated to more resources allocated.</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>They found that Black patients were assigned significantly lower risk scores than white patients with identical underlying health conditions. The algorithm was, in practice, directing resources away from Black patients who needed them.</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>The cause wasn't racist inputs. There was no race feature in the model. The cause was the choice of target variable: **healthcare cost**.</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>There was no race feature in the model — the cause was the choice of target variable: **healthcare cost**.</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>The algorithm predicted future healthcare costs and used that prediction as a proxy for healthcare need. But Black patients, on average, have lower healthcare costs than white patients with the same conditions, because they face more structural barriers to accessing care. Less access to care → less utilization → lower cost. The model learned the proxy (cost) rather than the underlying construct (need), and the proxy encoded decades of structural inequity.</span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>This is what algorithmic bias looks like in practice. It's rarely intentional. It's almost always structural.</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>This is what algorithmic bias looks like in practice. It's rarely intentional and almost always structural.</span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
@@ -881,7 +881,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## A Framework: What Fairness Requires</span></span>
 <span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>Fairness in ML is not a single concept. There are multiple definitions, and they are often mutually incompatible. The three most commonly invoked:</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>Fairness in ML is not a single concept — the multiple definitions are often mutually incompatible. The three most commonly invoked:</span>
 <span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>**Demographic parity**: The positive prediction rate is equal across demographic groups.</span>
 <span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
@@ -921,7 +921,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>Social Determinants of Health (SDOH), including housing stability, food security, transportation access, neighborhood environment, and occupational exposure, are typically excluded because they're not in the EHR.</span>
 <span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>This is not because SDOH are less important than clinical variables. It's because they're harder to collect.</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>SDOH are excluded from most models because they're harder to collect, not because they matter less than clinical variables.</span>
 <span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>A more honest model specification:</span>
 <span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a></span>
@@ -1017,7 +1017,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-176"><a href="#cb6-176" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-177"><a href="#cb6-177" aria-hidden="true" tabindex="-1"></a>Every model deployed in a high-stakes setting (clinical risk stratification, benefit eligibility determination, resource allocation) warrants a fairness audit before deployment and monitoring afterward. That audit needs to be disaggregated by the demographic characteristics most likely to be affected by the structural factors your proxy variables are encoding.</span>
 <span id="cb6-178"><a href="#cb6-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-179"><a href="#cb6-179" aria-hidden="true" tabindex="-1"></a>This is not a burden on top of good modeling. It is good modeling.</span>
+<span id="cb6-179"><a href="#cb6-179" aria-hidden="true" tabindex="-1"></a>A fairness audit isn't a burden on top of good modeling — it is good modeling.</span>
 <span id="cb6-180"><a href="#cb6-180" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-181"><a href="#cb6-181" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb6-182"><a href="#cb6-182" aria-hidden="true" tabindex="-1"></a></span>
