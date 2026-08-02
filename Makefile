@@ -1,6 +1,16 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help preview render data clean
+.PHONY: help preview render data clean all bootstrap lint
+
+all: data render-wc-leagues render-wc-epl  ## Fetch data then re-execute both WC posts end-to-end
+
+bootstrap:  ## Install local footy package (editable) and pin soccerdata
+	pip install -e ~/repos/football/footy
+	pip install soccerdata
+	@echo "Bootstrap complete. Run 'pip show soccerdata' to confirm version, then pin in requirements.txt."
+
+lint:  ## Run Ruff linter across the repo
+	conda run -n blog ruff check . --fix
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
