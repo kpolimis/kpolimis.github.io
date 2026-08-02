@@ -44,7 +44,7 @@ def _logo(name: str) -> str:
     except KeyError:
         return ""
 
-_LIGHTEN_BARS = {"#c8102e", "#dd0000"}   # Liverpool, Nottm Forest — all-red badges at small size
+_LIGHTEN_BARS = {"#c8102e", "#cc0000", "#dd0000"}   # Liverpool, Fulham, Nottm Forest — all-red badges; Fulham/Forest pair collapses under protanopia
 
 def _bar_colour(name: str) -> str:
     """Lighten bars where the badge is all-red and blends with a dark-red background."""
@@ -270,7 +270,7 @@ the 2026 World Cup presented the rare occasion where Premier League rivals combi
 And for fans of the English Premier League (EPL) and international club soccer like myself, this World Cup was also an opportunity to test the relative quality of leagues in a different way from the normal Champions League competitions.
 At the end of the tournament, I saw the following screenshot in my social media feed that tickled my analytical brain:
 
-![Minutes by league at the 2026 World Cup — the screenshot that started this.](IMG_6009.png){width=40% fig-align="center"}
+![Minutes by league at the 2026 World Cup: the screenshot that started this analysis.](IMG_6009.png){width=40% fig-align="center"}
  
 The Premier League sent more minutes to the 2026 World Cup than La Liga and
 the Bundesliga combined. That is striking. But "the Premier League" is not a
@@ -528,8 +528,8 @@ p_logos = (
 ```
 
 Hover any bar to see the player's nation, club, position, and goal
-contributions. The bar colour and logo are the club's — bars with the same
-colour came from the same side.
+contributions. The bar colour and logo are the club's. Bars sharing the
+same colour came from the same side.
 
 ---
 
@@ -719,7 +719,7 @@ This series started with a screenshot.
 
 ![The original chart that kicked this off: minutes by league at the 2026 World Cup.](IMG_6009.png){width=40% fig-align="center"}
 
-That image showed the EPL at 42,301 minutes — nearly double its nearest
+That image showed the EPL at 42,301 minutes, nearly double its nearest
 rival. Our analysis lands at 48,660 minutes, somewhat higher. The gap is
 likely methodological: our club-to-league mapping uses footy's historical
 league assignments, which can include clubs that were in the EPL in earlier
@@ -727,16 +727,25 @@ seasons even if they were in the Championship in 2025/26. For instance,
 Sunderland returned to the top flight and appears here correctly; a handful
 of others might be overcounted.
 
+A note on bar colors: each club's bar uses its official brand color. Eight of
+the twenty clubs shown use reds that are difficult to distinguish under
+deuteranopia or protanopia simulation. Notably, Bournemouth and Manchester
+United share the exact same official hex (`#DA291C`). Bar color here is a
+brand reference, not a primary data encoding. Each bar is independently
+labeled by club name and logo on the y-axis, so the chart is readable without
+color differentiation. Liverpool's, Fulham's, and Nottingham Forest's bars
+are lightened slightly to improve badge legibility against the bar background.
+
 One methodological note worth flagging: player club affiliations here are
-as of the final day of the 2025/26 EPL season — whenever FBref's squad data
-was last updated before the tournament. Players who transferred mid-tournament
+as of the final day of the 2025/26 EPL season (specifically, whenever FBref's
+squad data was last updated before the tournament). Players who transferred mid-tournament
 (or between the end of the domestic season and the World Cup) are attributed
 to their EPL club rather than their new one. Marc Cucurella, for instance,
 moved from Chelsea to Real Madrid but is counted under Chelsea in this data.
 The same logic applies in reverse for inbound transfers. I think this is the
-right call — it measures where players developed and played leading into the
-tournament — but it is worth keeping in mind when interpreting totals for clubs
-in active transfer windows.
+right call: it measures where players developed and played leading into the
+tournament. Worth keeping in mind when interpreting totals for clubs in active
+transfer windows.
 
 Still, the core finding holds up either way. The EPL is not slightly ahead
 of the competition. It is categorically ahead. La Liga and the Bundesliga
@@ -748,7 +757,7 @@ clubs drove that total, what nations those minutes came from, and whether the
 table finish said anything about a club's international depth. I think the
 answers here are genuinely interesting. Manchester City and Arsenal lead by
 volume. On production, among clubs with at least 200 World Cup minutes, Arsenal ranks near the top
-at 0.53 G+A per 90 — ahead of Liverpool, Crystal Palace, and everyone else with
+at 0.53 G+A per 90, ahead of Liverpool, Crystal Palace, and everyone else with
 substantial minutes.
 Sunderland appears in the top six by volume, which looks surprising until you
 see the national breakdown. The league position and World Cup contribution
@@ -762,13 +771,13 @@ further.
 
 ## What this connects to
 
-1. [EPL Standings (1992--2026)](../epl-standings/) — 34 seasons of finishes,
+1. [EPL Standings (1992--2026)](../epl-standings/): 34 seasons of finishes,
    animated as a bump chart, with k-means cluster analysis.
 
-2. [Which Leagues Powered the 2026 World Cup?](../world-cup-2026-leagues/)
-   — league-level breakdown of minutes, G+A per 90, and tournament depth.
+2. [Which Leagues Powered the 2026 World Cup?](../world-cup-2026-leagues/):
+   league-level breakdown of minutes, G+A per 90, and tournament depth.
 
-3. **The EPL's World Cup Footprint** (this post) — club-level breakdown,
+3. **The EPL's World Cup Footprint** (this post): club-level breakdown,
    national team composition, and the relationship between league position
    and World Cup contribution.
 
