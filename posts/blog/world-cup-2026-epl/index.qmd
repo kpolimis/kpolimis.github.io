@@ -33,12 +33,14 @@ if not os.path.exists(EPL_DATA):
 
 # ── footy helpers ─────────────────────────────────────────────────────────────
 def _colour(name: str) -> str:
+    """Return the official hex brand colour for a club, or grey if unknown."""
     try:
         return footy.colour(footy.normalise(name))
     except KeyError:
         return "#AAAAAA"
 
 def _logo(name: str) -> str:
+    """Return the logo URL for a club, or empty string if unknown."""
     try:
         return footy.logo(footy.normalise(name)) or ""
     except KeyError:

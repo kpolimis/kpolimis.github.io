@@ -36,6 +36,7 @@ TOP_N = 15  # leagues to show in primary charts
 
 # Colour palette: EPL highlighted, others muted
 def league_colour(league: str) -> str:
+    """Return EPL highlight colour for the EPL, muted grey for all others."""
     return "#3700B3" if league == "EPL" else "#AAAAAA"
 
 top_leagues = leagues[leagues["league"] != "Other"].head(TOP_N).copy()
