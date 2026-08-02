@@ -1,0 +1,249 @@
+---
+title: "Which Leagues Powered the 2026 World Cup?"
+date: "2026-07-25"
+author: "Kivan Polimis"
+description: "The Premier League contributed more World Cup minutes than La Liga and the Bundesliga combined. This post breaks down which leagues powered the 2026 tournament, how efficiently their players produced, and what the numbers suggest about global football's concentration of talent."
+categories: [sports, football, data-viz, world-cup, premier-league]
+draft: false
+jupyter: blog
+---
+
+```{python}
+#| label: setup
+#| include: false
+
+import pandas as pd
+import altair as alt
+import os
+
+# Data must be present — run fetch_wc_data.py first:
+#   cd posts/blog/world-cup-2026-leagues && python fetch_wc_data.py
+
+DATA_DIR = "data"
+_missing = [f for f in ["wc_leagues.csv", "wc_players.csv", "wc_rounds.csv"]
+            if not os.path.exists(f"{DATA_DIR}/{f}")]
+if _missing:
+    raise FileNotFoundError(
+        f"Missing data files: {_missing}\n"
+        "Run:  python posts/blog/world-cup-2026-leagues/fetch_wc_data.py"
+    )
+
+leagues = pd.read_csv(f"{DATA_DIR}/wc_leagues.csv")
+players = pd.read_csv(f"{DATA_DIR}/wc_players.csv")
+rounds  = pd.read_csv(f"{DATA_DIR}/wc_rounds.csv")
+
+TOP_N = 15  # leagues to show in primary charts
+
+# Colour palette: EPL highlighted, others muted
+def league_colour(league: str) -> str:
+    return "#3700B3" if league == "EPL" else "#AAAAAA"
+
+top_leagues = leagues[leagues["league"] != "Other"].head(TOP_N).copy()
+top_leagues["colour"] = top_leagues["league"].apply(league_colour)
+top_leagues["minutes_k"] = (top_leagues["total_minutes"] / 1000).round(1)
+```
+
+The 2026 FIFA World Cup brought together 48 national teams for the first
+edition of the expanded tournament, hosted across the United States, Canada,
+and Mexico. For the first time in World Cup history, more than 100 matches
+were played in a single tournament. More teams meant more players, more
+minutes, and a cleaner read on which club leagues are the true pipelines
+for international football talent.
+
+The answer, at least by volume, is not close: the English Premier League
+contributed more than twice the World Cup minutes of La Liga, its nearest
+rival. This post examines why that gap exists, whether it reflects quality
+as well as quantity, and what the outlier stories — MLS at sixth, the Saudi
+Pro League at seventh — tell us about where the global game is heading.
+
+---
+
+## Minutes played by league
+
+The most direct measure of league contribution is total minutes accumulated
+by players at their club at the time of the tournament.
+
+```{python}
+#| label: chart-minutes
+#| fig-cap: "Total minutes played by players from each club league. Top 15 leagues shown."
+
+chart_minutes = (
+    alt.Chart(top_leagues)
+    .mark_bar()
+    .encode(
+        x=alt.X("total_minutes:Q",
+                axis=alt.Axis(title="Total minutes played", format=",d")),
+        y=alt.Y("league:N",
+                sort=alt.EncodingSortField(field="total_minutes", order="descending"),
+                axis=alt.Axis(title=None)),
+        color=alt.Color("colour:N", scale=None, legend=None),
+        tooltip=[
+            alt.Tooltip("league:N",        title="League"),
+            alt.Tooltip("total_minutes:Q", title="Minutes", format=",d"),
+            alt.Tooltip("player_count:Q",  title="Players"),
+            alt.Tooltip("minutes_k:Q",     title="Minutes (k)"),
+        ],
+    )
+    .properties(width=600, height=400,
+                title="2026 World Cup: Minutes Played by Club League")
+    .interactive()
+)
+chart_minutes
+```
+
+The Premier League's dominance here is partly structural: it is the
+wealthiest league in the world, with wages that attract talent from across
+Europe, South America, and beyond. When those players represent their
+nations in a World Cup, their minutes accrue to the EPL's ledger. La Liga,
+the Bundesliga, Serie A, and Ligue 1 — the other four of the traditional
+"Big Five" — follow at meaningful distances. Together they account for the
+majority of all World Cup minutes, which suggests that the European football
+ecosystem as a whole functions as a talent development and concentration
+mechanism for international football.
+
+Two entries below the Big Five are worth pausing on.
+
+**MLS at sixth.** Major League Soccer's appearance above several established
+European leagues is unusual in most tournament cycles. The 2026 World Cup
+was hosted on North American soil, and the United States, Canada, and Mexico
+all qualified with full squads — many of whose players are MLS-based. This
+likely inflates MLS's minute count relative to what we would expect in a
+typical cycle. A caution here: not all minutes are created equal. Volume
+without production is a weaker signal than we might hope.
+
+**The Saudi Pro League at seventh.** Several years of high-profile
+signings — Cristiano Ronaldo to Al-Nassr, Karim Benzema to Al-Ittihad, and
+others — brought players from the Saudi Pro League into World Cup squads at
+a level it had not previously reached. Whether those players' Saudi stints
+maintained their international form is a question the production data can
+help answer.
+
+---
+
+## Production, not just presence
+
+Minutes tell us which leagues sent the most players for the most time.
+Goals plus assists per 90 minutes — a blunt but reliable efficiency
+measure — tells us which leagues' players actually produced.
+
+```{python}
+#| label: chart-ga-per90
+#| fig-cap: "Goals plus assists per 90 minutes by league. Minimum 500 league minutes to qualify."
+
+MIN_MINUTES = 500
+qa_leagues = leagues[leagues["total_minutes"] >= MIN_MINUTES].copy()
+qa_leagues["colour"] = qa_leagues["league"].apply(league_colour)
+qa_top = qa_leagues.nlargest(TOP_N, "ga_per90")
+
+chart_ga = (
+    alt.Chart(qa_top)
+    .mark_bar()
+    .encode(
+        x=alt.X("ga_per90:Q",
+                axis=alt.Axis(title="Goals + assists per 90 min")),
+        y=alt.Y("league:N",
+                sort=alt.EncodingSortField(field="ga_per90", order="descending"),
+                axis=alt.Axis(title=None)),
+        color=alt.Color("colour:N", scale=None, legend=None),
+        tooltip=[
+            alt.Tooltip("league:N",       title="League"),
+            alt.Tooltip("ga_per90:Q",     title="G+A per 90", format=".2f"),
+            alt.Tooltip("total_goals:Q",  title="Goals"),
+            alt.Tooltip("total_assists:Q",title="Assists"),
+            alt.Tooltip("total_minutes:Q",title="Total minutes", format=",d"),
+        ],
+    )
+    .properties(width=600, height=400,
+                title="2026 World Cup: Goals + Assists per 90 by Club League")
+    .interactive()
+)
+chart_ga
+```
+
+The chart separates volume from quality. A league that ranks highly on
+minutes but poorly on G+A per 90 may be sending players whose tournament
+contributions were limited to depth roles or early eliminations. For
+instance, if MLS players accumulated minutes primarily in group-stage
+matches before the host nations exited, their per-90 production rate may be
+substantially lower than a European league whose players advanced deep into
+the knockouts.
+
+---
+
+## Tournament depth: how far did each league's players go?
+
+```{python}
+#| label: chart-depth
+#| fig-cap: "Average furthest round reached by players from each league. Weighted by player count."
+
+# Join round info onto players via nation
+if "round_num" in rounds.columns and "nation" in players.columns:
+    players_with_rounds = players.merge(
+        rounds[["nation", "round_num", "round_reached"]],
+        on="nation",
+        how="left",
+    )
+
+    depth = (
+        players_with_rounds
+        .groupby("league")
+        .agg(
+            avg_round=("round_num", "mean"),
+            player_count=("player", "count"),
+        )
+        .reset_index()
+        .sort_values("avg_round", ascending=False)
+    )
+    depth = depth[depth["player_count"] >= 5]  # filter noise from tiny leagues
+    depth["colour"] = depth["league"].apply(league_colour)
+
+    chart_depth = (
+        alt.Chart(depth.head(TOP_N))
+        .mark_bar()
+        .encode(
+            x=alt.X("avg_round:Q",
+                    axis=alt.Axis(title="Avg furthest round (1=Group, 6=Final)")),
+            y=alt.Y("league:N",
+                    sort=alt.EncodingSortField(field="avg_round", order="descending"),
+                    axis=alt.Axis(title=None)),
+            color=alt.Color("colour:N", scale=None, legend=None),
+            tooltip=[
+                alt.Tooltip("league:N",       title="League"),
+                alt.Tooltip("avg_round:Q",    title="Avg round", format=".2f"),
+                alt.Tooltip("player_count:Q", title="Players"),
+            ],
+        )
+        .properties(width=600, height=400,
+                    title="2026 World Cup: Average Tournament Depth by Club League")
+        .interactive()
+    )
+    chart_depth
+else:
+    print("Round data not available — skipping depth chart.")
+```
+
+Tournament depth is a useful correction for the volume chart. A league
+whose players exit in the group stage will accumulate fewer minutes per
+player than one whose players advance to the semifinals, holding squad size
+constant. If the EPL's per-player minute total is higher than La Liga's on
+this metric, it suggests EPL players are not just present in larger numbers
+but are playing for nations that advance further in the tournament.
+
+---
+
+## What comes next
+
+The next post in this series drills into the EPL specifically: which clubs
+contributed the most World Cup minutes, and whether a club's final position
+in the 2025/26 Premier League table predicts how many World Cup minutes its
+players accumulated.
+
+For the EPL standings context — where each club finished in the 2025/26
+season and the 34-year trajectory of the league — see the
+[EPL Standings post](../epl-standings/).
+
+---
+
+*Player data from [FBref](https://fbref.com). League aggregates computed
+from club affiliations at the time of the tournament (June/July 2026).
+Code and data: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*
