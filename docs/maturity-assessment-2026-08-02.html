@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Software Maturity Assessment — kpolimis.github.io</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 9.5pt; line-height: 1.45; max-width: 740px; margin: 0 auto; padding: 28px 28px 20px; color: #1a1a1a; }
+h1 { font-size: 16pt; font-weight: 700; margin-bottom: 6px; color: #111; }
+h2 { font-size: 11pt; font-weight: 700; margin: 22px 0 7px; border-bottom: 1.5px solid #bbb; padding-bottom: 3px; color: #111; text-transform: uppercase; letter-spacing: 0.03em; }
+h3 { font-size: 10pt; font-weight: 600; margin: 14px 0 4px; color: #222; }
+p { margin: 5px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9pt; }
+th { background: #f2f2f2; text-align: left; padding: 5px 8px; border: 1px solid #ccc; font-size: 8.5pt; }
+td { padding: 4px 8px; border: 1px solid #ddd; vertical-align: top; }
+.sc { text-align: center; font-weight: 700; white-space: nowrap; }
+.green { background: #d4edda; color: #155724; }
+.amber { background: #fff3cd; color: #856404; }
+.red   { background: #f8d7da; color: #721c24; }
+code { font-family: Menlo, "Courier New", monospace; font-size: 8pt; background: #f5f5f5; padding: 1px 4px; border-radius: 2px; color: #c7254e; }
+.meta { font-size: 8.5pt; margin: 8px 0 18px; color: #444; line-height: 1.8; }
+.meta b { color: #111; }
+.radar-row { display: flex; gap: 16px; align-items: flex-start; margin: 6px 0; }
+.bar-panel { flex: 1; padding-top: 18px; }
+.bar-panel table td { padding: 3px 6px; border: none; border-bottom: 1px solid #eee; }
+.bar-panel table th { background: none; border: none; border-bottom: 1px solid #ccc; padding: 3px 6px; font-size: 8pt; }
+.bar { height: 11px; border-radius: 2px; }
+.p1 { background: #fff3cd; }
+.footer { margin-top: 32px; font-size: 7.5pt; color: #888; border-top: 1px solid #ddd; padding-top: 7px; }
+dl.evid { margin: 4px 0 0 0; }
+dl.evid dt { font-weight: 700; display: inline; }
+dl.evid dd { display: inline; margin-left: 0; }
+.dim { margin-top: 14px; padding: 10px 12px; background: #fafafa; border-left: 3px solid #ddd; border-radius: 0 4px 4px 0; }
+.dim h3 { margin: 0 0 6px; }
+.dim p { margin: 3px 0; font-size: 9pt; }
+.dim .lbl { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Software Maturity Assessment — kpolimis.github.io</h1>
+<div class="meta">
+<b>Date:</b> 2026-08-02 &nbsp;·&nbsp;
+<b>Framework:</b> Atlas Analytics Internal Framework v1.0 &nbsp;·&nbsp;
+<b>Assessor:</b> Claude Sonnet 4.6 (automated, evidence-based) &nbsp;·&nbsp;
+<b>Tier:</b> Small / scripts-only &nbsp;·&nbsp;
+<b>Tier justification:</b> Quarto static blog with Python data-viz notebooks and one data-fetch script; Docker and full CI/CD are not required at this tier; <code>requirements.txt</code> + <code>venv</code> is the standard.
+</div>
+
+<h2>Executive Summary</h2>
+<p>kpolimis.github.io is a Quarto static blog producing World Cup and EPL data-visualization posts via Python notebooks and a data-fetch script (<code>fetch_wc_data.py</code>). Six of seven maturity dimensions sit at Level 2 (Documented): practices are written down in <code>SMALL_PROJECT_STANDARDS.md</code> and applied by convention, but no tooling enforces them on commit or merge. Testing is the single outlier at Level 1, with zero test files in the repo. The highest-leverage remediation is a four-item, 80-minute sprint (fix the log format, add a <code>make all</code> pipeline target, add three missing docstrings, document the footy bootstrap) that moves four dimensions to Level 3 with no new infrastructure. <b>Theme: Documented but not yet Automated.</b></p>
+
+<h2>Scorecard &amp; Radar</h2>
+<div class="radar-row">
+<div>
+<svg width="380" height="380" viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg">
+<polygon points="185.0,157.0 206.9,167.5 212.3,191.2 197.1,210.2 172.9,210.2 157.7,191.2 163.1,167.5" fill="none" stroke="#e5e5e5" stroke-width="0.8"/>
+<polygon points="185.0,129.0 228.8,150.1 239.6,197.5 209.3,235.5 160.7,235.5 130.4,197.5 141.2,150.1" fill="none" stroke="#e5e5e5" stroke-width="0.8"/>
+<polygon points="185.0,73.0 272.6,115.2 294.2,209.9 233.6,285.9 136.4,285.9 75.8,209.9 97.4,115.2" fill="none" stroke="#e5e5e5" stroke-width="0.8"/>
+<polygon points="185.0,45.0 294.5,97.7 321.5,216.2 245.7,311.1 124.3,311.1 48.5,216.2 75.5,97.7" fill="none" stroke="#e5e5e5" stroke-width="0.8"/>
+<polygon points="185.0,101.0 250.7,132.6 266.9,203.7 221.4,260.7 148.6,260.7 103.1,203.7 119.3,132.6" fill="none" stroke="#1976D2" stroke-width="1.5" stroke-dasharray="5,3"/>
+<line x1="185" y1="185" x2="185.0" y2="45.0" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="294.5" y2="97.7" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="321.5" y2="216.2" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="245.7" y2="311.1" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="124.3" y2="311.1" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="48.5" y2="216.2" stroke="#d0d0d0" stroke-width="0.8"/>
+<line x1="185" y1="185" x2="75.5" y2="97.7" stroke="#d0d0d0" stroke-width="0.8"/>
+
+<polygon points="185.0,129.0 206.9,167.5 239.6,197.5 209.3,235.5 160.7,235.5 130.4,197.5 141.2,150.1" fill="rgba(25,118,210,0.15)" stroke="#1565C0" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="185.0" cy="129.0" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<circle cx="206.9" cy="167.5" r="3.5" fill="#c62828" stroke="white" stroke-width="1.2"/>
+<circle cx="239.6" cy="197.5" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<circle cx="209.3" cy="235.5" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<circle cx="160.7" cy="235.5" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<circle cx="130.4" cy="197.5" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<circle cx="141.2" cy="150.1" r="3.5" fill="#1565C0" stroke="white" stroke-width="1.2"/>
+<text x="185.0" y="21.0" font-size="7.8" text-anchor="middle" font-weight="600" fill="#222">3.1 Code Quality</text>
+<text x="315.0" y="87.7" font-size="7.8" text-anchor="start" font-weight="600" fill="#222">3.2 Testing</text>
+<text x="345.1" y="223.7" font-size="7.8" text-anchor="start" font-weight="600" fill="#222">3.3 Logging</text>
+<text x="252.7" y="339.6" font-size="7.8" text-anchor="middle" font-weight="600" fill="#222">3.4 Docs</text>
+<text x="117.3" y="339.6" font-size="7.8" text-anchor="middle" font-weight="600" fill="#222">3.5 Deploy</text>
+<text x="24.9" y="223.7" font-size="7.8" text-anchor="end" font-weight="600" fill="#222">3.6 Pipeline</text>
+<text x="55.0" y="87.7" font-size="7.8" text-anchor="end" font-weight="600" fill="#222">3.7 CI/CD</text>
+<text x="188.0" y="160.0" font-size="6" fill="#bbb">1</text>
+<text x="188.0" y="132.0" font-size="6" fill="#bbb">2</text>
+<text x="188.0" y="104.0" font-size="6" fill="#bbb">3</text>
+<text x="188.0" y="76.0" font-size="6" fill="#bbb">4</text>
+<text x="188.0" y="48.0" font-size="6" fill="#bbb">5</text>
+
+<line x1="14" y1="368" x2="36" y2="368" stroke="#1976D2" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="41" y="372" font-size="7" fill="#666">Level 3 target</text>
+<rect x="125" y="361" width="10" height="9" fill="rgba(25,118,210,0.15)" stroke="#1565C0" stroke-width="1.5"/>
+<text x="140" y="372" font-size="7" fill="#666">Current state</text>
+</svg>
+</div>
+<div class="bar-panel">
+<table>
+<tr><th>Dimension</th><th class="sc">Score</th><th style="width:90px">Progress</th></tr>
+<tr><td>3.1 Code Quality</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+<tr><td>3.2 Testing</td><td class="sc red">1/5</td><td><div class="bar" style="width:20%;background:#c62828"></div></td></tr>
+<tr><td>3.3 Logging</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+<tr><td>3.4 Documentation</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+<tr><td>3.5 Deployment</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+<tr><td>3.6 Pipeline</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+<tr><td>3.7 CI/CD</td><td class="sc amber">2/5</td><td><div class="bar" style="width:40%;background:#F9A825"></div></td></tr>
+</table>
+<p style="font-size:7.5pt;color:#888;margin-top:6px;">Bars scaled to 5. Dashed ring = Level 3 target. &nbsp;<span style="display:inline-block;width:10px;height:10px;background:#fff3cd;border:1px solid #856404;vertical-align:middle"></span> Documented &nbsp;<span style="display:inline-block;width:10px;height:10px;background:#f8d7da;border:1px solid #721c24;vertical-align:middle"></span> Ad Hoc</p>
+
+<table style="margin-top:12px;">
+<tr><th>Level</th><th>Name</th><th>Meaning</th></tr>
+<tr><td class="sc" style="background:#f8d7da;color:#721c24">1</td><td>Ad Hoc</td><td>Absent; individual habit only.</td></tr>
+<tr><td class="sc" style="background:#fff3cd;color:#856404">2</td><td>Documented</td><td>Written down, not enforced.</td></tr>
+<tr><td class="sc" style="background:#d4edda;color:#155724">3</td><td>Automated</td><td>Enforced by tooling; violations caught.</td></tr>
+<tr><td class="sc" style="background:#cce5ff;color:#004085">4</td><td>Monitored</td><td>Automated + tracked over time.</td></tr>
+<tr><td class="sc" style="background:#e2d9f3;color:#4a235a">5</td><td>Optimized</td><td>Automated, monitored, gates decisions.</td></tr>
+</table>
+</div>
+</div>
+
+<h2>Dimension Findings</h2>
+
+<div class="dim">
+<h3>3.1 Code Quality &amp; Style — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span></h3>
+<p><span class="lbl">Evidence:</span> Type hints present on all public signatures in <code>fetch_wc_data.py</code> and <code>.qmd</code> helpers. Named module-level constants throughout (<code>TOP_NATIONS</code>, <code>TOP_CLUBS</code>, <code>MIN_SEGMENT</code>). No <code>pyproject.toml</code>, no Ruff config, no pre-commit hooks — style conventions live in <code>SMALL_PROJECT_STANDARDS.md</code> but nothing checks them.</p>
+<p><span class="lbl">Gap to 3/5:</span> Add <code>pyproject.toml</code> with <code>[tool.ruff]</code> section; run <code>ruff check . --fix</code> once to auto-remediate. Pre-commit hook optional at Small tier.</p>
+</div>
+
+<div class="dim">
+<h3>3.2 Testing &amp; Validation — <span class="red" style="padding:1px 5px;border-radius:3px">1/5 (Ad Hoc)</span></h3>
+<p><span class="lbl">Evidence:</span> No <code>tests/</code> directory, no <code>pytest.ini</code>, zero test files anywhere in the repo. Data validation is ad hoc: <code>pd.to_numeric(errors="coerce")</code> silently coerces bad values; <code>os.path.exists()</code> in notebooks aborts on missing files but does not validate schema. Pure, deterministic functions exist and are trivially testable: <code>_strip_rank_prefix</code>, <code>build_league_stats</code>, <code>build_epl_club_stats</code>.</p>
+<p><span class="lbl">Gap to 2/5:</span> Create <code>tests/test_fetch.py</code> with 5 pytest tests covering the three functions above (no I/O, no mocking needed). Run <code>pytest</code> manually before commits.</p>
+</div>
+
+<div class="dim">
+<h3>3.3 Observability &amp; Logging — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span></h3>
+<p><span class="lbl">Evidence:</span> <code>fetch_wc_data.py</code> now uses <code>logging.getLogger(__name__)</code> with <code>basicConfig</code> in <code>main()</code> — upgraded from 15+ <code>print()</code> calls this session. Format is <code>%(levelname)s %(message)s</code>, missing the required pipe-delimited standard: <code>%(asctime)s | %(levelname)-8s | %(name)s | %(message)s</code>. Notebook cells produce no structured logging (acceptable for a blog at Small tier).</p>
+<p><span class="lbl">Gap to 3/5:</span> Change the <code>basicConfig</code> format string in <code>fetch_wc_data.py:297</code> to the pipe-delimited standard. Single-line change.</p>
+</div>
+
+<div class="dim">
+<h3>3.4 Documentation — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span></h3>
+<p><span class="lbl">Evidence:</span> <code>README.md</code> covers setup and deployment. All six public functions in <code>fetch_wc_data.py</code> have Google-style docstrings with <code>Args:</code> and <code>Returns:</code> blocks (added this session). Three <code>.qmd</code> helper functions — <code>_colour</code>, <code>_logo</code>, <code>league_colour</code> — have no docstrings despite being called repeatedly across notebooks. No docstring-coverage enforcement.</p>
+<p><span class="lbl">Gap to 3/5:</span> Add one-line docstrings to the three undocumented <code>.qmd</code> helpers. Add a <code>pydocstyle</code> Ruff rule once <code>pyproject.toml</code> exists.</p>
+</div>
+
+<div class="dim">
+<h3>3.5 Deployment &amp; Environment — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span> <span style="font-size:8pt;color:#888">(Small-tier; Docker N/A)</span></h3>
+<p><span class="lbl">Evidence:</span> <code>requirements.txt</code> created this session with pinned <code>altair==6.2.2</code>, <code>numpy==2.3.5</code>, <code>pandas==2.3.3</code>, <code>scipy==1.16.3</code>. <code>Makefile</code> created with 9 targets. <b>Reproducibility gap:</b> <code>footy</code> is a local editable install from <code>~/repos/football/footy</code> and is not installable from <code>requirements.txt</code>. A fresh clone silently degrades to <code>HAS_FOOTY = False</code>. <code>soccerdata</code> is also unpinned.</p>
+<p><span class="lbl">Gap to 3/5:</span> Add a <code>bootstrap</code> Makefile target running <code>pip install -e ~/repos/football/footy</code>; document it in <code>README.md</code>. Pin <code>soccerdata</code> after confirming working version.</p>
+</div>
+
+<div class="dim">
+<h3>3.6 Data Pipeline / MLOps — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span></h3>
+<p><span class="lbl">Evidence:</span> Three-stage pipeline: fetch (<code>fetch_wc_data.py → 4 CSVs</code>) → transform (inline <code>.qmd</code> setup cells) → present (Altair charts). Stage 1 is scripted via <code>make data</code> and idempotent. No schema validation at any stage boundary — <code>pd.read_csv()</code> loads without column-type or nullability checks; a column rename in FBref would silently corrupt charts. No <code>make all</code> target wiring the full pipeline.</p>
+<p><span class="lbl">Gap to 3/5:</span> Add <code>make all: data render-wc-leagues render-wc-epl</code> (one line). Add Pandera column/dtype checks in <code>.qmd</code> setup cells to catch FBref schema drift before charts render silently broken.</p>
+</div>
+
+<div class="dim">
+<h3>3.7 CI/CD &amp; Automation — <span class="amber" style="padding:1px 5px;border-radius:3px">2/5 (Documented)</span> <span style="font-size:8pt;color:#888">(Small-tier; full CI not required)</span></h3>
+<p><span class="lbl">Evidence:</span> <code>.github/workflows/publish.yml</code> runs on every push to <code>main</code>: renders the Quarto site and deploys to <code>gh-pages</code>. No lint, type-check, or test gate before the render step. No branch protection requiring CI to pass before merge. A syntax error in <code>fetch_wc_data.py</code> would not block a push.</p>
+<p><span class="lbl">Gap to 3/5:</span> Add a <code>make lint</code> step to <code>publish.yml</code> before the render step (3 lines, once Ruff config exists from the 3.1 work). Not strictly required at Small tier but zero additional cost given the existing workflow.</p>
+</div>
+
+<h2>Prioritized Roadmap</h2>
+<table>
+<tr><th>P</th><th>Dimension</th><th>Action</th><th>Effort</th><th>Score Δ</th></tr>
+<tr class="p1"><td class="sc">P1</td><td>3.3 Logging (2→3)</td><td>Fix <code>basicConfig</code> format to pipe-delimited standard in <code>fetch_wc_data.py:297</code></td><td>15 min</td><td class="sc">+1</td></tr>
+<tr class="p1"><td class="sc">P2</td><td>3.6 Pipeline (2→3)</td><td>Add <code>all: data render-wc-leagues render-wc-epl</code> target to <code>Makefile</code></td><td>15 min</td><td class="sc">+1</td></tr>
+<tr class="p1"><td class="sc">P3</td><td>3.4 Docs (2→3)</td><td>One-line docstrings on <code>_colour</code>, <code>_logo</code>, <code>league_colour</code> in <code>.qmd</code> setup cells</td><td>20 min</td><td class="sc">+1</td></tr>
+<tr class="p1"><td class="sc">P4</td><td>3.5 Deploy (2→3)</td><td>Add <code>make bootstrap</code> target + README note; pin <code>soccerdata</code> version</td><td>30 min</td><td class="sc">+1</td></tr>
+<tr><td class="sc">P5</td><td>3.1 Quality (2→3)</td><td>Add <code>pyproject.toml</code> with <code>[tool.ruff]</code>; run <code>ruff check . --fix</code></td><td>1 hr</td><td class="sc">+1</td></tr>
+<tr><td class="sc">P6</td><td>3.7 CI/CD (2→3)</td><td>Add <code>make lint</code> step to <code>publish.yml</code> before render <i>(after P5)</i></td><td>30 min</td><td class="sc">+1</td></tr>
+<tr><td class="sc">P7</td><td>3.2 Testing (1→2)</td><td>Create <code>tests/test_fetch.py</code> with 5 pytest tests for pure functions</td><td>2 hr</td><td class="sc">+1</td></tr>
+<tr><td class="sc">P8</td><td>3.6 Pipeline (full 3)</td><td>Add Pandera schema check in <code>.qmd</code> setup cells for all 4 loaded CSVs</td><td>2 hr</td><td class="sc">—</td></tr>
+</table>
+<p style="font-size:8pt;color:#666;margin-top:4px;">P1–P4 form a single 80-minute sprint with no new infrastructure. P5 unlocks P6. P7 is the most important gap by risk but the most sustained effort — block a separate 2-hour session.</p>
+
+<h2>Appendix — Raw Evidence</h2>
+<table>
+<tr><th>Area</th><th>Detail</th></tr>
+<tr><td>CI config</td><td><code>.github/workflows/publish.yml</code> — deploy-only; renders Quarto and pushes to <code>gh-pages</code>; no lint/test/type-check gate</td></tr>
+<tr><td>Logging</td><td><code>fetch_wc_data.py</code> — <code>getLogger(__name__)</code> present; format <code>%(levelname)s %(message)s</code> (off-standard; missing timestamp, level padding, module name)</td></tr>
+<tr><td>Docstrings</td><td><code>fetch_wc_data.py</code> — 6/6 public functions documented; <code>.qmd</code> — 3 helpers undocumented (<code>_colour</code>, <code>_logo</code>, <code>league_colour</code>)</td></tr>
+<tr><td>Dependencies</td><td><code>requirements.txt</code> pinned: altair 6.2.2, numpy 2.3.5, pandas 2.3.3, scipy 1.16.3; <code>soccerdata</code> unpinned; <code>footy</code> local editable (not installable)</td></tr>
+<tr><td>Tests</td><td>No <code>tests/</code> directory; no <code>pytest.ini</code>; 0 test files</td></tr>
+<tr><td>Ruff/pyproject</td><td>No <code>pyproject.toml</code>; no Ruff config; no pre-commit hooks</td></tr>
+<tr><td>Data validation</td><td><code>pd.to_numeric(errors="coerce")</code> only — silent; no Pandera schema checks; no column-presence assertions at CSV load</td></tr>
+<tr><td>Commits (this session)</td><td>5 commits: untrack cache artifacts, add Makefile+requirements.txt, logging+docstrings in fetch script, EPL post fixes, leagues post fixes</td></tr>
+</table>
+
+<div class="footer">
+Methodology: ~/repos/standards-playbook/software-maturity-assessment-methodology.md &nbsp;·&nbsp; Scale: 1 (Ad Hoc) → 5 (Optimized) &nbsp;·&nbsp; Tier: Small / scripts-only &nbsp;·&nbsp; Assessor: Claude Sonnet 4.6
+</div>
+</body>
+</html>
