@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fetch 2026 FIFA World Cup player stats via soccerdata (uses cached FBref data).
+"""Fetch 2026 FIFA World Cup player stats via soccerdata (uses cached FBref data).
 
 Outputs (written to data/):
   wc_players.csv  — one row per player: name, club, league, nation, minutes, goals, assists
@@ -75,17 +74,18 @@ ROUND_LABEL: dict[int, str] = {
 # ── Club → league mapping via footy ───────────────────────────────────────────
 
 def _strip_rank_prefix(raw: str) -> str:
-    """soccerdata prefixes club names with 'N. ' (e.g. '1. Arsenal'). Strip it."""
+    """Soccerdata prefixes club names with 'N. ' (e.g. '1. Arsenal'). Strip it."""
     return re.sub(r"^\d+\.\s*", "", str(raw)).strip()
 
 
 def club_to_league(raw_club: str) -> str:
-    """
-    Map a raw club name (e.g. '1. Arsenal', '1. Feyenoord') to a canonical
-    league ID (e.g. 'EPL', 'Eredivisie').
+    """Map a raw club name to a canonical league ID.
 
-    Uses footy.normalise() → club.league. Falls back to 'Other' for clubs
-    not yet in the footy registry; add them to footy/clubs.py to improve coverage.
+    Args:
+        raw_club: Raw club name from soccerdata (e.g. '1. Arsenal', '1. Feyenoord').
+
+    Returns:
+        League ID string (e.g. 'EPL', 'Eredivisie'), or 'Other' if unmapped.
     """
     if not HAS_FOOTY:
         return "Other"

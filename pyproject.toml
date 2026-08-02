@@ -1,0 +1,27 @@
+[project]
+name = "kpolimis-github-io"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "C90", "UP", "B", "D"]
+ignore = [
+    "D100",   # missing module docstring — not required for .qmd notebook cells
+    "D104",   # missing public package docstring
+    "D203",   # one-blank-line-before-class (conflicts with D211)
+    "D213",   # multi-line-summary-second-line (conflicts with D212)
+    "E501",   # line too long — handled by formatter, not linter
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]   # no docstrings required in test files
