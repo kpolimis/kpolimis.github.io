@@ -13,7 +13,7 @@ The majority of the 52 teams are split into three other trajectories. Some joine
 
 I wanted to see the league's history unfold and visualize club trajectories in one chart. Also, the chance to use a data-driven statistical approach to cluster the teams was a puzzle I found interesting.
 
-I also must confess that I'm an Arsenal fan — since 2005, a year after they last won the league. The Invincibles were the team I arrived too late to celebrate. My Gunner viewing experience consisted of twenty-two years of (mostly) top-four finishes, an appreciation for Wenger's imprint on the game (nutrition, training), but sadly, since that historic and undefeated 2004 season, twenty-two years of watching the title go somewhere else.
+I also must confess that I'm an Arsenal fan — since 2005, a year after they last won the league. The Invincibles were the team I arrived too late to celebrate. My Gunner viewing experience consisted of twenty-two years of (mostly) top-four finishes, an appreciation for Wenger's imprint on the game (tactics, nutrition, training), but sadly, since that historic and undefeated 2004 season, twenty-two years of watching the title go somewhere else.
 
 ---
 
