@@ -109,3 +109,14 @@ _freeze/
 /.quarto/
 **/*.quarto_ipynb
 cache/
+
+# Jupyter execution cache
+.jupyter_cache/
+**/.jupyter_cache/
+
+# Data-fetch script artifacts
+downloaded_files/
+**/downloaded_files/
+
+# R session history
+*.Rhistory
