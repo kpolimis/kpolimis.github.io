@@ -59,6 +59,15 @@ def _bar_colour(name: str) -> str:
 
 # ── Load WC player data ───────────────────────────────────────────────────────
 players = pd.read_csv(f"{WC_DATA}/wc_players.csv")
+
+# Schema guard: catch FBref/soccerdata column renames before charts render
+_REQUIRED = {"player", "nation", "club", "league", "minutes", "goals", "assists"}
+_missing_cols = _REQUIRED - set(players.columns)
+if _missing_cols:
+    raise ValueError(f"wc_players.csv is missing expected columns: {_missing_cols}. "
+                     "Re-run fetch_wc_data.py — FBref schema may have changed.")
+del _missing_cols
+
 epl_players = players[players["league"] == "EPL"].copy()
 epl_players["club"] = epl_players["club"].str.replace(r"^\d+\. ", "", regex=True).str.strip()
 

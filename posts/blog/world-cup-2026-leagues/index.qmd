@@ -32,6 +32,20 @@ leagues = pd.read_csv(f"{DATA_DIR}/wc_leagues.csv")
 players = pd.read_csv(f"{DATA_DIR}/wc_players.csv")
 rounds  = pd.read_csv(f"{DATA_DIR}/wc_rounds.csv")
 
+# ── Schema guard: catch FBref/soccerdata column renames before charts render ──
+_SCHEMAS = {
+    "wc_leagues": {"league", "total_minutes", "total_goals", "total_assists",
+                   "player_count", "ga_per90", "goals_per90"},
+    "wc_players": {"player", "nation", "club", "league", "minutes", "goals", "assists"},
+    "wc_rounds":  {"nation", "round_num", "round_reached"},
+}
+for _name, _df in [("wc_leagues", leagues), ("wc_players", players), ("wc_rounds", rounds)]:
+    _missing = _SCHEMAS[_name] - set(_df.columns)
+    if _missing:
+        raise ValueError(f"{_name}.csv is missing expected columns: {_missing}. "
+                         "Re-run fetch_wc_data.py — FBref schema may have changed.")
+del _name, _df, _missing
+
 TOP_N = 15  # leagues to show in primary charts
 
 # Colour palette: EPL highlighted, others muted
