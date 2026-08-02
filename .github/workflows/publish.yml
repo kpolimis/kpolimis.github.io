@@ -12,6 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lint dependencies
+        run: pip install ruff
+
+      - name: Lint
+        run: ruff check posts/blog/world-cup-2026-leagues/fetch_wc_data.py
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
