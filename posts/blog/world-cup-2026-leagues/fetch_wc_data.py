@@ -294,7 +294,10 @@ def report_unmapped(players: pd.DataFrame, top_n: int = 30) -> None:
 
 def main() -> None:
     """Entry point: fetch, aggregate, and save 2026 World Cup data files."""
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    )
 
     parser = argparse.ArgumentParser(description="Fetch 2026 WC data via soccerdata")
     parser.add_argument("--refresh", action="store_true",
