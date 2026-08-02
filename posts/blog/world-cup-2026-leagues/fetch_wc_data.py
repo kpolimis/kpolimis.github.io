@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import re
 import sys
@@ -29,6 +30,8 @@ import warnings
 import pandas as pd
 
 warnings.filterwarnings("ignore")
+
+logger = logging.getLogger(__name__)
 
 # ── footy (club registry + league normalizer) ──────────────────────────────────
 # Prefer the installed package; fall back to the local editable checkout.
@@ -42,7 +45,7 @@ try:
     HAS_FOOTY = True
 except ImportError:
     HAS_FOOTY = False
-    print("WARNING: footy not found. Club→league mapping will be degraded.")
+    logger.warning("footy not found. Club→league mapping will be degraded.")
 
 # ── Output directory ──────────────────────────────────────────────────────────
 DATA_DIR = "data"
@@ -97,6 +100,15 @@ def club_to_league(raw_club: str) -> str:
 # ── Fetch player stats ────────────────────────────────────────────────────────
 
 def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
+    """Fetch per-player standard stats for the 2026 World Cup via FBref.
+
+    Args:
+        no_cache: If True, bypass soccerdata cache and re-fetch from FBref.
+
+    Returns:
+        DataFrame with one row per player: player, nation, club, league,
+        minutes, goals, assists, and supporting columns.
+    """
     import soccerdata as sd  # import here so script is importable without it
 
     fbref = sd.FBref(leagues="INT-World Cup", seasons=2026, no_cache=no_cache)
@@ -142,14 +154,23 @@ def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    print(f"  {len(df)} players loaded; {df['league'].nunique()} distinct leagues")
-    print(f"  coverage: {(df['league'] != 'Other').mean():.1%} of players mapped to a known league")
+    logger.info("%d players loaded; %d distinct leagues", len(df), df["league"].nunique())
+    logger.info("%.1f%% of players mapped to a known league",
+                (df["league"] != "Other").mean() * 100)
     return df
 
 
 # ── Fetch tournament round results ────────────────────────────────────────────
 
 def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
+    """Derive the furthest tournament round reached by each national team.
+
+    Args:
+        no_cache: If True, bypass soccerdata cache and re-fetch from FBref.
+
+    Returns:
+        DataFrame with one row per nation: nation, round_num, round_reached.
+    """
     import soccerdata as sd
 
     fbref   = sd.FBref(leagues="INT-World Cup", seasons=2026, no_cache=no_cache)
@@ -176,13 +197,23 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
         for team, rnd_num in team_max.items()
     ]
     df = pd.DataFrame(records).sort_values("round_num", ascending=False)
-    print(f"  {len(df)} nations tracked; deepest round: {df['round_reached'].iloc[0]}")
+    logger.info("%d nations tracked; deepest round: %s",
+                len(df), df["round_reached"].iloc[0])
     return df
 
 
 # ── League aggregation ────────────────────────────────────────────────────────
 
 def build_league_stats(players: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate player stats to the league level.
+
+    Args:
+        players: Output of fetch_player_stats().
+
+    Returns:
+        DataFrame with one row per league: total_minutes, goals, assists,
+        player_count, ga_per90, goals_per90.
+    """
     agg = (
         players
         .groupby("league", dropna=False)
@@ -204,6 +235,15 @@ def build_league_stats(players: pd.DataFrame) -> pd.DataFrame:
 # ── EPL club aggregation ──────────────────────────────────────────────────────
 
 def build_epl_club_stats(players: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate EPL player stats to the club level.
+
+    Args:
+        players: Output of fetch_player_stats().
+
+    Returns:
+        DataFrame with one row per EPL club: wc_minutes, goals, assists,
+        player_count, ga_per90.
+    """
     epl = players[players["league"] == "EPL"].copy()
     agg = (
         epl
@@ -225,6 +265,12 @@ def build_epl_club_stats(players: pd.DataFrame) -> pd.DataFrame:
 # ── Unknown clubs report ───────────────────────────────────────────────────────
 
 def report_unmapped(players: pd.DataFrame, top_n: int = 30) -> None:
+    """Log the clubs whose league could not be resolved via footy.
+
+    Args:
+        players: Output of fetch_player_stats().
+        top_n: Number of unmapped clubs to log, ordered by total minutes.
+    """
     unmapped = (
         players[players["league"] == "Other"]
         .groupby("club")
@@ -233,38 +279,40 @@ def report_unmapped(players: pd.DataFrame, top_n: int = 30) -> None:
         .head(top_n)
     )
     if unmapped.empty:
-        print("  All clubs mapped.")
+        logger.info("All clubs mapped.")
         return
     total_unmapped = players[players["league"] == "Other"]["minutes"].sum()
     total          = players["minutes"].sum()
-    print(f"  Unmapped minutes: {total_unmapped:,.0f} of {total:,.0f} "
-          f"({total_unmapped / total:.1%})")
-    print(f"  Top unmapped clubs by minutes:")
-    print(unmapped.to_string())
-    print()
-    print("  To improve coverage, add these clubs to footy/clubs.py.")
+    logger.warning("Unmapped minutes: %s of %s (%.1f%%)",
+                   f"{total_unmapped:,.0f}", f"{total:,.0f}",
+                   total_unmapped / total * 100)
+    logger.info("Top unmapped clubs by minutes:\n%s", unmapped.to_string())
+    logger.info("To improve coverage, add these clubs to footy/clubs.py.")
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    """Entry point: fetch, aggregate, and save 2026 World Cup data files."""
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+
     parser = argparse.ArgumentParser(description="Fetch 2026 WC data via soccerdata")
     parser.add_argument("--refresh", action="store_true",
                         help="Re-fetch from FBref (opens Chrome, may show CAPTCHA)")
     args = parser.parse_args()
     no_cache = args.refresh
 
-    print("Fetching player stats...")
+    logger.info("Fetching player stats...")
     players = fetch_player_stats(no_cache=no_cache)
 
-    print("Fetching team round results...")
+    logger.info("Fetching team round results...")
     rounds = fetch_team_rounds(no_cache=no_cache)
 
-    print("Building aggregates...")
+    logger.info("Building aggregates...")
     leagues   = build_league_stats(players)
     epl_clubs = build_epl_club_stats(players)
 
-    print("\nUnmapped clubs (add to footy to improve league coverage):")
+    logger.info("Unmapped clubs (add to footy to improve league coverage):")
     report_unmapped(players)
 
     players.to_csv(f"{DATA_DIR}/wc_players.csv",   index=False)
@@ -272,18 +320,14 @@ def main() -> None:
     leagues.to_csv(f"{DATA_DIR}/wc_leagues.csv",   index=False)
     epl_clubs.to_csv(f"{DATA_DIR}/wc_epl_clubs.csv", index=False)
 
-    print(f"\nSaved:")
-    print(f"  {DATA_DIR}/wc_players.csv   ({len(players)} rows)")
-    print(f"  {DATA_DIR}/wc_rounds.csv    ({len(rounds)} rows)")
-    print(f"  {DATA_DIR}/wc_leagues.csv   ({len(leagues)} rows)")
-    print(f"  {DATA_DIR}/wc_epl_clubs.csv ({len(epl_clubs)} rows)")
-    print()
-    print("Top 12 leagues by minutes:")
-    print(
-        leagues[["league", "total_minutes", "ga_per90", "player_count"]]
-        .head(12)
-        .to_string(index=False)
-    )
+    logger.info("Saved:")
+    logger.info("  %s/wc_players.csv   (%d rows)", DATA_DIR, len(players))
+    logger.info("  %s/wc_rounds.csv    (%d rows)", DATA_DIR, len(rounds))
+    logger.info("  %s/wc_leagues.csv   (%d rows)", DATA_DIR, len(leagues))
+    logger.info("  %s/wc_epl_clubs.csv (%d rows)", DATA_DIR, len(epl_clubs))
+    logger.info("Top 12 leagues by minutes:\n%s",
+                leagues[["league", "total_minutes", "ga_per90", "player_count"]]
+                .head(12).to_string(index=False))
 
 
 if __name__ == "__main__":
