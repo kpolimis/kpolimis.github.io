@@ -1,0 +1,286 @@
+---
+title: "What the Bookmakers Know: Predicting the 2026/27 Premier League Table"
+date: "2026-08-20"
+author: "Kivan Polimis"
+description: "Vegas has Arsenal at +120 to defend their title. I convert the 2026/27 futures market into fair probabilities, strip out the bookmaker's margin, and check the one number that matters — over the last ten seasons, how often did the preseason favorite actually deliver?"
+categories: [sports, football, premier-league, statistics, betting, data-viz]
+draft: false
+jupyter: blog
+---
+
+```{python}
+#| label: setup
+#| include: false
+
+import json
+import os
+import sys
+
+import altair as alt
+import numpy as np
+import pandas as pd
+
+# ── footy helpers (shared) ────────────────────────────────────────────────────
+sys.path.insert(0, os.path.join(os.getcwd(), ".."))
+from _utils import _colour, _logo, _bar_colour  # noqa: E402
+
+# ── EPL standings (verified finishes, same source as the other footy posts) ───
+EPL_DATA = "../../../../epl-standings/data/standings_verified.json"
+if not os.path.exists(EPL_DATA):
+    raise FileNotFoundError(f"Missing {EPL_DATA} — clone kpolimis/epl-standings alongside this repo")
+with open(EPL_DATA) as f:
+    standings = json.load(f)
+
+# ── 2026/27 title futures (consensus American odds, August 2026) ──────────────
+title_odds = {
+    "Arsenal": 120, "Manchester City": 350, "Liverpool": 550, "Chelsea": 800,
+    "Manchester United": 900, "Tottenham": 2200, "Aston Villa": 5000,
+    "Newcastle United": 20000, "Brighton & Hove Albion": 20000, "Everton": 25000,
+    "Crystal Palace": 25000, "Brentford": 25000, "Bournemouth": 25000,
+    "Leeds United": 25000, "Sunderland": 50000, "Fulham": 50000,
+    "Nottingham Forest": 50000, "Coventry City": 100000, "Ipswich Town": 150000,
+    "Hull City": 200000,
+}
+
+# ── 2026/27 relegation futures (American odds; negative = odds-on) ─────────────
+releg_odds = {
+    "Hull City": -850, "Ipswich Town": -140, "Coventry City": -140,
+    "Sunderland": 300, "Fulham": 500, "Crystal Palace": 550, "Leeds United": 600,
+    "Newcastle United": 800, "Nottingham Forest": 900, "Brentford": 900,
+    "Everton": 1000, "Bournemouth": 1000, "Manchester City": 1200,
+    "Brighton & Hove Albion": 2800, "Tottenham": 4500, "Aston Villa": 6500,
+    "Chelsea": 8000, "Manchester United": 50000, "Liverpool": 70000,
+    "Arsenal": 100000,
+}
+
+def american_to_prob(a: int) -> float:
+    """Implied win probability from American moneyline odds."""
+    return 100.0 / (a + 100.0) if a > 0 else (-a) / (-a + 100.0)
+
+# ── Title market: raw implied, then de-vigged to a fair distribution ──────────
+title = pd.DataFrame({"club": list(title_odds), "odds": list(title_odds.values())})
+title["raw"]    = title["odds"].apply(american_to_prob)
+OVERROUND       = title["raw"].sum()            # sums to > 1 by the vig
+title["fair"]   = title["raw"] / OVERROUND      # normalise the margin away
+title["colour"] = title["club"].apply(_bar_colour)
+title["logo"]   = title["club"].apply(_logo)
+title["odds_label"] = title["odds"].apply(lambda a: f"+{a}")
+VIG_PCT = (OVERROUND - 1) * 100
+
+# ── Relegation market: implied P(relegated) per club, raw ─────────────────────
+releg = pd.DataFrame({"club": list(releg_odds), "odds": list(releg_odds.values())})
+releg["prob"]   = releg["odds"].apply(american_to_prob)
+releg["colour"] = releg["club"].apply(_bar_colour)
+releg["logo"]   = releg["club"].apply(_logo)
+releg = releg.sort_values("prob", ascending=False)
+
+# ── Last 10 seasons: preseason favorite vs where they actually finished ───────
+# Favorite = consensus August title line. Finishes/champions read from the data.
+favorites = {
+    "2016/17": "Manchester City", "2017/18": "Manchester City",
+    "2018/19": "Manchester City", "2019/20": "Manchester City",
+    "2020/21": "Manchester City", "2021/22": "Manchester City",
+    "2022/23": "Manchester City", "2023/24": "Manchester City",
+    "2024/25": "Manchester City", "2025/26": "Liverpool",
+}
+
+def finish_of(season: str, club: str) -> int:
+    """Look a club's finishing position up in the verified table, tolerant of name form."""
+    table = standings[season]
+    if club in table:
+        return table[club]
+    key = footy_key(club)
+    for name, pos in table.items():
+        if footy_key(name) == key:
+            return pos
+    raise KeyError(f"{club} not found in {season}")
+
+import footy  # noqa: E402
+def footy_key(name: str) -> str:
+    try:
+        return footy.normalise(name)
+    except KeyError:
+        return name.lower()
+
+rows = []
+for season, fav in favorites.items():
+    champ = next(c for c, p in standings[season].items() if p == 1)
+    rows.append({
+        "season": season,
+        "favorite": fav,
+        "fav_finish": finish_of(season, fav),
+        "champion": champ,
+        "hit": footy_key(fav) == footy_key(champ),
+    })
+history = pd.DataFrame(rows)
+history["colour"] = history["favorite"].apply(_bar_colour)
+history["logo"]   = history["favorite"].apply(_logo)
+history["outcome"] = np.where(history["hit"], "Favorite won", "Favorite fell short")
+
+HITS      = int(history["hit"].sum())
+N_SEASONS = len(history)
+TOP3      = int((history["fav_finish"] <= 3).sum())
+```
+
+The 2026/27 [Premier League](https://www.premierleague.com/en) season kicks off this weekend, and for the first time in twenty-two years I get to watch it as a fan of the defending champions. Arsenal won last season by seven points — their first title since the [Invincibles](https://en.wikipedia.org/wiki/Arsenal_F.C._Invincibles) of 2003/04 — and the sportsbooks have noticed. Arsenal open at +120 to do it again, clear of Manchester City (+350) and Liverpool (+550).
+
+I could just tell you who I think wins. Instead I want to do something more honest: read the odds as a probability distribution, because that is what they are. A betting line is a crowd-sourced forecast with real money enforcing discipline on it, and it is usually a sharper predictor than any pundit. My question for this post is narrow — when the market names a favorite in August, how often is it right in May?
+
+## From odds to probabilities (and the vig hiding inside them)
+
+The futures prices are quoted in American odds, so the first job is translation. A line of +120 means a \$100 bet returns \$120 in profit, which implies a win probability of 100 / (120 + 100), or about 45.5%. Do that for every club and you get the market's stated chance for each.
+
+There is a catch. Those implied probabilities do not sum to 100% — they sum to a good deal more. The excess is the [overround](https://en.wikipedia.org/wiki/Mathematics_of_bookmaking), the bookmaker's margin, the reason the house wins over time. To recover a fair estimate I normalize each raw probability by the total, which strips the margin out and leaves a distribution that actually integrates to one.
+
+```{python}
+#| label: tbl-title-market
+#| echo: false
+
+_disp = (title.loc[title["odds"] <= 5000, ["club", "odds_label", "raw", "fair"]]
+         .rename(columns={"club": "Club", "odds_label": "Odds",
+                          "raw": "Raw implied", "fair": "Fair probability"}))
+_disp["Raw implied"]      = (_disp["Raw implied"] * 100).map("{:.1f}%".format)
+_disp["Fair probability"] = (_disp["Fair probability"] * 100).map("{:.1f}%".format)
+print(f"Raw implied probabilities sum to {OVERROUND*100:.1f}%  →  bookmaker's margin = {VIG_PCT:.1f}%")
+_disp.reset_index(drop=True).style.hide(axis="index")
+```
+
+The de-vigged column is the honest one. Here is the same market as a picture, each club in its own colors:
+
+```{python}
+#| label: chart-title-race
+#| fig-cap: "2026/27 title race: fair (de-vigged) probability by club. Bar colour is the club's brand colour; badge sits at the axis label. Only clubs shorter than 500-to-1 shown."
+
+race = title[title["odds"] <= 5000].copy()
+race["fair_pct"]  = (race["fair"] * 100).round(1)
+race["fair_lbl"]  = race["fair_pct"].map(lambda x: f"{x:.1f}%")
+sort_field = alt.EncodingSortField(field="fair", order="descending")
+base = alt.Chart(race)
+
+bars = base.mark_bar().encode(
+    x=alt.X("fair_pct:Q", axis=alt.Axis(title="Fair probability of winning the title (%)")),
+    y=alt.Y("club:N", sort=sort_field, axis=alt.Axis(title=None, labelPadding=28)),
+    color=alt.Color("colour:N", scale=None, legend=None),
+    tooltip=[
+        alt.Tooltip("club:N",        title="Club"),
+        alt.Tooltip("odds_label:N",  title="Odds"),
+        alt.Tooltip("fair_pct:Q",    title="Fair prob", format=".1f"),
+    ],
+)
+axis_logos = base.mark_image(width=20, height=20, clip=False).encode(
+    x=alt.value(-15), y=alt.Y("club:N", sort=sort_field), url="logo:N",
+)
+end_labels = base.mark_text(align="left", dx=5, fontSize=10, color="#333333").encode(
+    x=alt.X("fair_pct:Q"), y=alt.Y("club:N", sort=sort_field), text="fair_lbl:N",
+)
+(bars + axis_logos + end_labels).properties(
+    width=620, height=300,
+    title="Arsenal Favored, but the Market Prices an Open Race",
+).interactive()
+```
+
+The favorites tag flatters Arsenal. A fair probability near 40% is the market saying, in the same breath, that there is a roughly 60% chance someone else lifts the trophy. That is not a hedge. It is what a genuinely open five-team race looks like when you price it.
+
+## How often is the August favorite right?
+
+This is the number I actually care about, so I pulled the last ten completed seasons and lined up each year's preseason favorite against where that club finished. The finishing positions come from my own [verified standings data](../epl-standings/) — the same source behind the [EPL Standings post](../epl-standings/) — and the favorites are the consensus August lines.
+
+```{python}
+#| label: chart-favorite-accuracy
+#| fig-cap: "Each badge is the preseason title favorite, placed at the position it actually finished (1 = champion). Green rule marks a hit; the favorite finished top-three every year but one."
+
+hist = history.copy()
+hist["season_lbl"] = hist["season"]
+season_order = list(favorites.keys())
+
+# Shade the champion's row-position band (1st place) so hits read at a glance
+win_rule = alt.Chart(pd.DataFrame({"x": [1]})).mark_rule(
+    color="#2ca02c", strokeDash=[4, 3], opacity=0.7).encode(x="x:Q")
+
+badges = alt.Chart(hist).mark_image(width=26, height=26).encode(
+    x=alt.X("fav_finish:Q",
+            scale=alt.Scale(domain=[0, 6], reverse=False),
+            axis=alt.Axis(title="Where the preseason favorite finished",
+                          values=[1, 2, 3, 4, 5])),
+    y=alt.Y("season_lbl:N", sort=season_order, axis=alt.Axis(title=None)),
+    url="logo:N",
+    tooltip=[
+        alt.Tooltip("season:N",     title="Season"),
+        alt.Tooltip("favorite:N",   title="Preseason favorite"),
+        alt.Tooltip("fav_finish:Q", title="Finished"),
+        alt.Tooltip("champion:N",   title="Actual champion"),
+    ],
+)
+champ_txt = alt.Chart(hist).mark_text(align="left", dx=18, fontSize=10,
+                                      color="#555555").encode(
+    x=alt.X("fav_finish:Q"), y=alt.Y("season_lbl:N", sort=season_order),
+    text=alt.Text("champion:N"),
+)
+(win_rule + badges + champ_txt).properties(
+    width=520, height=360,
+    title="The Favorite Is Rarely Wrong About Who Is Good, Often Wrong About the Order",
+).interactive()
+```
+
+```{python}
+#| label: favorite-summary
+#| echo: false
+print(f"Preseason favorite won the title in {HITS} of the last {N_SEASONS} seasons "
+      f"({HITS/N_SEASONS:.0%}).")
+print(f"Preseason favorite finished top-three in {TOP3} of {N_SEASONS} seasons.")
+```
+
+Two things fall out of this chart. The preseason favorite won the title in six of the last ten seasons, a hit rate any forecaster would take. And in the four seasons the favorite fell short, it still finished in the top three every time but one. The market is rarely wrong about who is good — it is often wrong about the exact order.
+
+The single exception is instructive, and it is recent. Last season Liverpool went in as favorites — the first August in a decade the line did not read Manchester City — and they finished fifth while the team they were supposed to hold off ran away with it. For instance, the model that would have served you best for nine straight years, "back Manchester City and go do something else," is exactly the model that would have burned you in the one year City were not the pick. This suggests some caution about the deeper reading of these numbers: a favorite that is right nine times can train you to stop asking why, right up until the tenth season charges the tuition.
+
+And none of this touches the real outlier. [Leicester City](https://en.wikipedia.org/wiki/2015%E2%80%9316_Leicester_City_F.C._season) won the league at 5000-to-1 in 2015/16, one season outside my window. On the fair-probability scale above, that is a 0.02% event that happened. The market is calibrated, not clairvoyant, and the difference is where the fun lives.
+
+## The relegation mirror
+
+The relegation market is the title market's reflection, and it is far more decisive. The bookmakers have all three promoted sides going straight back down, and the implied probabilities at the very bottom are steep.
+
+```{python}
+#| label: chart-relegation
+#| fig-cap: "Implied probability of relegation per club (raw, from the drop market). Each club in its own colours; badge at the axis label."
+
+rel = releg[releg["prob"] >= 0.05].copy()   # drop the near-zero survivors
+rel["prob_pct"] = (rel["prob"] * 100).round(0)
+rel["prob_lbl"] = rel["prob_pct"].map(lambda x: f"{x:.0f}%")
+rsort = alt.EncodingSortField(field="prob", order="descending")
+rbase = alt.Chart(rel)
+
+rbars = rbase.mark_bar().encode(
+    x=alt.X("prob_pct:Q", axis=alt.Axis(title="Implied probability of relegation (%)")),
+    y=alt.Y("club:N", sort=rsort, axis=alt.Axis(title=None, labelPadding=28)),
+    color=alt.Color("colour:N", scale=None, legend=None),
+    tooltip=[
+        alt.Tooltip("club:N",      title="Club"),
+        alt.Tooltip("prob_pct:Q",  title="Relegation prob", format=".0f"),
+    ],
+)
+rlogos = rbase.mark_image(width=18, height=18, clip=False).encode(
+    x=alt.value(-14), y=alt.Y("club:N", sort=rsort), url="logo:N",
+)
+rlabels = rbase.mark_text(align="left", dx=5, fontSize=10, color="#333333").encode(
+    x=alt.X("prob_pct:Q"), y=alt.Y("club:N", sort=rsort), text="prob_lbl:N",
+)
+(rbars + rlogos + rlabels).properties(
+    width=620, height=380,
+    title="The Market Has All Three Promoted Sides Going Straight Back Down",
+).interactive()
+```
+
+Hull City are effectively written off before a ball is kicked. The caution I would flag here is the one the promoted clubs know best: the market's prior against newcomers is heavy, and it is self-reinforcing, because the same pessimism that sets the odds also sets the transfer budget. Leicester, again, is the standing reminder that priors are not verdicts.
+
+At the other end of the pitch, the [Golden Boot](https://en.wikipedia.org/wiki/List_of_Premier_League_top_scorers) market barely qualifies as a market. Erling Haaland is -135, which de-vigs to roughly a 55% chance he outscores every other player in the league by himself. Alexander Isak (+1100) and Viktor Gyokeres (+1400) lead a distant chase.
+
+## What I actually think
+
+I will give you a prediction, but now you know exactly how much to trust it: Arsenal, Manchester City, Liverpool, Chelsea, in that order, with Manchester United the fifth-place side most likely to gatecrash the four.
+
+That top four is close to what you would get by sorting the fair-probability column and walking down it — which is the point. When the market is this confident and this well calibrated, the honest forecast is not a contrarian one. It is the market's forecast, with the margin removed and the humility left in. I have Arsenal first because the numbers do, and because after twenty-two years I have earned the right to read a spreadsheet with my heart. Ask me again in May.
+
+---
+
+*Title, relegation, and Golden Boot odds are consensus August 2026 lines. Finishing positions from my [verified EPL standings](../epl-standings/). Club colours and logos from [footy](https://github.com/kpolimis/football). Code: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*
