@@ -176,17 +176,21 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
     fbref   = sd.FBref(leagues="INT-World Cup", seasons=2026, no_cache=no_cache)
     sched   = fbref.read_schedule().reset_index()
 
-    team_max: dict[str, int] = {}
-    for _, row in sched.iterrows():
-        rnd       = str(row.get("round", "")).strip()
-        home      = str(row.get("home_team", "")).strip()
-        away      = str(row.get("away_team", "")).strip()
-        rnd_num   = ROUND_ORDER.get(rnd, 0)
-        if rnd_num == 0:
-            continue
-        for team in [home, away]:
-            if team and team.lower() != "nan":
-                team_max[team] = max(team_max.get(team, 0), rnd_num)
+    sched["_rnd_num"] = (
+        sched["round"].astype(str).str.strip().map(ROUND_ORDER).fillna(0).astype(int)
+    )
+    valid = sched.loc[sched["_rnd_num"] > 0, ["home_team", "away_team", "_rnd_num"]]
+    long = pd.concat(
+        [
+            valid.rename(columns={"home_team": "nation"})[["nation", "_rnd_num"]],
+            valid.rename(columns={"away_team": "nation"})[["nation", "_rnd_num"]],
+        ],
+        ignore_index=True,
+    )
+    long = long.loc[
+        long["nation"].astype(str).str.lower().ne("nan") & long["nation"].astype(str).ne("")
+    ]
+    team_max: dict[str, int] = long.groupby("nation")["_rnd_num"].max().to_dict()
 
     records = [
         {
