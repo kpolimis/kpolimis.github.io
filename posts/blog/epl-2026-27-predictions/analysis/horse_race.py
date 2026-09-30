@@ -150,6 +150,7 @@ def season_block_bootstrap(
     rows: list[dict] = []
     for checkpoint in diffs["checkpoint"].unique():
         sub = diffs.loc[diffs["checkpoint"] == checkpoint]
+        assert sub["season"].is_unique, "season_block_bootstrap requires one row per season"
         values = sub[metrics].to_numpy(dtype=float)  # (n_seasons, n_metrics)
         n_seasons = values.shape[0]
         idx = rng.integers(0, n_seasons, size=(n_boot, n_seasons))
@@ -182,6 +183,7 @@ def sign_test(diffs: pd.Series) -> float:
         The two-sided p-value.
     """
     clean = diffs.dropna()
+    clean = clean[clean != 0]  # exact sign test discards ties
     n_wins = int((clean < 0).sum())  # negative = checkpoint beats the baseline
     return float(binomtest(n_wins, n=len(clean), p=0.5, alternative="two-sided").pvalue)
 

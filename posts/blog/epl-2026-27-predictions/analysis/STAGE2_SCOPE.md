@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Stage 2 scope — fit, simulate, horse-race
 
 _Scoping + scaffolding for Stage 2 of the Week-1 overreaction study

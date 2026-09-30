@@ -22,6 +22,8 @@ from footy_stats.models.poisson import _dc_grid
 
 from analysis.params import LinkParams
 
+_MAX_GOALS: int = 10
+
 
 @dataclass(frozen=True)
 class SupremacyTransport:
@@ -76,7 +78,7 @@ class SupremacyTransport:
             probabilities, home goals on the first axis.
         """
         lam_h, lam_a = self.expected_goals(home_id, away_id)
-        return _dc_grid(lam_h, lam_a, self.link.rho, max_goals=10)
+        return _dc_grid(lam_h, lam_a, self.link.rho, max_goals=_MAX_GOALS)
 
     def match_probs(self, home_id: str, away_id: str) -> tuple[float, float, float]:
         """Return de-correlated 1X2 probabilities for one fixture.

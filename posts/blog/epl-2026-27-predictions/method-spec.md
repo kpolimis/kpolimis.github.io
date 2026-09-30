@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Week-1 Overreaction Study — Method Spec
 
 _Finalized method spec for the EPL 2026/27 predictions post. Drafted 2026-08-22,

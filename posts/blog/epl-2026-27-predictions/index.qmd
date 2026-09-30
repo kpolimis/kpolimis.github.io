@@ -1,8 +1,8 @@
 ---
-title: "What the Bookmakers Know: Predicting the 2026/27 Premier League Table"
-date: "2026-08-20"
+title: "Week One Told You Nothing"
+date: "2026-09-26"
 author: "Kivan Polimis"
-description: "Vegas has Arsenal at +120 to defend their title. I convert the 2026/27 futures market into fair probabilities, strip out the bookmaker's margin, and check the one number that matters — over the last ten seasons, how often did the preseason favorite actually deliver?"
+description: "I ran an 18-season LOSO horse race — prior, rational updater, market posterior — to ask whether the Week-2 odds are actually better forecasts than the preseason odds were. They are not."
 categories: [sports, football, premier-league, statistics, betting, data-viz]
 draft: false
 jupyter: blog
@@ -22,265 +22,219 @@ import pandas as pd
 
 # ── footy helpers (shared) ────────────────────────────────────────────────────
 sys.path.insert(0, os.path.join(os.getcwd(), ".."))
-from _utils import _colour, _logo, _bar_colour  # noqa: E402
+from _utils import _bar_colour  # noqa: E402
 
-# ── EPL standings (verified finishes, same source as the other footy posts) ───
-EPL_DATA = "../../../../epl-standings/data/standings_verified.json"
-if not os.path.exists(EPL_DATA):
-    raise FileNotFoundError(f"Missing {EPL_DATA} — clone kpolimis/epl-standings alongside this repo")
-with open(EPL_DATA) as f:
-    standings = json.load(f)
+DATA_DIR = "data"
 
-# ── 2026/27 title futures (consensus American odds, August 2026) ──────────────
-title_odds = {
-    "Arsenal": 120, "Manchester City": 350, "Liverpool": 550, "Chelsea": 800,
-    "Manchester United": 900, "Tottenham": 2200, "Aston Villa": 5000,
-    "Newcastle United": 20000, "Brighton & Hove Albion": 20000, "Everton": 25000,
-    "Crystal Palace": 25000, "Brentford": 25000, "Bournemouth": 25000,
-    "Leeds United": 25000, "Sunderland": 50000, "Fulham": 50000,
-    "Nottingham Forest": 50000, "Coventry City": 100000, "Ipswich Town": 150000,
-    "Hull City": 200000,
-}
+# ── Wave 1: full-sample descriptives (labelled: NOT out-of-sample) ────────────
+with open(f"{DATA_DIR}/wave1_results.json") as f:
+    w1 = json.load(f)
+BETA_MARKET = w1["beta_market"]["constrained"]
+SE_MARKET   = w1["beta_market"]["constrained_se"]
+N_MATCHES   = w1["beta_market"]["n_matches"]
+N_SEASONS   = w1["beta_market"]["n_seasons"]
+K_COMM      = w1["k_hat_commensurated_slope"]
+RATIO       = w1["overreaction_ratio"]
+GAP         = BETA_MARKET - K_COMM
+PRIOR_R     = w1["sanity_gates"]["prior_vs_final_points_r"]
 
-# ── 2026/27 relegation futures (American odds; negative = odds-on) ─────────────
-releg_odds = {
-    "Hull City": -850, "Ipswich Town": -140, "Coventry City": -140,
-    "Sunderland": 300, "Fulham": 500, "Crystal Palace": 550, "Leeds United": 600,
-    "Newcastle United": 800, "Nottingham Forest": 900, "Brentford": 900,
-    "Everton": 1000, "Bournemouth": 1000, "Manchester City": 1200,
-    "Brighton & Hove Albion": 2800, "Tottenham": 4500, "Aston Villa": 6500,
-    "Chelsea": 8000, "Manchester United": 50000, "Liverpool": 70000,
-    "Arsenal": 100000,
-}
+# ── Wave 2: LOSO horse race (18 folds, 10K sims per checkpoint) ───────────────
+with open(f"{DATA_DIR}/wave2_results.json") as f:
+    w2 = json.load(f)
+loso_scores = pd.read_parquet(f"{DATA_DIR}/loso_scores.parquet")
+loso_boot   = pd.read_parquet(f"{DATA_DIR}/loso_boot.parquet")
+loso_diffs  = pd.read_parquet(f"{DATA_DIR}/loso_diffs.parquet")
 
-def american_to_prob(a: int) -> float:
-    """Implied win probability from American moneyline odds."""
-    return 100.0 / (a + 100.0) if a > 0 else (-a) / (-a + 100.0)
+# ── Wave 3: decay curve (full-sample descriptive, NOT LOSO) ───────────────────
+decay = pd.read_parquet(f"{DATA_DIR}/decay_curve.parquet")
 
-# ── Title market: raw implied, then de-vigged to a fair distribution ──────────
-title = pd.DataFrame({"club": list(title_odds), "odds": list(title_odds.values())})
-title["raw"]    = title["odds"].apply(american_to_prob)
-OVERROUND       = title["raw"].sum()            # sums to > 1 by the vig
-title["fair"]   = title["raw"] / OVERROUND      # normalise the margin away
-title["colour"] = title["club"].apply(_bar_colour)
-title["logo"]   = title["club"].apply(_logo)
-title["odds_label"] = title["odds"].apply(lambda a: f"+{a}")
-VIG_PCT = (OVERROUND - 1) * 100
+# ── Prior quality: strength vs final points, tier top-4 rates ─────────────────
+panel = pd.read_parquet(f"{DATA_DIR}/panel_priors.parquet")
+panel["club"] = (panel["club_id"].str.replace("epl:", "", regex=False)
+                                 .str.replace("-", " ").str.title())
+panel["season_lbl"] = ("20" + panel["season"].str[:2] + "/"
+                       + panel["season"].str[2:])
+panel["top4"] = panel["final_position"] <= 4
+tier_top4 = (panel.groupby("preseason_tier", observed=True)["top4"]
+                  .mean().reindex(["top", "mid", "bottom"]))
+R_CHECK = np.corrcoef(panel["prior_strength"], panel["final_points"])[0, 1]
 
-# ── Relegation market: implied P(relegated) per club, raw ─────────────────────
-releg = pd.DataFrame({"club": list(releg_odds), "odds": list(releg_odds.values())})
-releg["prob"]   = releg["odds"].apply(american_to_prob)
-releg["colour"] = releg["club"].apply(_bar_colour)
-releg["logo"]   = releg["club"].apply(_logo)
-releg = releg.sort_values("prob", ascending=False)
+# ── Convenience frames for the charts ─────────────────────────────────────────
+TARGET_LBL = {"brier_top4": "Top-4", "brier_releg": "Relegation"}
 
-# ── Last 10 seasons: preseason favorite vs where they actually finished ───────
-# Favorite = consensus August title line. Finishes/champions read from the data.
-favorites = {
-    "2016/17": "Manchester City", "2017/18": "Manchester City",
-    "2018/19": "Manchester City", "2019/20": "Manchester City",
-    "2020/21": "Manchester City", "2021/22": "Manchester City",
-    "2022/23": "Manchester City", "2023/24": "Manchester City",
-    "2024/25": "Manchester City", "2025/26": "Liverpool",
-}
+mean_scores = (loso_scores.groupby("checkpoint")[["brier_top4", "brier_releg"]]
+               .mean().reindex(["prior", "rational", "market"]))
 
-def finish_of(season: str, club: str) -> int:
-    """Look a club's finishing position up in the verified table, tolerant of name form."""
-    table = standings[season]
-    if club in table:
-        return table[club]
-    key = footy_key(club)
-    for name, pos in table.items():
-        if footy_key(name) == key:
-            return pos
-    raise KeyError(f"{club} not found in {season}")
+diff_long = (loso_diffs.loc[loso_diffs["checkpoint"] == "market",
+                            ["season", "brier_top4", "brier_releg"]]
+             .melt(id_vars="season", var_name="metric", value_name="diff"))
+diff_long["target"] = diff_long["metric"].map(TARGET_LBL)
+diff_long["season_lbl"] = ("20" + diff_long["season"].str[:2] + "/"
+                           + diff_long["season"].str[2:])
 
-import footy  # noqa: E402
-def footy_key(name: str) -> str:
-    try:
-        return footy.normalise(name)
-    except KeyError:
-        return name.lower()
-
-rows = []
-for season, fav in favorites.items():
-    champ = next(c for c, p in standings[season].items() if p == 1)
-    rows.append({
-        "season": season,
-        "favorite": fav,
-        "fav_finish": finish_of(season, fav),
-        "champion": champ,
-        "hit": footy_key(fav) == footy_key(champ),
-    })
-history = pd.DataFrame(rows)
-history["colour"] = history["favorite"].apply(_bar_colour)
-history["logo"]   = history["favorite"].apply(_logo)
-history["outcome"] = np.where(history["hit"], "Favorite won", "Favorite fell short")
-
-HITS      = int(history["hit"].sum())
-N_SEASONS = len(history)
-TOP3      = int((history["fav_finish"] <= 3).sum())
+boot_m = loso_boot[(loso_boot["checkpoint"] == "market")
+                   & loso_boot["metric"].isin(TARGET_LBL)].copy()
+boot_m["target"] = boot_m["metric"].map(TARGET_LBL)
 ```
 
-The 2026/27 [Premier League](https://www.premierleague.com/en) season kicks off this weekend, and for the first time in twenty-two years I get to watch it as a fan of the defending champions. Arsenal won last season by seven points — their first title since the [Invincibles](https://en.wikipedia.org/wiki/Arsenal_F.C._Invincibles) of 2003/04 — and the sportsbooks have noticed. Arsenal open at +120 to do it again, clear of Manchester City (+350) and Liverpool (+550).
+The 2026/27 [Premier League](https://www.premierleague.com/en) season opened last month, and the bookmakers did what they always do after an opening weekend: they moved. Teams that won saw their season odds shorten by Tuesday; teams that lost drifted out. The question I want to ask is not whether the market should have moved — new information arrived, and a price that ignores information is a worse price — but whether it should have moved *that much*.
 
-I could just tell you who I think wins. Instead I want to do something more honest: read the odds as a probability distribution, because that is what they are. A betting line is a crowd-sourced forecast with real money enforcing discipline on it, and it is usually a sharper predictor than any pundit. My question for this post is narrow — when the market names a favorite in August, how often is it right in May?
+The Bayesian framing makes the stakes precise. The preseason odds are the market's prior, the distillation of everything knowable before a ball is kicked. Week 1 is one observation — 1 of 38 matches, about 2.6% of the season's evidence, and a noisy 2.6% at that. The Week-2 odds are the market's posterior. A rational updater confronted with one match barely moves. If the market moves substantially more than the results justify, and seasons still end near the preseason prior anyway, the Week-1 move was overreaction. I have eighteen seasons of data to check.
 
-## From odds to probabilities (and the vig hiding inside them)
+## The prior is hard to beat
 
-The futures prices are quoted in American odds, so the first job is translation. A line of +120 means a \$100 bet returns \$120 in profit, which implies a win probability of 100 / (120 + 100), or about 45.5%. Do that for every club and you get the market's stated chance for each.
-
-There is a catch. Those implied probabilities do not sum to 100% — they sum to a good deal more. The excess is the [overround](https://en.wikipedia.org/wiki/Mathematics_of_bookmaking), the bookmaker's margin, the reason the house wins over time. To recover a fair estimate I normalize each raw probability by the total, which strips the margin out and leaves a distribution that actually integrates to one.
+Before asking whether the posterior overshoots, it is worth establishing what the prior is worth — because the preseason odds turn out to carry a startling amount of information. For every team in every season from 2008/09 through 2025/26 I built a preseason strength rating: a regression-toward-the-mean seed from last season's table, refined by the Week-1 closing lines, which are posted before any match is played. That prior strength correlates with final league points at r = 0.81. For instance, sort the 360 team-seasons into preseason terciles and the top tier goes on to finish in the top four 52% of the time, the middle tier 5% of the time, and the bottom tier never — not once in eighteen seasons. Whatever Week 1 tells the market, it is competing against a prior that already knows most of the answer.
 
 ```{python}
-#| label: tbl-title-market
+#| label: chart-prior-quality
 #| echo: false
+#| fig-cap: "Preseason prior strength against final league points, 360 team-seasons (2008/09–2025/26). Colour is the preseason tercile; the correlation is r = 0.81."
 
-_disp = (title.loc[title["odds"] <= 5000, ["club", "odds_label", "raw", "fair"]]
-         .rename(columns={"club": "Club", "odds_label": "Odds",
-                          "raw": "Raw implied", "fair": "Fair probability"}))
-_disp["Raw implied"]      = (_disp["Raw implied"] * 100).map("{:.1f}%".format)
-_disp["Fair probability"] = (_disp["Fair probability"] * 100).map("{:.1f}%".format)
-print(f"Raw implied probabilities sum to {OVERROUND*100:.1f}%  →  bookmaker's margin = {VIG_PCT:.1f}%")
-_disp.reset_index(drop=True).style.hide(axis="index")
-```
+sc_df = panel[["club", "season_lbl", "prior_strength", "final_points",
+               "preseason_tier"]].copy()
+sc_df["tier"] = sc_df["preseason_tier"].astype(str).str.title()
 
-The de-vigged column is the honest one. Here is the same market as a picture, each club in its own colors:
-
-```{python}
-#| label: chart-title-race
-#| fig-cap: "2026/27 title race: fair (de-vigged) probability by club. Bar colour is the club's brand colour; badge sits at the axis label. Only clubs shorter than 500-to-1 shown."
-
-race = title[title["odds"] <= 5000].copy()
-race["fair_pct"]  = (race["fair"] * 100).round(1)
-race["fair_lbl"]  = race["fair_pct"].map(lambda x: f"{x:.1f}%")
-sort_field = alt.EncodingSortField(field="fair", order="descending")
-base = alt.Chart(race)
-
-bars = base.mark_bar().encode(
-    x=alt.X("fair_pct:Q", axis=alt.Axis(title="Fair probability of winning the title (%)")),
-    y=alt.Y("club:N", sort=sort_field, axis=alt.Axis(title=None, labelPadding=28)),
-    color=alt.Color("colour:N", scale=None, legend=None),
+scatter = alt.Chart(sc_df).mark_circle(size=45, opacity=0.55).encode(
+    x=alt.X("prior_strength:Q",
+            axis=alt.Axis(title="Preseason prior strength")),
+    y=alt.Y("final_points:Q",
+            axis=alt.Axis(title="Final league points"),
+            scale=alt.Scale(zero=False)),
+    color=alt.Color("tier:N",
+                    scale=alt.Scale(domain=["Top", "Mid", "Bottom"],
+                                    range=["#1f77b4", "#999999", "#e67e22"]),
+                    legend=alt.Legend(title="Preseason tier")),
     tooltip=[
-        alt.Tooltip("club:N",        title="Club"),
-        alt.Tooltip("odds_label:N",  title="Odds"),
-        alt.Tooltip("fair_pct:Q",    title="Fair prob", format=".1f"),
+        alt.Tooltip("club:N",           title="Club"),
+        alt.Tooltip("season_lbl:N",     title="Season"),
+        alt.Tooltip("prior_strength:Q", title="Prior strength", format=".2f"),
+        alt.Tooltip("final_points:Q",   title="Final points"),
     ],
 )
-axis_logos = base.mark_image(width=20, height=20, clip=False).encode(
-    x=alt.value(-15), y=alt.Y("club:N", sort=sort_field), url="logo:N",
+scatter.properties(
+    width=620, height=340,
+    title="The Preseason Odds Already Know Most of the Answer",
+).interactive()
+```
+
+## The market moves — about 20% more than the results justify
+
+Now the move itself. Per team, I define the Week-1 shock as points earned minus points expected — where the expectation comes from that very match's own pre-match odds, so opponent quality, venue, and the market's prior all net out in one step. Per Week-2 match, I measure the surprise: how far the Week-2 closing line sits from where the prior ratings said it should. Pooling 167 Week-2 matches across 18 seasons and regressing surprise on shock (season-clustered errors) gives the market's average response, β̂ = 0.047 (SE = 0.011). The rational benchmark — an Elo-style updater with its response fitted historically on the same data, refit onto the same scale — moves K̂ = 0.039 per unit of shock. The ratio is 1.20: the market moves roughly 20% more than a calibrated results-only updater would.
+
+One honest caveat before that number hardens into a headline. The gap β̂ − K̂ is about 0.008, which is less than one clustered standard error (0.011). At full sample the ratio is descriptive — suggestive of overreaction, not statistically distinguishable from a rational update. Which is exactly why the next section exists: rather than argue about the coefficient, I can race the three forecasts and let the season endings adjudicate.
+
+## The horse race
+
+Here is the design. For each of the 18 seasons I hold it out entirely and fit everything — the goals model, the Elo K, the seed and shrinkage weights, the market-response β — on the other 17. Then I build three ratings snapshots for the held-out season: the **prior** (preseason ratings, untouched), the **rational posterior** (prior + K̂ · shock), and the **market posterior** (prior + β̂ · shock). Each snapshot simulates the full 380-fixture season 10,000 times, and the resulting top-4 and relegation probabilities are scored against what actually happened, with Brier scores. No checkpoint ever sees the season it is scored on.
+
+```{python}
+#| label: tbl-horse-race
+#| echo: false
+
+_disp = mean_scores.copy()
+_disp.index = ["Prior", "Rational", "Market"]
+_disp.columns = ["Brier (top-4)", "Brier (relegation)"]
+_disp.round(4).style.format("{:.4f}")
+```
+
+On top-4, the prior wins outright: the market posterior scores *worse* (mean difference +0.0015, season-block bootstrap 95% CI [−0.0016, +0.0046]) — and so, more quietly, does the rational updater (+0.0007). On relegation, the market is marginally better (−0.0018), but the CI straddles zero ([−0.0062, +0.0024]). The pre-registered primary sign tests agree: market vs prior on Brier top-4, Holm-corrected p = 1.000; on Brier relegation, Holm-corrected p = 0.961. Some caution is owed to the sample — eighteen seasons is eighteen coin flips for a sign test — but the direction of the caution matters: nothing here suggests the Week-2 odds are better season forecasts than the preseason odds were, and on top-4 the point estimate runs the other way. Eighteen seasons is a small sample of heavily overlapping clubs, so these season-level intervals and sign tests are best read as descriptive: the design has limited power to detect an effect of this size, and the club overlap across seasons means the intervals are, if anything, slightly too narrow.
+
+```{python}
+#| label: chart-horse-race
+#| echo: false
+#| fig-cap: "Per-season Brier score difference, market posterior minus prior, LOSO. Positive = the market's Week-2 read was a worse season forecast. Orange dots are seasons; the black diamond and rule are the bootstrap mean and 95% CI."
+
+zero_rule = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(
+    color="#333333", strokeDash=[4, 3]).encode(x="x:Q")
+
+season_pts = alt.Chart(diff_long).mark_circle(
+    size=80, opacity=0.55, color="#e67e22").encode(
+    x=alt.X("diff:Q",
+            axis=alt.Axis(title="Brier difference, market − prior "
+                                "(positive = market worse)", format=".3f")),
+    y=alt.Y("target:N", axis=alt.Axis(title=None),
+            sort=["Top-4", "Relegation"]),
+    tooltip=[
+        alt.Tooltip("season_lbl:N", title="Season"),
+        alt.Tooltip("target:N",     title="Target"),
+        alt.Tooltip("diff:Q",       title="Market − prior", format=".4f"),
+    ],
 )
-end_labels = base.mark_text(align="left", dx=5, fontSize=10, color="#333333").encode(
-    x=alt.X("fair_pct:Q"), y=alt.Y("club:N", sort=sort_field), text="fair_lbl:N",
+ci_rule = alt.Chart(boot_m).mark_rule(color="#111111", size=2).encode(
+    x="ci_low:Q", x2="ci_high:Q",
+    y=alt.Y("target:N", sort=["Top-4", "Relegation"]),
 )
-(bars + axis_logos + end_labels).properties(
+mean_pt = alt.Chart(boot_m).mark_point(
+    shape="diamond", size=140, filled=True, color="#111111").encode(
+    x="mean_diff:Q",
+    y=alt.Y("target:N", sort=["Top-4", "Relegation"]),
+    tooltip=[
+        alt.Tooltip("target:N",    title="Target"),
+        alt.Tooltip("mean_diff:Q", title="Mean diff",  format=".4f"),
+        alt.Tooltip("ci_low:Q",    title="95% CI low", format=".4f"),
+        alt.Tooltip("ci_high:Q",   title="95% CI high", format=".4f"),
+    ],
+)
+(zero_rule + season_pts + ci_rule + mean_pt).properties(
+    width=620, height=160,
+    title="Eighteen Seasons of Market-vs-Prior: the Week-2 Odds Buy Nothing",
+).interactive()
+```
+
+The per-season dots are the honest picture: in some seasons the Week-2 read helps (2009/10 saves the market a solid margin on top-4), in others it hurts (2014/15 costs it more than the average gap), and the mean sits within a hair of zero on relegation and on the wrong side of it on top-4. Eighteen seasons, ten thousand simulations per checkpoint, every fit walled off from the season it was scored on. The market moved. It didn't help.
+
+## Does the market take it back?
+
+If the Week-1 move is overreaction, there should be a signature in the weeks that follow: re-run the surprise regression against the Week-*k* odds for k = 3, 4, 5, 6, and the coefficient should decay toward zero as the market unwinds its overshoot. These are full-sample descriptive fits, not LOSO scores, so read them as texture rather than verdict.
+
+```{python}
+#| label: chart-decay
+#| echo: false
+#| fig-cap: "Week-1 shock coefficient β_k against Week-k odds, k = 2…6, with 95% CIs (full-sample, season-clustered; descriptive, not LOSO). Dashed line: zero. Dotted line: the Week-2 anchor, β = 0.047."
+
+d = decay.copy()
+d["k5_note"] = np.where(d["week"] == 5, "near zero — CI straddles 0", "")
+
+zero_h = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(
+    color="#333333", strokeDash=[4, 3]).encode(y="y:Q")
+anchor_h = alt.Chart(pd.DataFrame({"y": [BETA_MARKET]})).mark_rule(
+    color="#888888", strokeDash=[2, 2]).encode(y="y:Q")
+
+err = alt.Chart(d).mark_rule(color="#1f77b4", size=2).encode(
+    x=alt.X("week:Q",
+            scale=alt.Scale(domain=[1.5, 6.5]),
+            axis=alt.Axis(title="Week k (odds read after Week 1)",
+                          values=[2, 3, 4, 5, 6], format="d")),
+    y=alt.Y("ci_lo:Q", axis=alt.Axis(title="β_k (market response per unit "
+                                           "of Week-1 shock)", format=".2f")),
+    y2="ci_hi:Q",
+)
+pts = alt.Chart(d).mark_circle(size=110, color="#1f77b4").encode(
+    x="week:Q", y="beta_market:Q",
+    tooltip=[
+        alt.Tooltip("week:Q",        title="Week", format="d"),
+        alt.Tooltip("beta_market:Q", title="β_k",  format=".4f"),
+        alt.Tooltip("ci_lo:Q",       title="CI low",  format=".4f"),
+        alt.Tooltip("ci_hi:Q",       title="CI high", format=".4f"),
+        alt.Tooltip("n_matches:Q",   title="Matches"),
+    ],
+)
+k5_txt = alt.Chart(d[d["week"] == 5]).mark_text(
+    align="left", dx=10, dy=-2, fontSize=10, color="#555555").encode(
+    x="week:Q", y="beta_market:Q", text="k5_note:N",
+)
+(zero_h + anchor_h + err + pts + k5_txt).properties(
     width=620, height=300,
-    title="Arsenal Favored, but the Market Prices an Open Race",
+    title="The Decay Curve Is Noisy — the Unwind Never Cleanly Arrives",
 ).interactive()
 ```
 
-The favorites tag flatters Arsenal. A fair probability near 40% is the market saying, in the same breath, that there is a roughly 60% chance someone else lifts the trophy. That is not a hedge. It is what a genuinely open five-team race looks like when you price it.
+The clean story would run: β falls week by week and reaches zero once the market has digested its mistake. The actual curve half-cooperates. β drops from 0.047 at Week 2 to the low 0.03s at Weeks 3 and 4, then collapses to 0.004 at Week 5 — which looks exactly like the reversal signature, except the confidence interval straddles zero ([−0.015, +0.025]) — and then bounces back to 0.044 at Week 6. A true unwind does not bounce. The honest reading is that the decay is noisy: the Week-5 dip may be the market taking the overreaction back, or it may be sampling noise in ~163 matches, and this design cannot say which. I will not oversell a curve that refuses to decay.
 
-## How often is the August favorite right?
+## What Week 1 is worth
 
-This is the number I actually care about, so I pulled the last ten completed seasons and lined up each year's preseason favorite against where that club finished. The finishing positions come from my own [verified standings data](../epl-standings/) — the same source behind the [EPL Standings post](../epl-standings/) — and the favorites are the consensus August lines.
-
-```{python}
-#| label: chart-favorite-accuracy
-#| fig-cap: "Each badge is the preseason title favorite, placed at the position it actually finished (1 = champion). Green rule marks a hit; the favorite finished top-three every year but one."
-
-hist = history.copy()
-hist["season_lbl"] = hist["season"]
-season_order = list(favorites.keys())
-
-# Shade the champion's row-position band (1st place) so hits read at a glance
-win_rule = alt.Chart(pd.DataFrame({"x": [1]})).mark_rule(
-    color="#2ca02c", strokeDash=[4, 3], opacity=0.7).encode(x="x:Q")
-
-badges = alt.Chart(hist).mark_image(width=26, height=26).encode(
-    x=alt.X("fav_finish:Q",
-            scale=alt.Scale(domain=[0, 6], reverse=False),
-            axis=alt.Axis(title="Where the preseason favorite finished",
-                          values=[1, 2, 3, 4, 5])),
-    y=alt.Y("season_lbl:N", sort=season_order, axis=alt.Axis(title=None)),
-    url="logo:N",
-    tooltip=[
-        alt.Tooltip("season:N",     title="Season"),
-        alt.Tooltip("favorite:N",   title="Preseason favorite"),
-        alt.Tooltip("fav_finish:Q", title="Finished"),
-        alt.Tooltip("champion:N",   title="Actual champion"),
-    ],
-)
-champ_txt = alt.Chart(hist).mark_text(align="left", dx=18, fontSize=10,
-                                      color="#555555").encode(
-    x=alt.X("fav_finish:Q"), y=alt.Y("season_lbl:N", sort=season_order),
-    text=alt.Text("champion:N"),
-)
-(win_rule + badges + champ_txt).properties(
-    width=520, height=360,
-    title="The Favorite Is Rarely Wrong About Who Is Good, Often Wrong About the Order",
-).interactive()
-```
-
-```{python}
-#| label: favorite-summary
-#| echo: false
-print(f"Preseason favorite won the title in {HITS} of the last {N_SEASONS} seasons "
-      f"({HITS/N_SEASONS:.0%}).")
-print(f"Preseason favorite finished top-three in {TOP3} of {N_SEASONS} seasons.")
-```
-
-Two things fall out of this chart. The preseason favorite won the title in six of the last ten seasons, a hit rate any forecaster would take. And in the four seasons the favorite fell short, it still finished in the top three every time but one. The market is rarely wrong about who is good — it is often wrong about the exact order.
-
-The single exception is instructive, and it is recent. Last season Liverpool went in as favorites — the first August in a decade the line did not read Manchester City — and they finished fifth while the team they were supposed to hold off ran away with it. For instance, the model that would have served you best for nine straight years, "back Manchester City and go do something else," is exactly the model that would have burned you in the one year City were not the pick. This suggests some caution about the deeper reading of these numbers: a favorite that is right nine times can train you to stop asking why, right up until the tenth season charges the tuition.
-
-And none of this touches the real outlier. [Leicester City](https://en.wikipedia.org/wiki/2015%E2%80%9316_Leicester_City_F.C._season) won the league at 5000-to-1 in 2015/16, one season outside my window. On the fair-probability scale above, that is a 0.02% event that happened. The market is calibrated, not clairvoyant, and the difference is where the fun lives.
-
-## The relegation mirror
-
-The relegation market is the title market's reflection, and it is far more decisive. The bookmakers have all three promoted sides going straight back down, and the implied probabilities at the very bottom are steep.
-
-```{python}
-#| label: chart-relegation
-#| fig-cap: "Implied probability of relegation per club (raw, from the drop market). Each club in its own colours; badge at the axis label."
-
-rel = releg[releg["prob"] >= 0.05].copy()   # drop the near-zero survivors
-rel["prob_pct"] = (rel["prob"] * 100).round(0)
-rel["prob_lbl"] = rel["prob_pct"].map(lambda x: f"{x:.0f}%")
-rsort = alt.EncodingSortField(field="prob", order="descending")
-rbase = alt.Chart(rel)
-
-rbars = rbase.mark_bar().encode(
-    x=alt.X("prob_pct:Q", axis=alt.Axis(title="Implied probability of relegation (%)")),
-    y=alt.Y("club:N", sort=rsort, axis=alt.Axis(title=None, labelPadding=28)),
-    color=alt.Color("colour:N", scale=None, legend=None),
-    tooltip=[
-        alt.Tooltip("club:N",      title="Club"),
-        alt.Tooltip("prob_pct:Q",  title="Relegation prob", format=".0f"),
-    ],
-)
-rlogos = rbase.mark_image(width=18, height=18, clip=False).encode(
-    x=alt.value(-14), y=alt.Y("club:N", sort=rsort), url="logo:N",
-)
-rlabels = rbase.mark_text(align="left", dx=5, fontSize=10, color="#333333").encode(
-    x=alt.X("prob_pct:Q"), y=alt.Y("club:N", sort=rsort), text="prob_lbl:N",
-)
-(rbars + rlogos + rlabels).properties(
-    width=620, height=380,
-    title="The Market Has All Three Promoted Sides Going Straight Back Down",
-).interactive()
-```
-
-Hull City are effectively written off before a ball is kicked. The caution I would flag here is the one the promoted clubs know best: the market's prior against newcomers is heavy, and it is self-reinforcing, because the same pessimism that sets the odds also sets the transfer budget. Leicester, again, is the standing reminder that priors are not verdicts.
-
-At the other end of the pitch, the [Golden Boot](https://en.wikipedia.org/wiki/List_of_Premier_League_top_scorers) market barely qualifies as a market. Erling Haaland is -135, which de-vigs to roughly a 55% chance he outscores every other player in the league by himself. Alexander Isak (+1100) and Viktor Gyokeres (+1400) lead a distant chase.
-
-## What I actually think
-
-I will give you a prediction, but now you know exactly how much to trust it: Arsenal, Manchester City, Liverpool, Chelsea, in that order, with Manchester United the fifth-place side most likely to gatecrash the four.
-
-That top four is close to what you would get by sorting the fair-probability column and walking down it — which is the point. When the market is this confident and this well calibrated, the honest forecast is not a contrarian one. It is the market's forecast, with the margin removed and the humility left in. I have Arsenal first because the numbers do, and because after twenty-two years I have earned the right to read a spreadsheet with my heart. Ask me again in May.
+The thesis survives the caveats. The preseason odds already contained the information — r = 0.81 against final points, a 52/5/0 top-4 gradient across the terciles — and Week 1 gave the market an excuse to move on top of it. The market took the excuse, moved about 20% more than a calibrated results-only updater would, and by May had nothing to show for it: the Week-2 posterior beat the preseason prior on neither primary metric, and on top-4 the point estimate says the move made the forecast worse. So when the odds shift dramatically after this or any opening weekend, some caution about reading too much into it is warranted. The season's evidence arrives 38 matches at a time. Week 1 is one of them.
 
 ---
 
-*Title, relegation, and Golden Boot odds are consensus August 2026 lines. Finishing positions from my [verified EPL standings](../epl-standings/). Club colours and logos from [footy](https://github.com/kpolimis/football). Code: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*
+*Match results and 1X2 odds from [football-data.co.uk](https://www.football-data.co.uk), seasons 2008/09–2025/26 (Bet365 lines; closing where posted from 2019/20, opening before — about 39% of the surprise rows use true closing lines). All numbers in this post are frozen analysis outputs in the post's `data/` directory; the horse race is nested leave-one-season-out with 10,000 simulation replicates per checkpoint, and sign tests are Holm-corrected. Full method spec and code: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*

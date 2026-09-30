@@ -4,7 +4,8 @@
 Outputs (written to data/):
   wc_players.csv  — one row per player: name, club, league, nation, minutes, goals, assists
   wc_rounds.csv   — one row per national team: nation, round_reached, round_num
-  wc_leagues.csv  — aggregated by club league: total_minutes, goals, assists, G+A per 90
+
+Run aggregate_wc_data.py afterwards to build wc_leagues.csv and wc_epl_clubs.csv.
 
 Prerequisites:
   pip install soccerdata   (uses undetected Chrome to bypass FBref bot protection)
@@ -206,98 +207,10 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
     return df
 
 
-# ── League aggregation ────────────────────────────────────────────────────────
-
-def build_league_stats(players: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate player stats to the league level.
-
-    Args:
-        players: Output of fetch_player_stats().
-
-    Returns:
-        DataFrame with one row per league: total_minutes, goals, assists,
-        player_count, ga_per90, goals_per90.
-    """
-    agg = (
-        players
-        .groupby("league", dropna=False)
-        .agg(
-            total_minutes= ("minutes",  "sum"),
-            total_goals=   ("goals",    "sum"),
-            total_assists= ("assists",  "sum"),
-            player_count=  ("player",   "count"),
-        )
-        .reset_index()
-        .sort_values("total_minutes", ascending=False)
-    )
-    nineties = agg["total_minutes"] / 90
-    agg["ga_per90"]     = ((agg["total_goals"] + agg["total_assists"]) / nineties).round(3)
-    agg["goals_per90"]  = (agg["total_goals"] / nineties).round(3)
-    return agg
-
-
-# ── EPL club aggregation ──────────────────────────────────────────────────────
-
-def build_epl_club_stats(players: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate EPL player stats to the club level.
-
-    Args:
-        players: Output of fetch_player_stats().
-
-    Returns:
-        DataFrame with one row per EPL club: wc_minutes, goals, assists,
-        player_count, ga_per90.
-    """
-    epl = players[players["league"] == "EPL"].copy()
-    agg = (
-        epl
-        .groupby("club")
-        .agg(
-            wc_minutes=  ("minutes",  "sum"),
-            wc_goals=    ("goals",    "sum"),
-            wc_assists=  ("assists",  "sum"),
-            player_count=("player",   "count"),
-        )
-        .reset_index()
-        .sort_values("wc_minutes", ascending=False)
-    )
-    nineties         = agg["wc_minutes"] / 90
-    agg["ga_per90"]  = ((agg["wc_goals"] + agg["wc_assists"]) / nineties).round(3)
-    return agg
-
-
-# ── Unknown clubs report ───────────────────────────────────────────────────────
-
-def report_unmapped(players: pd.DataFrame, top_n: int = 30) -> None:
-    """Log the clubs whose league could not be resolved via footy.
-
-    Args:
-        players: Output of fetch_player_stats().
-        top_n: Number of unmapped clubs to log, ordered by total minutes.
-    """
-    unmapped = (
-        players[players["league"] == "Other"]
-        .groupby("club")
-        .agg(minutes=("minutes", "sum"), players=("player", "count"))
-        .sort_values("minutes", ascending=False)
-        .head(top_n)
-    )
-    if unmapped.empty:
-        logger.info("All clubs mapped.")
-        return
-    total_unmapped = players[players["league"] == "Other"]["minutes"].sum()
-    total          = players["minutes"].sum()
-    logger.warning("Unmapped minutes: %s of %s (%.1f%%)",
-                   f"{total_unmapped:,.0f}", f"{total:,.0f}",
-                   total_unmapped / total * 100)
-    logger.info("Top unmapped clubs by minutes:\n%s", unmapped.to_string())
-    logger.info("To improve coverage, add these clubs to footy/clubs.py.")
-
-
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    """Entry point: fetch, aggregate, and save 2026 World Cup data files."""
+    """Entry point: fetch and save raw per-player and per-nation 2026 WC data."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
@@ -315,26 +228,13 @@ def main() -> None:
     logger.info("Fetching team round results...")
     rounds = fetch_team_rounds(no_cache=no_cache)
 
-    logger.info("Building aggregates...")
-    leagues   = build_league_stats(players)
-    epl_clubs = build_epl_club_stats(players)
-
-    logger.info("Unmapped clubs (add to footy to improve league coverage):")
-    report_unmapped(players)
-
-    players.to_csv(f"{DATA_DIR}/wc_players.csv",   index=False)
-    rounds.to_csv(f"{DATA_DIR}/wc_rounds.csv",     index=False)
-    leagues.to_csv(f"{DATA_DIR}/wc_leagues.csv",   index=False)
-    epl_clubs.to_csv(f"{DATA_DIR}/wc_epl_clubs.csv", index=False)
+    players.to_csv(f"{DATA_DIR}/wc_players.csv", index=False)
+    rounds.to_csv(f"{DATA_DIR}/wc_rounds.csv",   index=False)
 
     logger.info("Saved:")
     logger.info("  %s/wc_players.csv   (%d rows)", DATA_DIR, len(players))
     logger.info("  %s/wc_rounds.csv    (%d rows)", DATA_DIR, len(rounds))
-    logger.info("  %s/wc_leagues.csv   (%d rows)", DATA_DIR, len(leagues))
-    logger.info("  %s/wc_epl_clubs.csv (%d rows)", DATA_DIR, len(epl_clubs))
-    logger.info("Top 12 leagues by minutes:\n%s",
-                leagues[["league", "total_minutes", "ga_per90", "player_count"]]
-                .head(12).to_string(index=False))
+    logger.info("Run aggregate_wc_data.py to build wc_leagues.csv and wc_epl_clubs.csv")
 
 
 if __name__ == "__main__":
