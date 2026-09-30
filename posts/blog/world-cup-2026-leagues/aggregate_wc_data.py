@@ -5,7 +5,7 @@ Reads the outputs of fetch_wc_data.py and produces:
   wc_leagues.csv  — aggregated by club league: total_minutes, goals, assists, G+A per 90
   wc_epl_clubs.csv — aggregated by EPL club: wc_minutes, goals, assists, G+A per 90
 
-Run fetch_wc_data.py first to populate wc_players.csv and wc_rounds.csv.
+Run fetch_wc_data.py first to populate wc_players.csv.
 
 Usage:
   cd posts/blog/world-cup-2026-leagues
@@ -142,6 +142,10 @@ def main() -> None:
     for col in ["minutes", "goals", "assists"]:
         if col in players.columns:
             players[col] = pd.to_numeric(players[col], errors="coerce")
+    for col in ["minutes", "goals", "assists"]:
+        n_nan = players[col].isna().sum()
+        if n_nan:
+            logger.warning("  %s: %d non-numeric values coerced to NaN", col, n_nan)
 
     logger.info("Building league aggregates...")
     leagues   = build_league_stats(players)
