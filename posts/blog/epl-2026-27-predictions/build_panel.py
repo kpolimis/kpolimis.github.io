@@ -19,12 +19,15 @@ Outputs (all under ``data/``):
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import pandas as pd
 from footy_stats import cache
 from footy_stats.sources.football_data import load_matches
 from footy_stats.stats.odds import devig
+
+logger = logging.getLogger(__name__)
 
 SEASONS: list[str] = [
     "0809", "0910", "1011", "1112", "1213", "1314", "1415", "1516", "1617",
@@ -314,6 +317,10 @@ def week1_match_diagnostics(all_matches: pd.DataFrame) -> pd.DataFrame:
 
 def main() -> None:
     """Regenerate all frozen data and the team-season panel."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    )
     all_matches = load_all_seasons()
     panel = build_panel(all_matches)
     validate(panel, all_matches)
@@ -322,13 +329,15 @@ def main() -> None:
     panel.to_csv(DATA_DIR / "panel.csv", index=False)
 
     diag = week1_match_diagnostics(all_matches)
-    print(f"panel rows: {len(panel)}")
-    print(diag.to_string(index=False))
     unclean = diag.loc[~diag["clean"], "season"].tolist()
-    print(f"seasons where W1 did not resolve to 10 matches: {unclean or 'none'}")
+    logger.info("panel rows: %d", len(panel))
+    logger.info("%s", diag.to_string(index=False))
+    logger.info("seasons where W1 did not resolve to 10 matches: %s", unclean or "none")
     coverage = panel.groupby(["season", "week1_odds_source"]).size().unstack(fill_value=0)
-    print(coverage.to_string())
-    print(panel[["week1_shock", "week1_expected_points", "final_points"]].describe().to_string())
+    logger.info("%s", coverage.to_string())
+    logger.info(
+        "%s", panel[["week1_shock", "week1_expected_points", "final_points"]].describe().to_string()
+    )
 
 
 if __name__ == "__main__":

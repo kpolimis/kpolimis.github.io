@@ -117,6 +117,10 @@ def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
 
     # Reset index first so (league, season, team, player) become columns with tuple headers
     raw = raw.reset_index()
+    if raw.empty:
+        raise ValueError(
+            "fetch_player_stats: FBref returned 0 players — check cache or re-fetch with --refresh"
+        )
 
     # Flatten multi-level tuple column index: join non-empty parts with '_'
     raw.columns = [
@@ -193,6 +197,10 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
     ]
     team_max: dict[str, int] = long.groupby("nation")["_rnd_num"].max().to_dict()
 
+    if not team_max:
+        raise ValueError(
+            "fetch_team_rounds: no nations resolved from schedule — check ROUND_ORDER mapping"
+        )
     records = [
         {
             "nation":         team,

@@ -8,9 +8,32 @@ single frozen object that can be audited for leakage.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import pandas as pd
+
+
+def check_df_schema(df: pd.DataFrame, required: Sequence[str], name: str) -> None:
+    """Raise ValueError if ``df`` is missing any required columns or is empty.
+
+    Call this immediately after loading a parquet/CSV at pipeline boundaries
+    to surface schema drift early rather than getting a cryptic KeyError deep
+    inside an analysis module.
+
+    Args:
+        df: The loaded DataFrame.
+        required: Column names that must be present.
+        name: Human-readable label for the DataFrame (used in error messages).
+
+    Raises:
+        ValueError: if any required column is absent or if ``df`` is empty.
+    """
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise ValueError(f"{name}: missing required columns {missing}")
+    if df.empty:
+        raise ValueError(f"{name}: DataFrame is empty — pipeline broken")
 
 #: football-data 4-digit season codes covered by the Stage 1 panel, in
 #: chronological order (mirrors ``build_panel.SEASONS``; duplicated here so

@@ -68,6 +68,14 @@ def build_epl_club_stats(players: pd.DataFrame) -> pd.DataFrame:
         player_count, ga_per90.
     """
     epl = players[players["league"] == "EPL"].copy()
+    if epl.empty:
+        logger.warning(
+            "build_epl_club_stats: no EPL players found — "
+            "check footy club-to-league mapping or input data"
+        )
+        return pd.DataFrame(
+            columns=["club", "wc_minutes", "wc_goals", "wc_assists", "player_count", "ga_per90"]
+        )
     agg = (
         epl
         .groupby("club", dropna=False)
@@ -138,6 +146,10 @@ def main() -> None:
     players_path = f"{data_dir}/wc_players.csv"
     logger.info("Reading %s", players_path)
     players = pd.read_csv(players_path)
+    if players.empty:
+        raise ValueError(
+            f"Zero rows in {players_path} — run fetch_wc_data.py first to populate it"
+        )
 
     for col in ["minutes", "goals", "assists"]:
         if col in players.columns:

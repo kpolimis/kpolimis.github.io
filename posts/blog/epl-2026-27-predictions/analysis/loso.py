@@ -10,6 +10,7 @@ per-fold-vs-global split.
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -37,6 +38,8 @@ from analysis.ratings import (
     fit_rational_k,
     fit_seed_params,
 )
+
+logger = logging.getLogger(__name__)
 
 #: The post's ``data/`` directory (this module lives in ``analysis/``).
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -117,6 +120,14 @@ def fit_fold(
         train_panel, priors, k_hat=k_rational, link=link
     )
 
+    # Seed-chain exception (W1 fold, 0809): when holdout_season == "0809", the
+    # holdout prior has no training seasons to seed from in the ordinary sense —
+    # it is seeded entirely from 0708 (the pre-panel seed season, not in SEASONS
+    # and therefore never a fold).  build_prior_ratings receives `panel` (full,
+    # including 0809 promoted-team flags) and `all_matches` (which carries 0708).
+    # No 0809 standings or match outcomes enter the prior; the fold is fully
+    # leakage-free.  All other folds follow the same code path; the guard is
+    # implicit in build_prior_ratings selecting the immediate prior season.
     prior_ratings = assign_tiers(
         build_prior_ratings(panel, all_matches, holdout_season, hyperparams)
     )
@@ -215,7 +226,7 @@ def run_loso(
             when ``None``).
         n_sims: Monte-Carlo replicates per (season, checkpoint).
         seed: Master RNG seed; fold ``i`` gets ``seed * 100 + i``.
-        verbose: Print per-fold progress lines.
+        verbose: Log per-fold progress lines at INFO level.
 
     Returns:
         The assembled :class:`LosoResult`.
@@ -225,7 +236,9 @@ def run_loso(
     eval_parts: list[pd.DataFrame] = []
     for i, holdout_season in enumerate(scored):
         if verbose:
-            print(f"fold {i + 1}/{len(scored)}: holdout={holdout_season} ...", flush=True)
+            logger.info(
+                "fold %d/%d: holdout=%s ...", i + 1, len(scored), holdout_season
+            )
         fold = fit_fold(all_matches, panel, holdout_season)
         fold_seed = seed * 100 + i if seed is not None else None
         eval_df = evaluate_fold(fold, all_matches, panel, n_sims=n_sims, seed=fold_seed)
@@ -233,11 +246,10 @@ def run_loso(
         eval_parts.append(eval_df)
         if verbose:
             hp = fold.hyperparams
-            print(
-                f"  k={hp.k_rational} w={hp.regress_weight} r_prom={hp.promoted_baseline} "
-                f"lam={hp.lam} beta={fold.beta_market:.5f} "
-                f"k_comm={fold.k_commensurated:.5f}",
-                flush=True,
+            logger.info(
+                "  k=%s w=%s r_prom=%s lam=%s beta=%.5f k_comm=%.5f",
+                hp.k_rational, hp.regress_weight, hp.promoted_baseline,
+                hp.lam, fold.beta_market, fold.k_commensurated,
             )
     sims = pd.concat(eval_parts, ignore_index=True)
     sims_map = {

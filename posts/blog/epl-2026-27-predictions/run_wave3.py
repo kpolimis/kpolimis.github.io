@@ -19,6 +19,7 @@ Run from the post directory:
 from __future__ import annotations
 
 import json
+import logging
 import math
 import time
 from pathlib import Path
@@ -26,8 +27,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from analysis.decay import fit_decay_curve
-from analysis.params import SEASONS, LinkParams
+from analysis.params import SEASONS, LinkParams, check_df_schema
 from footy_stats.cache import freeze
+
+logger = logging.getLogger(__name__)
 
 POST_DIR = Path(__file__).resolve().parent
 DATA_DIR = POST_DIR / "data"
@@ -35,6 +38,13 @@ RESULTS_PATH = DATA_DIR / "wave3_results.json"
 
 #: β_2 must reproduce Wave 1's headline β̂_market within this tolerance.
 _CONSISTENCY_TOL = 0.001
+
+_MATCHES_REQUIRED = ["season", "home_club_id", "away_club_id", "fthg", "ftag", "date"]
+_PANEL_PRIORS_REQUIRED = [
+    "season", "club_id", "prior_strength", "preseason_tier",
+    "week1_opponent_tier", "week1_shock", "final_points",
+]
+_WAVE1_REQUIRED_KEYS = {"link", "beta_market"}
 
 
 def _save_results(results: dict) -> None:
@@ -56,43 +66,61 @@ def _save_results(results: dict) -> None:
     RESULTS_PATH.write_text(json.dumps(_clean(results), indent=2) + "\n")
 
 
-def _print_headline(decay: pd.DataFrame, k2_beta: float, wave1_beta: float, runtime: float) -> None:
-    """Print the ASCII headline table (models run_wave1's summary block)."""
-    print("\n" + "=" * 64)
-    print("WAVE 3 — DECAY CURVE (estimand 3: does the market unwind?)")
-    print("=" * 64)
-    print("full-sample descriptive (Wave 1 priors + link; NOT LOSO)")
-    print(f"{'week':>4}   {'beta_k':>6}   {'se':>5}  {'95% CI':<19} "
-          f"{'n_matches':>9}  {'n_seasons':>9}  {'%closing':>8}")
-    for row in decay.itertuples(index=False):
-        ci = f"[{row.ci_lo:.4f}, {row.ci_hi:.4f}]"
-        print(f"{row.week:>4}   {row.beta_market:.4f}  {row.se_market:.3f}  {ci:<19} "
-              f"{row.n_matches:>9}  {row.n_seasons:>9}  {row.share_closing:>7.0%}")
-    print("-" * 64)
+def _log_headline(decay: pd.DataFrame, k2_beta: float, wave1_beta: float, runtime: float) -> None:
+    """Log the ASCII headline table via logger.info."""
     diff = abs(k2_beta - wave1_beta)
     verdict = "PASS" if diff < _CONSISTENCY_TOL else "FAIL"
-    print("consistency check: wave3 k=2 beta vs wave1 beta_market "
-          f"(should match within {_CONSISTENCY_TOL}):")
-    print(f"  wave3 k=2: {k2_beta:.5f}  wave1: {wave1_beta:.5f}  "
-          f"diff: {diff:.5f}  [{verdict}]")
-    print("-" * 64)
-    print(f"artifacts: data/decay_curve.parquet, data/wave3_results.json ({runtime:.1f}s)")
+    lines = [
+        "",
+        "=" * 64,
+        "WAVE 3 — DECAY CURVE (estimand 3: does the market unwind?)",
+        "=" * 64,
+        "full-sample descriptive (Wave 1 priors + link; NOT LOSO)",
+        f"{'week':>4}   {'beta_k':>6}   {'se':>5}  {'95% CI':<19} "
+        f"{'n_matches':>9}  {'n_seasons':>9}  {'%closing':>8}",
+    ]
+    for row in decay.itertuples(index=False):
+        ci = f"[{row.ci_lo:.4f}, {row.ci_hi:.4f}]"
+        lines.append(
+            f"{row.week:>4}   {row.beta_market:.4f}  {row.se_market:.3f}  {ci:<19} "
+            f"{row.n_matches:>9}  {row.n_seasons:>9}  {row.share_closing:>7.0%}"
+        )
+    lines.extend([
+        "-" * 64,
+        f"consistency check: wave3 k=2 beta vs wave1 beta_market "
+        f"(should match within {_CONSISTENCY_TOL}):",
+        f"  wave3 k=2: {k2_beta:.5f}  wave1: {wave1_beta:.5f}  diff: {diff:.5f}  [{verdict}]",
+        "-" * 64,
+        f"artifacts: data/decay_curve.parquet, data/wave3_results.json ({runtime:.1f}s)",
+    ])
+    logger.info("%s", "\n".join(lines))
 
 
 def main() -> None:
     """Run the Wave 3 decay curve end to end."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    )
     t_start = time.time()
     results: dict = {"stage": "wave3_decay_curve_descriptive", "status": "running"}
 
     matches = pd.read_parquet(DATA_DIR / "matches_all.parquet")
+    check_df_schema(matches, _MATCHES_REQUIRED, "matches_all.parquet")
     panel_priors = pd.read_parquet(DATA_DIR / "panel_priors.parquet")
-    print(f"loaded {len(matches)} matches / {len(panel_priors)} panel_priors rows")
+    check_df_schema(panel_priors, _PANEL_PRIORS_REQUIRED, "panel_priors.parquet")
+    logger.info("loaded %d matches / %d panel_priors rows", len(matches), len(panel_priors))
 
     # Wave 1 artifacts only — nothing is re-fitted here.
     w1 = json.loads((DATA_DIR / "wave1_results.json").read_text())
+    missing_keys = _WAVE1_REQUIRED_KEYS - w1.keys()
+    if missing_keys:
+        raise ValueError(f"wave1_results.json: missing required keys {sorted(missing_keys)}")
     link = LinkParams(**w1["link"])
-    print(f"link (from wave1): mu={link.total_rate:.4f} rho={link.rho:.4f} "
-          f"h={link.home_adv:.4f} covid_h={link.covid_home_adv:.4f}")
+    logger.info(
+        "link (from wave1): mu=%.4f rho=%.4f h=%.4f covid_h=%.4f",
+        link.total_rate, link.rho, link.home_adv, link.covid_home_adv,
+    )
     priors_by_season = {
         season: panel_priors.loc[
             panel_priors["season"] == season, ["club_id", "prior_strength"]
@@ -102,7 +130,7 @@ def main() -> None:
 
     decay = fit_decay_curve(matches, panel_priors, priors_by_season, link)
     freeze(decay, DATA_DIR, "decay_curve")
-    print(f"wrote data/decay_curve.parquet ({len(decay)} rows)")
+    logger.info("wrote data/decay_curve.parquet (%d rows)", len(decay))
 
     wave1_beta = float(w1["beta_market"]["constrained"])
     k2_beta = float(decay.loc[decay["week"] == 2, "beta_market"].iloc[0])
@@ -130,7 +158,7 @@ def main() -> None:
         }
     )
     _save_results(results)
-    _print_headline(decay, k2_beta, wave1_beta, results["runtime_seconds"])
+    _log_headline(decay, k2_beta, wave1_beta, results["runtime_seconds"])
 
 
 if __name__ == "__main__":

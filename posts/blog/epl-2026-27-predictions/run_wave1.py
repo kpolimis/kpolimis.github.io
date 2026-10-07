@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import logging
 import math
 import time
 from pathlib import Path
@@ -40,7 +41,7 @@ from analysis.estimators import (
     pooled_surprise_regression,
     ridge_postweek1_fit,
 )
-from analysis.params import SEASONS, Hyperparams
+from analysis.params import SEASONS, Hyperparams, check_df_schema
 from analysis.ratings import (
     _season_frames,
     assign_tiers,
@@ -53,9 +54,17 @@ from analysis.ratings import (
 )
 from footy_stats.sources.football_data import load_matches
 
+logger = logging.getLogger(__name__)
+
 POST_DIR = Path(__file__).resolve().parent
 DATA_DIR = POST_DIR / "data"
 RESULTS_PATH = DATA_DIR / "wave1_results.json"
+
+_MATCHES_REQUIRED = ["season", "home_club_id", "away_club_id", "fthg", "ftag", "date"]
+_PANEL_REQUIRED = [
+    "season", "club_id", "week1_shock", "week1_odds_source",
+    "made_top4", "relegated", "final_points", "week1_opponent_id",
+]
 
 
 def _save_results(results: dict) -> None:
@@ -79,31 +88,40 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
     t_start = time.time()
     results: dict = {"stage": "wave1_full_sample_descriptive", "status": "running"}
 
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    )
+
     matches = pd.read_parquet(DATA_DIR / "matches_all.parquet")
+    check_df_schema(matches, _MATCHES_REQUIRED, "matches_all.parquet")
     panel = pd.read_parquet(DATA_DIR / "panel.parquet")
-    print(f"loaded {len(matches)} matches / {len(panel)} panel rows")
+    check_df_schema(panel, _PANEL_REQUIRED, "panel.parquet")
+    logger.info("loaded %d matches / %d panel rows", len(matches), len(panel))
 
     # Q1: 2007/08 is fetched solely to seed 2008/09's prior — it enters no fit.
     m0708 = load_matches("0708", "E0", use_cache=True)
     m0708.insert(0, "season", "0708")
     matches_ext = pd.concat([m0708, matches], ignore_index=True)
-    print(f"fetched 2007/08 seed season: {len(m0708)} matches")
+    logger.info("fetched 2007/08 seed season: %d matches", len(m0708))
 
     # ── 1. Full-sample hyperparameter fits (labelled descriptive) ────────────
     link = fit_link_params(matches)
-    print(f"link: total_rate={link.total_rate:.4f} rho={link.rho:.4f} "
-          f"h={link.home_adv:.4f} covid_h={link.covid_home_adv:.4f}")
+    logger.info(
+        "link: total_rate=%.4f rho=%.4f h=%.4f covid_h=%.4f",
+        link.total_rate, link.rho, link.home_adv, link.covid_home_adv,
+    )
     k_hat = fit_rational_k(list(_season_frames(matches).values()))
-    print(f"K_hat (raw Elo units): {k_hat}")
+    logger.info("K_hat (raw Elo units): %s", k_hat)
     results["link"] = dataclasses.asdict(link)
     results["k_hat_raw_elo"] = k_hat
     _save_results(results)
 
     w, r_prom = fit_seed_params(matches, k_rational=k_hat, link=link)
-    print(f"seed params: w={w} R_prom={r_prom}")
+    logger.info("seed params: w=%s R_prom=%s", w, r_prom)
     hp_partial = Hyperparams(w, r_prom, k_hat, float("nan"), link)
     lam = fit_lambda(matches, panel, hyperparams_partial=hp_partial)
-    print(f"lambda_hat: {lam}")
+    logger.info("lambda_hat: %s", lam)
     hyperparams = Hyperparams(w, r_prom, k_hat, lam, link)
     results["regress_weight_w"] = w
     results["promoted_baseline_r_prom"] = r_prom
@@ -117,14 +135,18 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
         priors[season] = assign_tiers(build_prior_ratings(panel, src, season, hyperparams))
     panel_priors = fill_panel_priors(panel, priors)
     panel_priors.to_parquet(DATA_DIR / "panel_priors.parquet", index=False)
-    print(f"wrote data/panel_priors.parquet ({len(panel_priors)} rows)")
+    logger.info("wrote data/panel_priors.parquet (%d rows)", len(panel_priors))
 
     # ── 3. Surprise frame + pooled regression (primary estimator) ────────────
     surprise = build_surprise_frame(matches, panel, priors, link, week=2)
     fit = pooled_surprise_regression(surprise)
-    print(f"beta_market (constrained): {fit.beta_market:.5f} (SE {fit.se_market:.5f})")
-    print(f"unconstrained: beta_home={fit.beta_home:.5f} (SE {fit.se_home:.5f}) "
-          f"beta_away={fit.beta_away:.5f} (SE {fit.se_away:.5f})")
+    logger.info(
+        "beta_market (constrained): %.5f (SE %.5f)", fit.beta_market, fit.se_market
+    )
+    logger.info(
+        "unconstrained: beta_home=%.5f (SE %.5f) beta_away=%.5f (SE %.5f)",
+        fit.beta_home, fit.se_home, fit.beta_away, fit.se_away,
+    )
     results["surprise_frame"] = {
         "n_rows": int(len(surprise)),
         "n_week_mismatch": int(surprise["week_mismatch"].sum()),
@@ -173,16 +195,18 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
                 "under-identified on their own (see method spec)",
     }
     results["ridge_divergence"] = divergence
-    print(f"ridge per-season slope: mean={divergence['mean']:.5f} "
-          f"median={divergence['median']:.5f} sd={divergence['sd']:.5f} "
-          f"| mean |slope - pooled beta| = {divergence['mean_abs_dev_from_pooled']:.5f}")
+    logger.info(
+        "ridge per-season slope: mean=%.5f median=%.5f sd=%.5f | mean |slope - pooled beta| = %.5f",
+        divergence["mean"], divergence["median"], divergence["sd"],
+        divergence["mean_abs_dev_from_pooled"],
+    )
     _save_results(results)
 
     # ── 5. Commensuration (Q2) + the overreaction ratio ──────────────────────
     k_comm = commensurated_rational_slope(panel, priors, k_hat=k_hat, link=link)
     ratio = overreaction_ratio(fit.beta_market, k_comm, link=link)
-    print(f"commensurated rational slope: {k_comm:.5f} (supremacy per unit points-shock)")
-    print(f"overreaction ratio: {ratio:.4f}")
+    logger.info("commensurated rational slope: %.5f (supremacy per unit points-shock)", k_comm)
+    logger.info("overreaction ratio: %.4f", ratio)
     results["k_hat_commensurated_slope"] = k_comm
     results["overreaction_ratio"] = ratio
     _save_results(results)
@@ -208,33 +232,37 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
     results["runtime_seconds"] = round(time.time() - t_start, 1)
     _save_results(results)
 
-    print("\n" + "=" * 72)
-    print("WAVE 1 — FULL-SAMPLE DESCRIPTIVE SUMMARY (labelled: not LOSO)")
-    print("=" * 72)
-    print(f"link:            mu (total_rate) = {link.total_rate:.4f}  rho = {link.rho:.4f}")
-    print(f"                 h = {link.home_adv:.4f}  covid_h = {link.covid_home_adv:.4f}")
-    print(f"seed:            w = {w}  R_prom = {r_prom}")
-    print(f"shrinkage:       lambda_hat = {lam}")
-    print(f"K_hat:           {k_hat} (raw Elo)  ->  {k_comm:.5f} (commensurated slope)")
-    print(f"beta_market:     {fit.beta_market:.5f}  (clustered SE {fit.se_market:.5f}; "
-          f"n = {fit.n_matches} matches, {fit.n_seasons} seasons)")
-    print(f"  symmetry chk:  beta_home = {fit.beta_home:.5f}, beta_away = {fit.beta_away:.5f} "
-          f"(home + away = {fit.beta_home + fit.beta_away:+.5f})")
-    print(f"overreaction:    beta_market / K_commensurated = {ratio:.4f}")
-    print(f"ridge secondary: per-season slope mean {divergence['mean']:.5f} "
-          f"(sd {divergence['sd']:.5f}), mean |dev from pooled| "
-          f"{divergence['mean_abs_dev_from_pooled']:.5f}")
-    print("-" * 72)
     ok = lambda b: "PASS" if b else "FAIL"  # noqa: E731
-    print(f"[{ok(gates['k_hat_positive_finite'])}] K_hat positive and finite: {k_hat}")
-    print(f"[{ok(gates['prior_vs_final_points_r_strong'])}] "
-          f"prior_strength vs final_points pooled Pearson r = {prior_final_r:.4f} (need >= 0.6)")
-    print(f"[{ok(gates['beta_market_positive'])}] beta_market positive: {fit.beta_market:.5f}")
-    print(f"[{ok(gates['panel_priors_360_rows'] and gates['panel_priors_no_nulls'])}] "
-          f"panel_priors: {len(panel_priors)} rows, nulls {nulls}")
-    print("-" * 72)
-    print(f"artifacts: data/panel_priors.parquet, data/wave1_results.json "
-          f"({results['runtime_seconds']}s)")
+    summary = "\n".join([
+        "",
+        "=" * 72,
+        "WAVE 1 — FULL-SAMPLE DESCRIPTIVE SUMMARY (labelled: not LOSO)",
+        "=" * 72,
+        f"link:            mu (total_rate) = {link.total_rate:.4f}  rho = {link.rho:.4f}",
+        f"                 h = {link.home_adv:.4f}  covid_h = {link.covid_home_adv:.4f}",
+        f"seed:            w = {w}  R_prom = {r_prom}",
+        f"shrinkage:       lambda_hat = {lam}",
+        f"K_hat:           {k_hat} (raw Elo)  ->  {k_comm:.5f} (commensurated slope)",
+        f"beta_market:     {fit.beta_market:.5f}  (clustered SE {fit.se_market:.5f}; "
+        f"n = {fit.n_matches} matches, {fit.n_seasons} seasons)",
+        f"  symmetry chk:  beta_home = {fit.beta_home:.5f}, beta_away = {fit.beta_away:.5f} "
+        f"(home + away = {fit.beta_home + fit.beta_away:+.5f})",
+        f"overreaction:    beta_market / K_commensurated = {ratio:.4f}",
+        f"ridge secondary: per-season slope mean {divergence['mean']:.5f} "
+        f"(sd {divergence['sd']:.5f}), mean |dev from pooled| "
+        f"{divergence['mean_abs_dev_from_pooled']:.5f}",
+        "-" * 72,
+        f"[{ok(gates['k_hat_positive_finite'])}] K_hat positive and finite: {k_hat}",
+        f"[{ok(gates['prior_vs_final_points_r_strong'])}] "
+        f"prior_strength vs final_points pooled Pearson r = {prior_final_r:.4f} (need >= 0.6)",
+        f"[{ok(gates['beta_market_positive'])}] beta_market positive: {fit.beta_market:.5f}",
+        f"[{ok(gates['panel_priors_360_rows'] and gates['panel_priors_no_nulls'])}] "
+        f"panel_priors: {len(panel_priors)} rows, nulls {nulls}",
+        "-" * 72,
+        f"artifacts: data/panel_priors.parquet, data/wave1_results.json "
+        f"({results['runtime_seconds']}s)",
+    ])
+    logger.info("%s", summary)
 
 
 if __name__ == "__main__":
