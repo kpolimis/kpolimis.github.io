@@ -1,0 +1,84 @@
+{
+  "stage": "wave1_full_sample_descriptive",
+  "status": "complete",
+  "link": {
+    "total_rate": 2.654025342334312,
+    "rho": -0.04713912197524566,
+    "home_adv": 0.33170580037563413,
+    "covid_home_adv": 0.1487675196464513
+  },
+  "k_hat_raw_elo": 20.0,
+  "regress_weight_w": 0.9,
+  "promoted_baseline_r_prom": 1450.0,
+  "lambda_hat": 0.3,
+  "surprise_frame": {
+    "n_rows": 193,
+    "n_week_mismatch": 26,
+    "mismatch_by_season": {
+      "0910": 8,
+      "1112": 4,
+      "1213": 2,
+      "1314": 2,
+      "2021": 8,
+      "2324": 2
+    }
+  },
+  "beta_market": {
+    "constrained": 0.04697430156369337,
+    "constrained_se": 0.011032487613484705,
+    "unconstrained_home": 0.05732579403874602,
+    "unconstrained_home_se": 0.015000998826052766,
+    "unconstrained_away": -0.036984532102421905,
+    "unconstrained_away_se": 0.015205207807332402,
+    "symmetry_gap_home_plus_away": 0.020341261936324115,
+    "n_matches": 167,
+    "n_seasons": 18
+  },
+  "ridge_divergence": {
+    "per_season_slopes": {
+      "0809": 0.03559365421812308,
+      "0910": 0.011910601460199377,
+      "1011": 0.0029639173812946538,
+      "1112": 0.017021825540699885,
+      "1213": -0.003526555579806178,
+      "1314": 0.03796097026059193,
+      "1415": 0.022319718720826293,
+      "1516": 0.009115171062664598,
+      "1617": 0.037265287270971684,
+      "1718": 0.016268984158716665,
+      "1819": 0.003743660845089716,
+      "1920": 0.016678166031364162,
+      "2021": 0.03486120873107016,
+      "2122": 0.03099960714673208,
+      "2223": 0.013266701321021259,
+      "2324": 0.020756015396966906,
+      "2425": -0.011772977450418283,
+      "2526": -0.004169966248069643
+    },
+    "mean": 0.016180888348224357,
+    "median": 0.016473575095040414,
+    "sd": 0.015173296506470877,
+    "min": -0.011772977450418283,
+    "max": 0.03796097026059193,
+    "pooled_beta": 0.04697430156369337,
+    "mean_abs_dev_from_pooled": 0.030793413215469023,
+    "note": "ridge slopes are mechanically proportional to (1 - lambda); under-identified on their own (see method spec)"
+  },
+  "k_hat_commensurated_slope": 0.039170750566983326,
+  "overreaction_ratio": 1.1992188274096436,
+  "sanity_gates": {
+    "k_hat_positive_finite": true,
+    "prior_vs_final_points_r": 0.8124780098948928,
+    "prior_vs_final_points_r_strong": true,
+    "beta_market_positive": true,
+    "panel_priors_rows": 360,
+    "panel_priors_360_rows": true,
+    "panel_priors_new_col_nulls": {
+      "prior_strength": 0,
+      "preseason_tier": 0,
+      "week1_opponent_tier": 0
+    },
+    "panel_priors_no_nulls": true
+  },
+  "runtime_seconds": 5.2
+}
