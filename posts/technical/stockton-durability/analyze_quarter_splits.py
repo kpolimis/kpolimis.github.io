@@ -37,6 +37,9 @@ logger = logging.getLogger(__name__)
 
 def load_splits(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
     """Load quarter splits parquet and return (df, treated_id, treated_name)."""
+    if cohort not in ("pg", "pf"):
+        raise ValueError(f"Unknown cohort: {cohort!r}. Use pg or pf.")
+
     parquet = DATA_DIR / f"quarter_splits_{cohort}.parquet"
     if not parquet.exists():
         raise FileNotFoundError(
@@ -81,16 +84,19 @@ def _prepare_model_df(
     mdf["is_treated"] = (mdf["player_id"] == treated_id).astype(int)
     mdf["quarter4"] = (mdf["quarter"].astype(str) == "4").astype(int)
 
-    # Merge rest_days from game_logs if available
-    gl_path = DATA_DIR / "game_logs.parquet"
-    if gl_path.exists():
-        gl = pd.read_parquet(gl_path)[["player_id", "Date", "rest_days", "b2b"]].copy()
-        gl["date"] = pd.to_datetime(gl["Date"])
-        mdf["date"] = pd.to_datetime(mdf["date"])
-        mdf = mdf.merge(gl, on=["player_id", "date"], how="left")
-        mdf["rest_days"] = mdf["rest_days"].fillna(3)
+    # Merge rest_days from game_logs only if not already present
+    if "rest_days" not in mdf.columns:
+        gl_path = DATA_DIR / "game_logs.parquet"
+        if gl_path.exists():
+            gl = pd.read_parquet(gl_path)[["player_id", "Date", "rest_days"]].copy()
+            gl["date"] = pd.to_datetime(gl["Date"])
+            mdf["date"] = pd.to_datetime(mdf["date"])
+            mdf = mdf.merge(gl[["player_id", "date", "rest_days"]], on=["player_id", "date"], how="left")
+            mdf["rest_days"] = mdf["rest_days"].fillna(3)
+        else:
+            mdf["rest_days"] = 3.0
     else:
-        mdf["rest_days"] = 3.0
+        mdf["rest_days"] = mdf["rest_days"].fillna(3)
 
     if len(mdf) < 20 or mdf["player_id"].nunique() < 2:
         logger.warning(
