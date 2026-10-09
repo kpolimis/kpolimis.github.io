@@ -221,9 +221,9 @@ Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-in
 | 2018 | Online calculator to help tackle disparities in the criminal justice system in Washington state |
 | 2017 | My eScience Experience |
 | 2017 | GitHub for Collaboration |
-| 2016 | Legal Financial Obligations |
-| 2015 | Budding UW Data Scientists Use Their Powers for Social Good |
-| 2015 | UW students put data science skills to use for social good |
+| 2016 | [Legal Financial Obligations](https://urbanalytics.uw.edu/responsible-data/2016/12/07/legalfinancial) |
+| 2015 | [Budding UW Data Scientists Use Their Powers for Social Good](http://www.xconomy.com/seattle/2015/08/24/budding-uw-data-scientists-use-their-powers-for-social-good/?single_page=true) |
+| 2015 | [UW students put data science skills to use for social good](https://www.washington.edu/news/2015/08/31/uw-students-put-data-science-skills-to-use-for-social-good/) |
 
 ---
 
