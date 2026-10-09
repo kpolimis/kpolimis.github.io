@@ -49,7 +49,7 @@ COHORT: dict[str, tuple[str, str, int, int, str]] = {
     "Gary Payton":     ("p", "paytoga01",  1991, 2007, "pg"),
     "Mark Jackson":    ("j", "jacksma01",  1988, 2004, "pg"),
     "Terry Porter":    ("p", "portete01",  1986, 2003, "pg"),
-    "Rod Strickland":  ("s", "stricro01",  1989, 2005, "pg"),
+    "Rod Strickland":  ("s", "stricro02",  1989, 2005, "pg"),
     "Muggsy Bogues":   ("b", "boguesmu01", 1988, 2001, "pg"),  # borderline MPG (~28)
     "Sherman Douglas": ("d", "douglsh01",  1990, 1999, "pg"),  # borderline MPG
     "Jason Kidd":      ("k", "kiddja01",   1995, 2013, "pg"),
@@ -93,13 +93,21 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
     cache_path = cache_dir / f"{cache_key}.html"
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8")
-    resp = requests.get(url, headers={"User-Agent": "stockton-research/1.0"}, timeout=20)
-    if resp.status_code != 200:
-        logger.warning("HTTP %s for %s", resp.status_code, url)
-        return None
-    cache_path.write_text(resp.text, encoding="utf-8")
-    time.sleep(RATE_LIMIT_SEC)
-    return resp.text
+    for attempt in range(4):
+        resp = requests.get(url, headers={"User-Agent": "stockton-research/1.0"}, timeout=20)
+        if resp.status_code == 200:
+            cache_path.write_text(resp.text, encoding="utf-8")
+            time.sleep(RATE_LIMIT_SEC)
+            return resp.text
+        if resp.status_code == 429:
+            wait = 90 * (2 ** attempt)
+            logger.warning("HTTP 429 for %s — backing off %ds (attempt %d/4)", url, wait, attempt + 1)
+            time.sleep(wait)
+        else:
+            logger.warning("HTTP %s for %s", resp.status_code, url)
+            return None
+    logger.warning("HTTP 429 persisted after retries for %s", url)
+    return None
 
 
 def fetch_gamelog(initial: str, player_id: str, season: int) -> pd.DataFrame | None:
