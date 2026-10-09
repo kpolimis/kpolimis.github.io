@@ -218,7 +218,7 @@ Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-in
 | 2023 | Karna — [Technical Achievement Award](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w) |
 | 2022 | Karna — [Community Engagement Award](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD) |
 | 2022 | Karna — [Outstanding Publication Award runner-up](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD) |
-| 2018 | Online calculator to help tackle disparities in the criminal justice system in Washington state |
+| 2018 | [Online calculator to help tackle disparities in the criminal justice system in Washington state](https://blogs.microsoft.com/on-the-issues/2018/06/07/online-calculator-to-help-tackle-disparities-in-the-criminal-justice-system-in-washington-state/) |
 | 2017 | My eScience Experience |
 | 2017 | GitHub for Collaboration |
 | 2016 | [Legal Financial Obligations](https://urbanalytics.uw.edu/responsible-data/2016/12/07/legalfinancial) |
