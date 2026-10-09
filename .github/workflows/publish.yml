@@ -17,8 +17,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install lint and test dependencies
-        run: pip install ruff pytest pandas
+      - name: Install Python dependencies
+        run: pip install ruff pytest pandas numpy matplotlib seaborn scipy ipykernel jupyter-cache
+
+      - name: Register blog kernel
+        run: python -m ipykernel install --user --name blog --display-name "blog"
 
       - name: Lint
         run: ruff check posts/blog/world-cup-2026-leagues/fetch_wc_data.py
