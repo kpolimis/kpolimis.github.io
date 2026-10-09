@@ -20,36 +20,35 @@ toc-depth: 2
 
 **2021–Present** &emsp; Senior Data Scientist, [Karna](https://karna.com), Atlanta, GA
 
-- Architected and deployed a web-based document intelligence platform integrating cloud document extraction services (Azure, AWS, GCP) and GPT-4 for automated clinical document processing; primary showcase for document AI capabilities.
-- Led dashboard development and analytics delivery for a live state Medicaid program, coordinating across three organizations and presenting MVP to state agency and health plan stakeholders.
-- Designed a production ML pipeline for patient risk classification with automated drift monitoring, reducing unnecessary ED visits and downstream costs in high-risk patient populations.
-- Designed compliant data infrastructure in Snowflake and reproducible statistical analyses in R and Python supporting national opioid response and population health programs.
+- Engineered a document intelligence microservice that automated clinical document extraction (Azure Document Intelligence, Textract) and AI-powered synthetic data generation (GPT-4); deployed on ECS with schema enforcement and data validation to protect downstream quality.
+- Built compliant Snowflake data infrastructure and SQL-based ETL pipelines using Python, R, and shell scripting to ingest multi-source clinical datasets and surface opioid use trends, program utilization metrics, and drug co-occurrence patterns supporting national federal opioid response planning.
+- Designed and deployed a HIPAA/NIST-compliant ML pipeline for maternal CVD risk stratification on Azure, with automated drift monitoring and a Flask API; migrated from SQLite to PostgreSQL in production; applied causal inference (ITS and diff-in-differences) to measure the program's impact on emergency care utilization.
+- Partnered with data science, research and evaluation, and health communications teams to design and run A/B message testing for CDC NCIRD's COVID Vaccine Task Force; tested message variants across hesitancy segments, political ideology, and demographics using ordered logistic regression; findings directly shaped national vaccine communication decisions.
 - *Awards: [President's Award (2023)](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w), [Technical Achievement Award (2023)](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w), [Community Engagement Award (2022)](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD), [Outstanding Publication runner-up (2022)](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD), Technical Achievement runner-up (2024)*
 
 **2021–Present** &emsp; Lecturer, [University of Washington, Department of Sociology](https://sociology.washington.edu), Seattle, WA
 
-- Lectured on data science topics including Algorithmic Bias, AI Ethics, and Data Visualization.
-- Designed curricula and assessments focused on producing, collecting, and analyzing digital trace data.
+- Designed and taught applied labs on behavioral and digital trace data analysis (Google Trends, Fitbit, sensor data), data visualization, NLP, and algorithmic fairness; challenged students to interrogate models for potential bias from training data, historical inequities, and deployment context.
+- Designed and ran in-class randomized experiments (A/B tests) covering random assignment, hypothesis testing, and power analysis, demonstrating how controlled experimentation underpins data-driven product and policy decisions and where purely observational analysis falls short.
 
 **2020–2021** &emsp; Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX
 
-- Implemented county-wide initiatives collaborating across government and the private sector; permanent supportive housing proposals estimated at $6 million annual savings.
-- Developed automated COVID-19 reporting that reduced run time by 90% and improved data quality.
+- Automated COVID-19 surveillance reporting by replacing hand-transcribed web data and manual multi-source joins with a reproducible R pipeline ingesting DSHS, HCPH, and national datasets, reducing processing latency by 90% and enabling real-time data quality for policymakers.
+- Applied statistical modeling to evaluate county-wide housing initiatives, projecting $6 million in annual savings from permanent supportive housing proposals.
 
 **2020–Present** &emsp; Principal, [Atlas Analytics](https://www.analyticsbyatlas.com/), Houston, TX
 
-- Applied statistical modeling and NLP to increase referral conversion by approximately 20%.
-- Built a scalable entity resolution pipeline in Python/SQL joining fragmented SBA datasets with merchant registries, achieving 86% recall via a tiered probabilistic matching algorithm.
-- Architected end-to-end ML pipelines from feature engineering through model deployment, delivering customer propensity scoring and market segmentation solutions.
+- Built a Python/SQL entity resolution pipeline joining fragmented SBA datasets with merchant registries via a tiered probabilistic matching algorithm (86% recall on a manually labeled hold-out set), enabling downstream customer analytics and market segmentation.
+- Built data pipelines integrating a 2.2M-member consumer transaction panel (Earnest Analytics), device mobility data (SafeGraph), and COVID policy records; analyzed user acquisition and retention cohorts to quantify COVID-19's long-term impact on consumer behavior across 12 categories; acknowledged for research assistance in Oblander & McCarthy, *Marketing Science* (2023).
 
 **2018–2020** &emsp; Data Scientist, MAANA, Houston, TX
 
-- Built machine learning micro-services for dynamic shipping constraints; vessel optimization software cut route planning from hours to minutes.
-- Conducted cost baseline analysis of historical trades forecasting $100 million annual savings.
+- Partnered with solutions architects to engineer and deploy containerized ML microservices (Docker, Kubernetes) powering a real-time vessel routing optimizer across global multi-port routes, with ingestion pipelines parsing Q88 XML and integrating live weather, war-risk, and port data to cut fleet planning from hours to minutes; cost forecasting on historical trades projected $100M in annual savings.
 
-**2017–2018** &emsp; Postdoctoral Researcher, Università Bocconi, Milan, Italy
+**2017–2018** &emsp; Postdoctoral Researcher, [Università Bocconi](http://www.dondena.unibocconi.it/wps/wcm/connect/Cdr/Centro_Dondena/Home), Milan, Italy
 
 - Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy
+- Engineered multi-source data fusion pipelines from social media APIs and digital trace data to produce high-frequency population estimates and evaluate policy outcomes at scale.
 
 **2016–2017** &emsp; Program Manager, eScience Institute, Data Science for Social Good, Seattle, WA
 
