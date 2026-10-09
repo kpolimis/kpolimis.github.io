@@ -76,6 +76,75 @@ class TestAgeRegime:
         assert "stockton" not in regime
 
 
+class TestParsePbpQuarters:
+    """Unit tests for the BRef play-by-play parser."""
+
+    def _make_pbp_html(self, plays: list[str], quarters: int = 1) -> str:
+        """Build minimal PBP HTML with given plays in quarter 1."""
+        rows = [
+            '<tr><td colspan="6">Start of 1st quarter</td></tr>',
+        ]
+        for play in plays:
+            rows.append(f'<tr><td>11:59</td><td>{play}</td><td>0-0</td><td></td></tr>')
+        table_html = f'<table id="pbp">{"".join(rows)}</table>'
+        return f"<html><body>{table_html}</body></html>"
+
+    def test_ft_made_counted(self):
+        html = self._make_pbp_html(["John Stockton makes free throw 1 of 2"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert len(rows) == 1
+        assert rows[0]["FT"] == 1
+        assert rows[0]["FTA"] == 1
+        assert rows[0]["quarter"] == "1"
+
+    def test_ft_missed_only_increments_fta(self):
+        html = self._make_pbp_html(["John Stockton misses free throw 2 of 2"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert rows[0]["FT"] == 0
+        assert rows[0]["FTA"] == 1
+
+    def test_fg_made_increments_fga_and_pts(self):
+        html = self._make_pbp_html(["John Stockton makes two-point shot from 15 ft"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert rows[0]["FGA"] == 1
+        assert rows[0]["PTS"] == 2
+
+    def test_three_pointer_scores_3(self):
+        html = self._make_pbp_html(["John Stockton makes three-point shot from 24 ft"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert rows[0]["PTS"] == 3
+
+    def test_turnover_counted(self):
+        html = self._make_pbp_html(["Turnover by John Stockton: Bad Pass"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert rows[0]["TOV"] == 1
+
+    def test_other_player_ignored(self):
+        html = self._make_pbp_html(["Karl Malone makes jump shot"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        # No rows for Stockton if he didn't play
+        assert len(rows) == 0
+
+    def test_returns_empty_on_missing_table(self):
+        html = "<html><body><p>No PBP table here</p></body></html>"
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert rows == []
+
+
 class TestParseSeasonRange:
     def test_valid_range(self):
         assert fqs._parse_season_range("1996-2003") == (1996, 2003)

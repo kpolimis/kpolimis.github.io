@@ -68,23 +68,28 @@ def _ts_pct(pts: float, fga: float, fta: float) -> float | None:
     return pts / denom
 
 
-def _get_html(game_id: str) -> tuple[str | None, bool]:
-    """Return (html, cache_hit) for a BRef boxscore page."""
-    cache_path = HTML_CACHE_QUARTER / f"{game_id}.html"
+def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
+    """Return (html, cache_hit) for a BRef boxscore or PBP page."""
+    suffix = "_pbp" if pbp else ""
+    cache_path = HTML_CACHE_QUARTER / f"{game_id}{suffix}.html"
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8"), True
-    url = f"https://www.basketball-reference.com/boxscores/{game_id}.html"
+    base_url = (
+        f"https://www.basketball-reference.com/boxscores/pbp/{game_id}.html"
+        if pbp
+        else f"https://www.basketball-reference.com/boxscores/{game_id}.html"
+    )
     try:
         resp = requests.get(
-            url,
+            base_url,
             headers={"User-Agent": "stockton-research/1.0"},
             timeout=20,
         )
     except requests.RequestException as exc:
-        logger.warning("Request error for %s: %s", game_id, exc)
+        logger.warning("Request error for %s (pbp=%s): %s", game_id, pbp, exc)
         return None, False
     if resp.status_code != 200:
-        logger.warning("HTTP %d for game_id=%s", resp.status_code, game_id)
+        logger.warning("HTTP %d for game_id=%s (pbp=%s)", resp.status_code, game_id, pbp)
         return None, False
     cache_path.write_text(resp.text, encoding="utf-8")
     time.sleep(RATE_LIMIT_SEC)
@@ -110,6 +115,135 @@ def _extract_game_id(row: pd.Series) -> str | None:
     home = opponent if away_flag else home_team
     # BRef team abbreviations are already 3-char
     return f"{date_str}0{home.upper()}"
+
+
+def parse_pbp_quarters(
+    html: str,
+    player_id: str,
+    player_name: str,
+    game_id: str,
+    season: int,
+    date,
+    age_regime: str,
+) -> list[dict]:
+    """Parse BRef play-by-play HTML to produce per-quarter stats for one player.
+
+    BRef PBP URL: /boxscores/pbp/{game_id}.html
+    Table id: 'pbp'. Each row is one play; quarter boundaries are identified
+    by cells containing 'Start of Nth quarter/overtime'.
+
+    Returns a list of dicts (one per quarter played by this player).
+    Returns empty list if player not found or didn't play.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    pbp_table = soup.find("table", {"id": "pbp"})
+    if pbp_table is None:
+        return []
+
+    # BRef player names vary slightly; build all-lowercase match set
+    name_lower = player_name.lower()
+    first_name = player_name.split()[0].lower() if player_name else ""
+    last_name = player_name.split()[-1].lower() if player_name else ""
+
+    # Stats accumulators per quarter
+    quarters: dict[str, dict] = {}
+    current_quarter = "1"
+
+    quarter_header_re = re.compile(
+        r"start of (1st|2nd|3rd|4th|1st ot|2nd ot|ot)\s+(quarter|overtime|period)",
+        re.IGNORECASE,
+    )
+
+    for tr in pbp_table.find_all("tr"):
+        tds = tr.find_all("td")
+        if not tds:
+            continue
+
+        # Check for quarter header row
+        full_text = tr.get_text(" ", strip=True).lower()
+        qm = quarter_header_re.search(full_text)
+        if qm:
+            q_label = qm.group(1).lower()
+            q_map = {"1st": "1", "2nd": "2", "3rd": "3", "4th": "4",
+                     "1st ot": "OT1", "2nd ot": "OT2", "ot": "OT1"}
+            current_quarter = q_map.get(q_label, q_label)
+            continue
+
+        # Each data row: col0=time, col1=visitor_play, col2=score, col3=home_play
+        if len(tds) < 4:
+            continue
+
+        visitor_play = tds[1].get_text(" ", strip=True)
+        home_play = tds[3].get_text(" ", strip=True)
+
+        for play_text in (visitor_play, home_play):
+            if not play_text:
+                continue
+            play_lower = play_text.lower()
+
+            # Check if this play involves our player
+            if last_name not in play_lower and first_name not in play_lower:
+                continue
+
+            if current_quarter not in quarters:
+                quarters[current_quarter] = {
+                    "FT": 0, "FTA": 0, "AST": 0, "TOV": 0, "FGA": 0, "PTS": 0
+                }
+            q = quarters[current_quarter]
+
+            # FT made
+            if re.search(r"makes free throw", play_lower):
+                q["FT"] += 1
+                q["FTA"] += 1
+            # FT missed
+            elif re.search(r"misses free throw", play_lower):
+                q["FTA"] += 1
+            # FG made (2 or 3 pts)
+            elif re.search(r"makes (two|three|2|3)[-\s]point|makes (jump|layup|dunk|tip|hook|fadeaway|running|driving)", play_lower):
+                q["FGA"] += 1
+                pts = 3 if re.search(r"three|3-point", play_lower) else 2
+                q["PTS"] += pts
+            # FG missed
+            elif re.search(r"misses (jump|layup|dunk|tip|hook|fadeaway|running|driving|two|three)", play_lower):
+                q["FGA"] += 1
+            # AST
+            elif re.search(r"\bassist\b", play_lower):
+                # BRef: "Player A makes ... (assist by Player B)" — Player B credited
+                if re.search(rf"assist\b.*\b{re.escape(last_name)}\b", play_lower):
+                    q["AST"] += 1
+            # TOV
+            if re.search(r"turnover by", play_lower):
+                q["TOV"] += 1
+
+    if not quarters:
+        return []
+
+    rows = []
+    for q_label, stats in quarters.items():
+        fta = stats["FTA"]
+        ft_pct = (stats["FT"] / fta) if fta > 0 else None
+        fga = stats["FGA"]
+        pts = stats["PTS"]
+        ts = _ts_pct(pts, fga, fta)
+        rows.append({
+            "game_id": game_id,
+            "player_id": player_id,
+            "player_name": player_name,
+            "season": season,
+            "date": date,
+            "quarter": q_label,
+            "FT": stats["FT"],
+            "FTA": fta,
+            "FT_pct": ft_pct,
+            "AST": stats["AST"],
+            "TOV": stats["TOV"],
+            "FGA": fga,
+            "PTS": pts,
+            "TS_pct": ts,
+            "age_regime": age_regime,
+            "score_margin": None,  # margin extracted from box score, not PBP
+        })
+    return rows
 
 
 def parse_quarter_box(
@@ -302,16 +436,29 @@ def fetch_quarter_splits(
             continue
 
         regime = _age_regime(pid, season)
-        html, was_cached = _get_html(game_id)
-        if was_cached:
+
+        # Try PBP first (gives true quarter-level stats; available ≥1996-97)
+        pbp_html, pbp_cached = _get_html(game_id, pbp=True)
+        if pbp_cached:
             cache_hits += 1
         else:
             new_requests += 1
 
-        if html is None:
-            continue
+        rows = []
+        if pbp_html:
+            rows = parse_pbp_quarters(pbp_html, pid, pname, game_id, season, date, regime)
 
-        rows = parse_quarter_box(html, pid, pname, game_id, season, date, regime)
+        # Fall back to full-game box score (produces quarter='full'; less informative
+        # but still captures FTA/FGA/score_margin used in blowout sensitivity)
+        if not rows:
+            box_html, box_cached = _get_html(game_id, pbp=False)
+            if box_cached:
+                cache_hits += 1
+            else:
+                new_requests += 1
+            if box_html:
+                rows = parse_quarter_box(box_html, pid, pname, game_id, season, date, regime)
+
         all_rows.extend(rows)
 
     logger.info(
