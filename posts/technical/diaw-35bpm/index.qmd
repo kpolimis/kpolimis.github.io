@@ -1,0 +1,121 @@
+---
+title: "The 35 BPM Heart: Testing Boris Diaw's Durability Signal in the Box Score"
+description: "Can we detect an extraordinary resting heart rate in career statistics? We test E1 (career durability), E3 (shot selection), E2/E4/E5 (within-game resilience) for Boris Diaw against a matched PF cohort using permutation inference."
+author: "Kivan Polimis"
+date: "2026-10-08"
+draft: true
+categories: [NBA, statistics, sports analytics, durability]
+---
+
+```{python}
+#| echo: false
+#| output: false
+import pathlib, sys
+sys.path.insert(0, str(pathlib.Path(".")))
+```
+
+## The Claim
+
+In 2016, it was reported that Boris Diaw had a resting heart rate of approximately 35 beats per minute — a figure associated with elite endurance athletes, not NBA power forwards. The claim invites a statistical question: if this physiology is real and consequential, can we find its trace in the box score?
+
+We cannot observe heart rate from game logs. But we can ask whether Diaw's durability and late-game performance stand out from a matched cohort of contemporary PFs in ways that are consistent with — though not proof of — exceptional cardiovascular capacity.
+
+This post is the first in a three-part series. It establishes the permutation-inference methodology on Diaw's full career (2004–2016), where BRef play-by-play coverage is complete. The [Stockton post](../stockton-durability/index.qmd) applies the same method to a more complex case; the [population study](../nba-durability-population/index.qmd) checks whether the signal holds in the broader BRef era.
+
+---
+
+## Who to Compare Diaw To
+
+*[Placeholder: cohort table — Diaw + 5 PF comparators with career game totals, MPG, seasons.
+Data source: `data/cohort_summary.csv` after full cohort fetch.]*
+
+Selection rule: power forwards who debuted 1995–2010, played ≥ 600 career games, averaged ≥ 28 MPG. This yields 5 comparators: Dirk Nowitzki, Carlos Boozer, Antawn Jamison, Shawn Marion, and Rashard Lewis.
+
+Note: the threshold conditions on the dependent variable for E1 (selection-on-outcome bias). The estimand's scope is durability *among players who completed a long career*, not all PFs. This is stated in every result below.
+
+---
+
+## Did He Actually Miss Fewer Games? (E1)
+
+*[Placeholder: E1 histogram — `data/figures/pf/e1_histogram.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e1-pf
+#| fig-cap: "Career games missed per 82 — PF cohort. Diaw marked in red."
+#| fig-alt: "Histogram of games missed per 82-game season for Boris Diaw and 5 PF comparators. Diaw's position in the distribution is marked."
+from IPython.display import Image
+import pathlib
+p = pathlib.Path("data/figures/pf/e1_histogram.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+*E1 results and permutation null distribution will appear here after `analyze_durability.py --cohort pf` is run against the full cohort parquet.*
+
+**Reference class note:** Cohort selected on ≥ 600 games — E1 estimand scope is durability among players who completed a long career, not all players.
+
+---
+
+## Does He Hold Up Late in Games? (E3)
+
+*[Placeholder: E3 scatter — `data/figures/pf/e3_scatter.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e3-pf
+#| fig-cap: "Shot selection shift on back-to-back games vs rest — PF cohort."
+#| fig-alt: "Scatter plot of back-to-back minus rest differences in 3PA/FGA (x-axis) and FTA/FGA (y-axis) for each PF cohort player. Diaw labeled."
+p = pathlib.Path("data/figures/pf/e3_scatter.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+**B2B selection note:** conditioning on playing a back-to-back selects healthier player-states; within-player pairing removes stable effects but not state selection. Claims are restricted to "among games actually played."
+
+---
+
+## Within-Game Resilience: E2, E4, E5
+
+*[Placeholder: E2/E4/E5 results from `analyze_quarter_splits.py --cohort pf`.
+Figures: `data/figures/pf/e2_q4_ft_degradation.png`, `e4_ast_tov.png`, `e5_ts_pct.png`.]*
+
+```{python}
+#| echo: false
+#| label: fig-e2-pf
+#| fig-cap: "E2: FT% by quarter — Diaw vs PF cohort."
+#| fig-alt: "Bar chart comparing FT% by quarter for Diaw (left panel) versus the full PF cohort (right panel)."
+p = pathlib.Path("data/figures/pf/e2_q4_ft_degradation.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+**Confound note:** late-game stats carry significant confounders — score margin, intentional fouling, and garbage-time lineup changes. FT% (E2) is the least confounded because FT shooting is isolated and not directly managed by clock or margin decisions.
+
+---
+
+## What the Data Can and Cannot Say
+
+**Selection bias.** The cohort is conditioned on ≥ 600 career games. E1 results describe durability *among long-career PFs*, not PFs generally.
+
+**B2B state selection.** Players who appear in back-to-back games are, by definition, healthy enough to play. The B2B comparison is within healthier player-states, not a random draw from all states.
+
+**Within-game confounders.** Score margin, intentional fouling in close games, and garbage-time rotation changes all affect 4th-quarter statistics in ways that BRef box scores do not resolve.
+
+**Causal language.** This analysis cannot establish that Diaw's heart rate *caused* any observed durability gap. The findings are *consistent with* the physiology claim but do not prove it. A gap near zero is also a legitimate scientific result — a rigorous null updates the prior.
+
+---
+
+## Conclusion
+
+*[Placeholder: one paragraph — size of observed gap, confidence, what would be needed to go further.
+Written after analysis results are available.]*
+
+---
+
+## Technical Notes
+
+- All intervals are permutation-based (treatment reassigned over cohort). No p-value thresholds.
+- Analysis scripts: `analyze_durability.py --cohort pf`, `analyze_quarter_splits.py --cohort pf`
+- Data: `data/game_logs.parquet`, `data/quarter_splits_pf.parquet`
+- Environment: `conda run -n blog python ...`

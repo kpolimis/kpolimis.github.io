@@ -1,0 +1,121 @@
+---
+title: "Can We See John Stockton's Heart Rate in the Box Score?"
+description: "E1 (career durability), E3 (shot selection), and E2/E4/E5 (within-game, 1996–2003 only) for Stockton against 14 matched PG contemporaries, using permutation inference throughout."
+author: "Kivan Polimis"
+date: "2026-10-08"
+draft: true
+categories: [NBA, statistics, sports analytics, durability]
+---
+
+```{python}
+#| echo: false
+#| output: false
+import pathlib, sys
+sys.path.insert(0, str(pathlib.Path(".")))
+```
+
+## The Claim
+
+John Stockton reportedly had a resting heart rate near 35 beats per minute — a number cited in profiles as evidence of elite cardiovascular adaptation. Applied to an NBA point guard who played 1,504 regular-season games over 19 seasons, the claim is specific enough to test: if that physiology were consequential, we should be able to find its trace in durability, fatigue-driven shot selection, and late-game efficiency.
+
+This post asks whether that trace is detectable. It uses the same permutation-inference methodology established in the [Diaw post](../diaw-35bpm/index.qmd), applied to the harder case: a longer career with a pre-1996 data gap that limits within-game analysis to Stockton's ages 34–40.
+
+---
+
+## Who to Compare Stockton To
+
+*[Placeholder: cohort table after full PG fetch.
+Source: `data/cohort_summary.csv`]*
+
+Selection: point guards who debuted 1984–2000, played ≥ 600 career games, averaged ≥ 28 MPG. 15 players including Isiah Thomas, Kevin Johnson, Tim Hardaway, Gary Payton, Jason Kidd, and Steve Nash.
+
+---
+
+## Did He Actually Miss Fewer Games? (E1 — full career 1984–2003)
+
+*[Placeholder: E1 histogram — `data/figures/pg/e1_histogram.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e1-pg
+#| fig-cap: "Career games missed per 82 — PG cohort. Stockton marked in red."
+#| fig-alt: "Histogram of games missed per 82-game season for Stockton and 14 PG comparators."
+from IPython.display import Image
+import pathlib
+p = pathlib.Path("data/figures/pg/e1_histogram.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+**Reference class note:** Cohort selected on ≥ 600 games (n=15 reference class). E1 estimand scope is durability among players who completed a long career, not all players.
+
+---
+
+## Does He Hold Up Late in Games? (E3 — full career)
+
+*[Placeholder: E3 scatter — `data/figures/pg/e3_scatter.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e3-pg
+#| fig-cap: "Shot selection shift on back-to-back games vs rest — PG cohort."
+#| fig-alt: "Scatter of B2B minus rest differences in 3PA/FGA and FTA/FGA for each PG cohort player. Stockton labeled."
+p = pathlib.Path("data/figures/pg/e3_scatter.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+---
+
+## Within-Game Resilience: 1996–2003 Window (Stockton ages 34–40)
+
+**Data limitation:** BRef play-by-play starts 1996-97. Stockton's first 12 seasons (1984–96) have no quarter data. Outreach to Squared Statistics (Justin Jacobs) for video-reconstructed pre-1996 data is pending; see `data/html_cache/jacobs_outreach.md`.
+
+**Age-regime caveat:** this analysis covers Stockton ages 34–40. A null result in this window does not contradict a peak-workload resilience claim during his prime (ages 22–34). These results and prime-career results are different estimands and should not be conflated.
+
+```{python}
+#| echo: false
+#| label: fig-e2-pg
+#| fig-cap: "E2: FT% by quarter — Stockton vs PG cohort, 1996–2003."
+#| fig-alt: "Bar chart of FT% by quarter for Stockton (left) versus PG cohort (right), restricted to 1996–2003 season window."
+p = pathlib.Path("data/figures/pg/e2_q4_ft_degradation.png")
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+### Confounders for within-game estimands
+
+| Confounder | Direction | Mitigation |
+|---|---|---|
+| Score margin (blowout) | Starters sit; suppresses minutes and compresses estimates | Sensitivity: restricted to games with Q4 margin ≤ 10 |
+| Intentional fouling | Inflates FTA in close games; FT% reflects pressure context | FT% (E2) is least-confounded metric |
+| Timeout availability | Teams with more timeouts grant more recovery time; unmeasured | Stated explicitly; not mitigated |
+| Age regime (34–40) | Later-career Stockton; null ≠ no prime-career effect | Stated explicitly in every result |
+
+---
+
+## What the Data Can and Cannot Say
+
+**Selection bias.** Cohort conditioned on ≥ 600 career games — describes durability among long-career PGs.
+
+**B2B state selection.** Back-to-back comparison is within healthier player-states by construction.
+
+**Causal language.** No result here proves or disproves the 35 BPM figure. The analysis is *consistent with* or *does not contradict* the physiology claim. It does not establish a causal mechanism.
+
+**Pre-1996 gap.** E2/E4/E5 cover 7 of Stockton's 19 seasons. Any claim about his full-career within-game resilience requires either additional data sources or an explicit extrapolation caveat.
+
+---
+
+## Conclusion
+
+*[Placeholder — written after analysis results.]*
+
+---
+
+## Technical Notes
+
+- Methodology: as established in [Boris Diaw post](../diaw-35bpm/index.qmd).
+- All intervals permutation-based; no p-value thresholds.
+- E1/E3: `analyze_durability.py --cohort pg`
+- E2/E4/E5: `analyze_quarter_splits.py --cohort pg`
+- Data: `data/game_logs.parquet`, `data/quarter_splits_pg.parquet`

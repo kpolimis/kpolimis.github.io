@@ -134,6 +134,19 @@ commit_msg.md
 posts/blog/epl-2026-27-predictions/data/*.csv
 posts/blog/epl-2026-27-predictions/data/matches/
 
-# Handoff packets (local working docs; directory tracked via .gitkeep)
+# Stockton durability — commit analysis outputs (parquets, figures, CSVs)
+# HTML cache is too large and is always re-creatable from BRef
+posts/technical/stockton-durability/data/html_cache/
+# Test-generated permutation parquets (cohort="test*") are test artifacts
+posts/technical/stockton-durability/data/e1_test*.parquet
+posts/technical/stockton-durability/data/e2_test*.parquet
+posts/technical/stockton-durability/data/e4_test*.parquet
+posts/technical/stockton-durability/data/e5_test*.parquet
+# Keep __pycache__ out
+posts/technical/stockton-durability/__pycache__/
+posts/technical/stockton-durability/tests/__pycache__/
+
+# Handoff packets — SESSION files committed; other working docs ignored
 docs/handoffs/*
 !docs/handoffs/.gitkeep
+!docs/handoffs/SESSION-*.md

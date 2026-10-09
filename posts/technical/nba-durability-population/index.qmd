@@ -1,0 +1,103 @@
+---
+title: "How Unusual Is 1.2 Games Missed Per 82? A Population View of NBA Durability"
+description: "Places Stockton and Diaw in the full BRef-era distribution of guards and forwards (1980–2010). E1 and E3 at population scale, with era as a fixed covariate."
+author: "Kivan Polimis"
+date: "2026-10-08"
+draft: true
+categories: [NBA, statistics, sports analytics, durability, population study]
+---
+
+```{python}
+#| echo: false
+#| output: false
+import pathlib, sys
+sys.path.insert(0, str(pathlib.Path("../../stockton-durability/")))
+DATA_DIR = pathlib.Path("../../stockton-durability/data")
+```
+
+## Why a Population Study?
+
+The individual posts ([Diaw](../diaw-35bpm/index.qmd), [Stockton](../stockton-durability/index.qmd)) establish signals in curated cohorts. The population study is the credibility check: does the gap persist when the reference class is every high-workload guard or forward in the BRef era, not a hand-selected 15?
+
+It also surfaces unexpected outliers — players whose durability is unusual in ways the curated analysis did not anticipate.
+
+---
+
+## Cohort Definition
+
+*[Placeholder: population_cohort table. Source: `data/population_cohort.csv`]*
+
+**Guards (G, PG, SG):** debuted 1980–2010, ≥ 600 career games, ≥ 28 MPG.
+**Forwards (F, PF, SF):** debuted 1995–2010, same thresholds.
+
+Expected N: 300–500 qualifying players from ~1,500 candidates before threshold filtering.
+
+**Era variable:** `era = f"{(debut_year // 10) * 10}s"` — used as a fixed effect in the OLS model to control for era-level pace and usage differences.
+
+---
+
+## E1: Career Durability Distribution
+
+*[Placeholder: distribution histogram — `data/figures/population/e1_distribution.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e1-pop
+#| fig-cap: "Career games missed per 82 — full BRef-era distribution, by position × era. Stockton and Diaw labeled."
+#| fig-alt: "Histogram panels of games missed per 82 for guards and forwards by decade, with Stockton and Diaw labeled."
+from IPython.display import Image
+p = DATA_DIR / "figures/population/e1_distribution.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+*OLS model: `games_missed ~ is_stockton + career_mpg + era + position`; era as fixed effect. Coefficient table appears after `analyze_durability.py --cohort population` runs.*
+
+**Selection note:** population conditioned on ≥ 600 games. E1 estimand scope is durability among players who completed a long career. Truncated distribution — interpret percentile ranks with this in mind.
+
+---
+
+## Outlier Table
+
+*[Placeholder: top-10 most durable and bottom-10 least durable per position.
+Source: `data/population_outliers.csv`]*
+
+---
+
+## E3: Shot Selection B2B vs Rest
+
+*[Placeholder: E3 scatter — `data/figures/population/e3_scatter.png`]*
+
+```{python}
+#| echo: false
+#| label: fig-e3-pop
+#| fig-cap: "E3: shot selection on B2Bs vs rest — population distribution. Stockton and Diaw labeled."
+#| fig-alt: "Scatter plot of B2B minus rest differences in 3PA/FGA and FTA/FGA for the population, with Stockton and Diaw labeled."
+p = DATA_DIR / "figures/population/e3_scatter.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+---
+
+## What the Data Can and Cannot Say
+
+The population study inherits all selection caveats from the individual posts. Additional notes:
+
+- **Era confound:** earlier decades had different pace, usage, and medical practices. The era fixed effect controls for mean differences but not heterogeneity within eras.
+- **Position coding:** BRef position labels are inconsistent across eras. Forwards and guards with dual-position codes are assigned to their primary listed position.
+- **Incomplete population:** the population scrape covers BRef index pages as of the fetch date. Players whose careers predate BRef's digital records (pre-1980) are excluded by construction.
+
+---
+
+## Conclusion
+
+*[Placeholder — written after analysis results.]*
+
+---
+
+## Technical Notes
+
+- Population fetch: `fetch_bref_data.py --build-population && fetch_bref_data.py --population-fetch`
+- Analysis: `analyze_durability.py --cohort population`
+- Data: `../../stockton-durability/data/`
