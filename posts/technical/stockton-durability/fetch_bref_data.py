@@ -327,6 +327,14 @@ def build_population_cohort() -> None:
         if "Player" not in df.columns:
             continue
 
+        # Pre-build name→player_id mapping once per letter page (O(n) not O(n²))
+        player_link_re = re.compile(rf"/players/{letter}/(\w+)\.html")
+        name_to_pid: dict[str, str] = {}
+        for tag in soup.find_all("a", href=player_link_re):
+            m = player_link_re.search(tag["href"])
+            if m:
+                name_to_pid[tag.get_text(strip=True)] = m.group(1)
+
         for _, r in df.iterrows():
             name = str(r.get("Player", "")).strip()
             pos = str(r.get("Pos", "")).strip()
@@ -348,15 +356,9 @@ def build_population_cohort() -> None:
             if not ((is_guard and guard_era) or (is_forward and forward_era)):
                 continue
 
-            # Extract player_id from the href
-            href = ""
-            for tag in soup.find_all("a", href=re.compile(rf"/players/{letter}/\w+\.html")):
-                if tag.get_text(strip=True) == name:
-                    href = tag["href"]
-                    break
-            if not href:
+            pid = name_to_pid.get(name)
+            if not pid:
                 continue
-            pid = href.split("/")[-1].replace(".html", "")
             era = f"{(debut // 10) * 10}s"
             rows.append({
                 "player_name": name,
