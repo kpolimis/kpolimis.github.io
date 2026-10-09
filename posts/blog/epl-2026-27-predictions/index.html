@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kivan Polimis">
+<meta name="dcterms.date" content="2026-09-26">
+<meta name="description" content="I ran an 18-season LOSO horse race — prior, rational updater, market posterior — to ask whether the Week-2 odds are actually better forecasts than the preseason odds were. They are not.">
+
+<title>Week One Told You Nothing – Kivan Polimis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-5c1318cf63eba56dbef7ba16bc7d56f5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-240167e2aa1b0458c56e668692b9e94d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivan-polimis-36b54a9/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-prior-is-hard-to-beat" id="toc-the-prior-is-hard-to-beat" class="nav-link active" data-scroll-target="#the-prior-is-hard-to-beat">The prior is hard to beat</a></li>
+  <li><a href="#the-market-moves-about-20-more-than-the-results-justify" id="toc-the-market-moves-about-20-more-than-the-results-justify" class="nav-link" data-scroll-target="#the-market-moves-about-20-more-than-the-results-justify">The market moves — about 20% more than the results justify</a></li>
+  <li><a href="#the-horse-race" id="toc-the-horse-race" class="nav-link" data-scroll-target="#the-horse-race">The horse race</a></li>
+  <li><a href="#does-the-market-take-it-back" id="toc-does-the-market-take-it-back" class="nav-link" data-scroll-target="#does-the-market-take-it-back">Does the market take it back?</a></li>
+  <li><a href="#what-week-1-is-worth" id="toc-what-week-1-is-worth" class="nav-link" data-scroll-target="#what-week-1-is-worth">What Week 1 is worth</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Week One Told You Nothing</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">sports</div>
+    <div class="quarto-category">football</div>
+    <div class="quarto-category">premier-league</div>
+    <div class="quarto-category">statistics</div>
+    <div class="quarto-category">betting</div>
+    <div class="quarto-category">data-viz</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    I ran an 18-season LOSO horse race — prior, rational updater, market posterior — to ask whether the Week-2 odds are actually better forecasts than the preseason odds were. They are not.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kivan Polimis </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 26, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The 2026/27 <a href="https://www.premierleague.com/en">Premier League</a> season opened last month, and the bookmakers did what they always do after an opening weekend: they moved. Teams that won saw their season odds shorten by Tuesday; teams that lost drifted out. The question I want to ask is not whether the market should have moved — new information arrived, and a price that ignores information is a worse price — but whether it should have moved <em>that much</em>.</p>
+<p>The Bayesian framing makes the stakes precise. The preseason odds are the market’s prior, the distillation of everything knowable before a ball is kicked. Week 1 is one observation — 1 of 38 matches, about 2.6% of the season’s evidence, and a noisy 2.6% at that. The Week-2 odds are the market’s posterior. A rational updater confronted with one match barely moves. If the market moves substantially more than the results justify, and seasons still end near the preseason prior anyway, the Week-1 move was overreaction. I have eighteen seasons of data to check.</p>
+<section id="the-prior-is-hard-to-beat" class="level2">
+<h2 class="anchored" data-anchor-id="the-prior-is-hard-to-beat">The prior is hard to beat</h2>
+<p>Before asking whether the posterior overshoots, it is worth establishing what the prior is worth — because the preseason odds turn out to carry a startling amount of information. For every team in every season from 2008/09 through 2025/26 I built a preseason strength rating: a regression-toward-the-mean seed from last season’s table, refined by the Week-1 closing lines, which are posted before any match is played. That prior strength correlates with final league points at r = 0.81. For instance, sort the 360 team-seasons into preseason terciles and the top tier goes on to finish in the top four 52% of the time, the middle tier 5% of the time, and the bottom tier never — not once in eighteen seasons. Whatever Week 1 tells the market, it is competing against a prior that already knows most of the answer.</p>
+<div id="cell-chart-prior-quality" class="cell" data-execution_count="3">
+<div id="chart-prior-quality" class="cell-output cell-output-display" data-execution_count="2">
+
+<style>
+  #altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6.vega-embed details,
+  #altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6") {
+      outputDiv = document.getElementById("altair-viz-d9ea55b2fb874f08a2b54b5248cd38b6");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-a228f6cef77630d22bdf8fdfb8bca84a"}, "mark": {"type": "circle", "opacity": 0.55, "size": 45}, "encoding": {"color": {"field": "tier", "legend": {"title": "Preseason tier"}, "scale": {"domain": ["Top", "Mid", "Bottom"], "range": ["#1f77b4", "#999999", "#e67e22"]}, "type": "nominal"}, "tooltip": [{"field": "club", "title": "Club", "type": "nominal"}, {"field": "season_lbl", "title": "Season", "type": "nominal"}, {"field": "prior_strength", "format": ".2f", "title": "Prior strength", "type": "quantitative"}, {"field": "final_points", "title": "Final points", "type": "quantitative"}], "x": {"axis": {"title": "Preseason prior strength"}, "field": "prior_strength", "type": "quantitative"}, "y": {"axis": {"title": "Final league points"}, "field": "final_points", "scale": {"zero": false}, "type": "quantitative"}}, "height": 340, "params": [{"name": "param_1e9efca18e7a2868", "select": {"type": "interval", "encodings": ["x", "y"]}, "bind": "scales"}], "title": "The Preseason Odds Already Know Most of the Answer", "width": 620, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-a228f6cef77630d22bdf8fdfb8bca84a": [{"club": "Arsenal", "season_lbl": "2008/09", "prior_strength": 0.8676945342746903, "final_points": 72, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2008/09", "prior_strength": 0.14864732835973288, "final_points": 62, "preseason_tier": "top", "tier": "Top"}, {"club": "Blackburn", "season_lbl": "2008/09", "prior_strength": 0.05846966306579983, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Bolton", "season_lbl": "2008/09", "prior_strength": -0.17286726911840694, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Chelsea", "season_lbl": "2008/09", "prior_strength": 0.921792281900532, "final_points": 83, "preseason_tier": "top", "tier": "Top"}, {"club": "Everton", "season_lbl": "2008/09", "prior_strength": 0.25371975283922327, "final_points": 63, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2008/09", "prior_strength": -0.21213353607140822, "final_points": 53, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Hull", "season_lbl": "2008/09", "prior_strength": -0.445111463481915, "final_points": 35, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2008/09", "prior_strength": 0.7034529706444687, "final_points": 86, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2008/09", "prior_strength": -0.13503211405843224, "final_points": 50, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Manchester United", "season_lbl": "2008/09", "prior_strength": 0.8542023292756733, "final_points": 90, "preseason_tier": "top", "tier": "Top"}, {"club": "Middlesbrough", "season_lbl": "2008/09", "prior_strength": -0.41012390310569563, "final_points": 32, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Newcastle", "season_lbl": "2008/09", "prior_strength": -0.3785117169944313, "final_points": 34, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Portsmouth", "season_lbl": "2008/09", "prior_strength": -0.2018967426430827, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2008/09", "prior_strength": -0.4864223758528356, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Sunderland", "season_lbl": "2008/09", "prior_strength": -0.4920970011429199, "final_points": 36, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2008/09", "prior_strength": 0.11217265494899051, "final_points": 51, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2008/09", "prior_strength": -0.5846527646642474, "final_points": 32, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2008/09", "prior_strength": -0.07719802320381824, "final_points": 51, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wigan", "season_lbl": "2008/09", "prior_strength": -0.3241046049719181, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2009/10", "prior_strength": 0.6787504891789521, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2009/10", "prior_strength": 0.22122049157870224, "final_points": 64, "preseason_tier": "top", "tier": "Top"}, {"club": "Birmingham", "season_lbl": "2009/10", "prior_strength": -0.5038050975858656, "final_points": 50, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Blackburn", "season_lbl": "2009/10", "prior_strength": -0.48161705174858954, "final_points": 50, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Bolton", "season_lbl": "2009/10", "prior_strength": -0.4073872525321174, "final_points": 39, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2009/10", "prior_strength": -0.38755170455904125, "final_points": 30, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2009/10", "prior_strength": 0.8853050496858819, "final_points": 86, "preseason_tier": "top", "tier": "Top"}, {"club": "Everton", "season_lbl": "2009/10", "prior_strength": 0.15440484885410907, "final_points": 61, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2009/10", "prior_strength": 0.02588127081245778, "final_points": 46, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Hull", "season_lbl": "2009/10", "prior_strength": -0.7293638684589401, "final_points": 30, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2009/10", "prior_strength": 0.7345079810458829, "final_points": 63, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2009/10", "prior_strength": 0.16682394201888293, "final_points": 67, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2009/10", "prior_strength": 0.9974066673453656, "final_points": 85, "preseason_tier": "top", "tier": "Top"}, {"club": "Portsmouth", "season_lbl": "2009/10", "prior_strength": -0.28558561443080144, "final_points": 28, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2009/10", "prior_strength": -0.11198272086934408, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2009/10", "prior_strength": -0.3975605225019925, "final_points": 44, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2009/10", "prior_strength": 0.11935793318627402, "final_points": 70, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2009/10", "prior_strength": -0.02067993726503374, "final_points": 35, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wigan", "season_lbl": "2009/10", "prior_strength": -0.32695326112090584, "final_points": 36, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2009/10", "prior_strength": -0.33117164263387705, "final_points": 38, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2010/11", "prior_strength": 0.5954417744443687, "final_points": 68, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2010/11", "prior_strength": 0.05877179077990757, "final_points": 48, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Birmingham", "season_lbl": "2010/11", "prior_strength": -0.2968238753505184, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Blackburn", "season_lbl": "2010/11", "prior_strength": -0.060972786287067725, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Blackpool", "season_lbl": "2010/11", "prior_strength": -0.6420898270604762, "final_points": 39, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Bolton", "season_lbl": "2010/11", "prior_strength": -0.3668193415964498, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2010/11", "prior_strength": 1.0443512658857415, "final_points": 71, "preseason_tier": "top", "tier": "Top"}, {"club": "Everton", "season_lbl": "2010/11", "prior_strength": 0.3907724002983985, "final_points": 54, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2010/11", "prior_strength": -0.3363907149153265, "final_points": 49, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2010/11", "prior_strength": 0.39509431245686805, "final_points": 58, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2010/11", "prior_strength": 0.3625964265298373, "final_points": 71, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2010/11", "prior_strength": 0.9900801782840969, "final_points": 80, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2010/11", "prior_strength": -0.44676802435821134, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Stoke", "season_lbl": "2010/11", "prior_strength": -0.21927439240186186, "final_points": 46, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2010/11", "prior_strength": -0.26478677616982765, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2010/11", "prior_strength": 0.2541089182834395, "final_points": 62, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2010/11", "prior_strength": -0.5551214123752107, "final_points": 47, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2010/11", "prior_strength": -0.23726180873557015, "final_points": 33, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wigan", "season_lbl": "2010/11", "prior_strength": -0.36183575495755277, "final_points": 42, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Wolves", "season_lbl": "2010/11", "prior_strength": -0.30307235275458516, "final_points": 40, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2011/12", "prior_strength": 0.5060440303393741, "final_points": 70, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2011/12", "prior_strength": 0.01781613402465791, "final_points": 38, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Blackburn", "season_lbl": "2011/12", "prior_strength": -0.2896042724065862, "final_points": 31, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Bolton", "season_lbl": "2011/12", "prior_strength": -0.3561922433084149, "final_points": 36, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Chelsea", "season_lbl": "2011/12", "prior_strength": 0.8374620804266275, "final_points": 64, "preseason_tier": "top", "tier": "Top"}, {"club": "Everton", "season_lbl": "2011/12", "prior_strength": 0.3182693121587015, "final_points": 56, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2011/12", "prior_strength": 0.023209892511677644, "final_points": 52, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2011/12", "prior_strength": 0.3619721594788644, "final_points": 52, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2011/12", "prior_strength": 0.6626054891893524, "final_points": 89, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2011/12", "prior_strength": 1.0447264602112976, "final_points": 89, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2011/12", "prior_strength": -0.27541002583222735, "final_points": 65, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Norwich", "season_lbl": "2011/12", "prior_strength": -0.40453453981137844, "final_points": 47, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Qpr", "season_lbl": "2011/12", "prior_strength": -0.4916732475541448, "final_points": 37, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Stoke", "season_lbl": "2011/12", "prior_strength": -0.3435959904253158, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2011/12", "prior_strength": -0.38274025621495866, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Swansea", "season_lbl": "2011/12", "prior_strength": -0.600663903592653, "final_points": 47, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2011/12", "prior_strength": 0.4386562857466011, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2011/12", "prior_strength": -0.36492213005711865, "final_points": 47, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Wigan", "season_lbl": "2011/12", "prior_strength": -0.35990344379579714, "final_points": 43, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Wolves", "season_lbl": "2011/12", "prior_strength": -0.34152179108856, "final_points": 25, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2012/13", "prior_strength": 0.6124950252040748, "final_points": 73, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2012/13", "prior_strength": -0.4037623679113423, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2012/13", "prior_strength": 0.7259686204879493, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Everton", "season_lbl": "2012/13", "prior_strength": 0.1953750913573383, "final_points": 63, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2012/13", "prior_strength": 0.08415604715481008, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2012/13", "prior_strength": 0.2626946669749489, "final_points": 61, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2012/13", "prior_strength": 1.0090775108794754, "final_points": 78, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2012/13", "prior_strength": 1.1786671066380512, "final_points": 89, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2012/13", "prior_strength": 0.13765943245501003, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Norwich", "season_lbl": "2012/13", "prior_strength": -0.27801695259969894, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Qpr", "season_lbl": "2012/13", "prior_strength": -0.26158691096914943, "final_points": 25, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Reading", "season_lbl": "2012/13", "prior_strength": -0.481997241035025, "final_points": 28, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2012/13", "prior_strength": -0.6067867483153142, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Stoke", "season_lbl": "2012/13", "prior_strength": -0.3424244337288852, "final_points": 42, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2012/13", "prior_strength": -0.389205296629074, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Swansea", "season_lbl": "2012/13", "prior_strength": -0.3647890193847798, "final_points": 46, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2012/13", "prior_strength": 0.39592849429897153, "final_points": 72, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2012/13", "prior_strength": -0.5556218877945585, "final_points": 49, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2012/13", "prior_strength": -0.43053547543992055, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Wigan", "season_lbl": "2012/13", "prior_strength": -0.4872956616428816, "final_points": 36, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Arsenal", "season_lbl": "2013/14", "prior_strength": 0.6923327216407257, "final_points": 79, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2013/14", "prior_strength": -0.2938649431764401, "final_points": 38, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Cardiff", "season_lbl": "2013/14", "prior_strength": -0.5764578588418864, "final_points": 30, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2013/14", "prior_strength": 0.8564076990417195, "final_points": 82, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2013/14", "prior_strength": -0.5062824681651733, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Everton", "season_lbl": "2013/14", "prior_strength": 0.35500710798596585, "final_points": 72, "preseason_tier": "top", "tier": "Top"}, {"club": "Fulham", "season_lbl": "2013/14", "prior_strength": -0.3223717754708329, "final_points": 32, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Hull", "season_lbl": "2013/14", "prior_strength": -0.7164829858379826, "final_points": 37, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2013/14", "prior_strength": 0.4549739014501491, "final_points": 84, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2013/14", "prior_strength": 0.9077727839716783, "final_points": 86, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2013/14", "prior_strength": 0.9604461872728057, "final_points": 64, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2013/14", "prior_strength": -0.3107832890592184, "final_points": 49, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Norwich", "season_lbl": "2013/14", "prior_strength": -0.21301174123245023, "final_points": 33, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Southampton", "season_lbl": "2013/14", "prior_strength": -0.2225518571947277, "final_points": 56, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2013/14", "prior_strength": -0.5523655529198144, "final_points": 50, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Sunderland", "season_lbl": "2013/14", "prior_strength": -0.37395042297363196, "final_points": 38, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Swansea", "season_lbl": "2013/14", "prior_strength": -0.027508028176253103, "final_points": 42, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2013/14", "prior_strength": 0.583187959049026, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2013/14", "prior_strength": -0.3196528576574948, "final_points": 36, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2013/14", "prior_strength": -0.37484457970616314, "final_points": 40, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Arsenal", "season_lbl": "2014/15", "prior_strength": 1.0206852757370284, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2014/15", "prior_strength": -0.4896153463925656, "final_points": 38, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2014/15", "prior_strength": -0.690785509672457, "final_points": 33, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2014/15", "prior_strength": 0.9959052601665127, "final_points": 87, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2014/15", "prior_strength": -0.35921207042591763, "final_points": 48, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2014/15", "prior_strength": 0.31243263301218077, "final_points": 47, "preseason_tier": "top", "tier": "Top"}, {"club": "Hull", "season_lbl": "2014/15", "prior_strength": -0.6336354237631384, "final_points": 35, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leicester", "season_lbl": "2014/15", "prior_strength": -0.3455272090064133, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2014/15", "prior_strength": 0.9841666044591375, "final_points": 62, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2014/15", "prior_strength": 1.0094032390944618, "final_points": 79, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2014/15", "prior_strength": 0.7380537187418206, "final_points": 70, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2014/15", "prior_strength": -0.2656522607875721, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Qpr", "season_lbl": "2014/15", "prior_strength": -0.7352309206241158, "final_points": 30, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2014/15", "prior_strength": -0.15357092720117993, "final_points": 60, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2014/15", "prior_strength": -0.16352066609532862, "final_points": 54, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2014/15", "prior_strength": -0.4533119345429318, "final_points": 38, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Swansea", "season_lbl": "2014/15", "prior_strength": -0.4136048322932053, "final_points": 56, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2014/15", "prior_strength": 0.47142503866396823, "final_points": 64, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2014/15", "prior_strength": -0.45144400171488347, "final_points": 44, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2014/15", "prior_strength": -0.3769606673554007, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2015/16", "prior_strength": 0.8774715821730381, "final_points": 71, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2015/16", "prior_strength": -0.6906187098657747, "final_points": 17, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Bournemouth", "season_lbl": "2015/16", "prior_strength": -0.51797211165421, "final_points": 42, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2015/16", "prior_strength": 1.100755643571015, "final_points": 50, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2015/16", "prior_strength": -0.23381347991787474, "final_points": 42, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2015/16", "prior_strength": 0.024423237150347714, "final_points": 47, "preseason_tier": "top", "tier": "Top"}, {"club": "Leicester", "season_lbl": "2015/16", "prior_strength": -0.23022917670636908, "final_points": 81, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2015/16", "prior_strength": 0.5523922689770175, "final_points": 60, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2015/16", "prior_strength": 0.9840944747964673, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2015/16", "prior_strength": 0.8180873719390387, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2015/16", "prior_strength": -0.4718120976229152, "final_points": 37, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Norwich", "season_lbl": "2015/16", "prior_strength": -0.48900125701424635, "final_points": 34, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2015/16", "prior_strength": -0.053191930611230134, "final_points": 63, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2015/16", "prior_strength": -0.056631645613936514, "final_points": 51, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2015/16", "prior_strength": -0.48009216689679474, "final_points": 39, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Swansea", "season_lbl": "2015/16", "prior_strength": -0.07956748314504503, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2015/16", "prior_strength": 0.24335302920987195, "final_points": 70, "preseason_tier": "top", "tier": "Top"}, {"club": "Watford", "season_lbl": "2015/16", "prior_strength": -0.5615269619288126, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Brom", "season_lbl": "2015/16", "prior_strength": -0.29542805550731, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2015/16", "prior_strength": -0.44069253133227726, "final_points": 62, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2016/17", "prior_strength": 0.5070615161905228, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Bournemouth", "season_lbl": "2016/17", "prior_strength": -0.4489620327270491, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2016/17", "prior_strength": -0.4683417281876247, "final_points": 40, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2016/17", "prior_strength": 0.5620603180769016, "final_points": 93, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2016/17", "prior_strength": -0.25600121551222654, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2016/17", "prior_strength": -0.0873329614827811, "final_points": 61, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Hull", "season_lbl": "2016/17", "prior_strength": -0.560143060137584, "final_points": 34, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leicester", "season_lbl": "2016/17", "prior_strength": 0.47355893969788265, "final_points": 44, "preseason_tier": "top", "tier": "Top"}, {"club": "Liverpool", "season_lbl": "2016/17", "prior_strength": 0.5519144555474745, "final_points": 76, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2016/17", "prior_strength": 0.8179573837082178, "final_points": 78, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2016/17", "prior_strength": 0.5745187221756477, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "Middlesbrough", "season_lbl": "2016/17", "prior_strength": -0.4543694911406703, "final_points": 28, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2016/17", "prior_strength": 0.21701527023036898, "final_points": 46, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2016/17", "prior_strength": -0.3027209820225133, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2016/17", "prior_strength": -0.5544355312860424, "final_points": 24, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Swansea", "season_lbl": "2016/17", "prior_strength": -0.2858243862282343, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2016/17", "prior_strength": 0.48963631913151745, "final_points": 86, "preseason_tier": "top", "tier": "Top"}, {"club": "Watford", "season_lbl": "2016/17", "prior_strength": -0.2763005294704577, "final_points": 40, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Brom", "season_lbl": "2016/17", "prior_strength": -0.4705878731564356, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2016/17", "prior_strength": -0.02870313340691512, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2017/18", "prior_strength": 0.7593254913887905, "final_points": 63, "preseason_tier": "top", "tier": "Top"}, {"club": "Bournemouth", "season_lbl": "2017/18", "prior_strength": -0.2722447656606947, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2017/18", "prior_strength": -0.8448983901436695, "final_points": 40, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2017/18", "prior_strength": -0.5473388527112114, "final_points": 54, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2017/18", "prior_strength": 0.9474314678469672, "final_points": 70, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2017/18", "prior_strength": -0.34362938826186384, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2017/18", "prior_strength": 0.2201990714251142, "final_points": 49, "preseason_tier": "top", "tier": "Top"}, {"club": "Huddersfield", "season_lbl": "2017/18", "prior_strength": -0.7407204505061596, "final_points": 37, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leicester", "season_lbl": "2017/18", "prior_strength": -0.019321186360344293, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2017/18", "prior_strength": 0.7089727806326032, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2017/18", "prior_strength": 0.9769559574286288, "final_points": 100, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2017/18", "prior_strength": 0.8464495808864044, "final_points": 81, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2017/18", "prior_strength": -0.49971732884470166, "final_points": 44, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2017/18", "prior_strength": 0.13906820881914944, "final_points": 36, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Stoke", "season_lbl": "2017/18", "prior_strength": -0.32574666262610363, "final_points": 33, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Swansea", "season_lbl": "2017/18", "prior_strength": -0.4805543506467548, "final_points": 33, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2017/18", "prior_strength": 0.80526990643808, "final_points": 77, "preseason_tier": "top", "tier": "Top"}, {"club": "Watford", "season_lbl": "2017/18", "prior_strength": -0.5990543243838335, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Brom", "season_lbl": "2017/18", "prior_strength": -0.3684955969145465, "final_points": 31, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2017/18", "prior_strength": -0.3619511678058542, "final_points": 42, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2018/19", "prior_strength": 0.43128939973225683, "final_points": 70, "preseason_tier": "top", "tier": "Top"}, {"club": "Bournemouth", "season_lbl": "2018/19", "prior_strength": -0.26859073148193563, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2018/19", "prior_strength": -0.3913498400030034, "final_points": 36, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Burnley", "season_lbl": "2018/19", "prior_strength": -0.42981027181538456, "final_points": 40, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Cardiff", "season_lbl": "2018/19", "prior_strength": -0.6268623065441792, "final_points": 34, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2018/19", "prior_strength": 0.8009895474709884, "final_points": 72, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2018/19", "prior_strength": -0.32550047070965177, "final_points": 49, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2018/19", "prior_strength": -0.26094610431161946, "final_points": 54, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Fulham", "season_lbl": "2018/19", "prior_strength": -0.5673147748596253, "final_points": 26, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Huddersfield", "season_lbl": "2018/19", "prior_strength": -0.5497844973517002, "final_points": 16, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leicester", "season_lbl": "2018/19", "prior_strength": -0.07059964196180825, "final_points": 52, "preseason_tier": "top", "tier": "Top"}, {"club": "Liverpool", "season_lbl": "2018/19", "prior_strength": 0.9713429404824048, "final_points": 97, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2018/19", "prior_strength": 1.3270660132753491, "final_points": 98, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2018/19", "prior_strength": 0.7672501739143496, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2018/19", "prior_strength": -0.15740703625912533, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Southampton", "season_lbl": "2018/19", "prior_strength": -0.1056503485190631, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2018/19", "prior_strength": 0.7607310180167366, "final_points": 71, "preseason_tier": "top", "tier": "Top"}, {"club": "Watford", "season_lbl": "2018/19", "prior_strength": -0.4720436292743473, "final_points": 50, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2018/19", "prior_strength": -0.3892782440319159, "final_points": 52, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2018/19", "prior_strength": -0.4435311957687256, "final_points": 57, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Arsenal", "season_lbl": "2019/20", "prior_strength": 0.36940535464640145, "final_points": 56, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2019/20", "prior_strength": -0.714860842224121, "final_points": 35, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Bournemouth", "season_lbl": "2019/20", "prior_strength": -0.32229941596099954, "final_points": 34, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2019/20", "prior_strength": -0.6574726041250505, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2019/20", "prior_strength": -0.4196424347057018, "final_points": 54, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2019/20", "prior_strength": 0.4636203493431708, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2019/20", "prior_strength": -0.2348098778780399, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2019/20", "prior_strength": 0.18064434740263255, "final_points": 49, "preseason_tier": "top", "tier": "Top"}, {"club": "Leicester", "season_lbl": "2019/20", "prior_strength": -0.1456249732626814, "final_points": 62, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2019/20", "prior_strength": 1.2813343734760716, "final_points": 99, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2019/20", "prior_strength": 1.6115276135662409, "final_points": 81, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2019/20", "prior_strength": 0.7483641745229251, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2019/20", "prior_strength": -0.1621305861188813, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Norwich", "season_lbl": "2019/20", "prior_strength": -0.7036163573277651, "final_points": 21, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Sheffield United", "season_lbl": "2019/20", "prior_strength": -0.7496517969063599, "final_points": 54, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2019/20", "prior_strength": -0.3469641083080815, "final_points": 52, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2019/20", "prior_strength": 0.5877637753733558, "final_points": 59, "preseason_tier": "top", "tier": "Top"}, {"club": "Watford", "season_lbl": "2019/20", "prior_strength": -0.31091321464155736, "final_points": 34, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2019/20", "prior_strength": -0.2235151689578222, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2019/20", "prior_strength": -0.2511586079137358, "final_points": 59, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2020/21", "prior_strength": 0.3196325048852158, "final_points": 61, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2020/21", "prior_strength": -0.4895081683015795, "final_points": 55, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Brighton", "season_lbl": "2020/21", "prior_strength": -0.5378482609770993, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Burnley", "season_lbl": "2020/21", "prior_strength": -0.5690414220738635, "final_points": 39, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2020/21", "prior_strength": 0.6252127421107397, "final_points": 67, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2020/21", "prior_strength": -0.45187103465384854, "final_points": 44, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Everton", "season_lbl": "2020/21", "prior_strength": -0.01136545477312541, "final_points": 59, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Fulham", "season_lbl": "2020/21", "prior_strength": -0.7104409194066558, "final_points": 28, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leeds", "season_lbl": "2020/21", "prior_strength": -0.45144450188627033, "final_points": 59, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Leicester", "season_lbl": "2020/21", "prior_strength": 0.21585975830612592, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Liverpool", "season_lbl": "2020/21", "prior_strength": 1.2027383416786226, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2020/21", "prior_strength": 1.3198121207282743, "final_points": 86, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2020/21", "prior_strength": 0.7465575119563268, "final_points": 74, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2020/21", "prior_strength": -0.4795477949860753, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Sheffield United", "season_lbl": "2020/21", "prior_strength": -0.3796284562095424, "final_points": 23, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Southampton", "season_lbl": "2020/21", "prior_strength": -0.11992720372602567, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2020/21", "prior_strength": 0.3646410905890246, "final_points": 62, "preseason_tier": "top", "tier": "Top"}, {"club": "West Brom", "season_lbl": "2020/21", "prior_strength": -0.3836007428035086, "final_points": 26, "preseason_tier": "mid", "tier": "Mid"}, {"club": "West Ham", "season_lbl": "2020/21", "prior_strength": -0.17278374969464802, "final_points": 65, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2020/21", "prior_strength": -0.037446360762088175, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2021/22", "prior_strength": 0.23882934542129222, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2021/22", "prior_strength": -0.19785599665567635, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brentford", "season_lbl": "2021/22", "prior_strength": -0.6222288014385113, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Brighton", "season_lbl": "2021/22", "prior_strength": -0.1504829002388536, "final_points": 51, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Burnley", "season_lbl": "2021/22", "prior_strength": -0.5811262731675038, "final_points": 35, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2021/22", "prior_strength": 0.6706140817137725, "final_points": 74, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2021/22", "prior_strength": -0.5389307583670555, "final_points": 48, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Everton", "season_lbl": "2021/22", "prior_strength": -0.060892844755964994, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Leeds", "season_lbl": "2021/22", "prior_strength": 0.06854517521021294, "final_points": 38, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Leicester", "season_lbl": "2021/22", "prior_strength": 0.25139011401210615, "final_points": 52, "preseason_tier": "top", "tier": "Top"}, {"club": "Liverpool", "season_lbl": "2021/22", "prior_strength": 0.9087692100250753, "final_points": 92, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2021/22", "prior_strength": 1.3966264286374732, "final_points": 93, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2021/22", "prior_strength": 0.6998794608610814, "final_points": 58, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2021/22", "prior_strength": -0.36517255026653583, "final_points": 49, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Norwich", "season_lbl": "2021/22", "prior_strength": -0.6708540019761238, "final_points": 22, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2021/22", "prior_strength": -0.2959978291905478, "final_points": 40, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Tottenham", "season_lbl": "2021/22", "prior_strength": 0.08550979820824682, "final_points": 71, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Watford", "season_lbl": "2021/22", "prior_strength": -0.8308257068931266, "final_points": 23, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2021/22", "prior_strength": 0.24481547515314983, "final_points": 56, "preseason_tier": "top", "tier": "Top"}, {"club": "Wolves", "season_lbl": "2021/22", "prior_strength": -0.25061142629251176, "final_points": 51, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2022/23", "prior_strength": 0.6112639883659327, "final_points": 84, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2022/23", "prior_strength": -0.1330858976675814, "final_points": 61, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Bournemouth", "season_lbl": "2022/23", "prior_strength": -0.9499164563806153, "final_points": 39, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Brentford", "season_lbl": "2022/23", "prior_strength": -0.28854817928063703, "final_points": 59, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2022/23", "prior_strength": -0.07764666455040016, "final_points": 62, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Chelsea", "season_lbl": "2022/23", "prior_strength": 0.8043225374511852, "final_points": 44, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2022/23", "prior_strength": -0.3643025486788401, "final_points": 45, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Everton", "season_lbl": "2022/23", "prior_strength": -0.5458645997499004, "final_points": 36, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Fulham", "season_lbl": "2022/23", "prior_strength": -0.730393789401768, "final_points": 52, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leeds", "season_lbl": "2022/23", "prior_strength": -0.3324485892868874, "final_points": 31, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Leicester", "season_lbl": "2022/23", "prior_strength": 0.02234353630451463, "final_points": 34, "preseason_tier": "top", "tier": "Top"}, {"club": "Liverpool", "season_lbl": "2022/23", "prior_strength": 1.2566705814163013, "final_points": 67, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2022/23", "prior_strength": 1.5121618463134041, "final_points": 89, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2022/23", "prior_strength": 0.30186554783545555, "final_points": 75, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2022/23", "prior_strength": -0.019771034279544884, "final_points": 71, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Nottm Forest", "season_lbl": "2022/23", "prior_strength": -0.7669208594376729, "final_points": 38, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2022/23", "prior_strength": -0.5213041870951227, "final_points": 25, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2022/23", "prior_strength": 0.5573546161706688, "final_points": 60, "preseason_tier": "top", "tier": "Top"}, {"club": "West Ham", "season_lbl": "2022/23", "prior_strength": -0.134032505438768, "final_points": 40, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2022/23", "prior_strength": -0.20174734260972343, "final_points": 41, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Arsenal", "season_lbl": "2023/24", "prior_strength": 0.9432246728525625, "final_points": 89, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2023/24", "prior_strength": 0.048461944893770946, "final_points": 68, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Bournemouth", "season_lbl": "2023/24", "prior_strength": -0.5975444511639073, "final_points": 48, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Brentford", "season_lbl": "2023/24", "prior_strength": 0.08398582604577028, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2023/24", "prior_strength": 0.35385422252587934, "final_points": 48, "preseason_tier": "top", "tier": "Top"}, {"club": "Burnley", "season_lbl": "2023/24", "prior_strength": -0.6433556564388702, "final_points": 24, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2023/24", "prior_strength": 0.09261399299589432, "final_points": 63, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Crystal Palace", "season_lbl": "2023/24", "prior_strength": -0.12054912609382851, "final_points": 49, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2023/24", "prior_strength": -0.43519781833763554, "final_points": 48, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Fulham", "season_lbl": "2023/24", "prior_strength": -0.3729206212856602, "final_points": 47, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Liverpool", "season_lbl": "2023/24", "prior_strength": 0.7790031953585267, "final_points": 82, "preseason_tier": "top", "tier": "Top"}, {"club": "Luton", "season_lbl": "2023/24", "prior_strength": -0.9392315140228736, "final_points": 26, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Manchester City", "season_lbl": "2023/24", "prior_strength": 1.2317165377644714, "final_points": 91, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2023/24", "prior_strength": 0.7794199342152675, "final_points": 60, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2023/24", "prior_strength": 0.5994777060690217, "final_points": 60, "preseason_tier": "top", "tier": "Top"}, {"club": "Nottm Forest", "season_lbl": "2023/24", "prior_strength": -0.5842948227568107, "final_points": 36, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Sheffield United", "season_lbl": "2023/24", "prior_strength": -0.8249308126140907, "final_points": 16, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2023/24", "prior_strength": 0.3405417961089356, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "West Ham", "season_lbl": "2023/24", "prior_strength": -0.2545037243039775, "final_points": 52, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2023/24", "prior_strength": -0.4797712818124442, "final_points": 46, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Arsenal", "season_lbl": "2024/25", "prior_strength": 1.1866813515257189, "final_points": 74, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2024/25", "prior_strength": 0.19746607019496232, "final_points": 66, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Bournemouth", "season_lbl": "2024/25", "prior_strength": -0.43575409500618917, "final_points": 56, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Brentford", "season_lbl": "2024/25", "prior_strength": -0.37945319553762513, "final_points": 56, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2024/25", "prior_strength": 0.060663383382501115, "final_points": 61, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Chelsea", "season_lbl": "2024/25", "prior_strength": 0.4177488179262365, "final_points": 69, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2024/25", "prior_strength": 0.010715036890658924, "final_points": 53, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2024/25", "prior_strength": -0.43083218232103276, "final_points": 48, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Fulham", "season_lbl": "2024/25", "prior_strength": -0.26266704851856676, "final_points": 54, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Ipswich", "season_lbl": "2024/25", "prior_strength": -0.8197394987271687, "final_points": 22, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Leicester", "season_lbl": "2024/25", "prior_strength": -0.8348367852059706, "final_points": 25, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2024/25", "prior_strength": 0.9642582615512861, "final_points": 84, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2024/25", "prior_strength": 1.3018224410419685, "final_points": 71, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2024/25", "prior_strength": 0.30093382384040257, "final_points": 42, "preseason_tier": "top", "tier": "Top"}, {"club": "Newcastle", "season_lbl": "2024/25", "prior_strength": 0.2257945954331723, "final_points": 66, "preseason_tier": "top", "tier": "Top"}, {"club": "Nottm Forest", "season_lbl": "2024/25", "prior_strength": -0.48733818560652364, "final_points": 65, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Southampton", "season_lbl": "2024/25", "prior_strength": -0.7647214018765917, "final_points": 12, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2024/25", "prior_strength": 0.2870909883439378, "final_points": 38, "preseason_tier": "top", "tier": "Top"}, {"club": "West Ham", "season_lbl": "2024/25", "prior_strength": -0.06016190456490347, "final_points": 43, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2024/25", "prior_strength": -0.4776704727662736, "final_points": 42, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Arsenal", "season_lbl": "2025/26", "prior_strength": 0.8191032820747793, "final_points": 85, "preseason_tier": "top", "tier": "Top"}, {"club": "Aston Villa", "season_lbl": "2025/26", "prior_strength": 0.28989392895796773, "final_points": 65, "preseason_tier": "top", "tier": "Top"}, {"club": "Bournemouth", "season_lbl": "2025/26", "prior_strength": -0.15961368051769625, "final_points": 57, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brentford", "season_lbl": "2025/26", "prior_strength": -0.1488356942723079, "final_points": 53, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Brighton", "season_lbl": "2025/26", "prior_strength": 0.20222132748484883, "final_points": 53, "preseason_tier": "top", "tier": "Top"}, {"club": "Burnley", "season_lbl": "2025/26", "prior_strength": -1.0017519374480075, "final_points": 22, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Chelsea", "season_lbl": "2025/26", "prior_strength": 0.46364365411233766, "final_points": 52, "preseason_tier": "top", "tier": "Top"}, {"club": "Crystal Palace", "season_lbl": "2025/26", "prior_strength": 0.09464063547478627, "final_points": 45, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Everton", "season_lbl": "2025/26", "prior_strength": -0.3502125035567998, "final_points": 49, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Fulham", "season_lbl": "2025/26", "prior_strength": -0.16056786835192793, "final_points": 52, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Leeds", "season_lbl": "2025/26", "prior_strength": -0.5879676169425907, "final_points": 47, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Liverpool", "season_lbl": "2025/26", "prior_strength": 1.046279343846922, "final_points": 60, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester City", "season_lbl": "2025/26", "prior_strength": 1.0049240330284184, "final_points": 78, "preseason_tier": "top", "tier": "Top"}, {"club": "Manchester United", "season_lbl": "2025/26", "prior_strength": -0.11199103712952864, "final_points": 71, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Newcastle", "season_lbl": "2025/26", "prior_strength": 0.45882206964455696, "final_points": 49, "preseason_tier": "top", "tier": "Top"}, {"club": "Nottm Forest", "season_lbl": "2025/26", "prior_strength": 0.09225681258423778, "final_points": 44, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Sunderland", "season_lbl": "2025/26", "prior_strength": -0.9295147330082448, "final_points": 54, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "Tottenham", "season_lbl": "2025/26", "prior_strength": -0.3053556834081844, "final_points": 41, "preseason_tier": "bottom", "tier": "Bottom"}, {"club": "West Ham", "season_lbl": "2025/26", "prior_strength": -0.29797422536273876, "final_points": 39, "preseason_tier": "mid", "tier": "Mid"}, {"club": "Wolves", "season_lbl": "2025/26", "prior_strength": -0.41800010721083003, "final_points": 20, "preseason_tier": "bottom", "tier": "Bottom"}]}}, {"mode": "vega-lite"});
+</script>
+<p>Preseason prior strength against final league points, 360 team-seasons (2008/09–2025/26). Colour is the preseason tercile; the correlation is r = 0.81.</p>
+</div>
+</div>
+</section>
+<section id="the-market-moves-about-20-more-than-the-results-justify" class="level2">
+<h2 class="anchored" data-anchor-id="the-market-moves-about-20-more-than-the-results-justify">The market moves — about 20% more than the results justify</h2>
+<p>Now the move itself. Per team, I define the Week-1 shock as points earned minus points expected — where the expectation comes from that very match’s own pre-match odds, so opponent quality, venue, and the market’s prior all net out in one step. Per Week-2 match, I measure the surprise: how far the Week-2 closing line sits from where the prior ratings said it should. Pooling 167 Week-2 matches across 18 seasons and regressing surprise on shock (season-clustered errors) gives the market’s average response, β̂ = 0.047 (SE = 0.011). The rational benchmark — an Elo-style updater with its response fitted historically on the same data, refit onto the same scale — moves K̂ = 0.039 per unit of shock. The ratio is 1.20: the market moves roughly 20% more than a calibrated results-only updater would.</p>
+<p>One honest caveat before that number hardens into a headline. The gap β̂ − K̂ is about 0.008, which is less than one clustered standard error (0.011). At full sample the ratio is descriptive — suggestive of overreaction, not statistically distinguishable from a rational update. Which is exactly why the next section exists: rather than argue about the coefficient, I can race the three forecasts and let the season endings adjudicate.</p>
+</section>
+<section id="the-horse-race" class="level2">
+<h2 class="anchored" data-anchor-id="the-horse-race">The horse race</h2>
+<p>Here is the design. For each of the 18 seasons I hold it out entirely and fit everything — the goals model, the Elo K, the seed and shrinkage weights, the market-response β — on the other 17. Then I build three ratings snapshots for the held-out season: the <strong>prior</strong> (preseason ratings, untouched), the <strong>rational posterior</strong> (prior + K̂ · shock), and the <strong>market posterior</strong> (prior + β̂ · shock). Each snapshot simulates the full 380-fixture season 10,000 times, and the resulting top-4 and relegation probabilities are scored against what actually happened, with Brier scores. No checkpoint ever sees the season it is scored on.</p>
+<div class="cell" data-execution_count="4">
+<div id="tbl-horse-race" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-horse-race-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-horse-race-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<style type="text/css">
+</style>
+
+<table id="T_a85fb" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="blank level0" data-quarto-table-cell-role="th">&nbsp;</th>
+<th id="T_a85fb_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Brier (top-4)</th>
+<th id="T_a85fb_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Brier (relegation)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th id="T_a85fb_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Prior</th>
+<td id="T_a85fb_row0_col0" class="data row0 col0">0.0743</td>
+<td id="T_a85fb_row0_col1" class="data row0 col1">0.1005</td>
+</tr>
+<tr class="even">
+<th id="T_a85fb_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Rational</th>
+<td id="T_a85fb_row1_col0" class="data row1 col0">0.0751</td>
+<td id="T_a85fb_row1_col1" class="data row1 col1">0.0987</td>
+</tr>
+<tr class="odd">
+<th id="T_a85fb_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">Market</th>
+<td id="T_a85fb_row2_col0" class="data row2 col0">0.0758</td>
+<td id="T_a85fb_row2_col1" class="data row2 col1">0.0987</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>On top-4, the prior wins outright: the market posterior scores <em>worse</em> (mean difference +0.0015, season-block bootstrap 95% CI [−0.0016, +0.0046]) — and so, more quietly, does the rational updater (+0.0007). On relegation, the market is marginally better (−0.0018), but the CI straddles zero ([−0.0062, +0.0024]). The pre-registered primary sign tests agree: market vs prior on Brier top-4, Holm-corrected p = 1.000; on Brier relegation, Holm-corrected p = 0.961. Some caution is owed to the sample — eighteen seasons is eighteen coin flips for a sign test — but the direction of the caution matters: nothing here suggests the Week-2 odds are better season forecasts than the preseason odds were, and on top-4 the point estimate runs the other way. Eighteen seasons is a small sample of heavily overlapping clubs, so these season-level intervals and sign tests are best read as descriptive: the design has limited power to detect an effect of this size, and the club overlap across seasons means the intervals are, if anything, slightly too narrow.</p>
+<div id="cell-chart-horse-race" class="cell" data-execution_count="5">
+<div id="chart-horse-race" class="cell-output cell-output-display" data-execution_count="4">
+
+<style>
+  #altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7.vega-embed details,
+  #altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7") {
+      outputDiv = document.getElementById("altair-viz-ebfcd7cf787c49359ab6b0a2722eb8d7");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"data": {"name": "data-d285a7403ed98ae579761d64a864032b"}, "mark": {"type": "rule", "color": "#333333", "strokeDash": [4, 3]}, "encoding": {"x": {"field": "x", "type": "quantitative"}}, "name": "view_edf69703046899db_0"}, {"data": {"name": "data-04cb30cbf015835640cfeb2324e9f1f6"}, "mark": {"type": "circle", "color": "#e67e22", "opacity": 0.55, "size": 80}, "encoding": {"tooltip": [{"field": "season_lbl", "title": "Season", "type": "nominal"}, {"field": "target", "title": "Target", "type": "nominal"}, {"field": "diff", "format": ".4f", "title": "Market \u2212 prior", "type": "quantitative"}], "x": {"axis": {"format": ".3f", "title": "Brier difference, market \u2212 prior (positive = market worse)"}, "field": "diff", "type": "quantitative"}, "y": {"axis": {"title": null}, "field": "target", "sort": ["Top-4", "Relegation"], "type": "nominal"}}}, {"data": {"name": "data-4a5f7394889e143970495261e17fff11"}, "mark": {"type": "rule", "color": "#111111", "size": 2}, "encoding": {"x": {"field": "ci_low", "type": "quantitative"}, "x2": {"field": "ci_high"}, "y": {"field": "target", "sort": ["Top-4", "Relegation"], "type": "nominal"}}}, {"data": {"name": "data-4a5f7394889e143970495261e17fff11"}, "mark": {"type": "point", "color": "#111111", "filled": true, "shape": "diamond", "size": 140}, "encoding": {"tooltip": [{"field": "target", "title": "Target", "type": "nominal"}, {"field": "mean_diff", "format": ".4f", "title": "Mean diff", "type": "quantitative"}, {"field": "ci_low", "format": ".4f", "title": "95% CI low", "type": "quantitative"}, {"field": "ci_high", "format": ".4f", "title": "95% CI high", "type": "quantitative"}], "x": {"field": "mean_diff", "type": "quantitative"}, "y": {"field": "target", "sort": ["Top-4", "Relegation"], "type": "nominal"}}}], "height": 160, "params": [{"name": "param_1e9efca18e7a2868", "select": {"type": "interval", "encodings": ["x", "y"]}, "bind": "scales", "views": ["view_edf69703046899db_0"]}], "title": "Eighteen Seasons of Market-vs-Prior: the Week-2 Odds Buy Nothing", "width": 620, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-d285a7403ed98ae579761d64a864032b": [{"x": 0}], "data-04cb30cbf015835640cfeb2324e9f1f6": [{"season": "0809", "metric": "brier_top4", "diff": -0.00046693600000000026, "target": "Top-4", "season_lbl": "2008/09"}, {"season": "0910", "metric": "brier_top4", "diff": -0.010609894000000009, "target": "Top-4", "season_lbl": "2009/10"}, {"season": "1011", "metric": "brier_top4", "diff": -0.002996744999999995, "target": "Top-4", "season_lbl": "2010/11"}, {"season": "1112", "metric": "brier_top4", "diff": -0.004741596999999986, "target": "Top-4", "season_lbl": "2011/12"}, {"season": "1213", "metric": "brier_top4", "diff": 0.0012661869999999985, "target": "Top-4", "season_lbl": "2012/13"}, {"season": "1314", "metric": "brier_top4", "diff": 0.009441761999999992, "target": "Top-4", "season_lbl": "2013/14"}, {"season": "1415", "metric": "brier_top4", "diff": 0.01319704700000001, "target": "Top-4", "season_lbl": "2014/15"}, {"season": "1516", "metric": "brier_top4", "diff": 0.010317872000000006, "target": "Top-4", "season_lbl": "2015/16"}, {"season": "1617", "metric": "brier_top4", "diff": -0.00893593500000002, "target": "Top-4", "season_lbl": "2016/17"}, {"season": "1718", "metric": "brier_top4", "diff": -0.0072857709999999964, "target": "Top-4", "season_lbl": "2017/18"}, {"season": "1819", "metric": "brier_top4", "diff": -0.0015639429999999913, "target": "Top-4", "season_lbl": "2018/19"}, {"season": "1920", "metric": "brier_top4", "diff": 0.007956797999999987, "target": "Top-4", "season_lbl": "2019/20"}, {"season": "2021", "metric": "brier_top4", "diff": 0.005587816000000002, "target": "Top-4", "season_lbl": "2020/21"}, {"season": "2122", "metric": "brier_top4", "diff": -0.0009480509999999914, "target": "Top-4", "season_lbl": "2021/22"}, {"season": "2223", "metric": "brier_top4", "diff": 0.005286245999999967, "target": "Top-4", "season_lbl": "2022/23"}, {"season": "2324", "metric": "brier_top4", "diff": 0.005046500000000009, "target": "Top-4", "season_lbl": "2023/24"}, {"season": "2425", "metric": "brier_top4", "diff": 0.0072238979999999925, "target": "Top-4", "season_lbl": "2024/25"}, {"season": "2526", "metric": "brier_top4", "diff": -0.0011285520000000326, "target": "Top-4", "season_lbl": "2025/26"}, {"season": "0809", "metric": "brier_releg", "diff": 0.01224910500000001, "target": "Relegation", "season_lbl": "2008/09"}, {"season": "0910", "metric": "brier_releg", "diff": -0.0038046959999999824, "target": "Relegation", "season_lbl": "2009/10"}, {"season": "1011", "metric": "brier_releg", "diff": 0.010076222999999995, "target": "Relegation", "season_lbl": "2010/11"}, {"season": "1112", "metric": "brier_releg", "diff": 0.014167188999999997, "target": "Relegation", "season_lbl": "2011/12"}, {"season": "1213", "metric": "brier_releg", "diff": -0.016949913999999983, "target": "Relegation", "season_lbl": "2012/13"}, {"season": "1314", "metric": "brier_releg", "diff": 0.005092313000000015, "target": "Relegation", "season_lbl": "2013/14"}, {"season": "1415", "metric": "brier_releg", "diff": 0.0013446179999999988, "target": "Relegation", "season_lbl": "2014/15"}, {"season": "1516", "metric": "brier_releg", "diff": 0.0036870499999999973, "target": "Relegation", "season_lbl": "2015/16"}, {"season": "1617", "metric": "brier_releg", "diff": 0.007114023999999997, "target": "Relegation", "season_lbl": "2016/17"}, {"season": "1718", "metric": "brier_releg", "diff": -0.0018084069999999564, "target": "Relegation", "season_lbl": "2017/18"}, {"season": "1819", "metric": "brier_releg", "diff": -0.01069426500000003, "target": "Relegation", "season_lbl": "2018/19"}, {"season": "1920", "metric": "brier_releg", "diff": -0.010202854999999983, "target": "Relegation", "season_lbl": "2019/20"}, {"season": "2021", "metric": "brier_releg", "diff": -0.013311263000000004, "target": "Relegation", "season_lbl": "2020/21"}, {"season": "2122", "metric": "brier_releg", "diff": -0.005483574000000012, "target": "Relegation", "season_lbl": "2021/22"}, {"season": "2223", "metric": "brier_releg", "diff": -0.0037708439999999677, "target": "Relegation", "season_lbl": "2022/23"}, {"season": "2324", "metric": "brier_releg", "diff": -0.001266282999999993, "target": "Relegation", "season_lbl": "2023/24"}, {"season": "2425", "metric": "brier_releg", "diff": -0.0003237630000000047, "target": "Relegation", "season_lbl": "2024/25"}, {"season": "2526", "metric": "brier_releg", "diff": -0.018458975000000002, "target": "Relegation", "season_lbl": "2025/26"}], "data-4a5f7394889e143970495261e17fff11": [{"checkpoint": "market", "metric": "brier_top4", "mean_diff": 0.0014803723333333303, "ci_low": -0.0016249896875000058, "ci_high": 0.004636182379166668, "se": 0.0015913205408057116, "target": "Top-4"}, {"checkpoint": "market", "metric": "brier_releg", "mean_diff": -0.0017969064999999948, "ci_low": -0.006204066341666667, "ci_high": 0.0024458373263888927, "se": 0.002216837818105449, "target": "Relegation"}]}}, {"mode": "vega-lite"});
+</script>
+<p>Per-season Brier score difference, market posterior minus prior, LOSO. Positive = the market’s Week-2 read was a worse season forecast. Orange dots are seasons; the black diamond and rule are the bootstrap mean and 95% CI.</p>
+</div>
+</div>
+<p>The per-season dots are the honest picture: in some seasons the Week-2 read helps (2009/10 saves the market a solid margin on top-4), in others it hurts (2014/15 costs it more than the average gap), and the mean sits within a hair of zero on relegation and on the wrong side of it on top-4. Eighteen seasons, ten thousand simulations per checkpoint, every fit walled off from the season it was scored on. The market moved. It didn’t help.</p>
+</section>
+<section id="does-the-market-take-it-back" class="level2">
+<h2 class="anchored" data-anchor-id="does-the-market-take-it-back">Does the market take it back?</h2>
+<p>If the Week-1 move is overreaction, there should be a signature in the weeks that follow: re-run the surprise regression against the Week-<em>k</em> odds for k = 3, 4, 5, 6, and the coefficient should decay toward zero as the market unwinds its overshoot. These are full-sample descriptive fits, not LOSO scores, so read them as texture rather than verdict.</p>
+<div id="cell-chart-decay" class="cell" data-execution_count="6">
+<div id="chart-decay" class="cell-output cell-output-display" data-execution_count="5">
+
+<style>
+  #altair-viz-5e991a722b684547a60226465672e7fc.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-5e991a722b684547a60226465672e7fc.vega-embed details,
+  #altair-viz-5e991a722b684547a60226465672e7fc.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-5e991a722b684547a60226465672e7fc"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-5e991a722b684547a60226465672e7fc") {
+      outputDiv = document.getElementById("altair-viz-5e991a722b684547a60226465672e7fc");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"data": {"name": "data-87e69d7a9d7ae5b02a22f807b2d20c57"}, "mark": {"type": "rule", "color": "#333333", "strokeDash": [4, 3]}, "encoding": {"y": {"field": "y", "type": "quantitative"}}, "name": "view_047fa3996639988c_0"}, {"data": {"name": "data-06693379a9eb02e376cc8bffe162f113"}, "mark": {"type": "rule", "color": "#888888", "strokeDash": [2, 2]}, "encoding": {"y": {"field": "y", "type": "quantitative"}}}, {"data": {"name": "data-b5de30409edda5e587ecd42cecf7df56"}, "mark": {"type": "rule", "color": "#1f77b4", "size": 2}, "encoding": {"x": {"axis": {"format": "d", "title": "Week k (odds read after Week 1)", "values": [2, 3, 4, 5, 6]}, "field": "week", "scale": {"domain": [1.5, 6.5]}, "type": "quantitative"}, "y": {"axis": {"format": ".2f", "title": "\u03b2_k (market response per unit of Week-1 shock)"}, "field": "ci_lo", "type": "quantitative"}, "y2": {"field": "ci_hi"}}}, {"data": {"name": "data-b5de30409edda5e587ecd42cecf7df56"}, "mark": {"type": "circle", "color": "#1f77b4", "size": 110}, "encoding": {"tooltip": [{"field": "week", "format": "d", "title": "Week", "type": "quantitative"}, {"field": "beta_market", "format": ".4f", "title": "\u03b2_k", "type": "quantitative"}, {"field": "ci_lo", "format": ".4f", "title": "CI low", "type": "quantitative"}, {"field": "ci_hi", "format": ".4f", "title": "CI high", "type": "quantitative"}, {"field": "n_matches", "title": "Matches", "type": "quantitative"}], "x": {"field": "week", "type": "quantitative"}, "y": {"field": "beta_market", "type": "quantitative"}}}, {"data": {"name": "data-85506d51e871b6e5154d9ca612e0c3b2"}, "mark": {"type": "text", "align": "left", "color": "#555555", "dx": 10, "dy": -2, "fontSize": 10}, "encoding": {"text": {"field": "k5_note", "type": "nominal"}, "x": {"field": "week", "type": "quantitative"}, "y": {"field": "beta_market", "type": "quantitative"}}}], "height": 300, "params": [{"name": "param_1e9efca18e7a2868", "select": {"type": "interval", "encodings": ["x", "y"]}, "bind": "scales", "views": ["view_047fa3996639988c_0"]}], "title": "The Decay Curve Is Noisy \u2014 the Unwind Never Cleanly Arrives", "width": 620, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-87e69d7a9d7ae5b02a22f807b2d20c57": [{"y": 0.0}], "data-06693379a9eb02e376cc8bffe162f113": [{"y": 0.04697430156369337}], "data-b5de30409edda5e587ecd42cecf7df56": [{"week": 2, "beta_market": 0.04697430156369337, "se_market": 0.011032487613484705, "ci_lo": 0.029294872101046414, "ci_hi": 0.06407168391879756, "n_matches": 167, "n_seasons": 18, "share_closing": 0.38922155688622756, "k5_note": ""}, {"week": 3, "beta_market": 0.03305653407578354, "se_market": 0.012259546632076419, "ci_lo": 0.01616384864803985, "ci_hi": 0.05320534036343206, "n_matches": 162, "n_seasons": 18, "share_closing": 0.3950617283950617, "k5_note": ""}, {"week": 4, "beta_market": 0.03536723219362181, "se_market": 0.011875522694949117, "ci_lo": 0.01834505061044029, "ci_hi": 0.0552095632814116, "n_matches": 164, "n_seasons": 18, "share_closing": 0.3902439024390244, "k5_note": ""}, {"week": 5, "beta_market": 0.0038716340346487826, "se_market": 0.010378250971836518, "ci_lo": -0.012011230068715593, "ci_hi": 0.019132549295396706, "n_matches": 163, "n_seasons": 18, "share_closing": 0.39263803680981596, "k5_note": "near zero \u2014 CI straddles 0"}, {"week": 6, "beta_market": 0.04400281881870573, "se_market": 0.009833745735826875, "ci_lo": 0.03008346158043454, "ci_hi": 0.05985781710613147, "n_matches": 164, "n_seasons": 18, "share_closing": 0.3902439024390244, "k5_note": ""}], "data-85506d51e871b6e5154d9ca612e0c3b2": [{"week": 5, "beta_market": 0.0038716340346487826, "se_market": 0.010378250971836518, "ci_lo": -0.012011230068715593, "ci_hi": 0.019132549295396706, "n_matches": 163, "n_seasons": 18, "share_closing": 0.39263803680981596, "k5_note": "near zero \u2014 CI straddles 0"}]}}, {"mode": "vega-lite"});
+</script>
+<p>Week-1 shock coefficient β_k against Week-k odds, k = 2…6, with 95% CIs (full-sample, season-clustered; descriptive, not LOSO). Dashed line: zero. Dotted line: the Week-2 anchor, β = 0.047.</p>
+</div>
+</div>
+<p>The clean story would run: β falls week by week and reaches zero once the market has digested its mistake. The actual curve half-cooperates. β drops from 0.047 at Week 2 to the low 0.03s at Weeks 3 and 4, then collapses to 0.004 at Week 5 — which looks exactly like the reversal signature, except the confidence interval straddles zero ([−0.015, +0.025]) — and then bounces back to 0.044 at Week 6. A true unwind does not bounce. The honest reading is that the decay is noisy: the Week-5 dip may be the market taking the overreaction back, or it may be sampling noise in ~163 matches, and this design cannot say which. I will not oversell a curve that refuses to decay.</p>
+</section>
+<section id="what-week-1-is-worth" class="level2">
+<h2 class="anchored" data-anchor-id="what-week-1-is-worth">What Week 1 is worth</h2>
+<p>The thesis survives the caveats. The preseason odds already contained the information — r = 0.81 against final points, a 52/5/0 top-4 gradient across the terciles — and Week 1 gave the market an excuse to move on top of it. The market took the excuse, moved about 20% more than a calibrated results-only updater would, and by May had nothing to show for it: the Week-2 posterior beat the preseason prior on neither primary metric, and on top-4 the point estimate says the move made the forecast worse. So when the odds shift dramatically after this or any opening weekend, some caution about reading too much into it is warranted. The season’s evidence arrives 38 matches at a time. Week 1 is one of them.</p>
+<hr>
+<p><em>Match results and 1X2 odds from <a href="https://www.football-data.co.uk">football-data.co.uk</a>, seasons 2008/09–2025/26 (Bet365 lines; closing where posted from 2019/20, opening before — about 39% of the surprise rows use true closing lines). All numbers in this post are frozen analysis outputs in the post’s <code>data/</code> directory; the horse race is nested leave-one-season-out with 10,000 simulation replicates per checkpoint, and sign tests are Holm-corrected. Full method spec and code: <a href="https://github.com/kpolimis/kpolimis.github.io">github.com/kpolimis/kpolimis.github.io</a>.</em></p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script src="bayesian-waves-bg.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Week One Told You Nothing"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-09-26"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I ran an 18-season LOSO horse race — prior, rational updater, market posterior — to ask whether the Week-2 odds are actually better forecasts than the preseason odds were. They are not."</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports, football, premier-league, statistics, betting, data-viz]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> blog</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># ── footy helpers (shared) ────────────────────────────────────────────────────</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, os.path.join(os.getcwd(), <span class="st">".."</span>))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _utils <span class="im">import</span> _bar_colour  <span class="co"># noqa: E402</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> <span class="st">"data"</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Wave 1: full-sample descriptives (labelled: NOT out-of-sample) ────────────</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/wave1_results.json"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    w1 <span class="op">=</span> json.load(f)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>BETA_MARKET <span class="op">=</span> w1[<span class="st">"beta_market"</span>][<span class="st">"constrained"</span>]</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>SE_MARKET   <span class="op">=</span> w1[<span class="st">"beta_market"</span>][<span class="st">"constrained_se"</span>]</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>N_MATCHES   <span class="op">=</span> w1[<span class="st">"beta_market"</span>][<span class="st">"n_matches"</span>]</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>N_SEASONS   <span class="op">=</span> w1[<span class="st">"beta_market"</span>][<span class="st">"n_seasons"</span>]</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>K_COMM      <span class="op">=</span> w1[<span class="st">"k_hat_commensurated_slope"</span>]</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>RATIO       <span class="op">=</span> w1[<span class="st">"overreaction_ratio"</span>]</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>GAP         <span class="op">=</span> BETA_MARKET <span class="op">-</span> K_COMM</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>PRIOR_R     <span class="op">=</span> w1[<span class="st">"sanity_gates"</span>][<span class="st">"prior_vs_final_points_r"</span>]</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Wave 2: LOSO horse race (18 folds, 10K sims per checkpoint) ───────────────</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/wave2_results.json"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    w2 <span class="op">=</span> json.load(f)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>loso_scores <span class="op">=</span> pd.read_parquet(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/loso_scores.parquet"</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>loso_boot   <span class="op">=</span> pd.read_parquet(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/loso_boot.parquet"</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>loso_diffs  <span class="op">=</span> pd.read_parquet(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/loso_diffs.parquet"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Wave 3: decay curve (full-sample descriptive, NOT LOSO) ───────────────────</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>decay <span class="op">=</span> pd.read_parquet(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/decay_curve.parquet"</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Prior quality: strength vs final points, tier top-4 rates ─────────────────</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>panel <span class="op">=</span> pd.read_parquet(<span class="ss">f"</span><span class="sc">{</span>DATA_DIR<span class="sc">}</span><span class="ss">/panel_priors.parquet"</span>)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>panel[<span class="st">"club"</span>] <span class="op">=</span> (panel[<span class="st">"club_id"</span>].<span class="bu">str</span>.replace(<span class="st">"epl:"</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>                                 .<span class="bu">str</span>.replace(<span class="st">"-"</span>, <span class="st">" "</span>).<span class="bu">str</span>.title())</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>panel[<span class="st">"season_lbl"</span>] <span class="op">=</span> (<span class="st">"20"</span> <span class="op">+</span> panel[<span class="st">"season"</span>].<span class="bu">str</span>[:<span class="dv">2</span>] <span class="op">+</span> <span class="st">"/"</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                       <span class="op">+</span> panel[<span class="st">"season"</span>].<span class="bu">str</span>[<span class="dv">2</span>:])</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>panel[<span class="st">"top4"</span>] <span class="op">=</span> panel[<span class="st">"final_position"</span>] <span class="op">&lt;=</span> <span class="dv">4</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>tier_top4 <span class="op">=</span> (panel.groupby(<span class="st">"preseason_tier"</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">"top4"</span>]</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                  .mean().reindex([<span class="st">"top"</span>, <span class="st">"mid"</span>, <span class="st">"bottom"</span>]))</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>R_CHECK <span class="op">=</span> np.corrcoef(panel[<span class="st">"prior_strength"</span>], panel[<span class="st">"final_points"</span>])[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Convenience frames for the charts ─────────────────────────────────────────</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>TARGET_LBL <span class="op">=</span> {<span class="st">"brier_top4"</span>: <span class="st">"Top-4"</span>, <span class="st">"brier_releg"</span>: <span class="st">"Relegation"</span>}</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>mean_scores <span class="op">=</span> (loso_scores.groupby(<span class="st">"checkpoint"</span>)[[<span class="st">"brier_top4"</span>, <span class="st">"brier_releg"</span>]]</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>               .mean().reindex([<span class="st">"prior"</span>, <span class="st">"rational"</span>, <span class="st">"market"</span>]))</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>diff_long <span class="op">=</span> (loso_diffs.loc[loso_diffs[<span class="st">"checkpoint"</span>] <span class="op">==</span> <span class="st">"market"</span>,</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>                            [<span class="st">"season"</span>, <span class="st">"brier_top4"</span>, <span class="st">"brier_releg"</span>]]</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>             .melt(id_vars<span class="op">=</span><span class="st">"season"</span>, var_name<span class="op">=</span><span class="st">"metric"</span>, value_name<span class="op">=</span><span class="st">"diff"</span>))</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>diff_long[<span class="st">"target"</span>] <span class="op">=</span> diff_long[<span class="st">"metric"</span>].<span class="bu">map</span>(TARGET_LBL)</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>diff_long[<span class="st">"season_lbl"</span>] <span class="op">=</span> (<span class="st">"20"</span> <span class="op">+</span> diff_long[<span class="st">"season"</span>].<span class="bu">str</span>[:<span class="dv">2</span>] <span class="op">+</span> <span class="st">"/"</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>                           <span class="op">+</span> diff_long[<span class="st">"season"</span>].<span class="bu">str</span>[<span class="dv">2</span>:])</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>boot_m <span class="op">=</span> loso_boot[(loso_boot[<span class="st">"checkpoint"</span>] <span class="op">==</span> <span class="st">"market"</span>)</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>                   <span class="op">&amp;</span> loso_boot[<span class="st">"metric"</span>].isin(TARGET_LBL)].copy()</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>boot_m[<span class="st">"target"</span>] <span class="op">=</span> boot_m[<span class="st">"metric"</span>].<span class="bu">map</span>(TARGET_LBL)</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>The 2026/27 <span class="co">[</span><span class="ot">Premier League</span><span class="co">](https://www.premierleague.com/en)</span> season opened last month, and the bookmakers did what they always do after an opening weekend: they moved. Teams that won saw their season odds shorten by Tuesday; teams that lost drifted out. The question I want to ask is not whether the market should have moved — new information arrived, and a price that ignores information is a worse price — but whether it should have moved *that much*.</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>The Bayesian framing makes the stakes precise. The preseason odds are the market's prior, the distillation of everything knowable before a ball is kicked. Week 1 is one observation — 1 of 38 matches, about 2.6% of the season's evidence, and a noisy 2.6% at that. The Week-2 odds are the market's posterior. A rational updater confronted with one match barely moves. If the market moves substantially more than the results justify, and seasons still end near the preseason prior anyway, the Week-1 move was overreaction. I have eighteen seasons of data to check.</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="fu">## The prior is hard to beat</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>Before asking whether the posterior overshoots, it is worth establishing what the prior is worth — because the preseason odds turn out to carry a startling amount of information. For every team in every season from 2008/09 through 2025/26 I built a preseason strength rating: a regression-toward-the-mean seed from last season's table, refined by the Week-1 closing lines, which are posted before any match is played. That prior strength correlates with final league points at r = 0.81. For instance, sort the 360 team-seasons into preseason terciles and the top tier goes on to finish in the top four 52% of the time, the middle tier 5% of the time, and the bottom tier never — not once in eighteen seasons. Whatever Week 1 tells the market, it is competing against a prior that already knows most of the answer.</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-prior-quality</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Preseason prior strength against final league points, 360 team-seasons (2008/09–2025/26). Colour is the preseason tercile; the correlation is r = 0.81."</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>sc_df <span class="op">=</span> panel[[<span class="st">"club"</span>, <span class="st">"season_lbl"</span>, <span class="st">"prior_strength"</span>, <span class="st">"final_points"</span>,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>               <span class="st">"preseason_tier"</span>]].copy()</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>sc_df[<span class="st">"tier"</span>] <span class="op">=</span> sc_df[<span class="st">"preseason_tier"</span>].astype(<span class="bu">str</span>).<span class="bu">str</span>.title()</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>scatter <span class="op">=</span> alt.Chart(sc_df).mark_circle(size<span class="op">=</span><span class="dv">45</span>, opacity<span class="op">=</span><span class="fl">0.55</span>).encode(</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">"prior_strength:Q"</span>,</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="st">"Preseason prior strength"</span>)),</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"final_points:Q"</span>,</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="st">"Final league points"</span>),</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>            scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>)),</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">"tier:N"</span>,</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>                    scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[<span class="st">"Top"</span>, <span class="st">"Mid"</span>, <span class="st">"Bottom"</span>],</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>                                    <span class="bu">range</span><span class="op">=</span>[<span class="st">"#1f77b4"</span>, <span class="st">"#999999"</span>, <span class="st">"#e67e22"</span>]),</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>                    legend<span class="op">=</span>alt.Legend(title<span class="op">=</span><span class="st">"Preseason tier"</span>)),</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"club:N"</span>,           title<span class="op">=</span><span class="st">"Club"</span>),</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"season_lbl:N"</span>,     title<span class="op">=</span><span class="st">"Season"</span>),</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"prior_strength:Q"</span>, title<span class="op">=</span><span class="st">"Prior strength"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".2f"</span>),</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"final_points:Q"</span>,   title<span class="op">=</span><span class="st">"Final points"</span>),</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>scatter.properties(</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">620</span>, height<span class="op">=</span><span class="dv">340</span>,</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"The Preseason Odds Already Know Most of the Answer"</span>,</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## The market moves — about 20% more than the results justify</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>Now the move itself. Per team, I define the Week-1 shock as points earned minus points expected — where the expectation comes from that very match's own pre-match odds, so opponent quality, venue, and the market's prior all net out in one step. Per Week-2 match, I measure the surprise: how far the Week-2 closing line sits from where the prior ratings said it should. Pooling 167 Week-2 matches across 18 seasons and regressing surprise on shock (season-clustered errors) gives the market's average response, β̂ = 0.047 (SE = 0.011). The rational benchmark — an Elo-style updater with its response fitted historically on the same data, refit onto the same scale — moves K̂ = 0.039 per unit of shock. The ratio is 1.20: the market moves roughly 20% more than a calibrated results-only updater would.</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>One honest caveat before that number hardens into a headline. The gap β̂ − K̂ is about 0.008, which is less than one clustered standard error (0.011). At full sample the ratio is descriptive — suggestive of overreaction, not statistically distinguishable from a rational update. Which is exactly why the next section exists: rather than argue about the coefficient, I can race the three forecasts and let the season endings adjudicate.</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="fu">## The horse race</span></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>Here is the design. For each of the 18 seasons I hold it out entirely and fit everything — the goals model, the Elo K, the seed and shrinkage weights, the market-response β — on the other 17. Then I build three ratings snapshots for the held-out season: the **prior** (preseason ratings, untouched), the **rational posterior** (prior + K̂ · shock), and the **market posterior** (prior + β̂ · shock). Each snapshot simulates the full 380-fixture season 10,000 times, and the resulting top-4 and relegation probabilities are scored against what actually happened, with Brier scores. No checkpoint ever sees the season it is scored on.</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-horse-race</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>_disp <span class="op">=</span> mean_scores.copy()</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>_disp.index <span class="op">=</span> [<span class="st">"Prior"</span>, <span class="st">"Rational"</span>, <span class="st">"Market"</span>]</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>_disp.columns <span class="op">=</span> [<span class="st">"Brier (top-4)"</span>, <span class="st">"Brier (relegation)"</span>]</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>_disp.<span class="bu">round</span>(<span class="dv">4</span>).style.<span class="bu">format</span>(<span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>)</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>On top-4, the prior wins outright: the market posterior scores *worse* (mean difference +0.0015, season-block bootstrap 95% CI <span class="co">[</span><span class="ot">−0.0016, +0.0046</span><span class="co">]</span>) — and so, more quietly, does the rational updater (+0.0007). On relegation, the market is marginally better (−0.0018), but the CI straddles zero (<span class="co">[</span><span class="ot">−0.0062, +0.0024</span><span class="co">]</span>). The pre-registered primary sign tests agree: market vs prior on Brier top-4, Holm-corrected p = 1.000; on Brier relegation, Holm-corrected p = 0.961. Some caution is owed to the sample — eighteen seasons is eighteen coin flips for a sign test — but the direction of the caution matters: nothing here suggests the Week-2 odds are better season forecasts than the preseason odds were, and on top-4 the point estimate runs the other way. Eighteen seasons is a small sample of heavily overlapping clubs, so these season-level intervals and sign tests are best read as descriptive: the design has limited power to detect an effect of this size, and the club overlap across seasons means the intervals are, if anything, slightly too narrow.</span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-horse-race</span></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Per-season Brier score difference, market posterior minus prior, LOSO. Positive = the market's Week-2 read was a worse season forecast. Orange dots are seasons; the black diamond and rule are the bootstrap mean and 95% CI."</span></span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>zero_rule <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">"x"</span>: [<span class="dv">0</span>]})).mark_rule(</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"#333333"</span>, strokeDash<span class="op">=</span>[<span class="dv">4</span>, <span class="dv">3</span>]).encode(x<span class="op">=</span><span class="st">"x:Q"</span>)</span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>season_pts <span class="op">=</span> alt.Chart(diff_long).mark_circle(</span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="dv">80</span>, opacity<span class="op">=</span><span class="fl">0.55</span>, color<span class="op">=</span><span class="st">"#e67e22"</span>).encode(</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">"diff:Q"</span>,</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="st">"Brier difference, market − prior "</span></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"(positive = market worse)"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".3f"</span>)),</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"target:N"</span>, axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="va">None</span>),</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>            sort<span class="op">=</span>[<span class="st">"Top-4"</span>, <span class="st">"Relegation"</span>]),</span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"season_lbl:N"</span>, title<span class="op">=</span><span class="st">"Season"</span>),</span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"target:N"</span>,     title<span class="op">=</span><span class="st">"Target"</span>),</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"diff:Q"</span>,       title<span class="op">=</span><span class="st">"Market − prior"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>ci_rule <span class="op">=</span> alt.Chart(boot_m).mark_rule(color<span class="op">=</span><span class="st">"#111111"</span>, size<span class="op">=</span><span class="dv">2</span>).encode(</span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"ci_low:Q"</span>, x2<span class="op">=</span><span class="st">"ci_high:Q"</span>,</span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"target:N"</span>, sort<span class="op">=</span>[<span class="st">"Top-4"</span>, <span class="st">"Relegation"</span>]),</span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>mean_pt <span class="op">=</span> alt.Chart(boot_m).mark_point(</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>    shape<span class="op">=</span><span class="st">"diamond"</span>, size<span class="op">=</span><span class="dv">140</span>, filled<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">"#111111"</span>).encode(</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"mean_diff:Q"</span>,</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"target:N"</span>, sort<span class="op">=</span>[<span class="st">"Top-4"</span>, <span class="st">"Relegation"</span>]),</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"target:N"</span>,    title<span class="op">=</span><span class="st">"Target"</span>),</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"mean_diff:Q"</span>, title<span class="op">=</span><span class="st">"Mean diff"</span>,  <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"ci_low:Q"</span>,    title<span class="op">=</span><span class="st">"95% CI low"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"ci_high:Q"</span>,   title<span class="op">=</span><span class="st">"95% CI high"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>(zero_rule <span class="op">+</span> season_pts <span class="op">+</span> ci_rule <span class="op">+</span> mean_pt).properties(</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">620</span>, height<span class="op">=</span><span class="dv">160</span>,</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Eighteen Seasons of Market-vs-Prior: the Week-2 Odds Buy Nothing"</span>,</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>The per-season dots are the honest picture: in some seasons the Week-2 read helps (2009/10 saves the market a solid margin on top-4), in others it hurts (2014/15 costs it more than the average gap), and the mean sits within a hair of zero on relegation and on the wrong side of it on top-4. Eighteen seasons, ten thousand simulations per checkpoint, every fit walled off from the season it was scored on. The market moved. It didn't help.</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a><span class="fu">## Does the market take it back?</span></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>If the Week-1 move is overreaction, there should be a signature in the weeks that follow: re-run the surprise regression against the Week-*k* odds for k = 3, 4, 5, 6, and the coefficient should decay toward zero as the market unwinds its overshoot. These are full-sample descriptive fits, not LOSO scores, so read them as texture rather than verdict.</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-decay</span></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Week-1 shock coefficient β_k against Week-k odds, k = 2…6, with 95% CIs (full-sample, season-clustered; descriptive, not LOSO). Dashed line: zero. Dotted line: the Week-2 anchor, β = 0.047."</span></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> decay.copy()</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>d[<span class="st">"k5_note"</span>] <span class="op">=</span> np.where(d[<span class="st">"week"</span>] <span class="op">==</span> <span class="dv">5</span>, <span class="st">"near zero — CI straddles 0"</span>, <span class="st">""</span>)</span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>zero_h <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">"y"</span>: [<span class="fl">0.0</span>]})).mark_rule(</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"#333333"</span>, strokeDash<span class="op">=</span>[<span class="dv">4</span>, <span class="dv">3</span>]).encode(y<span class="op">=</span><span class="st">"y:Q"</span>)</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>anchor_h <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">"y"</span>: [BETA_MARKET]})).mark_rule(</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"#888888"</span>, strokeDash<span class="op">=</span>[<span class="dv">2</span>, <span class="dv">2</span>]).encode(y<span class="op">=</span><span class="st">"y:Q"</span>)</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>err <span class="op">=</span> alt.Chart(d).mark_rule(color<span class="op">=</span><span class="st">"#1f77b4"</span>, size<span class="op">=</span><span class="dv">2</span>).encode(</span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">"week:Q"</span>,</span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>            scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[<span class="fl">1.5</span>, <span class="fl">6.5</span>]),</span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="st">"Week k (odds read after Week 1)"</span>,</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a>                          values<span class="op">=</span>[<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"d"</span>)),</span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"ci_lo:Q"</span>, axis<span class="op">=</span>alt.Axis(title<span class="op">=</span><span class="st">"β_k (market response per unit "</span></span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>                                           <span class="st">"of Week-1 shock)"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".2f"</span>)),</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>    y2<span class="op">=</span><span class="st">"ci_hi:Q"</span>,</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>pts <span class="op">=</span> alt.Chart(d).mark_circle(size<span class="op">=</span><span class="dv">110</span>, color<span class="op">=</span><span class="st">"#1f77b4"</span>).encode(</span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"week:Q"</span>, y<span class="op">=</span><span class="st">"beta_market:Q"</span>,</span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"week:Q"</span>,        title<span class="op">=</span><span class="st">"Week"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"d"</span>),</span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"beta_market:Q"</span>, title<span class="op">=</span><span class="st">"β_k"</span>,  <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"ci_lo:Q"</span>,       title<span class="op">=</span><span class="st">"CI low"</span>,  <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"ci_hi:Q"</span>,       title<span class="op">=</span><span class="st">"CI high"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".4f"</span>),</span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"n_matches:Q"</span>,   title<span class="op">=</span><span class="st">"Matches"</span>),</span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>k5_txt <span class="op">=</span> alt.Chart(d[d[<span class="st">"week"</span>] <span class="op">==</span> <span class="dv">5</span>]).mark_text(</span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>    align<span class="op">=</span><span class="st">"left"</span>, dx<span class="op">=</span><span class="dv">10</span>, dy<span class="op">=-</span><span class="dv">2</span>, fontSize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">"#555555"</span>).encode(</span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"week:Q"</span>, y<span class="op">=</span><span class="st">"beta_market:Q"</span>, text<span class="op">=</span><span class="st">"k5_note:N"</span>,</span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>(zero_h <span class="op">+</span> anchor_h <span class="op">+</span> err <span class="op">+</span> pts <span class="op">+</span> k5_txt).properties(</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">620</span>, height<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"The Decay Curve Is Noisy — the Unwind Never Cleanly Arrives"</span>,</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>The clean story would run: β falls week by week and reaches zero once the market has digested its mistake. The actual curve half-cooperates. β drops from 0.047 at Week 2 to the low 0.03s at Weeks 3 and 4, then collapses to 0.004 at Week 5 — which looks exactly like the reversal signature, except the confidence interval straddles zero (<span class="co">[</span><span class="ot">−0.015, +0.025</span><span class="co">]</span>) — and then bounces back to 0.044 at Week 6. A true unwind does not bounce. The honest reading is that the decay is noisy: the Week-5 dip may be the market taking the overreaction back, or it may be sampling noise in ~163 matches, and this design cannot say which. I will not oversell a curve that refuses to decay.</span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a><span class="fu">## What Week 1 is worth</span></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>The thesis survives the caveats. The preseason odds already contained the information — r = 0.81 against final points, a 52/5/0 top-4 gradient across the terciles — and Week 1 gave the market an excuse to move on top of it. The market took the excuse, moved about 20% more than a calibrated results-only updater would, and by May had nothing to show for it: the Week-2 posterior beat the preseason prior on neither primary metric, and on top-4 the point estimate says the move made the forecast worse. So when the odds shift dramatically after this or any opening weekend, some caution about reading too much into it is warranted. The season's evidence arrives 38 matches at a time. Week 1 is one of them.</span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>*Match results and 1X2 odds from [football-data.co.uk](https://www.football-data.co.uk), seasons 2008/09–2025/26 (Bet365 lines; closing where posted from 2019/20, opening before — about 39% of the surprise rows use true closing lines). All numbers in this post are frozen analysis outputs in the post's `data/` directory; the horse race is nested leave-one-season-out with 10,000 simulation replicates per checkpoint, and sign tests are Holm-corrected. Full method spec and code: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

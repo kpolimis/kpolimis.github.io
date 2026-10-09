@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kivan Polimis">
+<meta name="dcterms.date" content="2026-08-12">
+<meta name="description" content="Four seasons after the original post, I re-scrape Russell Westbrook’s full game log and re-test the thesis: do his teams really win more when he records a triple double? With 345 more team games and a late-career move to the bench, the answer holds, but it now says less about present-day Westbrook than it did in 2022.">
+
+<title>Triple Double Russ, Revisited – Kivan Polimis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-5c1318cf63eba56dbef7ba16bc7d56f5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-240167e2aa1b0458c56e668692b9e94d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivan-polimis-36b54a9/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#is-data-collection-still-possible" id="toc-is-data-collection-still-possible" class="nav-link active" data-scroll-target="#is-data-collection-still-possible">Is data collection still possible?</a></li>
+  <li><a href="#what-the-updated-data-looks-like" id="toc-what-the-updated-data-looks-like" class="nav-link" data-scroll-target="#what-the-updated-data-looks-like">What the updated data looks like</a></li>
+  <li><a href="#does-the-thesis-still-hold" id="toc-does-the-thesis-still-hold" class="nav-link" data-scroll-target="#does-the-thesis-still-hold">Does the thesis still hold?</a></li>
+  <li><a href="#the-role-change-the-original-post-could-not-see" id="toc-the-role-change-the-original-post-could-not-see" class="nav-link" data-scroll-target="#the-role-change-the-original-post-could-not-see">The role change the original post could not see</a></li>
+  <li><a href="#home-away-and-the-durant-question" id="toc-home-away-and-the-durant-question" class="nav-link" data-scroll-target="#home-away-and-the-durant-question">Home, away, and the Durant question</a></li>
+  <li><a href="#margins-still-no-sign-of-selfish-stat-chasing" id="toc-margins-still-no-sign-of-selfish-stat-chasing" class="nav-link" data-scroll-target="#margins-still-no-sign-of-selfish-stat-chasing">Margins: still no sign of selfish stat-chasing</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review</a></li>
+  <li><a href="#footnotes" id="toc-footnotes" class="nav-link" data-scroll-target="#footnotes">Footnotes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Triple Double Russ, Revisited</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">sports-analytics</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Four seasons after the original post, I re-scrape Russell Westbrook’s full game log and re-test the thesis: do his teams really win more when he records a triple double? With 345 more team games and a late-career move to the bench, the answer holds, but it now says less about present-day Westbrook than it did in 2022.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kivan Polimis </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 12, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In March 2022 I wrote <a href="../triple-double-russ/">Triple Double Russ</a>, which scraped Russell Westbrook’s game log and asked a simple question: when he records a triple double, do his teams win more often? The answer then was yes, and by a wide, statistically significant margin. That post was a snapshot of a career still in motion. Westbrook has since played four more seasons and changed teams three times, moving from a featured star to a reserve. This revisit re-collects the data through the 2025-26 season and asks two things: is the same analysis still reproducible, and does the original thesis still hold?</p>
+<p>I am keeping the <a href="../triple-double-russ/">original post</a> unchanged as a 2022 time capsule. Everything below is recomputed from a fresh scrape.</p>
+<section id="is-data-collection-still-possible" class="level2">
+<h2 class="anchored" data-anchor-id="is-data-collection-still-possible">Is data collection still possible?</h2>
+<p>Yes, with one repair. Basketball-Reference still publishes Westbrook’s per-season game logs at the same URLs the original post used, for instance <a href="https://www.basketball-reference.com/players/w/westbru01/gamelog/2026">the 2025-26 log</a>, and a plain request still returns them. What changed is the markup. The 2022 scraper keyed on the old game-log table and its column layout; the site has since renamed the table to <code>player_game_log_reg</code> and moved every statistic behind a <code>data-stat</code> attribute (<code>pts</code>, <code>trb</code>, <code>ast</code>, <code>game_result</code>). A scraper written against the 2022 page returns an empty table today rather than an error, which is the quiet kind of failure worth guarding against. The rewritten scraper lives in <a href="fetch_westbrook_data.py"><code>fetch_westbrook_data.py</code></a> and raises loudly if the expected table is missing.</p>
+<p>Two practical notes carried over from the original. Basketball-Reference rate-limits scrapers, so the fetch script sleeps between requests. And to keep this page building without touching the network, the scrape is cached to a CSV that the analysis below reads. The numbers here are current as of the 2025-26 season; re-running the fetch script later will collect more games.</p>
+</section>
+<section id="what-the-updated-data-looks-like" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-updated-data-looks-like">What the updated data looks like</h2>
+<p>The fresh scrape covers every regular-season team game from Westbrook’s 2008-09 rookie year through 2025-26. The original post had 1,093 team games to work with; this one has 1,438.</p>
+<div id="totals" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Career team games: </span><span class="sc">{</span>career_games<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Active for </span><span class="sc">{</span>active_games<span class="sc">}</span><span class="ss"> of them (</span><span class="sc">{</span>active_pct<span class="sc">:.2f}</span><span class="ss">%)"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Triple doubles: </span><span class="sc">{</span>td_games<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>td_rate<span class="sc">:.2f}</span><span class="ss">% of active games)"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Active games without a triple double: </span><span class="sc">{</span>non_td_games<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Career team games: 1438
+Active for 1301 of them (90.47%)
+Triple doubles: 209 (16.06% of active games)
+Active games without a triple double: 1092</code></pre>
+</div>
+</div>
+<p>The triple-double count is the load-bearing number, so it is worth checking against an authority. Basketball-Reference’s <a href="https://www.basketball-reference.com/leaders/trp_dbl_career.html">career triple-double leaderboard</a> lists Westbrook first all-time with 209 as of the 2025-26 season. The scrape-and-count here returns 209, an exact match. The definition is unchanged from 2022: a triple double is any game where three of points, rebounds, assists, steals, or blocks reach double digits, which in practice is almost always points, rebounds, and assists.</p>
+</section>
+<section id="does-the-thesis-still-hold" class="level2">
+<h2 class="anchored" data-anchor-id="does-the-thesis-still-hold">Does the thesis still hold?</h2>
+<p>The 2022 post found that Westbrook’s teams won 73.58% of games in which he recorded a triple double, against 55.79% when he did not. The updated numbers:</p>
+<div id="cell-win-pct-table" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Win %"</span>: [<span class="ss">f"</span><span class="sc">{</span>career_win<span class="sc">:.2f}</span><span class="ss">%"</span>, <span class="ss">f"</span><span class="sc">{</span>active_win<span class="sc">:.2f}</span><span class="ss">%"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>               <span class="ss">f"</span><span class="sc">{</span>td_win<span class="sc">:.2f}</span><span class="ss">%"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_win<span class="sc">:.2f}</span><span class="ss">%"</span>]},</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"Career"</span>, <span class="st">"Active"</span>, <span class="st">"With a triple double"</span>, <span class="st">"Without a triple double"</span>],</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="win-pct-table" class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Win %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Career</th>
+<td>56.33%</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Active</th>
+<td>56.73%</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">With a triple double</th>
+<td>73.21%</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Without a triple double</th>
+<td>53.57%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>The thesis holds. Westbrook’s teams still win about 73% of the games in which he records a triple double, a figure that has barely moved in four seasons, and only 54% of the games in which he does not. If anything the gap has widened slightly, from roughly 18 points in 2022 to 19.6 points now, because his non-triple-double win rate has drifted down as his teams have gotten worse. A two-proportion z-test rejects the null that the two win rates are equal.</p>
+<div id="ztest" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"z = </span><span class="sc">{</span>z_stat<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_value<span class="sc">:.2e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>z = 5.249, p = 1.53e-07</code></pre>
+</div>
+</div>
+<p>That the relationship survived four more seasons and three team changes is the strong form of the result. It is also where caution belongs. A triple double is not a treatment applied at random. It marks a game in which Westbrook played heavy minutes and stayed involved on both ends, and those games cluster in the seasons where he was a featured starter on a competitive team, for instance his 2016-17 MVP campaign in Oklahoma City and his 2020-21 season in Washington. The win-percentage gap is real, but it is a statement about the kind of game a triple double signals, not evidence that chasing the tenth assist causes the win.</p>
+<p>The late-career data makes that caveat concrete rather than theoretical.</p>
+</section>
+<section id="the-role-change-the-original-post-could-not-see" class="level2">
+<h2 class="anchored" data-anchor-id="the-role-change-the-original-post-could-not-see">The role change the original post could not see</h2>
+<p>Since 2023, Westbrook has been a reserve, moving from the Clippers to the Nuggets to the Kings and coming off the bench for most of those games. His triple-double rate collapsed accordingly. The seasonal counts tell the story better than any summary statistic.</p>
+<div id="cell-fig-seasonal" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"white"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="ss">f"'</span><span class="sc">{</span><span class="bu">str</span>(y)[<span class="dv">2</span>:]<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> y <span class="kw">in</span> td_by_season.index]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(labels, td_by_season.values, color<span class="op">=</span><span class="st">"#1f4e99"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Season (ending year)"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Games with a triple double"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Russell Westbrook triple doubles by season"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar, val <span class="kw">in</span> <span class="bu">zip</span>(bars, td_by_season.values):</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> val:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        ax.text(bar.get_x() <span class="op">+</span> bar.get_width() <span class="op">/</span> <span class="dv">2</span>, val <span class="op">+</span> <span class="fl">0.4</span>, <span class="bu">str</span>(val),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-seasonal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-seasonal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-seasonal-output-1.png" width="954" height="521" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-seasonal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Triple doubles by season, from Westbrook’s 2008-09 rookie year through 2025-26. The peak seasons are his post-Durant years in Oklahoma City, Houston, and Washington; the collapse after 2022 tracks his move to a bench role.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The four seasons added since the original post contributed 15 triple doubles combined, fewer than he recorded in the single 2016-17 season. The thesis, then, is now carried almost entirely by his prime. It describes 2017-era Westbrook accurately and 2026-era Westbrook barely, because the reserve version of him rarely plays the kind of game that produces a triple double in the first place. This is the generalizability caution in practice. A relationship estimated over a career can hold in aggregate while saying little about the player as he exists today.</p>
+</section>
+<section id="home-away-and-the-durant-question" class="level2">
+<h2 class="anchored" data-anchor-id="home-away-and-the-durant-question">Home, away, and the Durant question</h2>
+<p>The original post split triple doubles by location and marked Durant’s 2016 departure from Oklahoma City, on the theory that Westbrook’s triple-double era began once he was the unambiguous focal point of the offense.</p>
+<div id="cell-fig-location" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> <span class="bu">list</span>(td_by_loc.index)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>ax.plot(years, td_by_loc.get(<span class="st">"Home"</span>, <span class="dv">0</span>), marker<span class="op">=</span><span class="st">"o"</span>, label<span class="op">=</span><span class="st">"Home"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ax.plot(years, td_by_loc.get(<span class="st">"Away"</span>, <span class="dv">0</span>), marker<span class="op">=</span><span class="st">"o"</span>, label<span class="op">=</span><span class="st">"Away"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">2016.5</span>, color<span class="op">=</span><span class="st">"k"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Season (ending year)"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Games with a triple double"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Russell Westbrook triple doubles by location"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">"Home"</span>, <span class="st">"Away"</span>, <span class="st">"Durant leaves OKC"</span>], loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-location" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-location-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-location-output-1.png" width="1028" height="521" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-location-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Triple doubles by season, split by home and away. The dashed line marks Kevin Durant’s 2016 departure from Oklahoma City, after which Westbrook’s triple-double production jumped.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The split by era is stark:</p>
+<div id="kd-split" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"With Durant (through 2015-16):   </span><span class="sc">{</span>td_with_kd<span class="sc">}</span><span class="ss"> triple doubles"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"After Durant (2016-17 onward):   </span><span class="sc">{</span>td_without_kd<span class="sc">}</span><span class="ss"> triple doubles"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>With Durant (through 2015-16):   37 triple doubles
+After Durant (2016-17 onward):   172 triple doubles</code></pre>
+</div>
+</div>
+<p>Westbrook recorded 37 triple doubles across his eight seasons sharing a team with Durant and 172 in the seasons after. Some of that is simply age and tenure, an older Westbrook with the ball in his hands more often, so I would not read the Durant departure as the sole cause. But the timing is hard to ignore, and it lines up with the win-percentage story: the triple-double seasons are the seasons in which Westbrook was the engine of his team.</p>
+</section>
+<section id="margins-still-no-sign-of-selfish-stat-chasing" class="level2">
+<h2 class="anchored" data-anchor-id="margins-still-no-sign-of-selfish-stat-chasing">Margins: still no sign of selfish stat-chasing</h2>
+<p>The sharpest criticism of Westbrook is that he chases triple doubles at his team’s expense. If that were true, we would expect his teams to lose by more in games where he gets a triple double, the empty-stat-line loss. The margins say the opposite.</p>
+<div id="cell-margins" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Avg. margin"</span>: [<span class="ss">f"</span><span class="sc">{</span>td_win_margin<span class="sc">:+.2f}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_win_margin<span class="sc">:+.2f}</span><span class="ss">"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                     <span class="ss">f"</span><span class="sc">{</span>td_loss_margin<span class="sc">:+.2f}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_loss_margin<span class="sc">:+.2f}</span><span class="ss">"</span>]},</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"Triple-double wins"</span>, <span class="st">"Non-triple-double wins"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Triple-double losses"</span>, <span class="st">"Non-triple-double losses"</span>],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="margins" class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Avg. margin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Triple-double wins</th>
+<td>+11.61</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Non-triple-double wins</th>
+<td>+11.54</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Triple-double losses</th>
+<td>-7.45</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Non-triple-double losses</th>
+<td>-10.74</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>When Westbrook’s teams win, the margin is nearly identical whether or not he records a triple double (11.6 against 11.5). When they lose, they lose by <em>less</em> with a triple double (-7.4) than without (-10.7). That is the same conclusion the 2022 post reached, and four more seasons did not disturb it. Whatever a Westbrook triple double is, it is not a marker of a team quietly losing while he pads his line.</p>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
+<p>The 2022 result survives replication. Westbrook’s teams win far more with a triple double (73%) than without (54%), the difference is statistically significant, and the margin data shows no evidence that his triple doubles come at his team’s expense. The scrape is still possible, once the table name is repaired, and the count still matches Basketball-Reference to the game.</p>
+<p>What the extra four seasons add is a caveat the original post had no way to see. The relationship is anchored in Westbrook’s prime, and his move to the bench has made triple doubles rare enough that the thesis now describes a version of him that no longer takes the floor most nights. The statistic is durable. The player it was measuring has moved on. Both things can be true, and holding them together is the honest reading of the updated data.</p>
+</section>
+<section id="footnotes" class="level2">
+<h2 class="anchored" data-anchor-id="footnotes">Footnotes</h2>
+<div id="versions" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> IPython</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"originally published 2022-03-06; revisited 2026-08-12"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Python:     </span><span class="sc">{</span>sys<span class="sc">.</span>version<span class="sc">.</span>split()[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"pandas:     </span><span class="sc">{</span>pd<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"numpy:      </span><span class="sc">{</span>np<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"seaborn:    </span><span class="sc">{</span>sns<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"matplotlib: </span><span class="sc">{</span>mpl<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IPython:    </span><span class="sc">{</span>IPython<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>originally published 2022-03-06; revisited 2026-08-12
+Python:     3.11.14
+pandas:     2.3.3
+numpy:      2.3.5
+seaborn:    0.13.2
+matplotlib: 3.10.8
+IPython:    9.8.0</code></pre>
+</div>
+</div>
+<p>The scraping code is in <a href="fetch_westbrook_data.py"><code>fetch_westbrook_data.py</code></a>, and the cached dataset it produces is <a href="data/westbrook_game_logs.csv"><code>data/westbrook_game_logs.csv</code></a>. The <a href="../triple-double-russ/">original 2022 post</a> is preserved as-is.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script src="bayesian-waves-bg.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Triple Double Russ, Revisited"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-08-12"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Kivan Polimis"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Four seasons after the original post, I re-scrape Russell Westbrook's full game log and re-test the thesis: do his teams really win more when he records a triple double? With 345 more team games and a late-career move to the bench, the answer holds, but it now says less about present-day Westbrook than it did in 2022."</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [sports-analytics, python]</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> blog</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">  cache: false</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>In March 2022 I wrote <span class="co">[</span><span class="ot">Triple Double Russ</span><span class="co">](../triple-double-russ/)</span>, which scraped</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>Russell Westbrook's game log and asked a simple question: when he records a triple</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>double, do his teams win more often? The answer then was yes, and by a wide,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>statistically significant margin. That post was a snapshot of a career still in</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>motion. Westbrook has since played four more seasons and changed teams three times,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>moving from a featured star to a reserve. This revisit re-collects the data through</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>the 2025-26 season and asks two things: is the same analysis still reproducible, and</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>does the original thesis still hold?</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>I am keeping the <span class="co">[</span><span class="ot">original post</span><span class="co">](../triple-double-russ/)</span> unchanged as a 2022 time</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>capsule. Everything below is recomputed from a fresh scrape.</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Is data collection still possible?</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>Yes, with one repair. Basketball-Reference still publishes Westbrook's per-season game</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>logs at the same URLs the original post used, for instance</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">the 2025-26 log</span><span class="co">](https://www.basketball-reference.com/players/w/westbru01/gamelog/2026)</span>,</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>and a plain request still returns them. What changed is the markup. The 2022 scraper</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>keyed on the old game-log table and its column layout; the site has since renamed the</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>table to <span class="in">`player_game_log_reg`</span> and moved every statistic behind a <span class="in">`data-stat`</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>attribute (<span class="in">`pts`</span>, <span class="in">`trb`</span>, <span class="in">`ast`</span>, <span class="in">`game_result`</span>). A scraper written against the 2022</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>page returns an empty table today rather than an error, which is the quiet kind of</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>failure worth guarding against. The rewritten scraper lives in</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`fetch_westbrook_data.py`</span><span class="co">](fetch_westbrook_data.py)</span> and raises loudly if the expected</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>table is missing.</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>Two practical notes carried over from the original. Basketball-Reference rate-limits</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>scrapers, so the fetch script sleeps between requests. And to keep this page building</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>without touching the network, the scrape is cached to a CSV that the analysis below</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>reads. The numbers here are current as of the 2025-26 season; re-running the fetch</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>script later will collect more games.</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Load cached game logs ─────────────────────────────────────────────────────</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>games <span class="op">=</span> pd.read_csv(<span class="st">"data/westbrook_game_logs.csv"</span>)</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Schema guard: catch a Basketball-Reference layout change (or a stale scrape)</span></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="co"># before it silently corrupts every downstream number.</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>_REQUIRED <span class="op">=</span> {<span class="st">"date"</span>, <span class="st">"season_start"</span>, <span class="st">"season_end"</span>, <span class="st">"location"</span>, <span class="st">"active"</span>,</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>             <span class="st">"result_b"</span>, <span class="st">"margin"</span>, <span class="st">"points"</span>, <span class="st">"total_rebs"</span>, <span class="st">"assists"</span>,</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>             <span class="st">"steals"</span>, <span class="st">"blocks"</span>}</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>_missing <span class="op">=</span> _REQUIRED <span class="op">-</span> <span class="bu">set</span>(games.columns)</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> _missing:</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"westbrook_game_logs.csv missing columns: </span><span class="sc">{</span>_missing<span class="sc">}</span><span class="ss">. "</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Re-run fetch_westbrook_data.py."</span>)</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> _missing</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Triple-double indicator (same 7-scenario definition as the 2022 post) ─────</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> triple_double(row):</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return 1 if any three of pts/reb/ast/stl/blk reach double digits."""</span></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>    p, t, a <span class="op">=</span> row[<span class="st">"points"</span>], row[<span class="st">"total_rebs"</span>], row[<span class="st">"assists"</span>]</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>    s, b <span class="op">=</span> row[<span class="st">"steals"</span>], row[<span class="st">"blocks"</span>]</span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>    trios <span class="op">=</span> [(p, t, a), (p, t, b), (p, t, s), (p, a, s),</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>             (p, a, b), (t, a, b), (t, a, s)]</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">int</span>(<span class="bu">any</span>(x <span class="op">&gt;=</span> <span class="dv">10</span> <span class="kw">and</span> y <span class="op">&gt;=</span> <span class="dv">10</span> <span class="kw">and</span> z <span class="op">&gt;=</span> <span class="dv">10</span> <span class="cf">for</span> x, y, z <span class="kw">in</span> trios))</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>games[<span class="st">"triple_double"</span>] <span class="op">=</span> games.<span class="bu">apply</span>(triple_double, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>games.loc[games[<span class="st">"active"</span>] <span class="op">==</span> <span class="dv">0</span>, <span class="st">"triple_double"</span>] <span class="op">=</span> <span class="dv">0</span>  <span class="co"># missed games are not TDs</span></span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Slices ────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>active <span class="op">=</span> games[games[<span class="st">"active"</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>td <span class="op">=</span> active[active[<span class="st">"triple_double"</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>non_td <span class="op">=</span> active[active[<span class="st">"triple_double"</span>] <span class="op">==</span> <span class="dv">0</span>]</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Headline counts ───────────────────────────────────────────────────────────</span></span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>career_games <span class="op">=</span> <span class="bu">len</span>(games)</span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>active_games <span class="op">=</span> <span class="bu">len</span>(active)</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>active_pct <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> active_games <span class="op">/</span> career_games</span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>td_games <span class="op">=</span> <span class="bu">len</span>(td)</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>non_td_games <span class="op">=</span> <span class="bu">len</span>(non_td)</span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>td_rate <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> td_games <span class="op">/</span> active_games</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Win percentages ───────────────────────────────────────────────────────────</span></span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>career_win <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> games[<span class="st">"result_b"</span>].mean()</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>active_win <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> active[<span class="st">"result_b"</span>].mean()</span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a>td_win <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> td[<span class="st">"result_b"</span>].mean()</span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>non_td_win <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> non_td[<span class="st">"result_b"</span>].mean()</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>win_gap <span class="op">=</span> td_win <span class="op">-</span> non_td_win</span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Two-proportion z-test: TD vs non-TD win rate ──────────────────────────────</span></span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a>w_td, n_td <span class="op">=</span> td[<span class="st">"result_b"</span>].<span class="bu">sum</span>(), <span class="bu">len</span>(td)</span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>w_nt, n_nt <span class="op">=</span> non_td[<span class="st">"result_b"</span>].<span class="bu">sum</span>(), <span class="bu">len</span>(non_td)</span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>p_pool <span class="op">=</span> (w_td <span class="op">+</span> w_nt) <span class="op">/</span> (n_td <span class="op">+</span> n_nt)</span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> np.sqrt(p_pool <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p_pool) <span class="op">*</span> (<span class="dv">1</span> <span class="op">/</span> n_td <span class="op">+</span> <span class="dv">1</span> <span class="op">/</span> n_nt))</span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>z_stat <span class="op">=</span> (w_td <span class="op">/</span> n_td <span class="op">-</span> w_nt <span class="op">/</span> n_nt) <span class="op">/</span> se</span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> norm.cdf(<span class="bu">abs</span>(z_stat)))</span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Margins ───────────────────────────────────────────────────────────────────</span></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>td_win_margin <span class="op">=</span> td[td[<span class="st">"result_b"</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">"margin"</span>].mean()</span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>td_loss_margin <span class="op">=</span> td[td[<span class="st">"result_b"</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">"margin"</span>].mean()</span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>non_td_win_margin <span class="op">=</span> non_td[non_td[<span class="st">"result_b"</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">"margin"</span>].mean()</span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>non_td_loss_margin <span class="op">=</span> non_td[non_td[<span class="st">"result_b"</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">"margin"</span>].mean()</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Kevin Durant split (Durant left OKC after the 2015-16 season) ─────────────</span></span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>td_with_kd <span class="op">=</span> <span class="bu">len</span>(td[td[<span class="st">"season_start"</span>] <span class="op">&lt;</span> <span class="dv">2016</span>])</span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a>td_without_kd <span class="op">=</span> <span class="bu">len</span>(td[td[<span class="st">"season_start"</span>] <span class="op">&gt;=</span> <span class="dv">2016</span>])</span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Seasonal / location tables for charts ─────────────────────────────────────</span></span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a>season_range <span class="op">=</span> <span class="bu">range</span>(games[<span class="st">"season_end"</span>].<span class="bu">min</span>(), games[<span class="st">"season_end"</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a>td_by_season <span class="op">=</span> (td.groupby(<span class="st">"season_end"</span>).size()</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a>                .reindex(season_range, fill_value<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a>td_by_loc <span class="op">=</span> (td.groupby([<span class="st">"season_end"</span>, <span class="st">"location"</span>]).size()</span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a>             .unstack(<span class="st">"location"</span>, fill_value<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a>             .reindex(season_range, fill_value<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## What the updated data looks like</span></span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>The fresh scrape covers every regular-season team game from Westbrook's 2008-09 rookie</span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a>year through 2025-26. The original post had 1,093 team games to work with; this one has</span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a><span class="in">`{python} f"{career_games:,}"`</span>.</span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: totals</span></span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Career team games: </span><span class="sc">{</span>career_games<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Active for </span><span class="sc">{</span>active_games<span class="sc">}</span><span class="ss"> of them (</span><span class="sc">{</span>active_pct<span class="sc">:.2f}</span><span class="ss">%)"</span>)</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Triple doubles: </span><span class="sc">{</span>td_games<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>td_rate<span class="sc">:.2f}</span><span class="ss">% of active games)"</span>)</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Active games without a triple double: </span><span class="sc">{</span>non_td_games<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a>The triple-double count is the load-bearing number, so it is worth checking against an</span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>authority. Basketball-Reference's</span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">career triple-double leaderboard</span><span class="co">](https://www.basketball-reference.com/leaders/trp_dbl_career.html)</span></span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a>lists Westbrook first all-time with 209 as of the 2025-26 season. The scrape-and-count</span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a>here returns <span class="in">`{python} f"{td_games}"`</span>, an exact match. The definition is unchanged from</span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>2022: a triple double is any game where three of points, rebounds, assists, steals, or</span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a>blocks reach double digits, which in practice is almost always points, rebounds, and</span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>assists.</span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a><span class="fu">## Does the thesis still hold?</span></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a>The 2022 post found that Westbrook's teams won 73.58% of games in which he recorded a</span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a>triple double, against 55.79% when he did not. The updated numbers:</span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: win-pct-table</span></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Win %"</span>: [<span class="ss">f"</span><span class="sc">{</span>career_win<span class="sc">:.2f}</span><span class="ss">%"</span>, <span class="ss">f"</span><span class="sc">{</span>active_win<span class="sc">:.2f}</span><span class="ss">%"</span>,</span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a>               <span class="ss">f"</span><span class="sc">{</span>td_win<span class="sc">:.2f}</span><span class="ss">%"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_win<span class="sc">:.2f}</span><span class="ss">%"</span>]},</span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"Career"</span>, <span class="st">"Active"</span>, <span class="st">"With a triple double"</span>, <span class="st">"Without a triple double"</span>],</span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a>The thesis holds. Westbrook's teams still win about</span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a><span class="in">`{python} f"{td_win:.0f}"`</span>% of the games in which he records a triple double, a figure</span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a>that has barely moved in four seasons, and only <span class="in">`{python} f"{non_td_win:.0f}"`</span>% of the</span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a>games in which he does not. If anything the gap has widened slightly, from roughly 18</span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>points in 2022 to <span class="in">`{python} f"{win_gap:.1f}"`</span> points now, because his non-triple-double</span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>win rate has drifted down as his teams have gotten worse. A two-proportion z-test</span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>rejects the null that the two win rates are equal.</span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: ztest</span></span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"z = </span><span class="sc">{</span>z_stat<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_value<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a>That the relationship survived four more seasons and three team changes is the strong</span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a>form of the result. It is also where caution belongs. A triple double is not a treatment</span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a>applied at random. It marks a game in which Westbrook played heavy minutes and stayed</span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>involved on both ends, and those games cluster in the seasons where he was a featured</span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a>starter on a competitive team, for instance his 2016-17 MVP campaign in Oklahoma City</span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a>and his 2020-21 season in Washington. The win-percentage gap is real, but it is a</span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a>statement about the kind of game a triple double signals, not evidence that chasing the</span>
+<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a>tenth assist causes the win.</span>
+<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a>The late-career data makes that caveat concrete rather than theoretical.</span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a><span class="fu">## The role change the original post could not see</span></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a>Since 2023, Westbrook has been a reserve, moving from the Clippers to the Nuggets to the</span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a>Kings and coming off the bench for most of those games. His triple-double rate collapsed</span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a>accordingly. The seasonal counts tell the story better than any summary statistic.</span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-seasonal</span></span>
+<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Triple doubles by season, from Westbrook's 2008-09 rookie year through 2025-26. The peak seasons are his post-Durant years in Oklahoma City, Houston, and Washington; the collapse after 2022 tracks his move to a bench role."</span></span>
+<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"white"</span>)</span>
+<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="ss">f"'</span><span class="sc">{</span><span class="bu">str</span>(y)[<span class="dv">2</span>:]<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> y <span class="kw">in</span> td_by_season.index]</span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(labels, td_by_season.values, color<span class="op">=</span><span class="st">"#1f4e99"</span>)</span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Season (ending year)"</span>,</span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Games with a triple double"</span>,</span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Russell Westbrook triple doubles by season"</span>)</span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar, val <span class="kw">in</span> <span class="bu">zip</span>(bars, td_by_season.values):</span>
+<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> val:</span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a>        ax.text(bar.get_x() <span class="op">+</span> bar.get_width() <span class="op">/</span> <span class="dv">2</span>, val <span class="op">+</span> <span class="fl">0.4</span>, <span class="bu">str</span>(val),</span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a>                ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a>The four seasons added since the original post contributed</span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a><span class="in">`{python} f"{int(td_by_season.loc[2023:2026].sum())}"`</span> triple doubles combined, fewer</span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a>than he recorded in the single 2016-17 season. The thesis, then, is now carried almost</span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a>entirely by his prime. It describes 2017-era Westbrook accurately and 2026-era</span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a>Westbrook barely, because the reserve version of him rarely plays the kind of game that</span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a>produces a triple double in the first place. This is the generalizability caution in</span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>practice. A relationship estimated over a career can hold in aggregate while saying</span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>little about the player as he exists today.</span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a><span class="fu">## Home, away, and the Durant question</span></span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a>The original post split triple doubles by location and marked Durant's 2016 departure</span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a>from Oklahoma City, on the theory that Westbrook's triple-double era began once he was</span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a>the unambiguous focal point of the offense.</span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-location</span></span>
+<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Triple doubles by season, split by home and away. The dashed line marks Kevin Durant's 2016 departure from Oklahoma City, after which Westbrook's triple-double production jumped."</span></span>
+<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>))</span>
+<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> <span class="bu">list</span>(td_by_loc.index)</span>
+<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a>ax.plot(years, td_by_loc.get(<span class="st">"Home"</span>, <span class="dv">0</span>), marker<span class="op">=</span><span class="st">"o"</span>, label<span class="op">=</span><span class="st">"Home"</span>)</span>
+<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a>ax.plot(years, td_by_loc.get(<span class="st">"Away"</span>, <span class="dv">0</span>), marker<span class="op">=</span><span class="st">"o"</span>, label<span class="op">=</span><span class="st">"Away"</span>)</span>
+<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">2016.5</span>, color<span class="op">=</span><span class="st">"k"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Season (ending year)"</span>,</span>
+<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Games with a triple double"</span>,</span>
+<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Russell Westbrook triple doubles by location"</span>)</span>
+<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">"Home"</span>, <span class="st">"Away"</span>, <span class="st">"Durant leaves OKC"</span>], loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>The split by era is stark:</span>
+<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: kd-split</span></span>
+<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"With Durant (through 2015-16):   </span><span class="sc">{</span>td_with_kd<span class="sc">}</span><span class="ss"> triple doubles"</span>)</span>
+<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"After Durant (2016-17 onward):   </span><span class="sc">{</span>td_without_kd<span class="sc">}</span><span class="ss"> triple doubles"</span>)</span>
+<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a>Westbrook recorded <span class="in">`{python} f"{td_with_kd}"`</span> triple doubles across his eight seasons</span>
+<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a>sharing a team with Durant and <span class="in">`{python} f"{td_without_kd}"`</span> in the seasons after. Some</span>
+<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a>of that is simply age and tenure, an older Westbrook with the ball in his hands more</span>
+<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a>often, so I would not read the Durant departure as the sole cause. But the timing is</span>
+<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a>hard to ignore, and it lines up with the win-percentage story: the triple-double</span>
+<span id="cb13-273"><a href="#cb13-273" aria-hidden="true" tabindex="-1"></a>seasons are the seasons in which Westbrook was the engine of his team.</span>
+<span id="cb13-274"><a href="#cb13-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-275"><a href="#cb13-275" aria-hidden="true" tabindex="-1"></a><span class="fu">## Margins: still no sign of selfish stat-chasing</span></span>
+<span id="cb13-276"><a href="#cb13-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-277"><a href="#cb13-277" aria-hidden="true" tabindex="-1"></a>The sharpest criticism of Westbrook is that he chases triple doubles at his team's</span>
+<span id="cb13-278"><a href="#cb13-278" aria-hidden="true" tabindex="-1"></a>expense. If that were true, we would expect his teams to lose by more in games where he</span>
+<span id="cb13-279"><a href="#cb13-279" aria-hidden="true" tabindex="-1"></a>gets a triple double, the empty-stat-line loss. The margins say the opposite.</span>
+<span id="cb13-280"><a href="#cb13-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-283"><a href="#cb13-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-284"><a href="#cb13-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: margins</span></span>
+<span id="cb13-285"><a href="#cb13-285" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb13-286"><a href="#cb13-286" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Avg. margin"</span>: [<span class="ss">f"</span><span class="sc">{</span>td_win_margin<span class="sc">:+.2f}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_win_margin<span class="sc">:+.2f}</span><span class="ss">"</span>,</span>
+<span id="cb13-287"><a href="#cb13-287" aria-hidden="true" tabindex="-1"></a>                     <span class="ss">f"</span><span class="sc">{</span>td_loss_margin<span class="sc">:+.2f}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>non_td_loss_margin<span class="sc">:+.2f}</span><span class="ss">"</span>]},</span>
+<span id="cb13-288"><a href="#cb13-288" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"Triple-double wins"</span>, <span class="st">"Non-triple-double wins"</span>,</span>
+<span id="cb13-289"><a href="#cb13-289" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Triple-double losses"</span>, <span class="st">"Non-triple-double losses"</span>],</span>
+<span id="cb13-290"><a href="#cb13-290" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-291"><a href="#cb13-291" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-292"><a href="#cb13-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a>When Westbrook's teams win, the margin is nearly identical whether or not he records a</span>
+<span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a>triple double (<span class="in">`{python} f"{td_win_margin:.1f}"`</span> against</span>
+<span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a><span class="in">`{python} f"{non_td_win_margin:.1f}"`</span>). When they lose, they lose by</span>
+<span id="cb13-296"><a href="#cb13-296" aria-hidden="true" tabindex="-1"></a>*less* with a triple double (<span class="in">`{python} f"{td_loss_margin:.1f}"`</span>) than without</span>
+<span id="cb13-297"><a href="#cb13-297" aria-hidden="true" tabindex="-1"></a>(<span class="in">`{python} f"{non_td_loss_margin:.1f}"`</span>). That is the same conclusion the 2022 post</span>
+<span id="cb13-298"><a href="#cb13-298" aria-hidden="true" tabindex="-1"></a>reached, and four more seasons did not disturb it. Whatever a Westbrook triple double</span>
+<span id="cb13-299"><a href="#cb13-299" aria-hidden="true" tabindex="-1"></a>is, it is not a marker of a team quietly losing while he pads his line.</span>
+<span id="cb13-300"><a href="#cb13-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-301"><a href="#cb13-301" aria-hidden="true" tabindex="-1"></a><span class="fu">## Review</span></span>
+<span id="cb13-302"><a href="#cb13-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-303"><a href="#cb13-303" aria-hidden="true" tabindex="-1"></a>The 2022 result survives replication. Westbrook's teams win far more with a triple</span>
+<span id="cb13-304"><a href="#cb13-304" aria-hidden="true" tabindex="-1"></a>double (<span class="in">`{python} f"{td_win:.0f}"`</span>%) than without (<span class="in">`{python} f"{non_td_win:.0f}"`</span>%), the</span>
+<span id="cb13-305"><a href="#cb13-305" aria-hidden="true" tabindex="-1"></a>difference is statistically significant, and the margin data shows no evidence that his</span>
+<span id="cb13-306"><a href="#cb13-306" aria-hidden="true" tabindex="-1"></a>triple doubles come at his team's expense. The scrape is still possible, once the table</span>
+<span id="cb13-307"><a href="#cb13-307" aria-hidden="true" tabindex="-1"></a>name is repaired, and the count still matches Basketball-Reference to the game.</span>
+<span id="cb13-308"><a href="#cb13-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-309"><a href="#cb13-309" aria-hidden="true" tabindex="-1"></a>What the extra four seasons add is a caveat the original post had no way to see. The</span>
+<span id="cb13-310"><a href="#cb13-310" aria-hidden="true" tabindex="-1"></a>relationship is anchored in Westbrook's prime, and his move to the bench has made triple</span>
+<span id="cb13-311"><a href="#cb13-311" aria-hidden="true" tabindex="-1"></a>doubles rare enough that the thesis now describes a version of him that no longer takes</span>
+<span id="cb13-312"><a href="#cb13-312" aria-hidden="true" tabindex="-1"></a>the floor most nights. The statistic is durable. The player it was measuring has moved</span>
+<span id="cb13-313"><a href="#cb13-313" aria-hidden="true" tabindex="-1"></a>on. Both things can be true, and holding them together is the honest reading of the</span>
+<span id="cb13-314"><a href="#cb13-314" aria-hidden="true" tabindex="-1"></a>updated data.</span>
+<span id="cb13-315"><a href="#cb13-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-316"><a href="#cb13-316" aria-hidden="true" tabindex="-1"></a><span class="fu">## Footnotes</span></span>
+<span id="cb13-317"><a href="#cb13-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-320"><a href="#cb13-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-321"><a href="#cb13-321" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: versions</span></span>
+<span id="cb13-322"><a href="#cb13-322" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb13-323"><a href="#cb13-323" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> IPython</span>
+<span id="cb13-324"><a href="#cb13-324" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb13-325"><a href="#cb13-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-326"><a href="#cb13-326" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"originally published 2022-03-06; revisited 2026-08-12"</span>)</span>
+<span id="cb13-327"><a href="#cb13-327" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Python:     </span><span class="sc">{</span>sys<span class="sc">.</span>version<span class="sc">.</span>split()[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-328"><a href="#cb13-328" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"pandas:     </span><span class="sc">{</span>pd<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-329"><a href="#cb13-329" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"numpy:      </span><span class="sc">{</span>np<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-330"><a href="#cb13-330" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"seaborn:    </span><span class="sc">{</span>sns<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-331"><a href="#cb13-331" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"matplotlib: </span><span class="sc">{</span>mpl<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-332"><a href="#cb13-332" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IPython:    </span><span class="sc">{</span>IPython<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-333"><a href="#cb13-333" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-334"><a href="#cb13-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-335"><a href="#cb13-335" aria-hidden="true" tabindex="-1"></a>The scraping code is in <span class="co">[</span><span class="ot">`fetch_westbrook_data.py`</span><span class="co">](fetch_westbrook_data.py)</span>, and the</span>
+<span id="cb13-336"><a href="#cb13-336" aria-hidden="true" tabindex="-1"></a>cached dataset it produces is</span>
+<span id="cb13-337"><a href="#cb13-337" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`data/westbrook_game_logs.csv`</span><span class="co">](data/westbrook_game_logs.csv)</span>. The</span>
+<span id="cb13-338"><a href="#cb13-338" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">original 2022 post</span><span class="co">](../triple-double-russ/)</span> is preserved as-is.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

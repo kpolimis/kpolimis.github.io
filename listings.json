@@ -2,6 +2,7 @@
   {
     "listing": "/technical.html",
     "items": [
+      "/posts/technical/triple-double-russ-update/index.html",
       "/posts/technical/epl-clustering-tutorial/index.html",
       "/posts/technical/triple-double-russ/index.html",
       "/posts/technical/nba-shot-chart-part-1/index.html",
@@ -22,6 +23,10 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/blog/epl-2026-27-predictions/analysis/SESSION_HANDOFF_2026-09-08.html",
+      "/posts/blog/epl-2026-27-predictions/index.html",
+      "/posts/blog/world-cup-2026-epl/index.html",
+      "/posts/blog/world-cup-2026-leagues/index.html",
       "/posts/blog/epl-standings/index.html",
       "/posts/blog/algorithmic-bias-health-analytics/index.html",
       "/posts/blog/migrating-pelican-to-quarto/index.html",

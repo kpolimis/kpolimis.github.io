@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>code-review.local – Kivan Polimis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-5c1318cf63eba56dbef7ba16bc7d56f5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-240167e2aa1b0458c56e668692b9e94d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Kivan Polimis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../technical.html"> 
+<span class="menu-text">Technical Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vita.html"> 
+<span class="menu-text">Vita</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kpolimis"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/kivan-polimis-36b54a9/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kpolimis"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#code-review-kpolimis.github.io" id="toc-code-review-kpolimis.github.io" class="nav-link active" data-scroll-target="#code-review-kpolimis.github.io">Code Review: kpolimis.github.io</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#findings" id="toc-findings" class="nav-link" data-scroll-target="#findings">Findings</a>
+  <ul class="collapse">
+  <li><a href="#critical" id="toc-critical" class="nav-link" data-scroll-target="#critical">Critical</a></li>
+  <li><a href="#warnings" id="toc-warnings" class="nav-link" data-scroll-target="#warnings">Warnings</a></li>
+  <li><a href="#suggestions" id="toc-suggestions" class="nav-link" data-scroll-target="#suggestions">Suggestions</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7"></h1></header><div class="quarto-title-block"><div class="quarto-title-tools-only"><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+
+
+
+
+<section id="code-review-kpolimis.github.io" class="level1">
+<h1>Code Review: kpolimis.github.io</h1>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This is a Quarto-based personal website for Kivan Polimis, a data scientist and researcher. The site uses the <code>cosmo</code> Bootstrap theme augmented with custom SCSS/CSS, an animated canvas background (<code>bayesian-waves-bg.js</code>), and a standard Quarto listing setup for blog and technical posts. Most content was migrated from a prior Pelican site. The codebase is small, well-organized, and the newer posts (EPL series, algorithmic-bias) are written cleanly. The main issues are residual migration artifacts: broken/stale cross-post links, a couple of malformed HTML tags, an insecure external script load, an infinite animation loop with no accessibility escape hatch, and a handful of posts with missing metadata.</p>
+<hr>
+</section>
+<section id="findings" class="level2">
+<h2 class="anchored" data-anchor-id="findings">Findings</h2>
+<section id="critical" class="level3">
+<h3 class="anchored" data-anchor-id="critical">Critical</h3>
+<p><strong>1. Insecure MathJax CDN load (mixed-content / deprecated endpoint)</strong> File: <code>posts/technical/nba-mvp-comparisons-part-2/index.qmd</code>, line 23</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> type=</span><span class="st">"text/javascript"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This loads MathJax over plain HTTP from a CDN that shut down in 2017. Modern browsers will block this as mixed content on an HTTPS site. The math rendering in that post is silently broken. The legacy MathJax v1 config block on lines 13–21 (<code>MathJax.Hub.Config</code>) uses the v1 API that no longer exists. Replace with a CDN-hosted MathJax v3 load over HTTPS, or remove the block and rely on Quarto’s built-in <code>html-math-method: mathjax</code> setting in <code>_quarto.yml</code>.</p>
+<hr>
+<p><strong>2. Duplicate <code>{{&lt; embed &gt;}}</code> in flights-analysis</strong> File: <code>posts/technical/flights-analysis/index.qmd</code>, lines 13 and 17</p>
+<p>The same notebook is embedded twice:</p>
+<pre><code>{{&lt; embed ../../../downloads/notebooks/flights_analysis.ipynb &gt;}}
+&lt;img src="./flights2018.gif" alt="Gif of Flights"&gt;
+{{&lt; embed ../../../downloads/notebooks/flights_analysis.ipynb &gt;}}</code></pre>
+<p>Quarto will render the full notebook output twice (all cells, all output), doubling the page weight and duplicating every chart and code block. This is a copy-paste error from migration. Remove the second embed.</p>
+<hr>
+</section>
+<section id="warnings" class="level3">
+<h3 class="anchored" data-anchor-id="warnings">Warnings</h3>
+<p><strong>3. Stale cross-post links pointing to old Pelican domain</strong></p>
+<p>Cross-post links in the COVID-19 mortality series and the NBA MVP series still point to the old Pelican-era domain (<code>http://kivanpolimis.com/...</code>) with the old URL slugs. These are 404s or redirect-dependent:</p>
+<ul>
+<li><code>posts/technical/mortality-data-covid-19-disinformation-part-1/index.qmd</code> (line 204): links to <code>http://kivanpolimis.com/mortality-data-and-covid-19-disinformation-part-2.html</code></li>
+<li><code>posts/technical/mortality-data-covid-19-disinformation-part-2/index.qmd</code> (lines 15, 131): same pattern</li>
+<li><code>posts/technical/mortality-data-covid-19-disinformation-part-3/index.qmd</code> (lines 15, 121)</li>
+<li><code>posts/technical/mortality-data-covid-19-disinformation-part-4/index.qmd</code> (line 15)</li>
+<li><code>posts/technical/nba-mvp-comparisons-part-2/index.qmd</code> (line 35): links to <code>http://www.kivanpolimis.com/nba-mvp-comparisons-part-1.html</code></li>
+</ul>
+<p>These should be converted to relative Quarto paths (e.g., <code>../../mortality-data-covid-19-disinformation-part-2/</code>) so they work regardless of domain and do not require HTTP redirects.</p>
+<p>Additionally, <code>posts/blog/migrating-pelican-to-quarto/index.qmd</code> line 13 links to <code>[kivanpolimis.com](kivanpolimis.com)</code> — a bare domain without a scheme, which Quarto will not resolve as a hyperlink.</p>
+<hr>
+<p><strong>4. Unclosed/malformed HTML tags in two files</strong></p>
+<p><code>software.qmd</code>, lines 46 and 65 — <code>&lt;h1&gt;</code> tags are not closed with <code>&lt;/h1&gt;</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Community guidelines<span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>   <span class="co">&lt;!-- should be &lt;/h1&gt; --&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>References<span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>             <span class="co">&lt;!-- should be &lt;/h1&gt; --&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>posts/technical/positions-matter/index.qmd</code>, line 38 — the <code>style</code> attribute quote is not closed before the <code>&gt;</code> that ends the <code>img</code> tag:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"./rb-plot-example.png"</span><span class="ot"> alt</span><span class="op">=</span><span class="st">"RB Plot Example"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"width: 72%; height: 72%&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The closing <code>"</code> is missing after <code>72%</code>. This causes the browser to consume the <code>&gt;&lt;/p&gt;</code> as part of the attribute value, likely breaking the layout of the surrounding paragraph.</p>
+<hr>
+<p><strong>5. Animation loop has no stop condition and ignores <code>prefers-reduced-motion</code></strong> File: <code>bayesian-waves-bg.js</code></p>
+<p>The <code>tick()</code> function calls <code>requestAnimationFrame(tick)</code> unconditionally and the returned handle is never stored, so the loop cannot be cancelled:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">+=</span> CONFIG<span class="op">.</span><span class="at">speed</span><span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">requestAnimationFrame</span>(tick)<span class="op">;</span>   <span class="co">// handle discarded — no cancel path</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Two consequences: - The animation keeps running even when the tab is hidden (no <code>visibilitychange</code> guard), wasting battery/CPU for background tabs. - The OS accessibility setting <code>prefers-reduced-motion: reduce</code> is not respected. Users who have requested reduced motion for vestibular or epilepsy-related reasons get the full animation with no opt-out.</p>
+<p>Minimum fix: check <code>window.matchMedia('(prefers-reduced-motion: reduce)').matches</code> before starting the loop, and mirror the preference in <code>custom.scss</code> with <code>@media (prefers-reduced-motion: reduce) { #network-canvas { display: none; } }</code>. Also store the RAF handle and pause on <code>visibilitychange</code>.</p>
+<hr>
+<p><strong>6. Committed binary archives in the repo root</strong></p>
+<p><code>content-archive.zip</code> and <code>drafts.zip</code> are present in the repo root and tracked in git (they are not excluded by <code>.gitignore</code>, which excludes <code>*.zip</code> only to prevent future additions — already-committed files stay tracked). These files are ~several MB of binary data that adds permanent weight to git history for every clone. They are also not referenced by any Quarto page. If the archives are needed for backup, they should be stored outside the repo or in Git LFS; otherwise they should be removed and the history rewritten.</p>
+<hr>
+<p><strong>7. Broken Binder link in positions-matter</strong> File: <code>posts/technical/positions-matter/index.qmd</code>, line 24</p>
+<pre><code>[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/kpolimis/nfl-combine-evaluation-plots){:target=blank}</code></pre>
+<p>The URL uses <code>http://</code> (blocked on HTTPS pages), the Binder URL format has changed (<code>mybinder.org:/repo/</code> is not valid), and <code>{:target=blank}</code> is Pelican/Kramdown link attribute syntax that Quarto does not parse — it will render as literal text. The badge image also loads over HTTP, making it a mixed-content request. Either update to the current <code>https://mybinder.org/v2/gh/kpolimis/nfl-combine-evaluation-plots/HEAD</code> format or remove the badge if the repo is no longer maintained.</p>
+<hr>
+</section>
+<section id="suggestions" class="level3">
+<h3 class="anchored" data-anchor-id="suggestions">Suggestions</h3>
+<p><strong>8. Seventeen posts have empty <code>description</code> or <code>image</code> fields</strong></p>
+<p>The listing pages (<code>technical.qmd</code>, <code>blog.qmd</code>) show <code>fields: [date, title, description, categories, reading-time]</code>. Empty <code>description: ""</code> means these posts show no excerpt in the listings, reducing discoverability. Similarly, <code>image: ""</code> means no thumbnail appears. The affected posts are primarily the migrated Pelican content. Populating these fields is a content task, not a code fix, but it is the highest-impact improvement for reader experience after the technical issues above.</p>
+<p>Affected posts (partial list): <code>nba-shot-chart-part-1</code>, <code>nba-mvp-comparisons-part-1</code>, <code>nba-mvp-comparisons-part-3</code>, <code>triple-double-russ</code>, <code>flights-analysis</code>, <code>milano-location-history</code>, <code>seattle-location-history</code>, <code>first-post</code>, <code>ec2-r-and-twitter</code>.</p>
+<hr>
+<p><strong>9. <code>vita_script.sh</code> uses hardcoded absolute paths and copies to a non-existent output directory</strong> File: <code>docs/vita_script.sh</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/repos/vita/Polimis_Curriculum_Vitae.pdf Kivan_Polimis_Curriculum_Vitae.pdf</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> Kivan_Polimis_Curriculum_Vitae.pdf ../../output/docs/.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script assumes <code>~/repos/vita/</code> exists on any machine running it, and writes to <code>../../output/docs/</code> — the old Pelican output path that does not exist in the current Quarto project structure (<code>_site/</code> is the build dir). This script will silently fail or produce wrong output for anyone other than the original author. Since the PDFs are already present in <code>docs/</code>, the script is either already outdated or needs the paths updated to reflect the Quarto layout.</p>
+<hr>
+<p><strong>10. <code>PELICAN_END_SUMMARY</code> comment left in migrated post</strong> File: <code>posts/technical/social-media-twitter-api-and-r/index.qmd</code>, line 32</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- PELICAN_END_SUMMARY --&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is a Pelican-specific marker with no effect in Quarto. It is harmless but is a stale migration artifact that can be removed.</p>
+<hr>
+<p><strong>11. Notebook category mismatch in <code>social-media-twitter-api-and-r</code></strong> File: <code>posts/technical/social-media-twitter-api-and-r/index.qmd</code></p>
+<p>The front matter lists <code>categories: [tutorial, python]</code> but the post content is entirely R code (no Python). This causes the post to appear under the “python” filter on the listing page incorrectly. Change to <code>categories: [tutorial, r]</code>.</p>
+<hr>
+<p><strong>12. Global <code>link-external-newwindow: true</code> in <code>_quarto.yml</code></strong></p>
+<p>The <code>_quarto.yml</code> sets <code>link-external-newwindow: true</code> globally, causing every external link to open in a new tab. This is generally considered an accessibility anti-pattern (it removes the user’s control over tab behavior and is unexpected for keyboard and screen reader users). Consider removing this and applying <code>target="_blank"</code> only where explicitly desired, or at minimum adding <code>rel="noopener noreferrer"</code> (Quarto should add this automatically when the setting is active, but it is worth verifying in the rendered output).</p>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The site is well-structured and the newer content is well-written. The two highest-priority fixes are the broken MathJax script load in <code>nba-mvp-comparisons-part-2</code> (silent rendering failure) and the duplicate notebook embed in <code>flights-analysis</code> (doubled page output). The malformed HTML tags in <code>software.qmd</code> and <code>positions-matter</code> are likely causing layout breakage visible to readers. The stale Pelican-era cross-post links affect reader navigation across the entire COVID-19 mortality series and NBA MVP series. The animation accessibility gap and committed binary archives are lower urgency but worth addressing before the site reaches a wider audience.</p>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="bayesian-waves-bg.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kivanpolimis\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Code Review: kpolimis.github.io</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>This is a Quarto-based personal website for Kivan Polimis, a data scientist and researcher. The site uses the <span class="in">`cosmo`</span> Bootstrap theme augmented with custom SCSS/CSS, an animated canvas background (<span class="in">`bayesian-waves-bg.js`</span>), and a standard Quarto listing setup for blog and technical posts. Most content was migrated from a prior Pelican site. The codebase is small, well-organized, and the newer posts (EPL series, algorithmic-bias) are written cleanly. The main issues are residual migration artifacts: broken/stale cross-post links, a couple of malformed HTML tags, an insecure external script load, an infinite animation loop with no accessibility escape hatch, and a handful of posts with missing metadata.</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Findings</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### Critical</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>**1. Insecure MathJax CDN load (mixed-content / deprecated endpoint)**</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`posts/technical/nba-mvp-comparisons-part-2/index.qmd`</span>, line 23</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="in">```html</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>script type<span class="op">=</span><span class="st">"text/javascript"</span> src<span class="op">=</span><span class="st">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"</span><span class="op">&gt;&lt;/</span>script<span class="op">&gt;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>This loads MathJax over plain HTTP from a CDN that shut down in 2017. Modern browsers will block this as mixed content on an HTTPS site. The math rendering in that post is silently broken. The legacy MathJax v1 config block on lines 13–21 (<span class="in">`MathJax.Hub.Config`</span>) uses the v1 API that no longer exists. Replace with a CDN-hosted MathJax v3 load over HTTPS, or remove the block and rely on Quarto's built-in <span class="in">`html-math-method: mathjax`</span> setting in <span class="in">`_quarto.yml`</span>.</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>**2. Duplicate `{{&lt; embed &gt;}}` in flights-analysis**</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`posts/technical/flights-analysis/index.qmd`</span>, lines 13 and 17</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>The same notebook is embedded twice:</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="in">{{&lt; embed ../../../downloads/notebooks/flights_analysis.ipynb &gt;}}</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;img src="./flights2018.gif" alt="Gif of Flights"&gt;</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="in">{{&lt; embed ../../../downloads/notebooks/flights_analysis.ipynb &gt;}}</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>Quarto will render the full notebook output twice (all cells, all output), doubling the page weight and duplicating every chart and code block. This is a copy-paste error from migration. Remove the second embed.</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="fu">### Warnings</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>**3. Stale cross-post links pointing to old Pelican domain**</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>Cross-post links in the COVID-19 mortality series and the NBA MVP series still point to the old Pelican-era domain (<span class="in">`http://kivanpolimis.com/...`</span>) with the old URL slugs. These are 404s or redirect-dependent:</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`posts/technical/mortality-data-covid-19-disinformation-part-1/index.qmd`</span> (line 204): links to <span class="in">`http://kivanpolimis.com/mortality-data-and-covid-19-disinformation-part-2.html`</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`posts/technical/mortality-data-covid-19-disinformation-part-2/index.qmd`</span> (lines 15, 131): same pattern</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`posts/technical/mortality-data-covid-19-disinformation-part-3/index.qmd`</span> (lines 15, 121)</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`posts/technical/mortality-data-covid-19-disinformation-part-4/index.qmd`</span> (line 15)</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`posts/technical/nba-mvp-comparisons-part-2/index.qmd`</span> (line 35): links to <span class="in">`http://www.kivanpolimis.com/nba-mvp-comparisons-part-1.html`</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>These should be converted to relative Quarto paths (e.g., <span class="in">`../../mortality-data-covid-19-disinformation-part-2/`</span>) so they work regardless of domain and do not require HTTP redirects.</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>Additionally, <span class="in">`posts/blog/migrating-pelican-to-quarto/index.qmd`</span> line 13 links to <span class="in">`[kivanpolimis.com](kivanpolimis.com)`</span> — a bare domain without a scheme, which Quarto will not resolve as a hyperlink.</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>**4. Unclosed/malformed HTML tags in two files**</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="in">`software.qmd`</span>, lines 46 and 65 — <span class="in">`&lt;h1&gt;`</span> tags are not closed with <span class="in">`&lt;/h1&gt;`</span>:</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="in">```html</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>h1<span class="op">&gt;</span>Community guidelines<span class="op">&lt;</span>h1<span class="op">&gt;</span>   <span class="op">&lt;!--</span> should be <span class="op">&lt;/</span>h1<span class="op">&gt;</span> <span class="op">--&gt;</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>h1<span class="op">&gt;</span>References<span class="op">&lt;</span>h1<span class="op">&gt;</span>             <span class="op">&lt;!--</span> should be <span class="op">&lt;/</span>h1<span class="op">&gt;</span> <span class="op">--&gt;</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="in">`posts/technical/positions-matter/index.qmd`</span>, line 38 — the <span class="in">`style`</span> attribute quote is not closed before the <span class="in">`&gt;`</span> that ends the <span class="in">`img`</span> tag:</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="in">```html</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>img src<span class="op">=</span><span class="st">"./rb-plot-example.png"</span> alt<span class="op">=</span><span class="st">"RB Plot Example"</span> style<span class="op">=</span><span class="st">"width: 72%; height: 72%&gt;</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>The closing <span class="in">`"`</span> is missing after <span class="in">`72%`</span>. This causes the browser to consume the <span class="in">`&gt;&lt;/p&gt;`</span> as part of the attribute value, likely breaking the layout of the surrounding paragraph.</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>**5. Animation loop has no stop condition and ignores `prefers-reduced-motion`**</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`bayesian-waves-bg.js`</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>The <span class="in">`tick()`</span> function calls <span class="in">`requestAnimationFrame(tick)`</span> unconditionally and the returned handle is never stored, so the loop cannot be cancelled:</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="in">```js</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>t <span class="op">+=</span> CONFIG<span class="op">.</span><span class="at">speed</span><span class="op">;</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="fu">requestAnimationFrame</span>(tick)<span class="op">;</span>   <span class="co">// handle discarded — no cancel path</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>Two consequences:</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The animation keeps running even when the tab is hidden (no <span class="in">`visibilitychange`</span> guard), wasting battery/CPU for background tabs.</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The OS accessibility setting <span class="in">`prefers-reduced-motion: reduce`</span> is not respected. Users who have requested reduced motion for vestibular or epilepsy-related reasons get the full animation with no opt-out.</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>Minimum fix: check <span class="in">`window.matchMedia('(prefers-reduced-motion: reduce)').matches`</span> before starting the loop, and mirror the preference in <span class="in">`custom.scss`</span> with <span class="in">`@media (prefers-reduced-motion: reduce) { #network-canvas { display: none; } }`</span>. Also store the RAF handle and pause on <span class="in">`visibilitychange`</span>.</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>**6. Committed binary archives in the repo root**</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a><span class="in">`content-archive.zip`</span> and <span class="in">`drafts.zip`</span> are present in the repo root and tracked in git (they are not excluded by <span class="in">`.gitignore`</span>, which excludes <span class="in">`*.zip`</span> only to prevent future additions — already-committed files stay tracked). These files are ~several MB of binary data that adds permanent weight to git history for every clone. They are also not referenced by any Quarto page. If the archives are needed for backup, they should be stored outside the repo or in Git LFS; otherwise they should be removed and the history rewritten.</span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>**7. Broken Binder link in positions-matter**</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`posts/technical/positions-matter/index.qmd`</span>, line 24</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a><span class="in">[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/kpolimis/nfl-combine-evaluation-plots){:target=blank}</span></span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a>The URL uses <span class="in">`http://`</span> (blocked on HTTPS pages), the Binder URL format has changed (<span class="in">`mybinder.org:/repo/`</span> is not valid), and <span class="in">`{:target=blank}`</span> is Pelican/Kramdown link attribute syntax that Quarto does not parse — it will render as literal text. The badge image also loads over HTTP, making it a mixed-content request. Either update to the current <span class="in">`https://mybinder.org/v2/gh/kpolimis/nfl-combine-evaluation-plots/HEAD`</span> format or remove the badge if the repo is no longer maintained.</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a><span class="fu">### Suggestions</span></span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>**8. Seventeen posts have empty `description` or `image` fields**</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>The listing pages (<span class="in">`technical.qmd`</span>, <span class="in">`blog.qmd`</span>) show <span class="in">`fields: [date, title, description, categories, reading-time]`</span>. Empty <span class="in">`description: ""`</span> means these posts show no excerpt in the listings, reducing discoverability. Similarly, <span class="in">`image: ""`</span> means no thumbnail appears. The affected posts are primarily the migrated Pelican content. Populating these fields is a content task, not a code fix, but it is the highest-impact improvement for reader experience after the technical issues above.</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>Affected posts (partial list): <span class="in">`nba-shot-chart-part-1`</span>, <span class="in">`nba-mvp-comparisons-part-1`</span>, <span class="in">`nba-mvp-comparisons-part-3`</span>, <span class="in">`triple-double-russ`</span>, <span class="in">`flights-analysis`</span>, <span class="in">`milano-location-history`</span>, <span class="in">`seattle-location-history`</span>, <span class="in">`first-post`</span>, <span class="in">`ec2-r-and-twitter`</span>.</span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>**9. `vita_script.sh` uses hardcoded absolute paths and copies to a non-existent output directory**</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`docs/vita_script.sh`</span></span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a><span class="in">```sh</span></span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/repos/vita/Polimis_Curriculum_Vitae.pdf Kivan_Polimis_Curriculum_Vitae.pdf</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> Kivan_Polimis_Curriculum_Vitae.pdf ../../output/docs/.</span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>The script assumes <span class="in">`~/repos/vita/`</span> exists on any machine running it, and writes to <span class="in">`../../output/docs/`</span> — the old Pelican output path that does not exist in the current Quarto project structure (<span class="in">`_site/`</span> is the build dir). This script will silently fail or produce wrong output for anyone other than the original author. Since the PDFs are already present in <span class="in">`docs/`</span>, the script is either already outdated or needs the paths updated to reflect the Quarto layout.</span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>**10. `PELICAN_END_SUMMARY` comment left in migrated post**</span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`posts/technical/social-media-twitter-api-and-r/index.qmd`</span>, line 32</span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a><span class="in">```html</span></span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;!--</span> PELICAN_END_SUMMARY <span class="op">--&gt;</span></span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a>This is a Pelican-specific marker with no effect in Quarto. It is harmless but is a stale migration artifact that can be removed.</span>
+<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a>**11. Notebook category mismatch in `social-media-twitter-api-and-r`**</span>
+<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a>File: <span class="in">`posts/technical/social-media-twitter-api-and-r/index.qmd`</span></span>
+<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-148"><a href="#cb9-148" aria-hidden="true" tabindex="-1"></a>The front matter lists <span class="in">`categories: [tutorial, python]`</span> but the post content is entirely R code (no Python). This causes the post to appear under the "python" filter on the listing page incorrectly. Change to <span class="in">`categories: [tutorial, r]`</span>.</span>
+<span id="cb9-149"><a href="#cb9-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-150"><a href="#cb9-150" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-151"><a href="#cb9-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a>**12. Global `link-external-newwindow: true` in `_quarto.yml`**</span>
+<span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a>The <span class="in">`_quarto.yml`</span> sets <span class="in">`link-external-newwindow: true`</span> globally, causing every external link to open in a new tab. This is generally considered an accessibility anti-pattern (it removes the user's control over tab behavior and is unexpected for keyboard and screen reader users). Consider removing this and applying <span class="in">`target="_blank"`</span> only where explicitly desired, or at minimum adding <span class="in">`rel="noopener noreferrer"`</span> (Quarto should add this automatically when the setting is active, but it is worth verifying in the rendered output).</span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a>The site is well-structured and the newer content is well-written. The two highest-priority fixes are the broken MathJax script load in <span class="in">`nba-mvp-comparisons-part-2`</span> (silent rendering failure) and the duplicate notebook embed in <span class="in">`flights-analysis`</span> (doubled page output). The malformed HTML tags in <span class="in">`software.qmd`</span> and <span class="in">`positions-matter`</span> are likely causing layout breakage visible to readers. The stale Pelican-era cross-post links affect reader navigation across the entire COVID-19 mortality series and NBA MVP series. The animation accessibility gap and committed binary archives are lower urgency but worth addressing before the site reaches a wider audience.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© Kivan Polimis. Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
