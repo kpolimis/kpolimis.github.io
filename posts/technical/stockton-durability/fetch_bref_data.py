@@ -4,9 +4,9 @@ fetch_bref_data.py — scrape BRef game logs for Stockton durability cohort.
 Fetches one page per player-season; writes data/game_logs.parquet.
 Run this before building the analysis notebook.
 
-Rate-limited to ~4 sec/request.
-Expected wall time: ~3 hours for full PG+PF cohort from scratch. Cache
-skips players already present; re-runs are incremental.
+Rate-limited to 10-15 sec/request with a 5-minute cooldown every 20 pages.
+Expected wall time: ~6-8 hours for full PG+PF cohort from scratch (~330 pages).
+Cache skips players already present; re-runs are incremental.
 
 Usage:
     python fetch_bref_data.py              # full cohort (PG + PF)
@@ -21,6 +21,7 @@ Usage:
 import argparse
 import logging
 import pathlib
+import random
 import time
 from io import StringIO
 
@@ -36,7 +37,13 @@ HTML_CACHE.mkdir(exist_ok=True)
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
 
-RATE_LIMIT_SEC = 4  # stay well under BRef's soft limit
+RATE_LIMIT_SEC = 10      # base delay between requests — conservative to stay under BRef hourly aggregate
+RATE_LIMIT_JITTER = 5   # add uniform random [0, JITTER) seconds — looks human, avoids mechanical regularity
+SESSION_COOLDOWN_PAGES = 20   # sleep SESSION_COOLDOWN_SEC after every N successful fetches
+SESSION_COOLDOWN_SEC  = 300   # 5-minute break every 20 pages (~200 pages/hour cap)
+
+# IP-level block state: when BRef 429s, ALL requests are blocked until this timestamp clears.
+_ip_blocked_until: float = 0.0
 
 # BRef player IDs: first-5-lastname + first-2-firstname + 01
 # Tuple: (initial, player_id, first_season, last_season, cohort_type)
@@ -61,7 +68,7 @@ COHORT: dict[str, tuple[str, str, int, int, str]] = {
     "Boris Diaw":        ("d", "diawbo01",   2004, 2017, "pf"),
     "Dirk Nowitzki":     ("n", "nowitdi01",  1999, 2019, "pf"),
     "Carlos Boozer":     ("b", "boozeca01",  2003, 2015, "pf"),
-    "Antawn Jamison":    ("j", "jamisna01",  1999, 2014, "pf"),
+    "Antawn Jamison":    ("j", "jamisan01",  1999, 2014, "pf"),  # jamisan01 not jamisna01 (an≠na)
     "Shawn Marion":      ("m", "mariosh01",  2000, 2015, "pf"),
     "Rashard Lewis":     ("l", "lewisra02",  1999, 2009, "pf"),  # 02 not 01 — disambiguation
 }
@@ -86,22 +93,56 @@ def parse_mp_seconds(mp_str: str) -> float | None:
         return None
 
 
+_session_page_count: int = 0
+
+
 def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
     """Return HTML for url, reading from disk cache when available."""
+    global _ip_blocked_until, _session_page_count
+
     cache_dir = HTML_CACHE / cache_subdir if cache_subdir else HTML_CACHE
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"{cache_key}.html"
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8")
+
+    # Respect IP-level block before making any new request.
+    now = time.time()
+    if _ip_blocked_until > now:
+        wait = _ip_blocked_until - now
+        logger.warning("IP block active — sleeping %.0fs before next request", wait)
+        time.sleep(wait)
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (compatible; stockton-research/1.0; "
+            "+https://kpolimis.github.io/)"
+        )
+    }
     for attempt in range(4):
-        resp = requests.get(url, headers={"User-Agent": "stockton-research/1.0"}, timeout=20)
+        resp = requests.get(url, headers=headers, timeout=20)
         if resp.status_code == 200:
             cache_path.write_text(resp.text, encoding="utf-8")
-            time.sleep(RATE_LIMIT_SEC)
+            _session_page_count += 1
+            # Session-level cooldown every N pages to stay under hourly aggregate limit.
+            if _session_page_count % SESSION_COOLDOWN_PAGES == 0:
+                logger.info(
+                    "Session cooldown after %d pages — sleeping %ds",
+                    _session_page_count, SESSION_COOLDOWN_SEC,
+                )
+                time.sleep(SESSION_COOLDOWN_SEC)
+            else:
+                time.sleep(RATE_LIMIT_SEC + random.uniform(0, RATE_LIMIT_JITTER))
             return resp.text
         if resp.status_code == 429:
-            wait = 90 * (2 ** attempt)
-            logger.warning("HTTP 429 for %s — backing off %ds (attempt %d/4)", url, wait, attempt + 1)
+            # 429 = IP-level block. Honor Retry-After if present; otherwise exponential backoff.
+            retry_after = resp.headers.get("Retry-After")
+            wait = int(retry_after) if retry_after and retry_after.isdigit() \
+                else 120 * (2 ** attempt)  # 120s, 240s, 480s, 960s
+            _ip_blocked_until = time.time() + wait  # block all subsequent URLs too
+            logger.warning(
+                "HTTP 429 for %s — IP blocked, sleeping %ds (attempt %d/4)", url, wait, attempt + 1
+            )
             time.sleep(wait)
         else:
             logger.warning("HTTP %s for %s", resp.status_code, url)
@@ -170,6 +211,8 @@ def fetch_cohort(
     existing = load_existing()
     done_keys: set[tuple[str, int]] = set()
     if existing is not None:
+        cohort_lookup = {pid: ctype for _, (_, pid, _, _, ctype) in COHORT.items()}
+        existing["cohort"] = existing["player_id"].map(cohort_lookup).fillna(existing["cohort"])
         done_keys = set(zip(existing["player_id"], existing["season"]))
         logger.info("Cache: %s rows, %d (player, season) pairs already fetched.",
                     f"{len(existing):,}", len(done_keys))
