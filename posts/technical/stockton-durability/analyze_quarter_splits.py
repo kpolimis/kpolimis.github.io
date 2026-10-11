@@ -275,6 +275,63 @@ def plot_estimand(
     logger.info("Saved %s", out)
 
 
+def plot_e6_quarter_profile(
+    df: pd.DataFrame,
+    treated_id: str | None,
+    treated_name: str | None,
+    cohort: str,
+    fname: str = "e6_quarter_profile.png",
+) -> None:
+    """E6: FT% across Q1→Q4 for every player in the cohort window."""
+    import matplotlib.ticker as mticker
+
+    fig_dir = DATA_DIR / "figures" / cohort
+    fig_dir.mkdir(parents=True, exist_ok=True)
+
+    quarters = ["1", "2", "3", "4"]
+    df_q = df[df["quarter"].astype(str).isin(quarters)].copy()
+    for col in ("FT", "FTA"):
+        df_q[col] = pd.to_numeric(df_q[col], errors="coerce")
+
+    agg = (
+        df_q.groupby(["player_id", "player_name", "quarter"])
+        .agg(FT=("FT", "sum"), FTA=("FTA", "sum"))
+        .reset_index()
+    )
+    agg = agg[agg["FTA"] > 0].copy()
+    agg["ft_pct"] = agg["FT"] / agg["FTA"]
+    agg["quarter"] = pd.Categorical(agg["quarter"], categories=quarters, ordered=True)
+    agg = agg.sort_values("quarter")
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for pid, grp in agg.groupby("player_id"):
+        name = grp["player_name"].iloc[0]
+        if pid == treated_id:
+            ax.plot(
+                grp["quarter"].astype(str), grp["ft_pct"],
+                color="#E84D3C", linewidth=2.5, marker="o", markersize=7,
+                zorder=5, label=f"{name} (treated)",
+            )
+        else:
+            ax.plot(
+                grp["quarter"].astype(str), grp["ft_pct"],
+                color="#AAAAAA", linewidth=1.5, marker="o", markersize=4,
+                alpha=0.7, label=name,
+            )
+
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda y, _: f"{y:.0%}"))
+    ax.set_xlabel("Quarter")
+    ax.set_ylabel("FT%")
+    ax.set_title(f"E6: FT% by quarter — {cohort.upper()} cohort")
+    ax.legend(fontsize=9, loc="upper left" if cohort == "pg" else "lower left")
+    ax.set_ylim(0.45, 1.0)
+    fig.tight_layout()
+    out = fig_dir / fname
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+    logger.info("Saved %s", out)
+
+
 def run(cohort: str, n_perm: int = 5000) -> None:
     """Main entry point."""
     df, treated_id, treated_name = load_splits(cohort)
@@ -349,6 +406,7 @@ def run(cohort: str, n_perm: int = 5000) -> None:
     plot_estimand(df, "FT_pct", treated_id, treated_name, cohort, "2", "e2_q4_ft_degradation.png")
     plot_estimand(df, "AST_TOV_ratio", treated_id, treated_name, cohort, "4", "e4_ast_tov.png")
     plot_estimand(df, "TS_pct", treated_id, treated_name, cohort, "5", "e5_ts_pct.png")
+    plot_e6_quarter_profile(df, treated_id, treated_name, cohort)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-10 (v2)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-11 (v3)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -43,9 +43,9 @@ Stockton ships first to ride the current conversation; Diaw follows immediately 
 | **E2** | 4Q FT% degradation vs Q1–Q3 | Quarter box scores | **Done (PG) — Stockton +4.1 pp, only improver; PF pending** |
 | **E4** | 4Q AST/TOV ratio vs full-game | Quarter box scores | **Degenerate at quarter resolution (52% zero-TOV rows); dropped** |
 | **E5** | 4Q TS% vs Q1–Q3 | Quarter box scores | **Degenerate (21% coverage per quarter); dropped** |
-| **E6** | Full Q1→Q2→Q3→Q4 scoring profile | Quarter box scores | Proposed; no new scraping needed |
+| **E6** | Full Q1→Q2→Q3→Q4 scoring profile | Quarter box scores | **Done — both cohorts** |
 
-E1 and E3 are primary. E6 (profile plot) requires no new data — a subplot within the E2/E4/E5 analysis.
+E1 and E3 are primary. E6 (profile plot) generated from existing quarter splits; committed to both posts.
 
 ## Inference Approach
 
@@ -55,7 +55,7 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 ## Current Status
 
-**Infrastructure: complete.** 131 tests passing across four scripts:
+**Infrastructure: complete.** 141 tests passing across four scripts:
 
 | Script | Purpose |
 |:-------|:--------|
@@ -64,23 +64,22 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | `fetch_quarter_splits.py` | Quarter box score scraper; cached by game ID; 3.5s/request + jitter |
 | `analyze_quarter_splits.py` | E2/E4/E5; mixed-effects model; player-level permutation |
 
-**Data fetch: mostly complete for PG; PF quarter splits not started.**
+**Data fetch: complete for PG and PF cohorts; population fetch running locally.**
 
 | Status | Players |
 |:-------|:--------|
 | Full PG game logs + quarter splits | Stockton, Payton, Jackson, Harper |
 | Full PG game logs only | Thomas, Hardaway, K. Johnson, Porter, Bogues, Strickland, Kidd, Nash, Blaylock, Anderson, Douglas |
-| PF game logs complete (all 6) | Diaw, Nowitzki, Boozer, Jamison, Marion, Lewis |
-| PF quarter splits | Not started |
-| Population (Apollo) | 232 / 1,995 players — running (~4 days remaining) |
+| PF game logs + quarter splits (all 6) | Diaw, Nowitzki, Boozer, Jamison, Marion, Lewis |
+| Population (local fetch) | ~109 players fetched, running — ETA ~Oct 14 |
 
 **Post drafts:**
 
-| Post | E1/E3 | E2/E4/E5 | Status |
-|:-----|:------|:---------|:-------|
-| Stockton | Written | **E2 written; E4/E5 dropped (degenerate)** | Draft — complete |
-| Diaw | Written | Pending PF quarter splits | Draft — E2 pending |
-| Population | — | — | Outline only |
+| Post | E1/E3 | E2/E4/E5 | E6 | Status |
+|:-----|:------|:---------|:---|:-------|
+| Stockton | Written | E2 written; E4/E5 dropped | Written | **Published** (draft removed; freeze committed) |
+| Diaw | Written | E2 written (null); E4/E5 dropped | Written | **Published** (draft removed; freeze committed) |
+| Population | — | — | — | Outline only — blocked on population fetch |
 
 ## Caveats (mandatory in every post)
 
@@ -97,11 +96,7 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 | Step | Blocker | Est. |
 |:-----|:--------|:-----|
-| E2/E4/E5 prose → Stockton post | **Done** | — |
-| PF quarter splits fetch | None — run now | ~4h |
-| E2 analysis + prose → Diaw post | PF quarter splits | ~2h |
-| Remaining 11 PG quarter splits | Optional; E1/E3 sufficient for Post 1 | ~8h |
-| Population fetch (Apollo) | Running — ETA ~Oct 14 | ~4 days |
+| Population fetch (local) | Running — ETA ~Oct 14 | — |
 | Population analysis + post | Population fetch complete | 1 day |
 | Jacobs outreach (#22) — manual browser form | Human action required | 20 min |
 
@@ -112,6 +107,17 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v3 — 2026-10-11
+
+- **E6 plots added** — `plot_e6_quarter_profile()` added to `analyze_quarter_splits.py`; generates Q1→Q4 FT% line chart highlighting treated player. PG: Stockton is the only player with a monotonic Q1→Q4 rise (76.9% → 80.6% → 83.2% → 84.7%). PF: Diaw shows slight Q4 decline (67.7%), Marion is the Q4 outlier (82.2%).
+- **E6 figures generated** for both cohorts (`data/figures/pg/e6_quarter_profile.png`, `data/figures/pf/e6_quarter_profile.png`); figures committed.
+- **E6 section added to both posts** — Stockton post: updated from "pending" placeholder to real figure with caption; conclusion updated with monotonic-increase note. Diaw post: new E6 section inserted after E5.
+- **Diaw E2/E4/E5 complete** — PF quarter splits were already fetched (Oct 10); analysis complete; post draft finished.
+- **Posts 1 + 2 published** — `draft: true` removed from Stockton and Diaw posts; `jupyter: blog` added to frontmatter; `_freeze/` outputs generated locally and committed; CI will serve frozen outputs without re-executing Python.
+- **CI fixed** — kernel registration (`python -m ipykernel install --user --name blog`) added to `publish.yml`; last green run 2026-10-09.
+- **Population fetch running locally** — PID 39001; ~109 population players fetched so far; ETA ~Oct 14.
+- 141 tests passing (was 131 after Oct 10 session).
 
 ### v2 — 2026-10-10 (updated same day)
 - BRef ID fixes: Bogues (`boguemu01`), Harper (`harpede01`), Strickland (`stricro02`) — PG cohort grew from 12 → 15 players

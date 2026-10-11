@@ -4,6 +4,7 @@ description: "E1 (career durability), E3 (shot selection), and E2/E4/E5 (within-
 author: "Kivan Polimis"
 date: "2026-10-08"
 draft: true
+jupyter: blog
 categories: [NBA, statistics, sports analytics, durability]
 ---
 
@@ -133,13 +134,13 @@ E4 (AST/TOV in Q4) and E5 (TS% in Q4) are not interpretable at per-quarter BRef 
 ```{python}
 #| echo: false
 #| label: fig-e6-pg
-#| fig-cap: "E6: Full Q1→Q4 profile — shape of fatigue across the game. Requires complete career window; pending pre-1996 video-reconstructed data."
-#| fig-alt: "Placeholder for Q1-Q4 scoring profile comparison. Not yet available."
+#| fig-cap: "E6: FT% by quarter — PG cohort, 1996–2003 window (Stockton ages 34–40). Stockton is the only player who shows a monotonic Q1→Q4 increase (76.9% → 80.6% → 83.2% → 84.7%). The other three players in the window are flat or declining. Note: this window covers the final third of Stockton's career; pre-1996 data would extend the comparison to his prime."
+#| fig-alt: "Line chart of free throw percentage by quarter for Stockton (red) and three PG comparators (gray). Stockton's line rises steadily from Q1 to Q4 — uniquely so among the four players shown."
 p = pathlib.Path("data/figures/pg/e6_quarter_profile.png")
 if p.exists():
     display(Image(filename=str(p)))
 else:
-    print("E6 pending — requires pre-1996 quarter data (Squared Statistics outreach pending).")
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pg")
 ```
 
 ### Confounders for within-game estimands
@@ -169,7 +170,7 @@ else:
 
 John Stockton's career durability record — 1.18 games missed per 82 over 19 seasons — sits at the far end of a 15-player reference class of matched point-guard contemporaries. The permutation test places this at p = 0.194, which is near the floor of what is detectable with a cohort of this size; it is not evidence of chance so much as evidence of a small sample. His free-throw attempt rate on back-to-back nights drops more than any other player in the cohort (Δ = −0.049 per FGA, d = −1.62), consistent with a protective behavioral pattern under fatigue — though the causal mechanism is indeterminate from the data.
 
-Within-game, the picture is constrained. The 1996–2003 quarter-split window covers four players with data available (Stockton, Payton, Jackson, Harper). Among them, Stockton is the only player whose Q4 free throw percentage *improves* relative to his own Q1–Q3 average (+4.1 pp), while Harper degrades sharply (−19.6 pp) and the others hold flat. The permutation p (0.494) is at the floor of what a four-player test can detect, so the inference is directional rather than inferential — consistent with late-game resilience, but not a statistical claim in the conventional sense. E4 (AST/TOV) and E5 (TS%) are not interpretable at per-quarter resolution: half of all quarter-level observations have zero turnovers, and TS% coverage is too sparse for the model to converge. Both require coarser aggregation than BRef quarter splits provide.
+Within-game, the picture is constrained. The 1996–2003 quarter-split window covers four players with data available (Stockton, Payton, Jackson, Harper). Among them, Stockton is the only player whose Q4 free throw percentage *improves* relative to his own Q1–Q3 average (+4.1 pp), while Harper degrades sharply (−19.6 pp) and the others hold flat. The full Q1→Q4 profile reinforces this: Stockton's free throw percentage rises monotonically across all four quarters (76.9% → 80.6% → 83.2% → 84.7%) — a pattern none of the other three players share. The permutation p (0.494) is at the floor of what a four-player test can detect, so the inference is directional rather than inferential — consistent with late-game resilience, but not a statistical claim in the conventional sense. E4 (AST/TOV) and E5 (TS%) are not interpretable at per-quarter resolution: half of all quarter-level observations have zero turnovers, and TS% coverage is too sparse for the model to converge. Both require coarser aggregation than BRef quarter splits provide.
 
 The Diaw case — where full-career quarter data is available, the sourcing is cleaner, and the analysis runs without the age-regime qualification — is the more direct test of the 35 BPM hypothesis. This post is the harder version: a longer career, a shorter observable window, and a claim that is harder to trace to its source. What the data can say is this: Stockton's career durability is at the far end of a 15-player reference class, his B2B shot selection shows the largest protective shift in the cohort, and his Q4 free throw shooting does not degrade in the one window where it is observable. None of those findings prove the physiological claim. Together, they do not contradict it.
 

@@ -4,6 +4,7 @@ description: "Can we detect an extraordinary resting heart rate in career statis
 author: "Kivan Polimis"
 date: "2026-10-08"
 draft: true
+jupyter: blog
 categories: [NBA, statistics, sports analytics, durability]
 ---
 
@@ -129,6 +130,18 @@ else:
 ```
 
 E4 (AST/TOV in Q4) and E5 (TS% in Q4) are not interpretable at per-quarter BRef resolution. In 52% of player-quarter observations the turnover count is zero — a normal outcome for any single quarter — which makes the ratio numerically undefined and drives the mixed-effects interaction coefficient to an implausible 42.4. TS% coverage is even thinner: only 21% of player-quarter rows have non-null values, because a player who attempts no field goals in a quarter contributes nothing to the efficiency estimate. Both estimands require coarser aggregation (half-game or full-game) to be usable. This is the same degeneracy observed in the PG cohort — a property of the data resolution, not of these players specifically.
+
+```{python}
+#| echo: false
+#| label: fig-e6-pf
+#| fig-cap: "E6: FT% by quarter — PF cohort. Diaw's Q4 free throw percentage (67.7%) is lower than his Q1–Q3 average — a slight decline consistent with the E2 null result. Marion is the Q4 outlier in the favorable direction (82.2%). Nowitzki holds flat across all four quarters."
+#| fig-alt: "Line chart of free throw percentage by quarter for Diaw (red) and three PF comparators (gray). Diaw's line dips in Q4, while Marion's rises and Nowitzki stays flat."
+p = DATA_DIR / "figures/pf/e6_quarter_profile.png"
+if p.exists():
+    display(Image(filename=str(p)))
+else:
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
+```
 
 ### Confounders for within-game estimands
 
