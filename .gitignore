@@ -137,6 +137,8 @@ posts/blog/epl-2026-27-predictions/data/matches/
 # Stockton durability — commit analysis outputs (parquets, figures, CSVs)
 # HTML cache is too large and is always re-creatable from BRef
 posts/technical/stockton-durability/data/html_cache/
+# Lock file is a runtime artifact for concurrent write safety — never commit
+posts/technical/stockton-durability/data/game_logs.parquet.lock
 # VPN configs contain private keys — never commit
 posts/technical/stockton-durability/vpn/
 # Test-generated permutation parquets (cohort="test*") are test artifacts
