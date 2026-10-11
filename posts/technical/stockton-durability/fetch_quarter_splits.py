@@ -43,7 +43,14 @@ HTML_CACHE_QUARTER = DATA_DIR / "html_cache" / "quarter"
 DATA_DIR.mkdir(exist_ok=True)
 HTML_CACHE_QUARTER.mkdir(parents=True, exist_ok=True)
 
-RATE_LIMIT_SEC = 0.35  # ≤3 req/sec per BRef guidance
+RATE_LIMIT_SEC = 3.5   # BRef allows 20 req/min max (= 3s minimum); 3.5s for headroom
+RATE_LIMIT_JITTER = 1.5
+SESSION_COOLDOWN_PAGES = 100  # 5-min pause every 100 pages (~6 min net fetch per block)
+SESSION_COOLDOWN_SEC = 300
+
+import random as _random
+_ip_blocked_until: float = 0.0
+_session_page_count: int = 0
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -70,6 +77,7 @@ def _ts_pct(pts: float, fga: float, fta: float) -> float | None:
 
 def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
     """Return (html, cache_hit) for a BRef boxscore or PBP page."""
+    global _ip_blocked_until, _session_page_count
     suffix = "_pbp" if pbp else ""
     cache_path = HTML_CACHE_QUARTER / f"{game_id}{suffix}.html"
     if cache_path.exists():
@@ -79,21 +87,37 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
         if pbp
         else f"https://www.basketball-reference.com/boxscores/{game_id}.html"
     )
-    try:
-        resp = requests.get(
-            base_url,
-            headers={"User-Agent": "stockton-research/1.0"},
-            timeout=20,
-        )
-    except requests.RequestException as exc:
-        logger.warning("Request error for %s (pbp=%s): %s", game_id, pbp, exc)
-        return None, False
-    if resp.status_code != 200:
-        logger.warning("HTTP %d for game_id=%s (pbp=%s)", resp.status_code, game_id, pbp)
-        return None, False
-    cache_path.write_text(resp.text, encoding="utf-8")
-    time.sleep(RATE_LIMIT_SEC)
-    return resp.text, False
+    now = time.time()
+    if _ip_blocked_until > now:
+        time.sleep(_ip_blocked_until - now)
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; stockton-research/1.0; +https://kpolimis.github.io/)"}
+    for attempt in range(4):
+        try:
+            resp = requests.get(base_url, headers=headers, timeout=20)
+        except requests.RequestException as exc:
+            logger.warning("Request error for %s (pbp=%s): %s", game_id, pbp, exc)
+            return None, False
+        if resp.status_code == 200:
+            cache_path.write_text(resp.text, encoding="utf-8")
+            _session_page_count += 1
+            if _session_page_count % SESSION_COOLDOWN_PAGES == 0:
+                logger.info("Session cooldown (%d pages) — sleeping %ds", _session_page_count, SESSION_COOLDOWN_SEC)
+                time.sleep(SESSION_COOLDOWN_SEC)
+            else:
+                time.sleep(RATE_LIMIT_SEC + _random.uniform(0, RATE_LIMIT_JITTER))
+            return resp.text, False
+        if resp.status_code == 429:
+            retry_after = resp.headers.get("Retry-After")
+            wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2 ** attempt)
+            logger.warning("HTTP 429 game_id=%s (pbp=%s) — waiting %ds (attempt %d)", game_id, pbp, wait, attempt + 1)
+            _ip_blocked_until = time.time() + wait
+            time.sleep(wait)
+        elif resp.status_code == 404:
+            return None, False  # don't log 404 — pre-PBP-era games are expected
+        else:
+            logger.warning("HTTP %d for game_id=%s (pbp=%s)", resp.status_code, game_id, pbp)
+            return None, False
+    return None, False
 
 
 def _extract_game_id(row: pd.Series) -> str | None:
@@ -108,11 +132,12 @@ def _extract_game_id(row: pd.Series) -> str | None:
         return None
     date_str = pd.Timestamp(date).strftime("%Y%m%d")
     # Home/away: BRef game logs mark away games with @ in the unnamed column
-    home_team = row.get("Tm", "")
+    # "Team" is the parquet column name (BRef game logs use "Tm" in HTML but ETL renamed it)
+    own_team = str(row.get("Team", row.get("Tm", ""))).strip()
     away_flag = str(row.get("Unnamed: 5", "")).strip() == "@"
     opponent = str(row.get("Opp", "")).strip()
     # When away, game is at opponent's arena; home team = opponent
-    home = opponent if away_flag else home_team
+    home = opponent if away_flag else own_team
     # BRef team abbreviations are already 3-char
     return f"{date_str}0{home.upper()}"
 
@@ -149,8 +174,9 @@ def parse_pbp_quarters(
     quarters: dict[str, dict] = {}
     current_quarter = "1"
 
+    # Regex captures ordinal + period-type separately; group(2) distinguishes OT from Q
     quarter_header_re = re.compile(
-        r"start of (1st|2nd|3rd|4th|1st ot|2nd ot|ot)\s+(quarter|overtime|period)",
+        r"start of (1st|2nd|3rd|4th)\s+(quarter|overtime|period)",
         re.IGNORECASE,
     )
 
@@ -163,10 +189,14 @@ def parse_pbp_quarters(
         full_text = tr.get_text(" ", strip=True).lower()
         qm = quarter_header_re.search(full_text)
         if qm:
-            q_label = qm.group(1).lower()
-            q_map = {"1st": "1", "2nd": "2", "3rd": "3", "4th": "4",
-                     "1st ot": "OT1", "2nd ot": "OT2", "ot": "OT1"}
-            current_quarter = q_map.get(q_label, q_label)
+            ordinal = qm.group(1).lower()   # "1st", "2nd", "3rd", "4th"
+            period = qm.group(2).lower()    # "quarter", "overtime", "period"
+            if period in ("overtime", "period"):
+                ot_map = {"1st": "OT1", "2nd": "OT2", "3rd": "OT3", "4th": "OT4"}
+                current_quarter = ot_map.get(ordinal, f"OT{ordinal}")
+            else:
+                reg_map = {"1st": "1", "2nd": "2", "3rd": "3", "4th": "4"}
+                current_quarter = reg_map.get(ordinal, ordinal)
             continue
 
         # Each data row: col0=time, col1=visitor_play, col2=score, col3=home_play
@@ -393,7 +423,7 @@ def build_player_game_index(
         "Game index: %d games for %d player(s) (season range: %s)",
         len(df), df["player_id"].nunique(), season_range or "all",
     )
-    return df[["player_id", "player_name", "game_id", "season", "Date", "Age"]].copy()
+    return df[["player_id", "player_name", "game_id", "season", "Date"]].copy()
 
 
 def fetch_quarter_splits(

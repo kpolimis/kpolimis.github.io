@@ -1,13 +1,9 @@
 """Tests for analyze_durability.py — E1/E3 analysis engine."""
 
-import pathlib
-import sys
-
 import numpy as np
 import pandas as pd
 import pytest
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 import analyze_durability as ad
 
 
@@ -200,3 +196,103 @@ class TestLoadCohort:
     def test_pg_filtered_to_pg_ids(self):
         df, _, _ = ad.load_cohort("pg")
         assert df["player_id"].isin(ad.PG_IDS).all()
+
+    def test_population_cohort_loads_with_no_treated(self):
+        """Population cohort returns treated_id=None, treated_name=None (#32)."""
+        df, tid, tname = ad.load_cohort("population")
+        assert not df.empty
+        assert tid is None
+        assert tname is None
+
+    def test_population_includes_stockton_and_diaw(self):
+        """Stockton and Diaw must appear in population cohort load (#32)."""
+        df, _, _ = ad.load_cohort("population")
+        pids = set(df["player_id"].unique())
+        assert "stockjo01" in pids, "Stockton missing from population"
+        assert "diawbo01" in pids, "Diaw missing from population"
+
+    def test_population_e1_stockton_is_most_durable(self):
+        """Stockton's games_missed_per_82 should be lowest in population E1 (#32)."""
+        df, tid, _ = ad.load_cohort("population")
+        summary, _ = ad.compute_e1(df, tid)
+        assert not summary.empty
+        stockton_row = summary[summary["player_id"] == "stockjo01"]
+        assert not stockton_row.empty
+        stockton_val = stockton_row.iloc[0]["games_missed_per_82"]
+        median_val = summary["games_missed_per_82"].median()
+        assert stockton_val < median_val, (
+            f"Stockton ({stockton_val:.2f}) should be below median ({median_val:.2f})"
+        )
+
+    def test_population_e1_diaw_below_median(self):
+        """Diaw's games_missed_per_82 should be well below median in population (#32)."""
+        df, tid, _ = ad.load_cohort("population")
+        summary, _ = ad.compute_e1(df, tid)
+        diaw_row = summary[summary["player_id"] == "diawbo01"]
+        assert not diaw_row.empty
+        diaw_val = diaw_row.iloc[0]["games_missed_per_82"]
+        median_val = summary["games_missed_per_82"].median()
+        assert diaw_val < median_val, (
+            f"Diaw ({diaw_val:.2f}) should be below median ({median_val:.2f})"
+        )
+
+
+class TestComputeE1GamesClamped:
+    """Games-missed is clipped to zero — can't be negative."""
+
+    def test_player_with_more_games_than_schedule_clamps_to_zero(self):
+        """If a player appears in 83 games in an 82-game season (data error),
+        games_missed should clamp to 0, not go negative."""
+        rows = [{"player_id": "p1", "player_name": "P1", "season": 2000,
+                 "Date": pd.Timestamp("2000-01-01") + pd.Timedelta(days=i),
+                 "MP": "32:00", "mp_float": 32.0}
+                for i in range(83)]  # 83 > 82
+        df = pd.DataFrame(rows)
+        summary, _ = ad.compute_e1(df, "p1")
+        assert summary.iloc[0]["games_missed"] == 0
+        assert summary.iloc[0]["games_missed_per_82"] == pytest.approx(0.0, abs=0.01)
+
+
+class TestPlotFunctions:
+    """Plot functions should not raise on valid input."""
+
+    def _make_summary(self) -> pd.DataFrame:
+        return pd.DataFrame({
+            "player_id": ["p1", "p2", "p3"],
+            "player_name": ["P1", "P2", "P3"],
+            "games_missed_per_82": [1.0, 3.0, 5.0],
+        })
+
+    def test_e1_histogram_no_crash(self, tmp_path):
+        orig = ad.DATA_DIR
+        ad.DATA_DIR = tmp_path
+        try:
+            ad.plot_e1_histogram(self._make_summary(), "p1", "Player 1", "test_cohort")
+            out = tmp_path / "figures" / "test_cohort" / "e1_histogram.png"
+            assert out.exists()
+        finally:
+            ad.DATA_DIR = orig
+
+    def test_e1_histogram_without_treated_id_no_crash(self, tmp_path):
+        orig = ad.DATA_DIR
+        ad.DATA_DIR = tmp_path
+        try:
+            ad.plot_e1_histogram(self._make_summary(), None, None, "test_cohort")
+        finally:
+            ad.DATA_DIR = orig
+
+    def test_e3_scatter_no_crash(self, tmp_path):
+        e3_df = pd.DataFrame({
+            "player_id": ["p1", "p2"],
+            "player_name": ["P1", "P2"],
+            "diff_3pa_fga": [0.02, -0.01],
+            "diff_fta_fga": [-0.05, 0.03],
+        })
+        orig = ad.DATA_DIR
+        ad.DATA_DIR = tmp_path
+        try:
+            ad.plot_e3_scatter(e3_df, "p1", "Player 1", "test_cohort")
+            out = tmp_path / "figures" / "test_cohort" / "e3_scatter.png"
+            assert out.exists()
+        finally:
+            ad.DATA_DIR = orig

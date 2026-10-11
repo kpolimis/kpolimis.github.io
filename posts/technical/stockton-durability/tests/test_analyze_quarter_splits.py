@@ -1,13 +1,9 @@
 """Tests for analyze_quarter_splits.py — E2/E4/E5 within-game analysis."""
 
-import pathlib
-import sys
-
 import numpy as np
 import pandas as pd
 import pytest
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 import analyze_quarter_splits as aqs
 
 
@@ -128,10 +124,124 @@ class TestPermutationInteraction:
 
 
 class TestLoadSplitsFileNotFound:
-    def test_raises_on_missing_file(self):
+    def test_raises_on_missing_file(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(aqs, "DATA_DIR", tmp_path)
         with pytest.raises(FileNotFoundError):
             aqs.load_splits("pg")
 
     def test_unknown_cohort_raises(self):
         with pytest.raises(ValueError):
             aqs.load_splits("xyz")
+
+
+class TestPrepareModelDfRestDays:
+    """Guards for rest_days merge collision (avoids _x/_y suffixes)."""
+
+    def _make_df_with_rest_days(self) -> pd.DataFrame:
+        rows = []
+        for pid in ("p1", "p2"):
+            for q in ("1", "2", "3", "4"):
+                for _ in range(5):
+                    rows.append({
+                        "player_id": pid,
+                        "quarter": q,
+                        "season": 2000,
+                        "date": pd.Timestamp("2000-01-01"),
+                        "FT_pct": 0.8,
+                        "rest_days": 2.0,
+                    })
+        return pd.DataFrame(rows)
+
+    def test_rest_days_already_present_no_collision(self):
+        df = self._make_df_with_rest_days()
+        result = aqs._prepare_model_df(df, "FT_pct", "p1")
+        assert result is not None
+        # No _x/_y suffix columns
+        assert "rest_days" in result.columns
+        assert "rest_days_x" not in result.columns
+        assert "rest_days_y" not in result.columns
+
+    def test_rest_days_fillna_applied(self):
+        df = self._make_df_with_rest_days()
+        df.loc[df["player_id"] == "p1", "rest_days"] = np.nan
+        result = aqs._prepare_model_df(df, "FT_pct", "p1")
+        assert result is not None
+        assert result["rest_days"].isna().sum() == 0  # NaN filled with 3
+
+
+class TestPrepareModelDfOtQuarters:
+    """OT quarters (OT1, OT2) should not trigger the 'full' guard."""
+
+    def _make_df_with_ot(self) -> pd.DataFrame:
+        rows = []
+        for pid in ("p1", "p2"):
+            for q in ("1", "2", "3", "4", "OT1"):
+                for _ in range(5):
+                    rows.append({
+                        "player_id": pid,
+                        "quarter": q,
+                        "season": 2000,
+                        "date": pd.Timestamp("2000-01-01"),
+                        "FT_pct": 0.8,
+                        "rest_days": 3.0,
+                    })
+        return pd.DataFrame(rows)
+
+    def test_ot_rows_allowed_through(self):
+        df = self._make_df_with_ot()
+        result = aqs._prepare_model_df(df, "FT_pct", "p1")
+        assert result is not None
+
+    def test_quarter4_flag_does_not_include_ot(self):
+        df = self._make_df_with_ot()
+        result = aqs._prepare_model_df(df, "FT_pct", "p1")
+        assert result is not None
+        ot_rows = result[result["quarter"].astype(str).str.startswith("OT")]
+        assert (ot_rows["quarter4"] == 0).all(), "OT rows should not be flagged as Q4"
+
+
+class TestComputeE1EdgeCases:
+    """Edge cases: single season, missing treated player, large miss rate."""
+
+    def test_single_season_player(self):
+        df = pd.DataFrame({
+            "player_id": ["p1", "p2"],
+            "player_name": ["P1", "P2"],
+            "season": [2000, 2000],
+            "Date": [pd.Timestamp("2000-01-10"), pd.Timestamp("2000-01-10")],
+            "MP": ["30:00", "30:00"],
+            "mp_float": [30.0, 30.0],
+        })
+        import analyze_durability as ad
+        summary, treated_val = ad.compute_e1(df, "p1")
+        assert len(summary) == 2
+        assert treated_val is not None
+
+    def test_empty_dataframe_returns_empty_summary(self):
+        import analyze_durability as ad
+        df = pd.DataFrame(columns=["player_id", "player_name", "season", "Date", "MP", "mp_float"])
+        summary, treated_val = ad.compute_e1(df, "stockjo01")
+        assert len(summary) == 0
+        assert treated_val is None
+
+    def test_emit_comparators_fewer_than_n_comps(self):
+        """When fewer than n_comps others exist, returns all available."""
+        import pathlib
+        import tempfile
+        import analyze_durability as ad
+        summary = pd.DataFrame({
+            "player_id": ["p1", "p2"],
+            "player_name": ["P1", "P2"],
+            "games_missed_per_82": [1.0, 5.0],
+        })
+        with tempfile.TemporaryDirectory() as tmp:
+            orig = ad.DATA_DIR
+            ad.DATA_DIR = pathlib.Path(tmp)
+            try:
+                ad.emit_comparators_csv(summary, "p1", "pg", n_comps=5)
+                out = pathlib.Path(tmp) / "pg_comparators.csv"
+                comps = pd.read_csv(out)
+                # Only 1 other player; should get 1 row, not error
+                assert len(comps) == 1
+            finally:
+                ad.DATA_DIR = orig

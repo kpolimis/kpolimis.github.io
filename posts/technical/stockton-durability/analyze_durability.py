@@ -35,11 +35,11 @@ SEASON_GAMES.update({1999: 50, 2012: 66, 2020: 65, 2021: 72})
 # Cohort membership sets (player_id)
 PG_IDS = {
     "stockjo01", "thomais01", "johnske02", "hardati01", "paytoga01",
-    "jacksma01", "portete01", "stricro01", "boguesmu01", "douglsh01",
-    "kiddja01", "harped01", "blaylmo01", "anderke01", "nashst01",
+    "jacksma01", "portete01", "stricro02", "boguemu01", "douglsh01",
+    "kiddja01", "harpede01", "blaylmo01", "anderke01", "nashst01",
 }
 PF_IDS = {
-    "diawbo01", "nowitdi01", "boozeca01", "jamisna01", "mariosh01", "lewisra02",
+    "diawbo01", "nowitdi01", "boozeca01", "jamisan01", "mariosh01", "lewisra02",
 }
 
 
@@ -120,6 +120,12 @@ def compute_e1(
             "games_missed": int(total_missed),
             "games_missed_per_82": gmiss82,
         })
+
+    if not rows:
+        return pd.DataFrame(columns=[
+            "player_id", "player_name", "career_seasons", "total_season_games",
+            "active_games", "games_missed", "games_missed_per_82",
+        ]), None
 
     summary = pd.DataFrame(rows).sort_values("games_missed_per_82")
     treated_val = None

@@ -105,16 +105,18 @@ def _prepare_model_df(
         )
         return None
 
-    # Quarter column must be categorical
-    # Note: quarter='full' rows (from full-game box scores) are excluded from Q4 analysis
-    if "full" in mdf["quarter"].astype(str).values:
+    # Drop 'full'-game summary rows; we only want per-quarter rows for Q4 analysis
+    full_mask = mdf["quarter"].astype(str) == "full"
+    if full_mask.all():
         logger.warning(
-            "Quarter splits contain 'full'-game rows — true quarter data not available. "
-            "E2/E4/E5 models require per-quarter BRef play-by-play data (available ≥1996-97). "
+            "All rows are 'full'-game summaries — no per-quarter BRef PBP data available. "
             "Skipping model for %s.",
             metric_col,
         )
         return None
+    if full_mask.any():
+        logger.info("Dropping %d 'full'-game rows; keeping per-quarter rows.", full_mask.sum())
+        mdf = mdf[~full_mask].copy()
 
     return mdf
 

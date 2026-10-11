@@ -57,10 +57,10 @@ COHORT: dict[str, tuple[str, str, int, int, str]] = {
     "Mark Jackson":    ("j", "jacksma01",  1988, 2004, "pg"),
     "Terry Porter":    ("p", "portete01",  1986, 2003, "pg"),
     "Rod Strickland":  ("s", "stricro02",  1989, 2005, "pg"),
-    "Muggsy Bogues":   ("b", "boguesmu01", 1988, 2001, "pg"),  # borderline MPG (~28)
+    "Muggsy Bogues":   ("b", "boguemu01",  1988, 2001, "pg"),  # borderline MPG (~28)
     "Sherman Douglas": ("d", "douglsh01",  1990, 1999, "pg"),  # borderline MPG
     "Jason Kidd":      ("k", "kiddja01",   1995, 2013, "pg"),
-    "Derek Harper":    ("h", "harped01",   1984, 1999, "pg"),
+    "Derek Harper":    ("h", "harpede01",  1984, 1999, "pg"),  # de not d — harpede01 confirmed
     "Mookie Blaylock": ("b", "blaylmo01",  1990, 2002, "pg"),
     "Kenny Anderson":  ("a", "anderke01",  1992, 2005, "pg"),
     "Steve Nash":      ("n", "nashst01",   1997, 2014, "pg"),
@@ -166,12 +166,19 @@ def fetch_gamelog(initial: str, player_id: str, season: int) -> pd.DataFrame | N
 
     df = pd.read_html(StringIO(str(table)))[0]
 
-    # Drop mid-table repeated header rows
-    df = df[df["Rk"] != "Rk"].copy()
-    df = df[pd.to_numeric(df["Rk"], errors="coerce").notna()].copy()
+    # Drop mid-table repeated header rows (some pages omit the Rk column)
+    if "Rk" in df.columns:
+        df = df[df["Rk"] != "Rk"].copy()
+        df = df[pd.to_numeric(df["Rk"], errors="coerce").notna()].copy()
+        df["Rk"] = df["Rk"].astype(str)  # keep as string to match existing parquet schema
+    else:
+        df["Rk"] = pd.array([""] * len(df), dtype="object")
 
     df["player_id"] = player_id
     df["season"] = season
+
+    if "MP" not in df.columns:
+        return None  # no minutes column — not a usable game log page
 
     # Active = MP is a parseable time string
     df["mp_float"] = df["MP"].apply(parse_mp_seconds)
@@ -199,7 +206,31 @@ def load_existing() -> pd.DataFrame | None:
 
 
 def save(df: pd.DataFrame) -> None:
-    df.to_parquet(DATA_DIR / "game_logs.parquet", index=False)
+    """Write parquet, merging with any rows another process added since we loaded."""
+    out = DATA_DIR / "game_logs.parquet"
+    lock_path = DATA_DIR / "game_logs.parquet.lock"
+    import fcntl
+    with open(lock_path, "w") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        try:
+            if out.exists():
+                on_disk = pd.read_parquet(out)
+                new_keys = set(zip(df["player_id"], df["season"]))
+                on_disk_keys = set(zip(on_disk["player_id"], on_disk["season"]))
+                truly_new = new_keys - on_disk_keys
+                if truly_new:
+                    new_rows = df[df.apply(lambda r: (r["player_id"], r["season"]) in truly_new, axis=1)]
+                    df = pd.concat([on_disk, new_rows], ignore_index=True)
+                else:
+                    df = on_disk
+            # Normalize all object columns to string — BRef HTML parses inconsistently
+            # across player pages (some numeric, some string, some NaN), causing
+            # PyArrow type errors on concat. String is safe for all BRef text columns.
+            for col in df.select_dtypes(include="object").columns:
+                df[col] = df[col].astype(str).replace("nan", "")
+            df.to_parquet(out, index=False)
+        finally:
+            fcntl.flock(lf, fcntl.LOCK_UN)
     print(f"  → saved {len(df):,} rows to data/game_logs.parquet")
 
 
@@ -335,23 +366,26 @@ def fetch_population_cohort(limit: int | None = None) -> None:
         last = int(row["final_year"])
         name = row["player_name"]
         logger.info("%s (%s) %d–%d", name, pid, first, last)
+        player_frames = []
         for season in range(first, last + 1):
             df = fetch_gamelog(initial, pid, season)
             if df is not None:
                 df["player_name"] = name
                 df["cohort"] = "population"
-                all_frames.append(df)
+                player_frames.append(df)
+        if player_frames:
+            all_frames.extend(player_frames)
+            save(pd.concat(all_frames, ignore_index=True))
 
-    if all_frames:
-        combined = pd.concat(all_frames, ignore_index=True)
-        save(combined)
+    if not all_frames:
+        logger.warning("No data fetched.")
 
 
 def build_population_cohort() -> None:
     """Scrape BRef player index (A–Z) and build data/population_cohort.csv.
 
-    Scope: guards (G, PG, SG) who debuted 1980–2010;
-           forwards (F, PF, SF) who debuted 1995–2010.
+    Scope: guards (G, PG, SG), forwards (F, PF, SF), and centers (C, C-F, F-C)
+           who debuted 1980–2010 (modern era: post-merger, post-3-point line).
     Writes population_cohort.csv with columns:
         player_name, player_id, initial, position, debut_year, final_year, era
     """
@@ -399,12 +433,13 @@ def build_population_cohort() -> None:
             except (ValueError, TypeError):
                 continue
 
-            is_guard = any(p in pos for p in ("G", "PG", "SG"))
-            is_forward = any(p in pos for p in ("F", "PF", "SF"))
-            guard_era = 1980 <= debut <= 2010
-            forward_era = 1995 <= debut <= 2010
+            pos_parts = set(pos.replace("-", " ").split())
+            is_guard = bool(pos_parts & {"G", "PG", "SG"})
+            is_forward = bool(pos_parts & {"F", "PF", "SF"})
+            is_center = bool(pos_parts & {"C"})
+            modern_era = 1980 <= debut <= 2010
 
-            if not ((is_guard and guard_era) or (is_forward and forward_era)):
+            if not ((is_guard or is_forward or is_center) and modern_era):
                 continue
 
             pid = name_to_pid.get(name)
