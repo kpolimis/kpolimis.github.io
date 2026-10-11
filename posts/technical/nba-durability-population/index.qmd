@@ -11,8 +11,9 @@ categories: [NBA, statistics, sports analytics, durability, population study]
 #| echo: false
 #| output: false
 import pathlib, sys
-sys.path.insert(0, str(pathlib.Path("../../stockton-durability/")))
-DATA_DIR = pathlib.Path("../../stockton-durability/data")
+# From posts/technical/nba-durability-population/, one ../ reaches posts/technical/
+sys.path.insert(0, str(pathlib.Path("../stockton-durability/")))
+DATA_DIR = pathlib.Path("../stockton-durability/data")
 ```
 
 ## Why a Population Study?
@@ -100,4 +101,4 @@ The population study inherits all selection caveats from the individual posts. A
 
 - Population fetch: `fetch_bref_data.py --build-population && fetch_bref_data.py --population-fetch`
 - Analysis: `analyze_durability.py --cohort population`
-- Data: `../../stockton-durability/data/`
+- Data: `../stockton-durability/data/`
