@@ -181,5 +181,5 @@ The Diaw case — where full-career quarter data is available, the sourcing is c
 - All intervals permutation-based (n = 5,000); no p-value thresholds applied.
 - E1/E3: `analyze_durability.py --cohort pg` (n=15 reference class, corrected player IDs)
 - E2/E4/E5: `analyze_quarter_splits.py --cohort pg` (n=4 players, 1996–2003 window; E4/E5 not interpretable at per-quarter resolution)
-- Data: `data/game_logs.parquet` (22,683 rows, 21 players, 0 null cohort)
+- Data: `data/game_logs.parquet` (55,799 rows total; PG cohort: 16,213 active rows, 15 players)
 - PG cohort player IDs corrected this session: `boguemu01`, `harpede01`, `stricro02`, `jamisan01` (PF)
