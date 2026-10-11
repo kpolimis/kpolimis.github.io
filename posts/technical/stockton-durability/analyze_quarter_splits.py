@@ -121,53 +121,6 @@ def _prepare_model_df(
     return mdf
 
 
-def _fit_mixed_model(
-    mdf: pd.DataFrame,
-    metric_col: str,
-    treated_id: str,
-) -> tuple[float | None, float | None, float | None]:
-    """Fit MixedLM: metric ~ quarter4 * is_treated + rest_days + (1|player_id).
-
-    Returns (coef_interaction, ci_lower, ci_upper).
-    """
-    formula_vars = ["quarter4", "is_treated", "rest_days"]
-    if not all(v in mdf.columns for v in formula_vars):
-        return None, None, None
-
-    try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            model = MixedLM(
-                endog=mdf[metric_col],
-                exog=mdf[["quarter4", "is_treated", "quarter4_treated", "rest_days"]],
-                groups=mdf["player_id"],
-            )
-            # Create interaction term
-            mdf = mdf.copy()
-            mdf["quarter4_treated"] = mdf["quarter4"] * mdf["is_treated"]
-            model = MixedLM(
-                endog=mdf[metric_col],
-                exog=pd.concat(
-                    [pd.Series(1.0, index=mdf.index, name="const"),
-                     mdf[["quarter4", "is_treated", "quarter4_treated", "rest_days"]]],
-                    axis=1,
-                ),
-                groups=mdf["player_id"],
-            )
-            result = model.fit(reml=True, method="lbfgs", disp=False)
-        coef = float(result.params.get("quarter4_treated", float("nan")))
-        ci = result.conf_int()
-        if "quarter4_treated" in ci.index:
-            ci_lo = float(ci.loc["quarter4_treated", 0])
-            ci_hi = float(ci.loc["quarter4_treated", 1])
-        else:
-            ci_lo, ci_hi = float("nan"), float("nan")
-        return coef, ci_lo, ci_hi
-    except Exception as exc:
-        logger.warning("Model fit failed for %s: %s", metric_col, exc)
-        return None, None, None
-
-
 def permutation_interaction(
     mdf: pd.DataFrame,
     metric_col: str,
