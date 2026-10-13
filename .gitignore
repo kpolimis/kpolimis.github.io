@@ -134,9 +134,10 @@ commit_msg.md
 posts/blog/epl-2026-27-predictions/data/*.csv
 posts/blog/epl-2026-27-predictions/data/matches/
 
-# Stockton durability — commit analysis outputs (parquets, figures, CSVs)
-# HTML cache is too large and is always re-creatable from BRef
+# Stockton durability — commit analysis outputs (permutation parquets, figures, CSVs)
+# Raw game log input: large binary, grows with each fetch run — regenerable from BRef
 posts/technical/stockton-durability/data/html_cache/
+posts/technical/stockton-durability/data/game_logs.parquet
 # Lock file is a runtime artifact for concurrent write safety — never commit
 posts/technical/stockton-durability/data/game_logs.parquet.lock
 # VPN configs contain private keys — never commit

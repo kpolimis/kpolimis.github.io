@@ -11,26 +11,41 @@
  *       include-after-body: bayesian-waves-bg.js
  */
 (function () {
+  // Respect the user's motion preference — skip animation entirely if reduced motion is set.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const CONFIG = {
     iterations:   7,       // number of layered curves
     speed:        0.012,   // animation speed
-    opacity:      0.45,    // canvas opacity (tweak in custom.scss #network-canvas)
+    // opacity is applied via CSS on #network-canvas in custom.scss
   };
 
   const canvas = document.createElement('canvas');
   canvas.id = 'network-canvas';
+  canvas.style.pointerEvents = 'none';  // never intercept clicks or hover events
   document.body.insertBefore(canvas, document.body.firstChild);
   const ctx = canvas.getContext('2d');
   let W, H;
+  let dpr = window.devicePixelRatio || 1;
 
   function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+    dpr = window.devicePixelRatio || 1;
+    const cssW = window.innerWidth;
+    const cssH = window.innerHeight;
+    // Scale the backing buffer to the device pixel ratio for crisp rendering on HiDPI screens.
+    canvas.width  = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width  = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW;
+    H = cssH;
   }
   window.addEventListener('resize', resize);
   resize();
 
   let t = 0;
+  let rafId = null;
 
   function residual(x, iter, time) {
     const phase = time * 0.4 + iter * 1.1;
@@ -95,8 +110,17 @@
     }
 
     t += CONFIG.speed;
-    requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
   }
 
-  tick();
+  // Pause the rAF loop when the tab is hidden to avoid burning CPU in the background.
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    } else {
+      if (rafId === null) rafId = requestAnimationFrame(tick);
+    }
+  });
+
+  rafId = requestAnimationFrame(tick);
 })();

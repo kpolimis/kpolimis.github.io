@@ -18,16 +18,23 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python dependencies
-        run: pip install ruff pytest pandas numpy matplotlib seaborn scipy ipykernel jupyter-cache
+        # C1: install from requirements.txt (source of truth); add kernel deps not in requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install matplotlib seaborn ipykernel jupyter-cache
 
       - name: Register blog kernel
         run: python -m ipykernel install --user --name blog --display-name "blog"
 
       - name: Lint
-        run: ruff check posts/blog/world-cup-2026-leagues/fetch_wc_data.py
+        # C2: non-mutating check over the whole repo (not just one file)
+        run: |
+          ruff check .
+          ruff format --check .
 
       - name: Test
-        run: pytest tests/ -v
+        # no path arg — uses testpaths from pyproject.toml (tests/ + stockton-durability/tests/)
+        run: pytest -v
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b  # v2

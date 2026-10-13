@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-11 (v3)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-13 (v4)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -64,14 +64,14 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | `fetch_quarter_splits.py` | Quarter box score scraper; cached by game ID; 3.5s/request + jitter |
 | `analyze_quarter_splits.py` | E2/E4/E5; mixed-effects model; player-level permutation |
 
-**Data fetch: complete for PG and PF cohorts; population fetch running locally.**
+**Data fetch: complete for PG and PF cohorts; population fetch running on Apollo via Docker + ProtonVPN.**
 
 | Status | Players |
 |:-------|:--------|
 | Full PG game logs + quarter splits | Stockton, Payton, Jackson, Harper |
 | Full PG game logs only | Thomas, Hardaway, K. Johnson, Porter, Bogues, Strickland, Kidd, Nash, Blaylock, Anderson, Douglas |
 | PF game logs + quarter splits (all 6) | Diaw, Nowitzki, Boozer, Jamison, Marion, Lewis |
-| Population (local fetch) | ~109 players fetched, running — ETA ~Oct 14 |
+| Population (Apollo Docker fetch) | 594/1,995 players fetched; production retry + VPN-rotation fixes applied 2026-10-13 |
 
 **Post drafts:**
 
@@ -96,9 +96,10 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 | Step | Blocker | Est. |
 |:-----|:--------|:-----|
-| Population fetch (local) | Running — ETA ~Oct 14 | — |
+| Population fetch (Apollo Docker) | Running — 594/1,995 done; ~1,400 remaining | 2–3 days |
 | Population analysis + post | Population fetch complete | 1 day |
 | Jacobs outreach (#22) — manual browser form | Human action required | 20 min |
+| Blog infra: Makefile/CI/JS hardening (C1–C9) | Changes staged locally — awaiting commit | 30 min |
 
 ---
 
@@ -107,6 +108,27 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v4 — 2026-10-13
+
+- **Apollo fetch: Docker production hardening** — `fetch_bref_data.py` rewritten with:
+  - Env-configurable rate limits: `SESSION_COOLDOWN_PAGES=40` (was 20), `SESSION_COOLDOWN_SEC=120` (was 300)
+  - `_rotate_vpn()`: calls Gluetun HTTP control server (`PUT /v1/vpn/status` stop → start) on consecutive 403s; 15s reconnect wait
+  - 5-retry loop in `_get_html()` catching `Timeout` + `ConnectionError` (15*2^n backoff per attempt); previously no try/except existed
+  - 403 counter → automatic VPN rotation after `MAX_403_BEFORE_ROTATE=3` consecutive blocks
+  - Per-player `try/except Exception` in `fetch_population_cohort` — bad player skipped, run continues
+- **`docker-compose.yml` updated**: `restart: on-failure:10` for `bref-fetch`; env vars for all rate-limit/VPN params; `gluetun-auth.toml` volume-mounted for Gluetun control server auth (v3.40+ requires auth config)
+- **`gluetun-auth.toml` created**: grants unauthenticated access to `PUT/GET /v1/vpn/status` (control-only; no admin)
+- **Containers rebuilt and running**: Gluetun + bref-fetch healthy; resumed from 594/1,995 players
+- **Observed SSL EOF errors**: BRef resets SSL connections on VPN IPs (harder block than 403); correctly caught by `ConnectionError` handler and retried
+- **Blog infrastructure: panel synthesis C1–C9** — Makefile rewrite (freeze-safe `clean`, `clean-freeze CONFIRM=yes`, `bootstrap`, `lint`, `lint-fix`, `check`); CI adds lint + pytest steps; JS canvas hardening (reduced-motion bail-out, DPR scaling, visibility-change pause); archive exclusions in `_quarto.yml`; `pyproject.toml` glob fix (`**` for nested test dirs); `.gitignore` excludes `game_logs.parquet`; changes staged, not yet committed
+
+### v3.1 — 2026-10-12
+
+- **Docker setup for Apollo fetch** — migrated population fetch from nohup to Docker Compose with Gluetun ProtonVPN for IP rotation; `Dockerfile` + `docker-compose.yml` + `requirements.txt` (pinned to working venv: beautifulsoup4, lxml, numpy, pandas, pyarrow, requests)
+- **Fixed missing deps**: first build failed with `ImportError: Unable to find a usable engine` (missing pyarrow); second failed with `ImportError: Import lxml failed`; both added to `requirements.txt`
+- **Fetch resumed at 594/1,995 players** (236,972 rows) after Docker migration
+- **403 blocks from ProtonVPN IPs**: BRef actively blocks datacenter/VPN IPs with HTTP 403; `on-failure:10` not yet set (set in v4)
 
 ### v3 — 2026-10-11
 

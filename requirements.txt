@@ -12,5 +12,9 @@ soccerdata==1.9.1
 
 pytest>=8.0
 
-# footy is a local editable install — not on PyPI:
-#   pip install -e /path/to/football/footy
+ruff>=0.9
+
+# footy is private — install via SSH from pinned SHA (requires kpolimis/football access):
+#   pip install git+ssh://git@github.com/kpolimis/football.git@80c1d74#subdirectory=footy
+# Local editable dev override (takes precedence; keep in sync with the SHA above):
+#   pip install -e ~/repos/football/footy

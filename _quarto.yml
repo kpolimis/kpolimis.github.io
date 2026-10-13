@@ -3,6 +3,12 @@ project:
   output-dir: _site
   resources:
     - CNAME
+  # C6: exclude Pelican-era archive and draft directories — they contain Jinja tags
+  # and relative image paths that render broken under Quarto
+  render:
+    - "*.qmd"
+    - "!.content-archive/**"
+    - "!.drafts/**"
 
 website:
   title: "Kivan Polimis"

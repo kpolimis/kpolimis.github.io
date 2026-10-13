@@ -1,20 +1,35 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help preview render data clean all bootstrap lint
+.PHONY: help preview render render-epl render-wc-leagues render-wc-epl \
+        data data-refresh clean clean-freeze all bootstrap lint lint-fix check
 
-all: data render-wc-leagues render-wc-epl  ## Fetch data then re-execute both WC posts end-to-end
+# C4: all re-executes WC posts then renders the full site (freeze cache handles the rest)
+all: data render-wc-leagues render-wc-epl render  ## Fetch data, re-execute WC posts, render full site
 
-bootstrap:  ## Install local footy package (editable) and pin soccerdata
-	pip install -e ~/repos/football/footy
-	pip install soccerdata
-	@echo "Bootstrap complete. Run 'pip show soccerdata' to confirm version, then pin in requirements.txt."
+# C1: install footy from pinned git SHA; local editable still works as dev override
+bootstrap:  ## Install all blog dependencies (footy requires SSH access to kpolimis/football)
+	pip install git+ssh://git@github.com/kpolimis/football.git@80c1d74#subdirectory=footy
+	# Local editable override (takes precedence; keep in sync with the SHA above):
+	#   pip install -e ~/repos/football/footy
+	pip install -r requirements.txt
+	@echo "Bootstrap complete. Confirm versions: pip show footy soccerdata"
 
-lint:  ## Run Ruff linter across the repo
+# C2: non-mutating lint — exits non-zero on errors so CI can gate on it
+lint:  ## Check code style without modifying files (exits 1 on lint or format errors)
+	conda run -n blog ruff check .
+	conda run -n blog ruff format --check .
+
+lint-fix:  ## Auto-fix lint and format issues in place
 	conda run -n blog ruff check . --fix
+	conda run -n blog ruff format .
+
+# C2: full quality gate (lint + tests)
+check: lint  ## Run full quality gate: lint, format check, then pytest
+	conda run -n blog pytest
 
 help:  ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-	  | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	  | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
 
 preview:  ## Start local Quarto dev server (live reload)
 	conda run -n blog quarto preview
@@ -25,10 +40,11 @@ render:  ## Render entire site (no execution; uses freeze cache)
 render-epl:  ## Re-execute and render EPL standings post
 	conda run -n blog quarto render posts/blog/epl-standings/ --execute
 
-render-wc-leagues:  ## Re-execute and render world-cup-2026-leagues post
+# C4: render targets depend on data files so a data refresh forces re-execution
+render-wc-leagues: data/wc_players.csv  ## Re-execute WC leagues post (needs data/)
 	conda run -n blog quarto render posts/blog/world-cup-2026-leagues/ --execute
 
-render-wc-epl:  ## Re-execute and render world-cup-2026-epl post
+render-wc-epl: data/wc_rounds.csv  ## Re-execute WC EPL post (needs data/)
 	conda run -n blog quarto render posts/blog/world-cup-2026-epl/ --execute
 
 data:  ## Fetch 2026 World Cup data (uses soccerdata cache; no browser needed)
@@ -37,5 +53,14 @@ data:  ## Fetch 2026 World Cup data (uses soccerdata cache; no browser needed)
 data-refresh:  ## Re-fetch 2026 World Cup data from FBref (opens Chrome)
 	conda run -n blog python posts/blog/world-cup-2026-leagues/fetch_wc_data.py --refresh
 
-clean:  ## Remove Quarto build artifacts (keeps raw data and source files)
-	rm -rf _site/ .quarto/ _freeze/
+# C3/D1: clean never touches _freeze/ — the committed freeze cache is what lets CI publish
+clean:  ## Remove Quarto build outputs (keeps raw data, source files, and freeze cache)
+	rm -rf _site/ .quarto/
+
+# C3/D1: explicit escape hatch — only use if you will re-execute locally before pushing
+clean-freeze:  ## Remove freeze cache — DANGEROUS: breaks CI until freeze outputs are recommitted
+	@echo "WARNING: Deleting _freeze/ means CI cannot render posts that require local data or footy."
+	@echo "Only do this if you plan to run render targets locally before pushing."
+	@echo "Run 'make clean-freeze CONFIRM=yes' to proceed."
+	@test "$(CONFIRM)" = "yes" || (echo "Aborted. Pass CONFIRM=yes to delete _freeze/." && exit 1)
+	rm -rf _freeze/
