@@ -14,16 +14,15 @@ import pytest
 # name to be importable — spec_from_file_location without sys.modules registration
 # breaks @dataclass on Python 3.14).
 _ANALYSIS_DIR = str(
-    Path(__file__).parent.parent
-    / "posts" / "blog" / "epl-2026-27-predictions" / "analysis"
+    Path(__file__).parent.parent / "posts" / "blog" / "epl-2026-27-predictions" / "analysis"
 )
 if _ANALYSIS_DIR not in sys.path:
     sys.path.insert(0, _ANALYSIS_DIR)
 
 from params import check_df_schema  # noqa: E402
 
-
 # ── check_df_schema ───────────────────────────────────────────────────────────
+
 
 class TestCheckDfSchema:
     def _minimal(self) -> pd.DataFrame:

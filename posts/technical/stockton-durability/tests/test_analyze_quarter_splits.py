@@ -1,10 +1,9 @@
 """Tests for analyze_quarter_splits.py — E2/E4/E5 within-game analysis."""
 
+import analyze_quarter_splits as aqs
 import numpy as np
 import pandas as pd
 import pytest
-
-import analyze_quarter_splits as aqs
 
 
 class TestAddAstTov:
@@ -46,15 +45,17 @@ class TestPrepareModelDf:
         for pid, name in [("p1", "P1"), ("p2", "P2")]:
             for q in quarters:
                 for _ in range(5):
-                    rows.append({
-                        "player_id": pid,
-                        "player_name": name,
-                        "quarter": q,
-                        "season": 2000,
-                        "date": pd.Timestamp("2000-01-01"),
-                        "FT_pct": 0.8 if q == "4" else 0.85,
-                        "rest_days": 3.0,
-                    })
+                    rows.append(
+                        {
+                            "player_id": pid,
+                            "player_name": name,
+                            "quarter": q,
+                            "season": 2000,
+                            "date": pd.Timestamp("2000-01-01"),
+                            "FT_pct": 0.8 if q == "4" else 0.85,
+                            "rest_days": 3.0,
+                        }
+                    )
         return pd.DataFrame(rows)
 
     def test_returns_none_for_full_quarter(self):
@@ -96,15 +97,17 @@ class TestPermutationInteraction:
         for pid, name in [("treated", "Treated"), ("ctrl", "Control")]:
             for q in ["1", "2", "3", "4"]:
                 for _ in range(10):
-                    rows.append({
-                        "player_id": pid,
-                        "player_name": name,
-                        "quarter": q,
-                        "quarter4": int(q == "4"),
-                        "is_treated": int(pid == "treated"),
-                        "rest_days": 3.0,
-                        "FT_pct": 0.75 if q == "4" and pid == "treated" else 0.85,
-                    })
+                    rows.append(
+                        {
+                            "player_id": pid,
+                            "player_name": name,
+                            "quarter": q,
+                            "quarter4": int(q == "4"),
+                            "is_treated": int(pid == "treated"),
+                            "rest_days": 3.0,
+                            "FT_pct": 0.75 if q == "4" and pid == "treated" else 0.85,
+                        }
+                    )
         return pd.DataFrame(rows)
 
     def test_returns_float_coef(self):
@@ -142,14 +145,16 @@ class TestPrepareModelDfRestDays:
         for pid in ("p1", "p2"):
             for q in ("1", "2", "3", "4"):
                 for _ in range(5):
-                    rows.append({
-                        "player_id": pid,
-                        "quarter": q,
-                        "season": 2000,
-                        "date": pd.Timestamp("2000-01-01"),
-                        "FT_pct": 0.8,
-                        "rest_days": 2.0,
-                    })
+                    rows.append(
+                        {
+                            "player_id": pid,
+                            "quarter": q,
+                            "season": 2000,
+                            "date": pd.Timestamp("2000-01-01"),
+                            "FT_pct": 0.8,
+                            "rest_days": 2.0,
+                        }
+                    )
         return pd.DataFrame(rows)
 
     def test_rest_days_already_present_no_collision(self):
@@ -177,14 +182,16 @@ class TestPrepareModelDfOtQuarters:
         for pid in ("p1", "p2"):
             for q in ("1", "2", "3", "4", "OT1"):
                 for _ in range(5):
-                    rows.append({
-                        "player_id": pid,
-                        "quarter": q,
-                        "season": 2000,
-                        "date": pd.Timestamp("2000-01-01"),
-                        "FT_pct": 0.8,
-                        "rest_days": 3.0,
-                    })
+                    rows.append(
+                        {
+                            "player_id": pid,
+                            "quarter": q,
+                            "season": 2000,
+                            "date": pd.Timestamp("2000-01-01"),
+                            "FT_pct": 0.8,
+                            "rest_days": 3.0,
+                        }
+                    )
         return pd.DataFrame(rows)
 
     def test_ot_rows_allowed_through(self):
@@ -204,21 +211,25 @@ class TestComputeE1EdgeCases:
     """Edge cases: single season, missing treated player, large miss rate."""
 
     def test_single_season_player(self):
-        df = pd.DataFrame({
-            "player_id": ["p1", "p2"],
-            "player_name": ["P1", "P2"],
-            "season": [2000, 2000],
-            "Date": [pd.Timestamp("2000-01-10"), pd.Timestamp("2000-01-10")],
-            "MP": ["30:00", "30:00"],
-            "mp_float": [30.0, 30.0],
-        })
+        df = pd.DataFrame(
+            {
+                "player_id": ["p1", "p2"],
+                "player_name": ["P1", "P2"],
+                "season": [2000, 2000],
+                "Date": [pd.Timestamp("2000-01-10"), pd.Timestamp("2000-01-10")],
+                "MP": ["30:00", "30:00"],
+                "mp_float": [30.0, 30.0],
+            }
+        )
         import analyze_durability as ad
+
         summary, treated_val = ad.compute_e1(df, "p1")
         assert len(summary) == 2
         assert treated_val is not None
 
     def test_empty_dataframe_returns_empty_summary(self):
         import analyze_durability as ad
+
         df = pd.DataFrame(columns=["player_id", "player_name", "season", "Date", "MP", "mp_float"])
         summary, treated_val = ad.compute_e1(df, "stockjo01")
         assert len(summary) == 0
@@ -228,12 +239,16 @@ class TestComputeE1EdgeCases:
         """When fewer than n_comps others exist, returns all available."""
         import pathlib
         import tempfile
+
         import analyze_durability as ad
-        summary = pd.DataFrame({
-            "player_id": ["p1", "p2"],
-            "player_name": ["P1", "P2"],
-            "games_missed_per_82": [1.0, 5.0],
-        })
+
+        summary = pd.DataFrame(
+            {
+                "player_id": ["p1", "p2"],
+                "player_name": ["P1", "P2"],
+                "games_missed_per_82": [1.0, 5.0],
+            }
+        )
         with tempfile.TemporaryDirectory() as tmp:
             orig = ad.DATA_DIR
             ad.DATA_DIR = pathlib.Path(tmp)
@@ -247,20 +262,6 @@ class TestComputeE1EdgeCases:
                 ad.DATA_DIR = orig
 
 
-class TestEstimandFromMetric:
-    def test_ft_pct_is_e2(self):
-        assert aqs._estimand_from_metric("FT_pct") == "2"
-
-    def test_ast_tov_is_e4(self):
-        assert aqs._estimand_from_metric("AST_TOV_ratio") == "4"
-
-    def test_ts_pct_is_e5(self):
-        assert aqs._estimand_from_metric("TS_pct") == "5"
-
-    def test_unknown_metric_returns_x(self):
-        assert aqs._estimand_from_metric("unknown_col") == "x"
-
-
 class TestPermutationPlayerLevel:
     """Permutation assigns is_treated to exactly one player per iteration."""
 
@@ -269,15 +270,17 @@ class TestPermutationPlayerLevel:
         for pid in ("p1", "p2", "p3", "p4"):
             for q in ("1", "2", "3", "4"):
                 for _ in range(8):
-                    rows.append({
-                        "player_id": pid,
-                        "quarter": q,
-                        "quarter4": int(q == "4"),
-                        "is_treated": int(pid == "p1"),
-                        "quarter4_treated": int(q == "4" and pid == "p1"),
-                        "rest_days": 3.0,
-                        "FT_pct": 0.80,
-                    })
+                    rows.append(
+                        {
+                            "player_id": pid,
+                            "quarter": q,
+                            "quarter4": int(q == "4"),
+                            "is_treated": int(pid == "p1"),
+                            "quarter4_treated": int(q == "4" and pid == "p1"),
+                            "rest_days": 3.0,
+                            "FT_pct": 0.80,
+                        }
+                    )
         return pd.DataFrame(rows)
 
     def test_permutation_p_in_range(self):

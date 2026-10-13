@@ -5,9 +5,10 @@ Import from any post under posts/blog/ with:
     sys.path.insert(0, os.path.join(os.getcwd(), ".."))
     from _utils import _colour, _logo, _bar_colour, _LIGHTEN_BARS
 """
+
 from __future__ import annotations
 
-from functools import lru_cache
+from functools import cache
 
 import footy
 
@@ -15,7 +16,7 @@ import footy
 _LIGHTEN_BARS: set[str] = {"#c8102e", "#cc0000", "#dd0000"}
 
 
-@lru_cache(maxsize=None)
+@cache
 def _colour(name: str) -> str:
     """Return the official hex brand colour for a club, or grey if unknown."""
     try:
@@ -24,7 +25,7 @@ def _colour(name: str) -> str:
         return "#AAAAAA"
 
 
-@lru_cache(maxsize=None)
+@cache
 def _logo(name: str) -> str:
     """Return the logo URL for a club, or empty string if unknown."""
     try:
@@ -39,5 +40,7 @@ def _bar_colour(name: str) -> str:
     if hex_c.lower() in _LIGHTEN_BARS:
         r, g, b = int(hex_c[1:3], 16), int(hex_c[3:5], 16), int(hex_c[5:7], 16)
         f = 0.70
-        return f"#{int(r + f*(255-r)):02x}{int(g + f*(255-g)):02x}{int(b + f*(255-b)):02x}"
+        return (
+            f"#{int(r + f * (255 - r)):02x}{int(g + f * (255 - g)):02x}{int(b + f * (255 - b)):02x}"
+        )
     return hex_c

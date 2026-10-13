@@ -1,5 +1,4 @@
-"""
-analyze_quarter_splits.py — E2/E4/E5 within-game analysis.
+"""analyze_quarter_splits.py — E2/E4/E5 within-game analysis.
 
 E2: 4Q FT% degradation (mixed-effects model + permutation CI)
 E4: 4Q AST/TOV ratio
@@ -22,7 +21,6 @@ import warnings
 import matplotlib
 import numpy as np
 import pandas as pd
-from scipy import stats
 from statsmodels.regression.mixed_linear_model import MixedLM
 
 matplotlib.use("Agg")
@@ -43,8 +41,7 @@ def load_splits(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
     parquet = DATA_DIR / f"quarter_splits_{cohort}.parquet"
     if not parquet.exists():
         raise FileNotFoundError(
-            f"data/quarter_splits_{cohort}.parquet not found — "
-            f"run fetch_quarter_splits.py first."
+            f"data/quarter_splits_{cohort}.parquet not found — run fetch_quarter_splits.py first."
         )
     df = pd.read_parquet(parquet)
     logger.info("Loaded %s rows from quarter_splits_%s.parquet", f"{len(df):,}", cohort)
@@ -91,7 +88,9 @@ def _prepare_model_df(
             gl = pd.read_parquet(gl_path)[["player_id", "Date", "rest_days"]].copy()
             gl["date"] = pd.to_datetime(gl["Date"])
             mdf["date"] = pd.to_datetime(mdf["date"])
-            mdf = mdf.merge(gl[["player_id", "date", "rest_days"]], on=["player_id", "date"], how="left")
+            mdf = mdf.merge(
+                gl[["player_id", "date", "rest_days"]], on=["player_id", "date"], how="left"
+            )
             mdf["rest_days"] = mdf["rest_days"].fillna(3)
         else:
             mdf["rest_days"] = 3.0
@@ -101,7 +100,9 @@ def _prepare_model_df(
     if len(mdf) < 20 or mdf["player_id"].nunique() < 2:
         logger.warning(
             "Insufficient data for %s model: %d rows, %d players.",
-            metric_col, len(mdf), mdf["player_id"].nunique(),
+            metric_col,
+            len(mdf),
+            mdf["player_id"].nunique(),
         )
         return None
 
@@ -142,8 +143,10 @@ def permutation_interaction(
                 model = MixedLM(
                     endog=df[metric_col],
                     exog=pd.concat(
-                        [pd.Series(1.0, index=df.index, name="const"),
-                         df[["quarter4", "is_treated", "quarter4_treated", "rest_days"]]],
+                        [
+                            pd.Series(1.0, index=df.index, name="const"),
+                            df[["quarter4", "is_treated", "quarter4_treated", "rest_days"]],
+                        ],
                         axis=1,
                     ),
                     groups=df["player_id"],
@@ -224,7 +227,12 @@ def run_estimand(
         ci_hi = float(np.percentile(null_dist, 97.5)) if len(null_dist) > 0 else float("nan")
         logger.info(
             "%s E%s: quarter4:is_treated = %.4f, 95%% perm CI [%.4f, %.4f], p = %.3f",
-            treated_name, estimand_num, obs_coef, ci_lo, ci_hi, p_val,
+            treated_name,
+            estimand_num,
+            obs_coef,
+            ci_lo,
+            ci_hi,
+            p_val,
         )
     else:
         logger.warning("E%s: could not compute coefficient.", estimand_num)
@@ -257,7 +265,9 @@ def plot_estimand(
         return
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-    for ax, (is_treated_val, label) in zip(axes, [(0, "Cohort"), (1, treated_name or "Treated")]):
+    for ax, (is_treated_val, label) in zip(
+        axes, [(0, "Cohort"), (1, treated_name or "Treated")], strict=False
+    ):
         sub = df[df["player_id"] == treated_id] if is_treated_val == 1 and treated_id else df
         if sub.empty:
             continue
@@ -308,15 +318,25 @@ def plot_e6_quarter_profile(
         name = grp["player_name"].iloc[0]
         if pid == treated_id:
             ax.plot(
-                grp["quarter"].astype(str), grp["ft_pct"],
-                color="#E84D3C", linewidth=2.5, marker="o", markersize=7,
-                zorder=5, label=f"{name} (treated)",
+                grp["quarter"].astype(str),
+                grp["ft_pct"],
+                color="#E84D3C",
+                linewidth=2.5,
+                marker="o",
+                markersize=7,
+                zorder=5,
+                label=f"{name} (treated)",
             )
         else:
             ax.plot(
-                grp["quarter"].astype(str), grp["ft_pct"],
-                color="#AAAAAA", linewidth=1.5, marker="o", markersize=4,
-                alpha=0.7, label=name,
+                grp["quarter"].astype(str),
+                grp["ft_pct"],
+                color="#AAAAAA",
+                linewidth=1.5,
+                marker="o",
+                markersize=4,
+                alpha=0.7,
+                label=name,
             )
 
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda y, _: f"{y:.0%}"))
@@ -343,13 +363,14 @@ def run(cohort: str, n_perm: int = 5000) -> None:
 
     # Compute derived metrics
     if "FT_pct" not in df.columns and "FT" in df.columns and "FTA" in df.columns:
-        df["FT_pct"] = df.apply(
-            lambda r: r["FT"] / r["FTA"] if r["FTA"] > 0 else np.nan, axis=1
-        )
+        df["FT_pct"] = df.apply(lambda r: r["FT"] / r["FTA"] if r["FTA"] > 0 else np.nan, axis=1)
     if "TS_pct" not in df.columns and "PTS" in df.columns:
         df["TS_pct"] = df.apply(
-            lambda r: r["PTS"] / (2 * (r["FGA"] + 0.44 * r.get("FTA", 0)))
-            if (r["FGA"] + 0.44 * r.get("FTA", 0)) > 0 else np.nan,
+            lambda r: (
+                r["PTS"] / (2 * (r["FGA"] + 0.44 * r.get("FTA", 0)))
+                if (r["FGA"] + 0.44 * r.get("FTA", 0)) > 0
+                else np.nan
+            ),
             axis=1,
         )
     df = _add_ast_tov(df)
@@ -383,12 +404,17 @@ def run(cohort: str, n_perm: int = 5000) -> None:
         competitive = df[df["score_margin"].notna() & (df["score_margin"] <= 10)]
         if len(competitive) >= 20:
             logger.info(
-                "\n=== E2 sensitivity: competitive games (margin ≤ 10) ===\n"
-                "Restricted to %d rows.", len(competitive),
+                "\n=== E2 sensitivity: competitive games (margin ≤ 10) ===\nRestricted to %d rows.",
+                len(competitive),
             )
             run_estimand(
-                competitive, "FT_pct", treated_id, treated_name,
-                f"{cohort}_competitive", n_perm, None,
+                competitive,
+                "FT_pct",
+                treated_id,
+                treated_name,
+                f"{cohort}_competitive",
+                n_perm,
+                None,
             )
         else:
             logger.info(
@@ -411,9 +437,9 @@ def run(cohort: str, n_perm: int = 5000) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cohort", required=True, choices=["pg", "pf"],
-                        help="Cohort to analyze (pg or pf)")
-    parser.add_argument("--n-perm", type=int, default=5000,
-                        help="Permutation iterations")
+    parser.add_argument(
+        "--cohort", required=True, choices=["pg", "pf"], help="Cohort to analyze (pg or pf)"
+    )
+    parser.add_argument("--n-perm", type=int, default=5000, help="Permutation iterations")
     args = parser.parse_args()
     run(cohort=args.cohort, n_perm=args.n_perm)

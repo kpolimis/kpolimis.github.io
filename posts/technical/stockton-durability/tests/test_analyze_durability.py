@@ -1,10 +1,9 @@
 """Tests for analyze_durability.py — E1/E3 analysis engine."""
 
+import analyze_durability as ad
 import numpy as np
 import pandas as pd
 import pytest
-
-import analyze_durability as ad
 
 
 class TestSeasonGames:
@@ -34,16 +33,20 @@ class TestComputeE1:
         rows = []
         for pid, name, n_games in [("playerA", "Player A", 80), ("playerB", "Player B", 70)]:
             for i in range(n_games):
-                rows.append({
-                    "player_id": pid,
-                    "player_name": name,
-                    "season": 2000,
-                    "Date": pd.Timestamp("2000-01-01") + pd.Timedelta(days=i),
-                    "MP": f"32:{i % 60:02d}",
-                    "b2b": int(i % 5 == 0),
-                    "rest_days": 1.0 if i % 5 == 0 else 3.0,
-                    "3PA": 2, "FGA": 10, "FTA": 3,
-                })
+                rows.append(
+                    {
+                        "player_id": pid,
+                        "player_name": name,
+                        "season": 2000,
+                        "Date": pd.Timestamp("2000-01-01") + pd.Timedelta(days=i),
+                        "MP": f"32:{i % 60:02d}",
+                        "b2b": int(i % 5 == 0),
+                        "rest_days": 1.0 if i % 5 == 0 else 3.0,
+                        "3PA": 2,
+                        "FGA": 10,
+                        "FTA": 3,
+                    }
+                )
         df = pd.DataFrame(rows)
         df["mp_float"] = df["MP"].apply(ad._parse_mp)
         return df
@@ -72,11 +75,22 @@ class TestComputeE1:
 
     def test_season_games_used_correctly(self):
         """Player with 50 active games in 1999 season (50-game season) → 0 missed."""
-        rows = [{"player_id": "p1", "player_name": "P1", "season": 1999,
-                 "Date": pd.Timestamp("1999-01-01") + pd.Timedelta(days=i),
-                 "MP": "32:00", "mp_float": 32.0,
-                 "b2b": 0, "rest_days": 3.0, "3PA": 0, "FGA": 5, "FTA": 1}
-                for i in range(50)]
+        rows = [
+            {
+                "player_id": "p1",
+                "player_name": "P1",
+                "season": 1999,
+                "Date": pd.Timestamp("1999-01-01") + pd.Timedelta(days=i),
+                "MP": "32:00",
+                "mp_float": 32.0,
+                "b2b": 0,
+                "rest_days": 3.0,
+                "3PA": 0,
+                "FGA": 5,
+                "FTA": 1,
+            }
+            for i in range(50)
+        ]
         df = pd.DataFrame(rows)
         summary, _ = ad.compute_e1(df, "p1")
         row = summary[summary["player_id"] == "p1"].iloc[0]
@@ -91,15 +105,17 @@ class TestComputeE3:
         for pid, name in [("p1", "P1"), ("p2", "P2")]:
             for i in range(100):
                 is_b2b = int(i % 5 == 0)
-                rows.append({
-                    "player_id": pid,
-                    "player_name": name,
-                    "b2b": is_b2b,
-                    "3PA": 3 if is_b2b else 5,
-                    "FGA": 10,
-                    "FTA": 2 if is_b2b else 4,
-                    "mp_float": 30.0,
-                })
+                rows.append(
+                    {
+                        "player_id": pid,
+                        "player_name": name,
+                        "b2b": is_b2b,
+                        "3PA": 3 if is_b2b else 5,
+                        "FGA": 10,
+                        "FTA": 2 if is_b2b else 4,
+                        "mp_float": 30.0,
+                    }
+                )
         return pd.DataFrame(rows)
 
     def test_returns_dataframe(self):
@@ -113,17 +129,36 @@ class TestComputeE3:
         result = ad.compute_e3(df, "p1")
         # B2B FTA/FGA should be lower than rest
         for _, row in result.iterrows():
-            assert row["diff_fta_fga"] < 0, \
+            assert row["diff_fta_fga"] < 0, (
                 f"Expected negative diff_fta_fga for {row['player_name']}"
+            )
 
     def test_insufficient_b2b_excluded(self):
         """Players with <5 B2B games should be excluded."""
-        rows = [{"player_id": "p1", "player_name": "P1", "b2b": 0,
-                 "3PA": 2, "FGA": 8, "FTA": 3, "mp_float": 30.0}
-                for _ in range(50)]
-        rows += [{"player_id": "p1", "player_name": "P1", "b2b": 1,
-                  "3PA": 1, "FGA": 6, "FTA": 2, "mp_float": 30.0}
-                 for _ in range(3)]
+        rows = [
+            {
+                "player_id": "p1",
+                "player_name": "P1",
+                "b2b": 0,
+                "3PA": 2,
+                "FGA": 8,
+                "FTA": 3,
+                "mp_float": 30.0,
+            }
+            for _ in range(50)
+        ]
+        rows += [
+            {
+                "player_id": "p1",
+                "player_name": "P1",
+                "b2b": 1,
+                "3PA": 1,
+                "FGA": 6,
+                "FTA": 2,
+                "mp_float": 30.0,
+            }
+            for _ in range(3)
+        ]
         df = pd.DataFrame(rows)
         result = ad.compute_e3(df, "p1")
         assert result.empty
@@ -147,11 +182,13 @@ class TestPermutationE1:
     """Permutation test produces well-behaved null distributions."""
 
     def _make_summary(self) -> pd.DataFrame:
-        return pd.DataFrame({
-            "player_id": ["p1", "p2", "p3", "p4", "p5"],
-            "player_name": ["P1", "P2", "P3", "P4", "P5"],
-            "games_missed_per_82": [1.0, 3.0, 5.0, 7.0, 9.0],
-        })
+        return pd.DataFrame(
+            {
+                "player_id": ["p1", "p2", "p3", "p4", "p5"],
+                "player_name": ["P1", "P2", "P3", "P4", "P5"],
+                "games_missed_per_82": [1.0, 3.0, 5.0, 7.0, 9.0],
+            }
+        )
 
     def test_null_has_correct_length(self):
         summary = self._make_summary()
@@ -166,11 +203,13 @@ class TestPermutationE1:
     def test_treated_not_in_others_each_iteration(self):
         """Observed gap is never inflated by the treated player being in 'others'."""
         # If treated is at the extreme, observed gap should be large
-        summary = pd.DataFrame({
-            "player_id": ["treated", "p2", "p3", "p4", "p5"],
-            "player_name": ["Treated", "P2", "P3", "P4", "P5"],
-            "games_missed_per_82": [0.0, 5.0, 6.0, 7.0, 8.0],
-        })
+        summary = pd.DataFrame(
+            {
+                "player_id": ["treated", "p2", "p3", "p4", "p5"],
+                "player_name": ["Treated", "P2", "P3", "P4", "P5"],
+                "games_missed_per_82": [0.0, 5.0, 6.0, 7.0, 8.0],
+            }
+        )
         obs_gap, _, _ = ad.permutation_e1(summary, "treated", n_perm=200, cohort="test2")
         # Treated at 0.0, median of [5,6,7,8] = 6.5 → gap = 0 - 6.5 = -6.5
         assert obs_gap == pytest.approx(-6.5, abs=0.01)
@@ -243,10 +282,17 @@ class TestComputeE1GamesClamped:
     def test_player_with_more_games_than_schedule_clamps_to_zero(self):
         """If a player appears in 83 games in an 82-game season (data error),
         games_missed should clamp to 0, not go negative."""
-        rows = [{"player_id": "p1", "player_name": "P1", "season": 2000,
-                 "Date": pd.Timestamp("2000-01-01") + pd.Timedelta(days=i),
-                 "MP": "32:00", "mp_float": 32.0}
-                for i in range(83)]  # 83 > 82
+        rows = [
+            {
+                "player_id": "p1",
+                "player_name": "P1",
+                "season": 2000,
+                "Date": pd.Timestamp("2000-01-01") + pd.Timedelta(days=i),
+                "MP": "32:00",
+                "mp_float": 32.0,
+            }
+            for i in range(83)
+        ]  # 83 > 82
         df = pd.DataFrame(rows)
         summary, _ = ad.compute_e1(df, "p1")
         assert summary.iloc[0]["games_missed"] == 0
@@ -257,11 +303,13 @@ class TestPlotFunctions:
     """Plot functions should not raise on valid input."""
 
     def _make_summary(self) -> pd.DataFrame:
-        return pd.DataFrame({
-            "player_id": ["p1", "p2", "p3"],
-            "player_name": ["P1", "P2", "P3"],
-            "games_missed_per_82": [1.0, 3.0, 5.0],
-        })
+        return pd.DataFrame(
+            {
+                "player_id": ["p1", "p2", "p3"],
+                "player_name": ["P1", "P2", "P3"],
+                "games_missed_per_82": [1.0, 3.0, 5.0],
+            }
+        )
 
     def test_e1_histogram_no_crash(self, tmp_path):
         orig = ad.DATA_DIR
@@ -282,12 +330,14 @@ class TestPlotFunctions:
             ad.DATA_DIR = orig
 
     def test_e3_scatter_no_crash(self, tmp_path):
-        e3_df = pd.DataFrame({
-            "player_id": ["p1", "p2"],
-            "player_name": ["P1", "P2"],
-            "diff_3pa_fga": [0.02, -0.01],
-            "diff_fta_fga": [-0.05, 0.03],
-        })
+        e3_df = pd.DataFrame(
+            {
+                "player_id": ["p1", "p2"],
+                "player_name": ["P1", "P2"],
+                "diff_3pa_fga": [0.02, -0.01],
+                "diff_fta_fga": [-0.05, 0.03],
+            }
+        )
         orig = ad.DATA_DIR
         ad.DATA_DIR = tmp_path
         try:

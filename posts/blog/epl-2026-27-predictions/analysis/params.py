@@ -35,12 +35,29 @@ def check_df_schema(df: pd.DataFrame, required: Sequence[str], name: str) -> Non
     if df.empty:
         raise ValueError(f"{name}: DataFrame is empty — pipeline broken")
 
+
 #: football-data 4-digit season codes covered by the Stage 1 panel, in
 #: chronological order (mirrors ``build_panel.SEASONS``; duplicated here so
 #: the ``analysis`` package never imports the Stage 1 build module).
 SEASONS: list[str] = [
-    "0809", "0910", "1011", "1112", "1213", "1314", "1415", "1516", "1617",
-    "1718", "1819", "1920", "2021", "2122", "2223", "2324", "2425", "2526",
+    "0809",
+    "0910",
+    "1011",
+    "1112",
+    "1213",
+    "1314",
+    "1415",
+    "1516",
+    "1617",
+    "1718",
+    "1819",
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425",
+    "2526",
 ]
 
 #: Seasons whose match frames carry B365 *closing* odds (``b365c*`` columns).

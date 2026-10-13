@@ -31,9 +31,20 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 REQUEST_DELAY_SECONDS = 3.5  # be a polite scraper; the site 429s under load
 
 OUT_COLUMNS = [
-    "date", "season_start", "season_end", "team", "opp", "location",
-    "active", "result_b", "margin", "points", "total_rebs", "assists",
-    "steals", "blocks",
+    "date",
+    "season_start",
+    "season_end",
+    "team",
+    "opp",
+    "location",
+    "active",
+    "result_b",
+    "margin",
+    "points",
+    "total_rebs",
+    "assists",
+    "steals",
+    "blocks",
 ]
 
 
@@ -63,8 +74,7 @@ def fetch_season(end_year):
 
     rows = []
     for tr in tables[0].xpath(".//tbody/tr"):
-        cell = {c.get("data-stat"): c.text_content().strip()
-                for c in tr.xpath("./th|./td")}
+        cell = {c.get("data-stat"): c.text_content().strip() for c in tr.xpath("./th|./td")}
         if cell.get("ranker") == "Rk" or not cell.get("date"):
             continue  # repeated header / spacer row
 
@@ -75,23 +85,25 @@ def fetch_season(end_year):
         if m:
             margin = int(m.group(1)) - int(m.group(2))  # signed: + for wins
 
-        rows.append({
-            "date": cell.get("date"),
-            "season_start": end_year - 1,
-            "season_end": end_year,
-            "team": cell.get("team_name_abbr"),
-            "opp": cell.get("opp_name_abbr"),
-            "location": "Away" if cell.get("game_location") == "@" else "Home",
-            # a played game always has a numeric points cell; missed games do not
-            "active": 1 if re.fullmatch(r"-?\d+", cell.get("pts", "")) else 0,
-            "result_b": result_b,
-            "margin": margin,
-            "points": _as_int(cell.get("pts")),
-            "total_rebs": _as_int(cell.get("trb")),
-            "assists": _as_int(cell.get("ast")),
-            "steals": _as_int(cell.get("stl")),
-            "blocks": _as_int(cell.get("blk")),
-        })
+        rows.append(
+            {
+                "date": cell.get("date"),
+                "season_start": end_year - 1,
+                "season_end": end_year,
+                "team": cell.get("team_name_abbr"),
+                "opp": cell.get("opp_name_abbr"),
+                "location": "Away" if cell.get("game_location") == "@" else "Home",
+                # a played game always has a numeric points cell; missed games do not
+                "active": 1 if re.fullmatch(r"-?\d+", cell.get("pts", "")) else 0,
+                "result_b": result_b,
+                "margin": margin,
+                "points": _as_int(cell.get("pts")),
+                "total_rebs": _as_int(cell.get("trb")),
+                "assists": _as_int(cell.get("ast")),
+                "steals": _as_int(cell.get("stl")),
+                "blocks": _as_int(cell.get("blk")),
+            }
+        )
     return rows
 
 

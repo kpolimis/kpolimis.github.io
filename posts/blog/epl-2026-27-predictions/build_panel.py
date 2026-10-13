@@ -30,8 +30,24 @@ from footy_stats.stats.odds import devig
 logger = logging.getLogger(__name__)
 
 SEASONS: list[str] = [
-    "0809", "0910", "1011", "1112", "1213", "1314", "1415", "1516", "1617",
-    "1718", "1819", "1920", "2021", "2122", "2223", "2324", "2425", "2526",
+    "0809",
+    "0910",
+    "1011",
+    "1112",
+    "1213",
+    "1314",
+    "1415",
+    "1516",
+    "1617",
+    "1718",
+    "1819",
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425",
+    "2526",
 ]
 
 POST_DIR = Path(__file__).resolve().parent
@@ -240,11 +256,24 @@ def build_panel(all_matches: pd.DataFrame) -> pd.DataFrame:
 
     return panel[
         [
-            "season", "club_id",
-            "home_week1", "week1_opponent_id", "week1_result", "week1_points",
-            "week1_expected_points", "week1_shock", "week1_odds_source",
-            "newly_promoted", "post_psr", "psr_enforcement", "covid_restart",
-            "final_points", "final_gd", "final_position", "made_top4", "relegated",
+            "season",
+            "club_id",
+            "home_week1",
+            "week1_opponent_id",
+            "week1_result",
+            "week1_points",
+            "week1_expected_points",
+            "week1_shock",
+            "week1_odds_source",
+            "newly_promoted",
+            "post_psr",
+            "psr_enforcement",
+            "covid_restart",
+            "final_points",
+            "final_gd",
+            "final_position",
+            "made_top4",
+            "relegated",
         ]
     ]
 

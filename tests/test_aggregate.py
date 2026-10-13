@@ -10,8 +10,13 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-_AGG_PATH = (Path(__file__).parent.parent
-             / "posts" / "blog" / "world-cup-2026-leagues" / "aggregate_wc_data.py")
+_AGG_PATH = (
+    Path(__file__).parent.parent
+    / "posts"
+    / "blog"
+    / "world-cup-2026-leagues"
+    / "aggregate_wc_data.py"
+)
 
 _spec = importlib.util.spec_from_file_location("aggregate_wc_data", _AGG_PATH)
 awd = importlib.util.module_from_spec(_spec)
@@ -20,15 +25,18 @@ _spec.loader.exec_module(awd)
 
 # ── build_league_stats ────────────────────────────────────────────────────────
 
+
 @pytest.fixture()
 def players_df():
-    return pd.DataFrame({
-        "player":  ["A", "B", "C", "D"],
-        "league":  ["EPL", "EPL", "La Liga", "La Liga"],
-        "minutes": [180.0, 90.0, 270.0, 90.0],
-        "goals":   [1.0, 0.0, 2.0, 1.0],
-        "assists": [0.0, 1.0, 1.0, 0.0],
-    })
+    return pd.DataFrame(
+        {
+            "player": ["A", "B", "C", "D"],
+            "league": ["EPL", "EPL", "La Liga", "La Liga"],
+            "minutes": [180.0, 90.0, 270.0, 90.0],
+            "goals": [1.0, 0.0, 2.0, 1.0],
+            "assists": [0.0, 1.0, 1.0, 0.0],
+        }
+    )
 
 
 class TestBuildLeagueStats:
@@ -54,16 +62,19 @@ class TestBuildLeagueStats:
 
 # ── build_epl_club_stats ──────────────────────────────────────────────────────
 
+
 @pytest.fixture()
 def epl_players_df():
-    return pd.DataFrame({
-        "player":  ["A", "B", "C", "D"],
-        "league":  ["EPL", "EPL", "EPL", "La Liga"],
-        "club":    ["Arsenal", "Arsenal", "Chelsea", "Barcelona"],
-        "minutes": [90.0, 90.0, 180.0, 90.0],
-        "goals":   [1.0, 0.0, 1.0, 5.0],
-        "assists": [0.0, 1.0, 0.0, 5.0],
-    })
+    return pd.DataFrame(
+        {
+            "player": ["A", "B", "C", "D"],
+            "league": ["EPL", "EPL", "EPL", "La Liga"],
+            "club": ["Arsenal", "Arsenal", "Chelsea", "Barcelona"],
+            "minutes": [90.0, 90.0, 180.0, 90.0],
+            "goals": [1.0, 0.0, 1.0, 5.0],
+            "assists": [0.0, 1.0, 0.0, 5.0],
+        }
+    )
 
 
 class TestBuildEplClubStats:

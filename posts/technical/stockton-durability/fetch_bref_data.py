@@ -1,5 +1,4 @@
-"""
-fetch_bref_data.py — scrape BRef game logs for Stockton durability cohort.
+"""fetch_bref_data.py — scrape BRef game logs for Stockton durability cohort.
 
 Fetches one page per player-season; writes data/game_logs.parquet.
 Run this before building the analysis notebook.
@@ -37,10 +36,14 @@ HTML_CACHE.mkdir(exist_ok=True)
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
 
-RATE_LIMIT_SEC = 10      # base delay between requests — conservative to stay under BRef hourly aggregate
-RATE_LIMIT_JITTER = 5   # add uniform random [0, JITTER) seconds — looks human, avoids mechanical regularity
-SESSION_COOLDOWN_PAGES = 20   # sleep SESSION_COOLDOWN_SEC after every N successful fetches
-SESSION_COOLDOWN_SEC  = 300   # 5-minute break every 20 pages (~200 pages/hour cap)
+RATE_LIMIT_SEC = (
+    10  # base delay between requests — conservative to stay under BRef hourly aggregate
+)
+RATE_LIMIT_JITTER = (
+    5  # add uniform random [0, JITTER) seconds — looks human, avoids mechanical regularity
+)
+SESSION_COOLDOWN_PAGES = 20  # sleep SESSION_COOLDOWN_SEC after every N successful fetches
+SESSION_COOLDOWN_SEC = 300  # 5-minute break every 20 pages (~200 pages/hour cap)
 
 # IP-level block state: when BRef 429s, ALL requests are blocked until this timestamp clears.
 _ip_blocked_until: float = 0.0
@@ -49,37 +52,52 @@ _ip_blocked_until: float = 0.0
 # Tuple: (initial, player_id, first_season, last_season, cohort_type)
 COHORT: dict[str, tuple[str, str, int, int, str]] = {
     # PG cohort — selection: debuted 1984–2000, ≥600 career games, ≥28 MPG
-    "John Stockton":   ("s", "stockjo01",  1985, 2003, "pg"),
-    "Isiah Thomas":    ("t", "thomais01",  1982, 1994, "pg"),
-    "Kevin Johnson":   ("j", "johnske02",  1988, 2000, "pg"),
-    "Tim Hardaway":    ("h", "hardati01",  1990, 2003, "pg"),
-    "Gary Payton":     ("p", "paytoga01",  1991, 2007, "pg"),
-    "Mark Jackson":    ("j", "jacksma01",  1988, 2004, "pg"),
-    "Terry Porter":    ("p", "portete01",  1986, 2003, "pg"),
-    "Rod Strickland":  ("s", "stricro02",  1989, 2005, "pg"),
-    "Muggsy Bogues":   ("b", "boguemu01",  1988, 2001, "pg"),  # borderline MPG (~28)
-    "Sherman Douglas": ("d", "douglsh01",  1990, 1999, "pg"),  # borderline MPG
-    "Jason Kidd":      ("k", "kiddja01",   1995, 2013, "pg"),
-    "Derek Harper":    ("h", "harpede01",  1984, 1999, "pg"),  # de not d — harpede01 confirmed
-    "Mookie Blaylock": ("b", "blaylmo01",  1990, 2002, "pg"),
-    "Kenny Anderson":  ("a", "anderke01",  1992, 2005, "pg"),
-    "Steve Nash":      ("n", "nashst01",   1997, 2014, "pg"),
+    "John Stockton": ("s", "stockjo01", 1985, 2003, "pg"),
+    "Isiah Thomas": ("t", "thomais01", 1982, 1994, "pg"),
+    "Kevin Johnson": ("j", "johnske02", 1988, 2000, "pg"),
+    "Tim Hardaway": ("h", "hardati01", 1990, 2003, "pg"),
+    "Gary Payton": ("p", "paytoga01", 1991, 2007, "pg"),
+    "Mark Jackson": ("j", "jacksma01", 1988, 2004, "pg"),
+    "Terry Porter": ("p", "portete01", 1986, 2003, "pg"),
+    "Rod Strickland": ("s", "stricro02", 1989, 2005, "pg"),
+    "Muggsy Bogues": ("b", "boguemu01", 1988, 2001, "pg"),  # borderline MPG (~28)
+    "Sherman Douglas": ("d", "douglsh01", 1990, 1999, "pg"),  # borderline MPG
+    "Jason Kidd": ("k", "kiddja01", 1995, 2013, "pg"),
+    "Derek Harper": ("h", "harpede01", 1984, 1999, "pg"),  # de not d — harpede01 confirmed
+    "Mookie Blaylock": ("b", "blaylmo01", 1990, 2002, "pg"),
+    "Kenny Anderson": ("a", "anderke01", 1992, 2005, "pg"),
+    "Steve Nash": ("n", "nashst01", 1997, 2014, "pg"),
     # PF cohort — Diaw case study + 5 era comparators (verified BRef IDs, issue #20)
-    "Boris Diaw":        ("d", "diawbo01",   2004, 2017, "pf"),
-    "Dirk Nowitzki":     ("n", "nowitdi01",  1999, 2019, "pf"),
-    "Carlos Boozer":     ("b", "boozeca01",  2003, 2015, "pf"),
-    "Antawn Jamison":    ("j", "jamisan01",  1999, 2014, "pf"),  # jamisan01 not jamisna01 (an≠na)
-    "Shawn Marion":      ("m", "mariosh01",  2000, 2015, "pf"),
-    "Rashard Lewis":     ("l", "lewisra02",  1999, 2009, "pf"),  # 02 not 01 — disambiguation
+    "Boris Diaw": ("d", "diawbo01", 2004, 2017, "pf"),
+    "Dirk Nowitzki": ("n", "nowitdi01", 1999, 2019, "pf"),
+    "Carlos Boozer": ("b", "boozeca01", 2003, 2015, "pf"),
+    "Antawn Jamison": ("j", "jamisan01", 1999, 2014, "pf"),  # jamisan01 not jamisna01 (an≠na)
+    "Shawn Marion": ("m", "mariosh01", 2000, 2015, "pf"),
+    "Rashard Lewis": ("l", "lewisra02", 1999, 2009, "pf"),  # 02 not 01 — disambiguation
 }
 
 # Cohort selection thresholds (applied after scrape)
 MIN_CAREER_GAMES = 600
-MIN_CAREER_MPG   = 28.0
+MIN_CAREER_MPG = 28.0
 
-KEEP_COLS = ["Date", "Age", "Tm", "Opp", "GmSc", "MP",
-             "FG", "FGA", "3P", "3PA", "FT", "FTA",
-             "AST", "TOV", "PTS", "GS"]
+KEEP_COLS = [
+    "Date",
+    "Age",
+    "Tm",
+    "Opp",
+    "GmSc",
+    "MP",
+    "FG",
+    "FGA",
+    "3P",
+    "3PA",
+    "FT",
+    "FTA",
+    "AST",
+    "TOV",
+    "PTS",
+    "GS",
+]
 
 
 def parse_mp_seconds(mp_str: str) -> float | None:
@@ -115,8 +133,7 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
 
     headers = {
         "User-Agent": (
-            "Mozilla/5.0 (compatible; stockton-research/1.0; "
-            "+https://kpolimis.github.io/)"
+            "Mozilla/5.0 (compatible; stockton-research/1.0; +https://kpolimis.github.io/)"
         )
     }
     for attempt in range(4):
@@ -128,7 +145,8 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
             if _session_page_count % SESSION_COOLDOWN_PAGES == 0:
                 logger.info(
                     "Session cooldown after %d pages — sleeping %ds",
-                    _session_page_count, SESSION_COOLDOWN_SEC,
+                    _session_page_count,
+                    SESSION_COOLDOWN_SEC,
                 )
                 time.sleep(SESSION_COOLDOWN_SEC)
             else:
@@ -137,8 +155,9 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
         if resp.status_code == 429:
             # 429 = IP-level block. Honor Retry-After if present; otherwise exponential backoff.
             retry_after = resp.headers.get("Retry-After")
-            wait = int(retry_after) if retry_after and retry_after.isdigit() \
-                else 120 * (2 ** attempt)  # 120s, 240s, 480s, 960s
+            wait = (
+                int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
+            )  # 120s, 240s, 480s, 960s
             _ip_blocked_until = time.time() + wait  # block all subsequent URLs too
             logger.warning(
                 "HTTP 429 for %s — IP blocked, sleeping %ds (attempt %d/4)", url, wait, attempt + 1
@@ -153,8 +172,7 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
 
 def fetch_gamelog(initial: str, player_id: str, season: int) -> pd.DataFrame | None:
     """Fetch one player-season game log. Returns None on HTTP error or missing table."""
-    url = (f"https://www.basketball-reference.com/players/"
-           f"{initial}/{player_id}/gamelog/{season}/")
+    url = f"https://www.basketball-reference.com/players/{initial}/{player_id}/gamelog/{season}/"
     html = _get_html(url, f"{player_id}_{season}")
     if html is None:
         return None
@@ -192,13 +210,14 @@ def fetch_gamelog(initial: str, player_id: str, season: int) -> pd.DataFrame | N
     # Parse date; derive rest days
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
     df = df.sort_values("Date").reset_index(drop=True)
-    df["rest_days"] = df["Date"].diff().dt.days.fillna(3)   # season opener → 3
+    df["rest_days"] = df["Date"].diff().dt.days.fillna(3)  # season opener → 3
     df["b2b"] = (df["rest_days"] == 1).astype(int)
 
-    return df[df["active"] == 1].copy()   # drop DNPs here; keep for counting separately
+    return df[df["active"] == 1].copy()  # drop DNPs here; keep for counting separately
 
 
 def load_existing() -> pd.DataFrame | None:
+    """Return existing game_logs.parquet as a DataFrame, or None if absent."""
     out = DATA_DIR / "game_logs.parquet"
     if out.exists():
         return pd.read_parquet(out)
@@ -210,16 +229,19 @@ def save(df: pd.DataFrame) -> None:
     out = DATA_DIR / "game_logs.parquet"
     lock_path = DATA_DIR / "game_logs.parquet.lock"
     import fcntl
+
     with open(lock_path, "w") as lf:
         fcntl.flock(lf, fcntl.LOCK_EX)
         try:
             if out.exists():
                 on_disk = pd.read_parquet(out)
-                new_keys = set(zip(df["player_id"], df["season"]))
-                on_disk_keys = set(zip(on_disk["player_id"], on_disk["season"]))
+                new_keys = set(zip(df["player_id"], df["season"], strict=False))
+                on_disk_keys = set(zip(on_disk["player_id"], on_disk["season"], strict=False))
                 truly_new = new_keys - on_disk_keys
                 if truly_new:
-                    new_rows = df[df.apply(lambda r: (r["player_id"], r["season"]) in truly_new, axis=1)]
+                    new_rows = df[
+                        df.apply(lambda r: (r["player_id"], r["season"]) in truly_new, axis=1)
+                    ]
                     df = pd.concat([on_disk, new_rows], ignore_index=True)
                 else:
                     df = on_disk
@@ -244,9 +266,12 @@ def fetch_cohort(
     if existing is not None:
         cohort_lookup = {pid: ctype for _, (_, pid, _, _, ctype) in COHORT.items()}
         existing["cohort"] = existing["player_id"].map(cohort_lookup).fillna(existing["cohort"])
-        done_keys = set(zip(existing["player_id"], existing["season"]))
-        logger.info("Cache: %s rows, %d (player, season) pairs already fetched.",
-                    f"{len(existing):,}", len(done_keys))
+        done_keys = set(zip(existing["player_id"], existing["season"], strict=False))
+        logger.info(
+            "Cache: %s rows, %d (player, season) pairs already fetched.",
+            f"{len(existing):,}",
+            len(done_keys),
+        )
 
     all_frames = [existing] if existing is not None else []
     notes: list[str] = []
@@ -299,29 +324,32 @@ def cohort_summary(save_csv: bool = True) -> pd.DataFrame:
     # Fallback for players in parquet but not in COHORT dict (e.g. population)
     existing["cohort"] = existing["player_id"].map(cohort_lookup).fillna("population")
 
-    summary = (existing.groupby(["player_name", "player_id", "cohort"])
-               .agg(career_games=("Date", "count"),
-                    career_mpg=("mp_float", "mean"))
-               .reset_index()
-               .sort_values("career_games", ascending=False))
-    summary["meets_threshold"] = (
-        (summary["career_games"] >= MIN_CAREER_GAMES) &
-        (summary["career_mpg"] >= MIN_CAREER_MPG)
+    summary = (
+        existing.groupby(["player_name", "player_id", "cohort"])
+        .agg(career_games=("Date", "count"), career_mpg=("mp_float", "mean"))
+        .reset_index()
+        .sort_values("career_games", ascending=False)
+    )
+    summary["meets_threshold"] = (summary["career_games"] >= MIN_CAREER_GAMES) & (
+        summary["career_mpg"] >= MIN_CAREER_MPG
     )
 
     print(summary.to_string(index=False))
 
     # Document borderline cases
     borderline = summary[
-        (summary["career_games"] >= MIN_CAREER_GAMES) &
-        (summary["career_mpg"] < MIN_CAREER_MPG)
+        (summary["career_games"] >= MIN_CAREER_GAMES) & (summary["career_mpg"] < MIN_CAREER_MPG)
     ]
     if not borderline.empty:
         logger.info("\nBorderline (games OK, MPG below %.1f):", MIN_CAREER_MPG)
         for _, row in borderline.iterrows():
-            logger.info("  %s (%s): %.1f MPG — included as borderline; "
-                        "MPG below threshold noted in post Limitations",
-                        row["player_name"], row["player_id"], row["career_mpg"])
+            logger.info(
+                "  %s (%s): %.1f MPG — included as borderline; "
+                "MPG below threshold noted in post Limitations",
+                row["player_name"],
+                row["player_id"],
+                row["career_mpg"],
+            )
 
     if save_csv:
         out = DATA_DIR / "cohort_summary.csv"
@@ -330,9 +358,7 @@ def cohort_summary(save_csv: bool = True) -> pd.DataFrame:
 
     # Assert Stockton row count is correct
     stockton_rows = existing[existing["player_id"] == "stockjo01"]
-    assert len(stockton_rows) == 1504, (
-        f"Expected 1504 Stockton rows, got {len(stockton_rows)}"
-    )
+    assert len(stockton_rows) == 1504, f"Expected 1504 Stockton rows, got {len(stockton_rows)}"
 
     return summary
 
@@ -446,15 +472,17 @@ def build_population_cohort() -> None:
             if not pid:
                 continue
             era = f"{(debut // 10) * 10}s"
-            rows.append({
-                "player_name": name,
-                "player_id": pid,
-                "initial": letter,
-                "position": pos,
-                "debut_year": debut,
-                "final_year": final,
-                "era": era,
-            })
+            rows.append(
+                {
+                    "player_name": name,
+                    "player_id": pid,
+                    "initial": letter,
+                    "position": pos,
+                    "debut_year": debut,
+                    "final_year": final,
+                    "era": era,
+                }
+            )
 
     pop = pd.DataFrame(rows).drop_duplicates("player_id")
     logger.info("Population candidates: %d (before career threshold)", len(pop))
@@ -464,18 +492,29 @@ def build_population_cohort() -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--player", default=None,
-                        help="BRef player_id to fetch only one player")
-    parser.add_argument("--cohort", default=None, choices=["pg", "pf"],
-                        help="Restrict fetch to one cohort type")
-    parser.add_argument("--summary", action="store_true",
-                        help="Print cohort summary and save cohort_summary.csv")
-    parser.add_argument("--population-fetch", action="store_true",
-                        help="Fetch population cohort from data/population_cohort.csv")
-    parser.add_argument("--build-population", action="store_true",
-                        help="Scrape BRef index to build data/population_cohort.csv")
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Limit number of players for --population-fetch (test mode)")
+    parser.add_argument("--player", default=None, help="BRef player_id to fetch only one player")
+    parser.add_argument(
+        "--cohort", default=None, choices=["pg", "pf"], help="Restrict fetch to one cohort type"
+    )
+    parser.add_argument(
+        "--summary", action="store_true", help="Print cohort summary and save cohort_summary.csv"
+    )
+    parser.add_argument(
+        "--population-fetch",
+        action="store_true",
+        help="Fetch population cohort from data/population_cohort.csv",
+    )
+    parser.add_argument(
+        "--build-population",
+        action="store_true",
+        help="Scrape BRef index to build data/population_cohort.csv",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Limit number of players for --population-fetch (test mode)",
+    )
     args = parser.parse_args()
 
     if args.summary:

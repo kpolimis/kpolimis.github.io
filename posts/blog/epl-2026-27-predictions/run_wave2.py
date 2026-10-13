@@ -41,12 +41,21 @@ DATA_DIR = POST_DIR / "data"
 RESULTS_PATH = DATA_DIR / "wave2_results.json"
 
 #: The two pre-registered primaries (Brier, market posterior vs prior).
-_PRIMARIES = {"brier_top4_market_vs_prior": "brier_top4", "brier_releg_market_vs_prior": "brier_releg"}
+_PRIMARIES = {
+    "brier_top4_market_vs_prior": "brier_top4",
+    "brier_releg_market_vs_prior": "brier_releg",
+}
 
 _MATCHES_REQUIRED = ["season", "home_club_id", "away_club_id", "fthg", "ftag", "date"]
 _PANEL_REQUIRED = [
-    "season", "club_id", "week1_shock", "week1_odds_source",
-    "made_top4", "relegated", "final_points", "week1_opponent_id",
+    "season",
+    "club_id",
+    "week1_shock",
+    "week1_odds_source",
+    "made_top4",
+    "relegated",
+    "final_points",
+    "week1_opponent_id",
 ]
 _WAVE1_REQUIRED_KEYS = {"link", "beta_market", "k_hat_commensurated_slope", "overreaction_ratio"}
 
@@ -120,12 +129,9 @@ def _log_headline(
         )
     lines.append("\npre-registered primaries (sign test, Holm-corrected):")
     for label in _PRIMARIES:
-        lines.append(
-            f"  {label:<30} raw p = {pvals[label]:.4f}  holm p = {holm[label]:.4f}"
-        )
+        lines.append(f"  {label:<30} raw p = {pvals[label]:.4f}  holm p = {holm[label]:.4f}")
     lines.append(
-        f"\noverreaction ratio (Wave 1, full-sample descriptive): "
-        f"{wave1['overreaction_ratio']:.4f}"
+        f"\noverreaction ratio (Wave 1, full-sample descriptive): {wave1['overreaction_ratio']:.4f}"
     )
     lines.append("-" * 72)
     lines.append(f"[{ok(gates['n_folds_18'])}] n_folds == 18: {gates['n_folds']}")
@@ -143,8 +149,10 @@ def _log_headline(
         f"[{ok(gates['logloss_in_unit_interval'])}] all log-loss scores in [0, 1] "
         f"(max {gates['max_logloss']:.5f})"
     )
-    for name, row, label in (("top4", top4, "brier_top4_market_vs_prior"),
-                             ("releg", releg, "brier_releg_market_vs_prior")):
+    for name, row, label in (
+        ("top4", top4, "brier_top4_market_vs_prior"),
+        ("releg", releg, "brier_releg_market_vs_prior"),
+    ):
         verdict = "market better" if row["mean_diff"] < 0 else "prior better"
         lines.append(
             f"[INFO] market vs prior Brier {name}: {row['mean_diff']:+.5f} ({verdict}); "
@@ -230,9 +238,7 @@ def main() -> None:
         "max_brier": float(brier_vals.max()),
         "brier_in_unit_interval": bool((brier_vals >= 0).all() and (brier_vals <= 1).all()),
         "max_logloss": float(logloss_vals.max()),
-        "logloss_in_unit_interval": bool(
-            (logloss_vals >= 0).all() and (logloss_vals <= 1).all()
-        ),
+        "logloss_in_unit_interval": bool((logloss_vals >= 0).all() and (logloss_vals <= 1).all()),
     }
 
     results.update(
@@ -263,9 +269,7 @@ def main() -> None:
         }
     )
     _save_results(results)
-    _log_headline(
-        result, mean_scores, boot, pvals, holm, gates, wave1, results["runtime_seconds"]
-    )
+    _log_headline(result, mean_scores, boot, pvals, holm, gates, wave1, results["runtime_seconds"])
 
 
 if __name__ == "__main__":

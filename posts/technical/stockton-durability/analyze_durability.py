@@ -1,5 +1,4 @@
-"""
-analyze_durability.py — E1 (career durability) and E3 (shot selection) analysis.
+"""analyze_durability.py — E1 (career durability) and E3 (shot selection) analysis.
 
 Implements the primary estimands from method-spec.md §3 for any configured cohort.
 Run after fetch_bref_data.py has populated data/game_logs.parquet.
@@ -34,12 +33,29 @@ SEASON_GAMES.update({1999: 50, 2012: 66, 2020: 65, 2021: 72})
 
 # Cohort membership sets (player_id)
 PG_IDS = {
-    "stockjo01", "thomais01", "johnske02", "hardati01", "paytoga01",
-    "jacksma01", "portete01", "stricro02", "boguemu01", "douglsh01",
-    "kiddja01", "harpede01", "blaylmo01", "anderke01", "nashst01",
+    "stockjo01",
+    "thomais01",
+    "johnske02",
+    "hardati01",
+    "paytoga01",
+    "jacksma01",
+    "portete01",
+    "stricro02",
+    "boguemu01",
+    "douglsh01",
+    "kiddja01",
+    "harpede01",
+    "blaylmo01",
+    "anderke01",
+    "nashst01",
 }
 PF_IDS = {
-    "diawbo01", "nowitdi01", "boozeca01", "jamisan01", "mariosh01", "lewisra02",
+    "diawbo01",
+    "nowitdi01",
+    "boozeca01",
+    "jamisan01",
+    "mariosh01",
+    "lewisra02",
 }
 
 
@@ -105,27 +121,38 @@ def compute_e1(
         name = pdata["player_name"].iloc[0] if "player_name" in pdata.columns else pid
         per_season = pdata.groupby("season").agg(active_games=("Date", "count")).reset_index()
         per_season["season_games"] = per_season["season"].map(SEASON_GAMES).fillna(82)
-        per_season["missed"] = (per_season["season_games"] - per_season["active_games"]).clip(lower=0)
+        per_season["missed"] = (per_season["season_games"] - per_season["active_games"]).clip(
+            lower=0
+        )
         total_sg = per_season["season_games"].sum()
         total_active = per_season["active_games"].sum()
         total_missed = per_season["missed"].sum()
         # games_missed_per_82 = missed rate normalized to an 82-game season
         gmiss82 = (total_missed / total_sg * 82) if total_sg > 0 else float("nan")
-        rows.append({
-            "player_id": pid,
-            "player_name": name,
-            "career_seasons": len(per_season),
-            "total_season_games": int(total_sg),
-            "active_games": int(total_active),
-            "games_missed": int(total_missed),
-            "games_missed_per_82": gmiss82,
-        })
+        rows.append(
+            {
+                "player_id": pid,
+                "player_name": name,
+                "career_seasons": len(per_season),
+                "total_season_games": int(total_sg),
+                "active_games": int(total_active),
+                "games_missed": int(total_missed),
+                "games_missed_per_82": gmiss82,
+            }
+        )
 
     if not rows:
-        return pd.DataFrame(columns=[
-            "player_id", "player_name", "career_seasons", "total_season_games",
-            "active_games", "games_missed", "games_missed_per_82",
-        ]), None
+        return pd.DataFrame(
+            columns=[
+                "player_id",
+                "player_name",
+                "career_seasons",
+                "total_season_games",
+                "active_games",
+                "games_missed",
+                "games_missed_per_82",
+            ]
+        ), None
 
     summary = pd.DataFrame(rows).sort_values("games_missed_per_82")
     treated_val = None
@@ -214,14 +241,16 @@ def compute_e3(
 
         diff_3pa = float(b2b["ratio_3pa_fga"].mean() - rest["ratio_3pa_fga"].mean())
         diff_fta = float(b2b["ratio_fta_fga"].mean() - rest["ratio_fta_fga"].mean())
-        rows.append({
-            "player_id": pid,
-            "player_name": name,
-            "b2b_games": len(b2b),
-            "rest_games": len(rest),
-            "diff_3pa_fga": diff_3pa,
-            "diff_fta_fga": diff_fta,
-        })
+        rows.append(
+            {
+                "player_id": pid,
+                "player_name": name,
+                "b2b_games": len(b2b),
+                "rest_games": len(rest),
+                "diff_3pa_fga": diff_3pa,
+                "diff_fta_fga": diff_fta,
+            }
+        )
 
     return pd.DataFrame(rows)
 
@@ -275,8 +304,7 @@ def plot_e3_scatter(
     fig_dir.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    colors = ["crimson" if pid == treated_id else "#4C72B0"
-              for pid in e3_df["player_id"]]
+    colors = ["crimson" if pid == treated_id else "#4C72B0" for pid in e3_df["player_id"]]
     ax.scatter(e3_df["diff_3pa_fga"], e3_df["diff_fta_fga"], c=colors, s=60, alpha=0.8)
     ax.axhline(0, color="gray", linewidth=0.8, linestyle="--")
     ax.axvline(0, color="gray", linewidth=0.8, linestyle="--")
@@ -289,8 +317,14 @@ def plot_e3_scatter(
         if mask.any():
             tx = float(e3_df.loc[mask, "diff_3pa_fga"].iloc[0])
             ty = float(e3_df.loc[mask, "diff_fta_fga"].iloc[0])
-            ax.annotate(treated_name, (tx, ty), textcoords="offset points",
-                        xytext=(8, 4), fontsize=9, color="crimson")
+            ax.annotate(
+                treated_name,
+                (tx, ty),
+                textcoords="offset points",
+                xytext=(8, 4),
+                fontsize=9,
+                color="crimson",
+            )
 
     fig.tight_layout()
     out = fig_dir / "e3_scatter.png"
@@ -341,14 +375,19 @@ def run(cohort: str, n_perm: int = 5000) -> None:
         logger.info(
             "%s: %.2f games missed per 82 — percentile %.1f%% "
             "(n=%d reference class; scope: durability among players with ≥600 career games)",
-            treated_name, treated_gmiss, pct_rank, n_ref,
+            treated_name,
+            treated_gmiss,
+            pct_rank,
+            n_ref,
         )
 
         if n_ref >= 2:
             obs_gap, null_dist, p_perm = permutation_e1(e1_summary, treated_id, n_perm, cohort)
             logger.info(
                 "E1 permutation: observed gap = %.3f, two-sided p = %.3f (n_perm=%d)",
-                obs_gap, p_perm, n_perm,
+                obs_gap,
+                p_perm,
+                n_perm,
             )
 
         # Selection bias caveat
@@ -378,7 +417,13 @@ def run(cohort: str, n_perm: int = 5000) -> None:
                 logger.info(
                     "%s E3: Δ(3PA/FGA) = %.3f (pct %.1f%%, d=%.2f); "
                     "Δ(FTA/FGA) = %.3f (pct %.1f%%, d=%.2f)",
-                    treated_name, t3pa, pct_3pa, d_3pa, tfta, pct_fta, d_fta,
+                    treated_name,
+                    t3pa,
+                    pct_3pa,
+                    d_3pa,
+                    tfta,
+                    pct_fta,
+                    d_fta,
                 )
     else:
         logger.warning("E3: no players had sufficient B2B/rest game counts.")
@@ -406,11 +451,12 @@ def run(cohort: str, n_perm: int = 5000) -> None:
             if mask.any():
                 val = float(e1_summary.loc[mask, "games_missed_per_82"].iloc[0])
                 pct = float(stats.percentileofscore(e1_summary["games_missed_per_82"].values, val))
-                pos_vals = e1_summary.loc[
-                    e1_summary["player_id"] == label_id, "player_id"
-                ]
-                logger.info("%s: %.2f games missed/82, %.1f%% percentile (era-adjusted)",
-                            label_name, val, pct)
+                logger.info(
+                    "%s: %.2f games missed/82, %.1f%% percentile (era-adjusted)",
+                    label_name,
+                    val,
+                    pct,
+                )
 
         logger.info(
             "\nPopulation conditioned on ≥600 games; E1 estimand scope is durability "
@@ -421,9 +467,14 @@ def run(cohort: str, n_perm: int = 5000) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cohort", required=True, choices=["pg", "pf", "population"],
-                        help="Which cohort to analyze")
-    parser.add_argument("--n-perm", type=int, default=5000,
-                        help="Number of permutations for null distribution")
+    parser.add_argument(
+        "--cohort",
+        required=True,
+        choices=["pg", "pf", "population"],
+        help="Which cohort to analyze",
+    )
+    parser.add_argument(
+        "--n-perm", type=int, default=5000, help="Number of permutations for null distribution"
+    )
     args = parser.parse_args()
     run(cohort=args.cohort, n_perm=args.n_perm)

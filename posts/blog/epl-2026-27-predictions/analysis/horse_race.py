@@ -88,11 +88,9 @@ def collect_scores(
     rows: list[dict] = []
     for (season, checkpoint), sim in sims.items():
         outcomes = panel.loc[panel["season"] == season]
-        rows.append(
-            {"season": season, "checkpoint": checkpoint, **score_checkpoint(sim, outcomes)}
-        )
-    return pd.DataFrame.from_records(rows).sort_values(["season", "checkpoint"]).reset_index(
-        drop=True
+        rows.append({"season": season, "checkpoint": checkpoint, **score_checkpoint(sim, outcomes)})
+    return (
+        pd.DataFrame.from_records(rows).sort_values(["season", "checkpoint"]).reset_index(drop=True)
     )
 
 

@@ -321,9 +321,7 @@ def commensurated_rational_slope(
             shocks.append(float(row.week1_shock))
     d_sup_arr, shock_arr = np.asarray(d_sup), np.asarray(shocks)
     ok = np.isfinite(d_sup_arr) & np.isfinite(shock_arr)
-    return float(
-        (d_sup_arr[ok] @ shock_arr[ok]) / (shock_arr[ok] @ shock_arr[ok])
-    )
+    return float((d_sup_arr[ok] @ shock_arr[ok]) / (shock_arr[ok] @ shock_arr[ok]))
 
 
 def overreaction_ratio(beta_market: float, k_hat: float, *, link: LinkParams) -> float:
@@ -350,7 +348,5 @@ def overreaction_ratio(beta_market: float, k_hat: float, *, link: LinkParams) ->
     """
     del link  # both inputs already live on this link's supremacy scale
     if not np.isfinite(k_hat) or k_hat <= 0.0:
-        raise ValueError(
-            f"k_hat must be a positive, finite commensurated slope, got {k_hat!r}"
-        )
+        raise ValueError(f"k_hat must be a positive, finite commensurated slope, got {k_hat!r}")
     return float(beta_market) / float(k_hat)

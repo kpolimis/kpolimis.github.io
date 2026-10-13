@@ -171,7 +171,9 @@ def _fixture_numbers(season_matches: pd.DataFrame) -> pd.DataFrame:
     long["fix_no"] = long.groupby("club_id").cumcount() + 1
     h = long.loc[long["is_home"], ["match_idx", "fix_no"]].rename(columns={"fix_no": "home_fix"})
     a = long.loc[~long["is_home"], ["match_idx", "fix_no"]].rename(columns={"fix_no": "away_fix"})
-    return h.merge(a, on="match_idx", validate="1:1").sort_values("match_idx").reset_index(drop=True)
+    return (
+        h.merge(a, on="match_idx", validate="1:1").sort_values("match_idx").reset_index(drop=True)
+    )
 
 
 def _previous_season(matches: pd.DataFrame, season: str) -> str:
@@ -227,9 +229,7 @@ def fit_link_params(train_matches: pd.DataFrame) -> LinkParams:
     covid = train_matches.loc[covid_mask]
     if not covid.empty:
         covid_model = DixonColesModel.fit(covid)
-        covid_home_adv = float(
-            np.exp(covid_model.mu + covid_model.gamma) - np.exp(covid_model.mu)
-        )
+        covid_home_adv = float(np.exp(covid_model.mu + covid_model.gamma) - np.exp(covid_model.mu))
     return LinkParams(
         total_rate=lam_h0 + lam_a0,
         rho=float(model.rho),
@@ -347,10 +347,9 @@ def fit_seed_params(
                     promoted_ids=item["promoted"],
                 )
                 frame = item["frame"]
-                diff = (
-                    frame["home_club_id"].map(seeds).to_numpy(dtype=float)
-                    - frame["away_club_id"].map(seeds).to_numpy(dtype=float)
-                )
+                diff = frame["home_club_id"].map(seeds).to_numpy(dtype=float) - frame[
+                    "away_club_id"
+                ].map(seeds).to_numpy(dtype=float)
                 sup = _elo_diff_to_sup(diff, link) + item["h_eff"]
                 total += _static_match_loglik(sup, frame, link)
             if total > best[0]:
@@ -531,9 +530,7 @@ def build_prior_ratings(
     del panel  # COVID flags are derived from the season code (mirrors the panel's definition)
     club_ids, seed_sup, design, y = _prior_components(matches, season, hyperparams)
     rating = _solve_map(seed_sup, design, y, hyperparams.lam)
-    return pd.DataFrame(
-        {"club_id": club_ids, "seed_rating": seed_sup, "prior_strength": rating}
-    )
+    return pd.DataFrame({"club_id": club_ids, "seed_rating": seed_sup, "prior_strength": rating})
 
 
 def assign_tiers(prior_ratings: pd.DataFrame) -> pd.DataFrame:

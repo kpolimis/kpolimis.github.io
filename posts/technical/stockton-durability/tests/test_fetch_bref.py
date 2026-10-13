@@ -1,9 +1,8 @@
 """Tests for fetch_bref_data.py — cohort structure, parsing, and CSV output."""
 
+import fetch_bref_data as fb
 import pandas as pd
 import pytest
-
-import fetch_bref_data as fb
 
 
 class TestCohortStructure:
@@ -91,9 +90,7 @@ class TestCohortSummary:
             pytest.skip("No game log data available")
         pg_expected = {v[1] for v in fb.COHORT.values() if v[4] == "pg"}
         pg_in_summary = set(summary.loc[summary["cohort"] == "pg", "player_id"])
-        assert pg_expected == pg_in_summary, (
-            f"Missing PG players: {pg_expected - pg_in_summary}"
-        )
+        assert pg_expected == pg_in_summary, f"Missing PG players: {pg_expected - pg_in_summary}"
 
     def test_all_pf_cohort_present(self):
         """All 6 PF cohort players must appear in cohort_summary (#21)."""
@@ -102,9 +99,7 @@ class TestCohortSummary:
             pytest.skip("No game log data available")
         pf_expected = {v[1] for v in fb.COHORT.values() if v[4] == "pf"}
         pf_in_summary = set(summary.loc[summary["cohort"] == "pf", "player_id"])
-        assert pf_expected == pf_in_summary, (
-            f"Missing PF players: {pf_expected - pf_in_summary}"
-        )
+        assert pf_expected == pf_in_summary, f"Missing PF players: {pf_expected - pf_in_summary}"
 
     def test_both_subjects_exceed_career_games_threshold(self):
         """Stockton and Diaw must both meet career games threshold ≥600 (#21)."""
@@ -191,13 +186,21 @@ class TestFetchCohortSkipLogic:
     def test_done_keys_format(self):
         """done_keys should be {(player_id, season)} pairs from existing parquet."""
         rows = [
-            {"player_id": "stockjo01", "season": 2000, "Date": pd.Timestamp("2000-01-01"),
-             "MP": "30:00"},
-            {"player_id": "stockjo01", "season": 2001, "Date": pd.Timestamp("2001-01-01"),
-             "MP": "30:00"},
+            {
+                "player_id": "stockjo01",
+                "season": 2000,
+                "Date": pd.Timestamp("2000-01-01"),
+                "MP": "30:00",
+            },
+            {
+                "player_id": "stockjo01",
+                "season": 2001,
+                "Date": pd.Timestamp("2001-01-01"),
+                "MP": "30:00",
+            },
         ]
         existing = pd.DataFrame(rows)
-        done_keys = set(zip(existing["player_id"], existing["season"]))
+        done_keys = set(zip(existing["player_id"], existing["season"], strict=False))
         assert ("stockjo01", 2000) in done_keys
         assert ("stockjo01", 2001) in done_keys
         assert ("stockjo01", 1999) not in done_keys

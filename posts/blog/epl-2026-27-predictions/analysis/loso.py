@@ -116,9 +116,7 @@ def fit_fold(
     }
     surprise = build_surprise_frame(train_matches, train_panel, priors, link, week=2)
     fit = pooled_surprise_regression(surprise)
-    k_commensurated = commensurated_rational_slope(
-        train_panel, priors, k_hat=k_rational, link=link
-    )
+    k_commensurated = commensurated_rational_slope(train_panel, priors, k_hat=k_rational, link=link)
 
     # Seed-chain exception (W1 fold, 0809): when holdout_season == "0809", the
     # holdout prior has no training seasons to seed from in the ordinary sense —
@@ -236,9 +234,7 @@ def run_loso(
     eval_parts: list[pd.DataFrame] = []
     for i, holdout_season in enumerate(scored):
         if verbose:
-            logger.info(
-                "fold %d/%d: holdout=%s ...", i + 1, len(scored), holdout_season
-            )
+            logger.info("fold %d/%d: holdout=%s ...", i + 1, len(scored), holdout_season)
         fold = fit_fold(all_matches, panel, holdout_season)
         fold_seed = seed * 100 + i if seed is not None else None
         eval_df = evaluate_fold(fold, all_matches, panel, n_sims=n_sims, seed=fold_seed)
@@ -248,8 +244,12 @@ def run_loso(
             hp = fold.hyperparams
             logger.info(
                 "  k=%s w=%s r_prom=%s lam=%s beta=%.5f k_comm=%.5f",
-                hp.k_rational, hp.regress_weight, hp.promoted_baseline,
-                hp.lam, fold.beta_market, fold.k_commensurated,
+                hp.k_rational,
+                hp.regress_weight,
+                hp.promoted_baseline,
+                hp.lam,
+                fold.beta_market,
+                fold.k_commensurated,
             )
     sims = pd.concat(eval_parts, ignore_index=True)
     sims_map = {

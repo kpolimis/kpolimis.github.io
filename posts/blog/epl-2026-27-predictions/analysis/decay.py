@@ -83,9 +83,7 @@ def fit_decay_curve(
         boot_betas = np.empty(n_boot)
         for b in range(n_boot):
             pick = rng.choice(seasons, size=len(seasons), replace=True)
-            resample = pd.concat(
-                [clean.loc[clean["season"] == s] for s in pick], ignore_index=True
-            )
+            resample = pd.concat([clean.loc[clean["season"] == s] for s in pick], ignore_index=True)
             result = smf.ols("delta ~ shock_diff", data=resample).fit()
             boot_betas[b] = float(result.params["shock_diff"])
 

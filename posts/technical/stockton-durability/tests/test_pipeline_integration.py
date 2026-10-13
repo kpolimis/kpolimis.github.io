@@ -7,11 +7,10 @@ without touching BRef (no network requests).
 import pathlib
 import tempfile
 
+import analyze_durability as ad
 import numpy as np
 import pandas as pd
 import pytest
-
-import analyze_durability as ad
 
 
 def _build_synthetic_cohort(n_players: int = 6, seasons: int = 10) -> pd.DataFrame:
@@ -31,19 +30,21 @@ def _build_synthetic_cohort(n_players: int = 6, seasons: int = 10) -> pd.DataFra
             active = int(season_games * (1 - miss_rate))
             for g in range(active):
                 is_b2b = int(rng.random() < 0.15)
-                rows.append({
-                    "player_id": pid,
-                    "player_name": name,
-                    "season": season,
-                    "Date": pd.Timestamp(f"{season}-01-01") + pd.Timedelta(days=g * 2),
-                    "MP": "32:00",
-                    "mp_float": 32.0,
-                    "b2b": is_b2b,
-                    "rest_days": 1.0 if is_b2b else 3.0,
-                    "3PA": 2 + int(rng.random() < 0.3),
-                    "FGA": 12,
-                    "FTA": 3 + int(rng.random() < 0.2),
-                })
+                rows.append(
+                    {
+                        "player_id": pid,
+                        "player_name": name,
+                        "season": season,
+                        "Date": pd.Timestamp(f"{season}-01-01") + pd.Timedelta(days=g * 2),
+                        "MP": "32:00",
+                        "mp_float": 32.0,
+                        "b2b": is_b2b,
+                        "rest_days": 1.0 if is_b2b else 3.0,
+                        "3PA": 2 + int(rng.random() < 0.3),
+                        "FGA": 12,
+                        "FTA": 3 + int(rng.random() < 0.2),
+                    }
+                )
     return pd.DataFrame(rows)
 
 
@@ -71,7 +72,9 @@ class TestE1Pipeline:
             orig_data = ad.DATA_DIR
             ad.DATA_DIR = pathlib.Path(tmp)
             try:
-                obs, null, p = ad.permutation_e1(summary, self.treated_id, n_perm=100, cohort="synth")
+                obs, null, p = ad.permutation_e1(
+                    summary, self.treated_id, n_perm=100, cohort="synth"
+                )
                 assert not np.isnan(obs)
                 assert 0.0 <= p <= 1.0
                 assert len(null) == 100
@@ -85,7 +88,9 @@ class TestE1Pipeline:
             orig_data = ad.DATA_DIR
             ad.DATA_DIR = pathlib.Path(tmp)
             try:
-                obs, null, p = ad.permutation_e1(summary, self.treated_id, n_perm=200, cohort="synth2")
+                obs, null, p = ad.permutation_e1(
+                    summary, self.treated_id, n_perm=200, cohort="synth2"
+                )
                 # With treated at minimum and 6 players, perm p should be ≤ 1/6 ≈ 0.17
                 assert p <= 0.25, f"Expected low p for extreme treated; got {p:.3f}"
             finally:
@@ -124,12 +129,20 @@ class TestComparatorsCSV:
     """emit_comparators_csv produces correctly ranked output."""
 
     def _make_summary(self) -> pd.DataFrame:
-        return pd.DataFrame({
-            "player_id": ["stockjo01", "player01", "player02", "player03",
-                          "player04", "player05"],
-            "player_name": ["John Stockton", "P1", "P2", "P3", "P4", "P5"],
-            "games_missed_per_82": [1.5, 2.0, 3.5, 5.0, 7.0, 10.0],
-        })
+        return pd.DataFrame(
+            {
+                "player_id": [
+                    "stockjo01",
+                    "player01",
+                    "player02",
+                    "player03",
+                    "player04",
+                    "player05",
+                ],
+                "player_name": ["John Stockton", "P1", "P2", "P3", "P4", "P5"],
+                "games_missed_per_82": [1.5, 2.0, 3.5, 5.0, 7.0, 10.0],
+            }
+        )
 
     def test_top3_comparators_are_closest(self):
         summary = self._make_summary()

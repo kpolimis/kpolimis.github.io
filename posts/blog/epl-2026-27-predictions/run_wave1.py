@@ -62,13 +62,20 @@ RESULTS_PATH = DATA_DIR / "wave1_results.json"
 
 _MATCHES_REQUIRED = ["season", "home_club_id", "away_club_id", "fthg", "ftag", "date"]
 _PANEL_REQUIRED = [
-    "season", "club_id", "week1_shock", "week1_odds_source",
-    "made_top4", "relegated", "final_points", "week1_opponent_id",
+    "season",
+    "club_id",
+    "week1_shock",
+    "week1_odds_source",
+    "made_top4",
+    "relegated",
+    "final_points",
+    "week1_opponent_id",
 ]
 
 
 def _save_results(results: dict) -> None:
     """Write the (possibly partial) results dict to disk immediately."""
+
     def _clean(obj):
         if isinstance(obj, dict):
             return {k: _clean(v) for k, v in obj.items()}
@@ -109,7 +116,10 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
     link = fit_link_params(matches)
     logger.info(
         "link: total_rate=%.4f rho=%.4f h=%.4f covid_h=%.4f",
-        link.total_rate, link.rho, link.home_adv, link.covid_home_adv,
+        link.total_rate,
+        link.rho,
+        link.home_adv,
+        link.covid_home_adv,
     )
     k_hat = fit_rational_k(list(_season_frames(matches).values()))
     logger.info("K_hat (raw Elo units): %s", k_hat)
@@ -140,20 +150,19 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
     # ── 3. Surprise frame + pooled regression (primary estimator) ────────────
     surprise = build_surprise_frame(matches, panel, priors, link, week=2)
     fit = pooled_surprise_regression(surprise)
-    logger.info(
-        "beta_market (constrained): %.5f (SE %.5f)", fit.beta_market, fit.se_market
-    )
+    logger.info("beta_market (constrained): %.5f (SE %.5f)", fit.beta_market, fit.se_market)
     logger.info(
         "unconstrained: beta_home=%.5f (SE %.5f) beta_away=%.5f (SE %.5f)",
-        fit.beta_home, fit.se_home, fit.beta_away, fit.se_away,
+        fit.beta_home,
+        fit.se_home,
+        fit.beta_away,
+        fit.se_away,
     )
     results["surprise_frame"] = {
         "n_rows": int(len(surprise)),
         "n_week_mismatch": int(surprise["week_mismatch"].sum()),
         "mismatch_by_season": {
-            s: int(n)
-            for s, n in surprise.groupby("season")["week_mismatch"].sum().items()
-            if n > 0
+            s: int(n) for s, n in surprise.groupby("season")["week_mismatch"].sum().items() if n > 0
         },
     }
     results["beta_market"] = {
@@ -192,12 +201,14 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
         "pooled_beta": fit.beta_market,
         "mean_abs_dev_from_pooled": float(np.abs(slopes - fit.beta_market).mean()),
         "note": "ridge slopes are mechanically proportional to (1 - lambda); "
-                "under-identified on their own (see method spec)",
+        "under-identified on their own (see method spec)",
     }
     results["ridge_divergence"] = divergence
     logger.info(
         "ridge per-season slope: mean=%.5f median=%.5f sd=%.5f | mean |slope - pooled beta| = %.5f",
-        divergence["mean"], divergence["median"], divergence["sd"],
+        divergence["mean"],
+        divergence["median"],
+        divergence["sd"],
         divergence["mean_abs_dev_from_pooled"],
     )
     _save_results(results)
@@ -233,35 +244,37 @@ def main() -> None:  # noqa: PLR0915 - one linear driver, intentionally verbose
     _save_results(results)
 
     ok = lambda b: "PASS" if b else "FAIL"  # noqa: E731
-    summary = "\n".join([
-        "",
-        "=" * 72,
-        "WAVE 1 — FULL-SAMPLE DESCRIPTIVE SUMMARY (labelled: not LOSO)",
-        "=" * 72,
-        f"link:            mu (total_rate) = {link.total_rate:.4f}  rho = {link.rho:.4f}",
-        f"                 h = {link.home_adv:.4f}  covid_h = {link.covid_home_adv:.4f}",
-        f"seed:            w = {w}  R_prom = {r_prom}",
-        f"shrinkage:       lambda_hat = {lam}",
-        f"K_hat:           {k_hat} (raw Elo)  ->  {k_comm:.5f} (commensurated slope)",
-        f"beta_market:     {fit.beta_market:.5f}  (clustered SE {fit.se_market:.5f}; "
-        f"n = {fit.n_matches} matches, {fit.n_seasons} seasons)",
-        f"  symmetry chk:  beta_home = {fit.beta_home:.5f}, beta_away = {fit.beta_away:.5f} "
-        f"(home + away = {fit.beta_home + fit.beta_away:+.5f})",
-        f"overreaction:    beta_market / K_commensurated = {ratio:.4f}",
-        f"ridge secondary: per-season slope mean {divergence['mean']:.5f} "
-        f"(sd {divergence['sd']:.5f}), mean |dev from pooled| "
-        f"{divergence['mean_abs_dev_from_pooled']:.5f}",
-        "-" * 72,
-        f"[{ok(gates['k_hat_positive_finite'])}] K_hat positive and finite: {k_hat}",
-        f"[{ok(gates['prior_vs_final_points_r_strong'])}] "
-        f"prior_strength vs final_points pooled Pearson r = {prior_final_r:.4f} (need >= 0.6)",
-        f"[{ok(gates['beta_market_positive'])}] beta_market positive: {fit.beta_market:.5f}",
-        f"[{ok(gates['panel_priors_360_rows'] and gates['panel_priors_no_nulls'])}] "
-        f"panel_priors: {len(panel_priors)} rows, nulls {nulls}",
-        "-" * 72,
-        f"artifacts: data/panel_priors.parquet, data/wave1_results.json "
-        f"({results['runtime_seconds']}s)",
-    ])
+    summary = "\n".join(
+        [
+            "",
+            "=" * 72,
+            "WAVE 1 — FULL-SAMPLE DESCRIPTIVE SUMMARY (labelled: not LOSO)",
+            "=" * 72,
+            f"link:            mu (total_rate) = {link.total_rate:.4f}  rho = {link.rho:.4f}",
+            f"                 h = {link.home_adv:.4f}  covid_h = {link.covid_home_adv:.4f}",
+            f"seed:            w = {w}  R_prom = {r_prom}",
+            f"shrinkage:       lambda_hat = {lam}",
+            f"K_hat:           {k_hat} (raw Elo)  ->  {k_comm:.5f} (commensurated slope)",
+            f"beta_market:     {fit.beta_market:.5f}  (clustered SE {fit.se_market:.5f}; "
+            f"n = {fit.n_matches} matches, {fit.n_seasons} seasons)",
+            f"  symmetry chk:  beta_home = {fit.beta_home:.5f}, beta_away = {fit.beta_away:.5f} "
+            f"(home + away = {fit.beta_home + fit.beta_away:+.5f})",
+            f"overreaction:    beta_market / K_commensurated = {ratio:.4f}",
+            f"ridge secondary: per-season slope mean {divergence['mean']:.5f} "
+            f"(sd {divergence['sd']:.5f}), mean |dev from pooled| "
+            f"{divergence['mean_abs_dev_from_pooled']:.5f}",
+            "-" * 72,
+            f"[{ok(gates['k_hat_positive_finite'])}] K_hat positive and finite: {k_hat}",
+            f"[{ok(gates['prior_vs_final_points_r_strong'])}] "
+            f"prior_strength vs final_points pooled Pearson r = {prior_final_r:.4f} (need >= 0.6)",
+            f"[{ok(gates['beta_market_positive'])}] beta_market positive: {fit.beta_market:.5f}",
+            f"[{ok(gates['panel_priors_360_rows'] and gates['panel_priors_no_nulls'])}] "
+            f"panel_priors: {len(panel_priors)} rows, nulls {nulls}",
+            "-" * 72,
+            f"artifacts: data/panel_priors.parquet, data/wave1_results.json "
+            f"({results['runtime_seconds']}s)",
+        ]
+    )
     logger.info("%s", summary)
 
 

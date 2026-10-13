@@ -1,5 +1,4 @@
-"""
-fetch_quarter_splits.py — scrape per-game quarter box scores from BRef.
+r"""fetch_quarter_splits.py — scrape per-game quarter box scores from BRef.
 
 For each player, fetch boxscore HTML for every game in game_logs.parquet,
 extract quarter-level stats, and save to a parquet file.
@@ -32,7 +31,6 @@ import logging
 import pathlib
 import re
 import time
-from io import StringIO
 
 import pandas as pd
 import requests
@@ -43,12 +41,13 @@ HTML_CACHE_QUARTER = DATA_DIR / "html_cache" / "quarter"
 DATA_DIR.mkdir(exist_ok=True)
 HTML_CACHE_QUARTER.mkdir(parents=True, exist_ok=True)
 
-RATE_LIMIT_SEC = 3.5   # BRef allows 20 req/min max (= 3s minimum); 3.5s for headroom
+RATE_LIMIT_SEC = 3.5  # BRef allows 20 req/min max (= 3s minimum); 3.5s for headroom
 RATE_LIMIT_JITTER = 1.5
 SESSION_COOLDOWN_PAGES = 100  # 5-min pause every 100 pages (~6 min net fetch per block)
 SESSION_COOLDOWN_SEC = 300
 
-import random as _random
+import random as _random  # noqa: E402
+
 _ip_blocked_until: float = 0.0
 _session_page_count: int = 0
 
@@ -90,7 +89,9 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
     now = time.time()
     if _ip_blocked_until > now:
         time.sleep(_ip_blocked_until - now)
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; stockton-research/1.0; +https://kpolimis.github.io/)"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; stockton-research/1.0; +https://kpolimis.github.io/)"
+    }
     for attempt in range(4):
         try:
             resp = requests.get(base_url, headers=headers, timeout=20)
@@ -101,15 +102,25 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
             cache_path.write_text(resp.text, encoding="utf-8")
             _session_page_count += 1
             if _session_page_count % SESSION_COOLDOWN_PAGES == 0:
-                logger.info("Session cooldown (%d pages) — sleeping %ds", _session_page_count, SESSION_COOLDOWN_SEC)
+                logger.info(
+                    "Session cooldown (%d pages) — sleeping %ds",
+                    _session_page_count,
+                    SESSION_COOLDOWN_SEC,
+                )
                 time.sleep(SESSION_COOLDOWN_SEC)
             else:
                 time.sleep(RATE_LIMIT_SEC + _random.uniform(0, RATE_LIMIT_JITTER))
             return resp.text, False
         if resp.status_code == 429:
             retry_after = resp.headers.get("Retry-After")
-            wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2 ** attempt)
-            logger.warning("HTTP 429 game_id=%s (pbp=%s) — waiting %ds (attempt %d)", game_id, pbp, wait, attempt + 1)
+            wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
+            logger.warning(
+                "HTTP 429 game_id=%s (pbp=%s) — waiting %ds (attempt %d)",
+                game_id,
+                pbp,
+                wait,
+                attempt + 1,
+            )
             _ip_blocked_until = time.time() + wait
             time.sleep(wait)
         elif resp.status_code == 404:
@@ -166,7 +177,6 @@ def parse_pbp_quarters(
         return []
 
     # BRef player names vary slightly; build all-lowercase match set
-    name_lower = player_name.lower()
     first_name = player_name.split()[0].lower() if player_name else ""
     last_name = player_name.split()[-1].lower() if player_name else ""
 
@@ -189,8 +199,8 @@ def parse_pbp_quarters(
         full_text = tr.get_text(" ", strip=True).lower()
         qm = quarter_header_re.search(full_text)
         if qm:
-            ordinal = qm.group(1).lower()   # "1st", "2nd", "3rd", "4th"
-            period = qm.group(2).lower()    # "quarter", "overtime", "period"
+            ordinal = qm.group(1).lower()  # "1st", "2nd", "3rd", "4th"
+            period = qm.group(2).lower()  # "quarter", "overtime", "period"
             if period in ("overtime", "period"):
                 ot_map = {"1st": "OT1", "2nd": "OT2", "3rd": "OT3", "4th": "OT4"}
                 current_quarter = ot_map.get(ordinal, f"OT{ordinal}")
@@ -217,7 +227,12 @@ def parse_pbp_quarters(
 
             if current_quarter not in quarters:
                 quarters[current_quarter] = {
-                    "FT": 0, "FTA": 0, "AST": 0, "TOV": 0, "FGA": 0, "PTS": 0
+                    "FT": 0,
+                    "FTA": 0,
+                    "AST": 0,
+                    "TOV": 0,
+                    "FGA": 0,
+                    "PTS": 0,
                 }
             q = quarters[current_quarter]
 
@@ -229,12 +244,17 @@ def parse_pbp_quarters(
             elif re.search(r"misses free throw", play_lower):
                 q["FTA"] += 1
             # FG made (2 or 3 pts)
-            elif re.search(r"makes (two|three|2|3)[-\s]point|makes (jump|layup|dunk|tip|hook|fadeaway|running|driving)", play_lower):
+            elif re.search(
+                r"makes (two|three|2|3)[-\s]point|makes (jump|layup|dunk|tip|hook|fadeaway|running|driving)",
+                play_lower,
+            ):
                 q["FGA"] += 1
                 pts = 3 if re.search(r"three|3-point", play_lower) else 2
                 q["PTS"] += pts
             # FG missed
-            elif re.search(r"misses (jump|layup|dunk|tip|hook|fadeaway|running|driving|two|three)", play_lower):
+            elif re.search(
+                r"misses (jump|layup|dunk|tip|hook|fadeaway|running|driving|two|three)", play_lower
+            ):
                 q["FGA"] += 1
             # AST
             elif re.search(r"\bassist\b", play_lower):
@@ -255,24 +275,26 @@ def parse_pbp_quarters(
         fga = stats["FGA"]
         pts = stats["PTS"]
         ts = _ts_pct(pts, fga, fta)
-        rows.append({
-            "game_id": game_id,
-            "player_id": player_id,
-            "player_name": player_name,
-            "season": season,
-            "date": date,
-            "quarter": q_label,
-            "FT": stats["FT"],
-            "FTA": fta,
-            "FT_pct": ft_pct,
-            "AST": stats["AST"],
-            "TOV": stats["TOV"],
-            "FGA": fga,
-            "PTS": pts,
-            "TS_pct": ts,
-            "age_regime": age_regime,
-            "score_margin": None,  # margin extracted from box score, not PBP
-        })
+        rows.append(
+            {
+                "game_id": game_id,
+                "player_id": player_id,
+                "player_name": player_name,
+                "season": season,
+                "date": date,
+                "quarter": q_label,
+                "FT": stats["FT"],
+                "FTA": fta,
+                "FT_pct": ft_pct,
+                "AST": stats["AST"],
+                "TOV": stats["TOV"],
+                "FGA": fga,
+                "PTS": pts,
+                "TS_pct": ts,
+                "age_regime": age_regime,
+                "score_margin": None,  # margin extracted from box score, not PBP
+            }
+        )
     return rows
 
 
@@ -328,9 +350,9 @@ def parse_quarter_box(
             if mp is None:
                 continue  # DNP
 
-            def _n(key: str) -> float:
+            def _n(key: str, _stat: dict = stat) -> float:
                 try:
-                    return float(stat.get(key, 0) or 0)
+                    return float(_stat.get(key, 0) or 0)
                 except ValueError:
                     return 0.0
 
@@ -347,24 +369,26 @@ def parse_quarter_box(
             # Extract score margin if available in page
             score_margin = _extract_score_margin(soup, table)
 
-            rows.append({
-                "game_id": game_id,
-                "player_id": player_id,
-                "player_name": player_name,
-                "season": season,
-                "date": date,
-                "quarter": "full",  # full-game; quarter-level requires PBP
-                "FT": ft,
-                "FTA": fta,
-                "FT_pct": ft_pct,
-                "AST": ast,
-                "TOV": tov,
-                "FGA": fga,
-                "PTS": pts,
-                "TS_pct": ts,
-                "age_regime": age_regime,
-                "score_margin": score_margin,
-            })
+            rows.append(
+                {
+                    "game_id": game_id,
+                    "player_id": player_id,
+                    "player_name": player_name,
+                    "season": season,
+                    "date": date,
+                    "quarter": "full",  # full-game; quarter-level requires PBP
+                    "FT": ft,
+                    "FTA": fta,
+                    "FT_pct": ft_pct,
+                    "AST": ast,
+                    "TOV": tov,
+                    "FGA": fga,
+                    "PTS": pts,
+                    "TS_pct": ts,
+                    "age_regime": age_regime,
+                    "score_margin": score_margin,
+                }
+            )
             break  # found this player's row
 
     return rows
@@ -421,7 +445,9 @@ def build_player_game_index(
 
     logger.info(
         "Game index: %d games for %d player(s) (season range: %s)",
-        len(df), df["player_id"].nunique(), season_range or "all",
+        len(df),
+        df["player_id"].nunique(),
+        season_range or "all",
     )
     return df[["player_id", "player_name", "game_id", "season", "Date"]].copy()
 
@@ -441,10 +467,13 @@ def fetch_quarter_splits(
     if out_path.exists():
         existing = pd.read_parquet(out_path)
         done_games: set[tuple[str, str]] = set(
-            zip(existing["player_id"], existing["game_id"])
+            zip(existing["player_id"], existing["game_id"], strict=False)
         )
-        logger.info("Existing: %d rows, %d (player, game) pairs already fetched.",
-                    len(existing), len(done_games))
+        logger.info(
+            "Existing: %d rows, %d (player, game) pairs already fetched.",
+            len(existing),
+            len(done_games),
+        )
     else:
         existing = pd.DataFrame()
         done_games = set()
@@ -493,7 +522,8 @@ def fetch_quarter_splits(
 
     logger.info(
         "Fetch complete: %d new network requests, %d cache hits",
-        new_requests, cache_hits,
+        new_requests,
+        cache_hits,
     )
 
     if not all_rows and existing.empty:
@@ -523,14 +553,16 @@ def _parse_season_range(s: str | None) -> tuple[int, int] | None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--player", default=None,
-                        help="Single BRef player_id to fetch")
-    parser.add_argument("--comps-file", default=None,
-                        help="CSV with player_id column (from analyze_durability.py)")
-    parser.add_argument("--seasons", default=None,
-                        help="Season range YYYY-YYYY (e.g. 1996-2003)")
-    parser.add_argument("--output", default=None,
-                        help="Output parquet filename (auto-detected from comps-file if omitted)")
+    parser.add_argument("--player", default=None, help="Single BRef player_id to fetch")
+    parser.add_argument(
+        "--comps-file", default=None, help="CSV with player_id column (from analyze_durability.py)"
+    )
+    parser.add_argument("--seasons", default=None, help="Season range YYYY-YYYY (e.g. 1996-2003)")
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="Output parquet filename (auto-detected from comps-file if omitted)",
+    )
     args = parser.parse_args()
 
     if args.comps_file is None and args.player is None:

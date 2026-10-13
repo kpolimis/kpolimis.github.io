@@ -41,8 +41,13 @@ _CONSISTENCY_TOL = 0.001
 
 _MATCHES_REQUIRED = ["season", "home_club_id", "away_club_id", "fthg", "ftag", "date"]
 _PANEL_PRIORS_REQUIRED = [
-    "season", "club_id", "prior_strength", "preseason_tier",
-    "week1_opponent_tier", "week1_shock", "final_points",
+    "season",
+    "club_id",
+    "prior_strength",
+    "preseason_tier",
+    "week1_opponent_tier",
+    "week1_shock",
+    "final_points",
 ]
 _WAVE1_REQUIRED_KEYS = {"link", "beta_market"}
 
@@ -85,14 +90,16 @@ def _log_headline(decay: pd.DataFrame, k2_beta: float, wave1_beta: float, runtim
             f"{row.week:>4}   {row.beta_market:.4f}  {row.se_market:.3f}  {ci:<19} "
             f"{row.n_matches:>9}  {row.n_seasons:>9}  {row.share_closing:>7.0%}"
         )
-    lines.extend([
-        "-" * 64,
-        f"consistency check: wave3 k=2 beta vs wave1 beta_market "
-        f"(should match within {_CONSISTENCY_TOL}):",
-        f"  wave3 k=2: {k2_beta:.5f}  wave1: {wave1_beta:.5f}  diff: {diff:.5f}  [{verdict}]",
-        "-" * 64,
-        f"artifacts: data/decay_curve.parquet, data/wave3_results.json ({runtime:.1f}s)",
-    ])
+    lines.extend(
+        [
+            "-" * 64,
+            f"consistency check: wave3 k=2 beta vs wave1 beta_market "
+            f"(should match within {_CONSISTENCY_TOL}):",
+            f"  wave3 k=2: {k2_beta:.5f}  wave1: {wave1_beta:.5f}  diff: {diff:.5f}  [{verdict}]",
+            "-" * 64,
+            f"artifacts: data/decay_curve.parquet, data/wave3_results.json ({runtime:.1f}s)",
+        ]
+    )
     logger.info("%s", "\n".join(lines))
 
 
@@ -119,7 +126,10 @@ def main() -> None:
     link = LinkParams(**w1["link"])
     logger.info(
         "link (from wave1): mu=%.4f rho=%.4f h=%.4f covid_h=%.4f",
-        link.total_rate, link.rho, link.home_adv, link.covid_home_adv,
+        link.total_rate,
+        link.rho,
+        link.home_adv,
+        link.covid_home_adv,
     )
     priors_by_season = {
         season: panel_priors.loc[
@@ -152,7 +162,7 @@ def main() -> None:
                 "all_weeks_present": bool(sorted(decay["week"]) == [2, 3, 4, 5, 6]),
             },
             "note": "full-sample descriptive (Wave 1 priors + link; not LOSO); "
-                    "season-block bootstrap CIs, n_boot=10000, seed=42",
+            "season-block bootstrap CIs, n_boot=10000, seed=42",
             "status": "complete",
             "runtime_seconds": round(time.time() - t_start, 1),
         }

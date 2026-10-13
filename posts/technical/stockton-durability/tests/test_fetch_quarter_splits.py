@@ -1,9 +1,8 @@
 """Tests for fetch_quarter_splits.py — game_id extraction and TS% computation."""
 
+import fetch_quarter_splits as fqs
 import pandas as pd
 import pytest
-
-import fetch_quarter_splits as fqs
 
 
 class TestTsPct:
@@ -34,20 +33,24 @@ class TestParseMp:
 
 class TestExtractGameId:
     def _home_row(self) -> pd.Series:
-        return pd.Series({
-            "Date": pd.Timestamp("1999-03-15"),
-            "Tm": "UTA",
-            "Unnamed: 5": "",
-            "Opp": "CHI",
-        })
+        return pd.Series(
+            {
+                "Date": pd.Timestamp("1999-03-15"),
+                "Tm": "UTA",
+                "Unnamed: 5": "",
+                "Opp": "CHI",
+            }
+        )
 
     def _away_row(self) -> pd.Series:
-        return pd.Series({
-            "Date": pd.Timestamp("1999-03-15"),
-            "Tm": "UTA",
-            "Unnamed: 5": "@",
-            "Opp": "CHI",
-        })
+        return pd.Series(
+            {
+                "Date": pd.Timestamp("1999-03-15"),
+                "Tm": "UTA",
+                "Unnamed: 5": "@",
+                "Opp": "CHI",
+            }
+        )
 
     def test_home_game_id(self):
         gid = fqs._extract_game_id(self._home_row())
@@ -81,7 +84,7 @@ class TestParsePbpQuarters:
             '<tr><td colspan="6">Start of 1st quarter</td></tr>',
         ]
         for play in plays:
-            rows.append(f'<tr><td>11:59</td><td>{play}</td><td>0-0</td><td></td></tr>')
+            rows.append(f"<tr><td>11:59</td><td>{play}</td><td>0-0</td><td></td></tr>")
         table_html = f'<table id="pbp">{"".join(rows)}</table>'
         return f"<html><body>{table_html}</body></html>"
 
@@ -148,15 +151,15 @@ class TestParsePbpMultiQuarter:
         """Build PBP HTML with plays in Q1, Q3, Q4, and OT1."""
         rows = [
             '<tr><td colspan="6">Start of 1st quarter</td></tr>',
-            '<tr><td>11:59</td><td>John Stockton makes free throw 1 of 2</td><td>0-1</td><td></td></tr>',
+            "<tr><td>11:59</td><td>John Stockton makes free throw 1 of 2</td><td>0-1</td><td></td></tr>",
             '<tr><td colspan="6">Start of 2nd quarter</td></tr>',
             # No Stockton plays in Q2
             '<tr><td colspan="6">Start of 3rd quarter</td></tr>',
-            '<tr><td>11:59</td><td>John Stockton makes three-point shot from 23 ft</td><td>60-65</td><td></td></tr>',
+            "<tr><td>11:59</td><td>John Stockton makes three-point shot from 23 ft</td><td>60-65</td><td></td></tr>",
             '<tr><td colspan="6">Start of 4th quarter</td></tr>',
-            '<tr><td>11:59</td><td>Turnover by John Stockton: Bad Pass</td><td>80-82</td><td></td></tr>',
+            "<tr><td>11:59</td><td>Turnover by John Stockton: Bad Pass</td><td>80-82</td><td></td></tr>",
             '<tr><td colspan="6">Start of 1st overtime</td></tr>',
-            '<tr><td>4:59</td><td>John Stockton makes two-point shot from 8 ft</td><td>95-95</td><td></td></tr>',
+            "<tr><td>4:59</td><td>John Stockton makes two-point shot from 8 ft</td><td>95-95</td><td></td></tr>",
         ]
         table_html = f'<table id="pbp">{"".join(rows)}</table>'
         return f"<html><body>{table_html}</body></html>"

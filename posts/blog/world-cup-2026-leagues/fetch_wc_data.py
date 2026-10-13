@@ -18,6 +18,7 @@ Usage:
   python fetch_wc_data.py          # uses cache
   python fetch_wc_data.py --refresh  # clears cache and re-fetches
 """
+
 from __future__ import annotations
 
 import argparse
@@ -35,13 +36,12 @@ logger = logging.getLogger(__name__)
 
 # ── footy (club registry + league normalizer) ──────────────────────────────────
 # Prefer the installed package; fall back to the local editable checkout.
-FOOTY_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../../../football/footy")
-)
+FOOTY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../football/footy"))
 if os.path.isdir(FOOTY_ROOT) and FOOTY_ROOT not in sys.path:
     sys.path.insert(0, FOOTY_ROOT)
 try:
     import footy
+
     HAS_FOOTY = True
 except ImportError:
     HAS_FOOTY = False
@@ -54,13 +54,13 @@ os.makedirs(DATA_DIR, exist_ok=True)
 # ── Tournament round ordering ─────────────────────────────────────────────────
 # 2026 WC used a new 48-team format: 12 groups of 4, then Round of 32.
 ROUND_ORDER: dict[str, int] = {
-    "Group stage":      1,
-    "Round of 32":      2,
-    "Round of 16":      3,
-    "Quarter-finals":   4,
-    "Semi-finals":      5,
-    "Third-place match":5,
-    "Final":            6,
+    "Group stage": 1,
+    "Round of 32": 2,
+    "Round of 16": 3,
+    "Quarter-finals": 4,
+    "Semi-finals": 5,
+    "Third-place match": 5,
+    "Final": 6,
 }
 ROUND_LABEL: dict[int, str] = {
     1: "Group Stage",
@@ -73,6 +73,7 @@ ROUND_LABEL: dict[int, str] = {
 
 
 # ── Club → league mapping via footy ───────────────────────────────────────────
+
 
 def _strip_rank_prefix(raw: str) -> str:
     """Soccerdata prefixes club names with 'N. ' (e.g. '1. Arsenal'). Strip it."""
@@ -99,6 +100,7 @@ def club_to_league(raw_club: str) -> str:
 
 
 # ── Fetch player stats ────────────────────────────────────────────────────────
+
 
 def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
     """Fetch per-player standard stats for the 2026 World Cup via FBref.
@@ -130,28 +132,42 @@ def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
 
     # Rename to stable names (using the flattened tuple-join names)
     col_map = {
-        "player":           "player",
-        "team":             "nation",       # national team
-        "Club":             "club_raw",
-        "nation":           "nation_code",
-        "pos":              "position",
-        "age":              "age",
+        "player": "player",
+        "team": "nation",  # national team
+        "Club": "club_raw",
+        "nation": "nation_code",
+        "pos": "position",
+        "age": "age",
         "Playing Time_Min": "minutes",
-        "Playing Time_MP":  "matches",
+        "Playing Time_MP": "matches",
         "Playing Time_Starts": "starts",
-        "Performance_Gls":  "goals",
-        "Performance_Ast":  "assists",
-        "Performance_G+A":  "ga",
+        "Performance_Gls": "goals",
+        "Performance_Ast": "assists",
+        "Performance_G+A": "ga",
     }
     raw = raw.rename(columns={k: v for k, v in col_map.items() if k in raw.columns})
 
     # Derive clean club name and league
-    raw["club"]   = raw["club_raw"].apply(_strip_rank_prefix)
+    raw["club"] = raw["club_raw"].apply(_strip_rank_prefix)
     raw["league"] = raw["club_raw"].apply(club_to_league)
 
     # Keep only columns we need
-    want = ["player", "nation", "nation_code", "position", "club_raw", "club",
-            "league", "age", "matches", "starts", "minutes", "goals", "assists", "ga"]
+    want = [
+        "player",
+        "nation",
+        "nation_code",
+        "position",
+        "club_raw",
+        "club",
+        "league",
+        "age",
+        "matches",
+        "starts",
+        "minutes",
+        "goals",
+        "assists",
+        "ga",
+    ]
     df = raw[[c for c in want if c in raw.columns]].copy()
 
     # Convert numeric columns
@@ -160,12 +176,14 @@ def fetch_player_stats(no_cache: bool = False) -> pd.DataFrame:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
     logger.info("%d players loaded; %d distinct leagues", len(df), df["league"].nunique())
-    logger.info("%.1f%% of players mapped to a known league",
-                (df["league"] != "Other").mean() * 100)
+    logger.info(
+        "%.1f%% of players mapped to a known league", (df["league"] != "Other").mean() * 100
+    )
     return df
 
 
 # ── Fetch tournament round results ────────────────────────────────────────────
+
 
 def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
     """Derive the furthest tournament round reached by each national team.
@@ -178,8 +196,8 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
     """
     import soccerdata as sd
 
-    fbref   = sd.FBref(leagues="INT-World Cup", seasons=2026, no_cache=no_cache)
-    sched   = fbref.read_schedule().reset_index()
+    fbref = sd.FBref(leagues="INT-World Cup", seasons=2026, no_cache=no_cache)
+    sched = fbref.read_schedule().reset_index()
 
     sched["_rnd_num"] = (
         sched["round"].astype(str).str.strip().map(ROUND_ORDER).fillna(0).astype(int)
@@ -203,19 +221,19 @@ def fetch_team_rounds(no_cache: bool = False) -> pd.DataFrame:
         )
     records = [
         {
-            "nation":         team,
-            "round_num":      rnd_num,
-            "round_reached":  ROUND_LABEL.get(rnd_num, "Group Stage"),
+            "nation": team,
+            "round_num": rnd_num,
+            "round_reached": ROUND_LABEL.get(rnd_num, "Group Stage"),
         }
         for team, rnd_num in team_max.items()
     ]
     df = pd.DataFrame(records).sort_values("round_num", ascending=False)
-    logger.info("%d nations tracked; deepest round: %s",
-                len(df), df["round_reached"].iloc[0])
+    logger.info("%d nations tracked; deepest round: %s", len(df), df["round_reached"].iloc[0])
     return df
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def main() -> None:
     """Entry point: fetch and save raw per-player and per-nation 2026 WC data."""
@@ -225,8 +243,11 @@ def main() -> None:
     )
 
     parser = argparse.ArgumentParser(description="Fetch 2026 WC data via soccerdata")
-    parser.add_argument("--refresh", action="store_true",
-                        help="Re-fetch from FBref (opens Chrome, may show CAPTCHA)")
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-fetch from FBref (opens Chrome, may show CAPTCHA)",
+    )
     args = parser.parse_args()
     no_cache = args.refresh
 
@@ -237,7 +258,7 @@ def main() -> None:
     rounds = fetch_team_rounds(no_cache=no_cache)
 
     players.to_csv(f"{DATA_DIR}/wc_players.csv", index=False)
-    rounds.to_csv(f"{DATA_DIR}/wc_rounds.csv",   index=False)
+    rounds.to_csv(f"{DATA_DIR}/wc_rounds.csv", index=False)
 
     logger.info("Saved:")
     logger.info("  %s/wc_players.csv   (%d rows)", DATA_DIR, len(players))

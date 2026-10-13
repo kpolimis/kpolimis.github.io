@@ -17,8 +17,16 @@ import pytest
 
 # Load fetch_wc_data directly from its file path (directory name has hyphens,
 # so standard package import is not possible).
-_FETCH_PATH = Path(__file__).parent.parent / "posts" / "blog" / "world-cup-2026-leagues" / "fetch_wc_data.py"
-_AGG_PATH = Path(__file__).parent.parent / "posts" / "blog" / "world-cup-2026-leagues" / "aggregate_wc_data.py"
+_FETCH_PATH = (
+    Path(__file__).parent.parent / "posts" / "blog" / "world-cup-2026-leagues" / "fetch_wc_data.py"
+)
+_AGG_PATH = (
+    Path(__file__).parent.parent
+    / "posts"
+    / "blog"
+    / "world-cup-2026-leagues"
+    / "aggregate_wc_data.py"
+)
 
 # Stub out soccerdata before the module loads so it doesn't require the browser.
 sys.modules.setdefault("soccerdata", mock.MagicMock())
@@ -33,6 +41,7 @@ _agg_spec.loader.exec_module(agg)
 
 
 # ── _strip_rank_prefix ────────────────────────────────────────────────────────
+
 
 class TestStripRankPrefix:
     def test_strips_leading_rank(self):
@@ -52,6 +61,7 @@ class TestStripRankPrefix:
 
 
 # ── zero-record guards ────────────────────────────────────────────────────────
+
 
 class TestZeroRecordGuards:
     def test_fetch_player_stats_raises_on_empty(self):
@@ -85,15 +95,16 @@ class TestZeroRecordGuards:
 
     def test_build_epl_club_stats_empty_on_no_epl_players(self):
         """build_epl_club_stats returns an empty DataFrame (not an error) when no EPL players."""
-        players_no_epl = pd.DataFrame({
-            "player": ["A", "B"],
-            "league": ["La Liga", "Bundesliga"],
-            "club": ["Barcelona", "Bayern"],
-            "minutes": [90.0, 90.0],
-            "goals": [1.0, 0.0],
-            "assists": [0.0, 1.0],
-        })
+        players_no_epl = pd.DataFrame(
+            {
+                "player": ["A", "B"],
+                "league": ["La Liga", "Bundesliga"],
+                "club": ["Barcelona", "Bayern"],
+                "minutes": [90.0, 90.0],
+                "goals": [1.0, 0.0],
+                "assists": [0.0, 1.0],
+            }
+        )
         result = agg.build_epl_club_stats(players_no_epl)
         assert result.empty
         assert "club" in result.columns
-
