@@ -1,7 +1,9 @@
 ---
 title: "Blog"
 listing:
-  contents: posts/blog
+  contents:
+    - "posts/blog"
+    - "!posts/blog/**/*.md"
   sort: "date desc"
   type: default
   categories: true

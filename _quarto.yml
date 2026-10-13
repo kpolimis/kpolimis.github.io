@@ -9,6 +9,7 @@ project:
     - "*.qmd"
     - "!.content-archive/**"
     - "!.drafts/**"
+    - "!posts/**/*.md"
 
 website:
   title: "Kivan Polimis"

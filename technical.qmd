@@ -1,7 +1,9 @@
 ---
 title: "Technical Articles"
 listing:
-  contents: posts/technical
+  contents:
+    - "posts/technical"
+    - "!posts/technical/**/*.md"
   sort: "date desc"
   type: default
   categories: true
