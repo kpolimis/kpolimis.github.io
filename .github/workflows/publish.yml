@@ -7,8 +7,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
@@ -18,7 +16,6 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python dependencies
-        # C1: install from requirements.txt (source of truth); add kernel deps not in requirements.txt
         run: |
           pip install -r requirements.txt
           pip install matplotlib seaborn ipykernel jupyter-cache
@@ -27,27 +24,25 @@ jobs:
         run: python -m ipykernel install --user --name blog --display-name "blog"
 
       - name: Lint
-        # C2: non-mutating check over the whole repo (not just one file)
         run: |
           ruff check .
           ruff format --check .
 
       - name: Test
-        # no path arg — uses testpaths from pyproject.toml (tests/ + stockton-durability/tests/)
         run: pytest -v
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b  # v2
 
-      - name: Configure git credentials
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: Render site
+        run: quarto render
 
-      - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@8a96df13519ee81fd526f2dfca5962811136661b  # v2
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d231e62369c1bc9ed  # v4
         with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: kpolimis/kpolimis.github.io
+          publish_branch: gh-pages
+          publish_dir: ./_site
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
