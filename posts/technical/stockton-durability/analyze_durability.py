@@ -76,6 +76,9 @@ def load_cohort(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
     Returns (df, treated_player_id, treated_player_name).
     For population cohort, treated_id/name are None.
     """
+    if cohort not in ("pg", "pf", "population"):
+        raise ValueError(f"Unknown cohort: {cohort!r}. Use pg, pf, or population.")
+
     parquet = DATA_DIR / "game_logs.parquet"
     if not parquet.exists():
         raise FileNotFoundError("data/game_logs.parquet not found — run fetch_bref_data.py first.")
@@ -90,10 +93,8 @@ def load_cohort(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
     elif cohort == "pf":
         df = df[df["player_id"].isin(PF_IDS)].copy()
         treated_id, treated_name = "diawbo01", "Boris Diaw"
-    elif cohort == "population":
-        treated_id, treated_name = None, None
     else:
-        raise ValueError(f"Unknown cohort: {cohort!r}. Use pg, pf, or population.")
+        treated_id, treated_name = None, None
 
     n_players = df["player_id"].nunique()
     logger.info("Cohort=%s: %s rows, %d players", cohort, f"{len(df):,}", n_players)
