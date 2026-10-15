@@ -297,3 +297,40 @@ class TestPermutationPlayerLevel:
         # Null has some variability (different players reassigned as treated)
         if len(null) >= 2:
             assert null.std() >= 0  # at minimum doesn't crash
+
+
+class TestPlotE6QuarterProfile:
+    def test_quarter_filter_strips_whitespace(self, tmp_path, monkeypatch):
+        import matplotlib
+
+        matplotlib.use("Agg")
+        monkeypatch.setattr(aqs, "DATA_DIR", tmp_path)
+
+        df = pd.DataFrame(
+            {
+                "player_id": ["p1", "p1", "p1", "p1", "p1"],
+                "player_name": ["P1", "P1", "P1", "P1", "P1"],
+                "quarter": ["1", " 1", "1 ", "2", "5"],
+                "FT": [1, 2, 3, 4, 5],
+                "FTA": [2, 4, 6, 8, 10],
+            }
+        )
+
+        original_close = aqs.plt.close
+        monkeypatch.setattr(aqs.plt, "close", lambda *args, **kwargs: None)
+        try:
+            aqs.plot_e6_quarter_profile(
+                df,
+                treated_id=None,
+                treated_name=None,
+                cohort="test",
+            )
+
+            assert (tmp_path / "figures" / "test" / "e6_quarter_profile.png").exists()
+
+            fig = aqs.plt.gcf()
+            line = fig.axes[0].lines[0]
+            assert list(line.get_xdata()) == ["1", "2"]
+            assert list(line.get_ydata()) == pytest.approx([0.5, 0.5])
+        finally:
+            original_close("all")

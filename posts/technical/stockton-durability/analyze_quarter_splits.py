@@ -299,7 +299,9 @@ def plot_e6_quarter_profile(
     fig_dir.mkdir(parents=True, exist_ok=True)
 
     quarters = ["1", "2", "3", "4"]
-    df_q = df[df["quarter"].astype(str).isin(quarters)].copy()
+    df_q = df.copy()
+    df_q["quarter"] = df_q["quarter"].astype(str).str.strip()
+    df_q = df_q[df_q["quarter"].isin(quarters)].copy()
     for col in ("FT", "FTA"):
         df_q[col] = pd.to_numeric(df_q[col], errors="coerce")
 
