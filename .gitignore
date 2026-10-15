@@ -155,3 +155,5 @@ posts/technical/stockton-durability/tests/__pycache__/
 docs/handoffs/*
 !docs/handoffs/.gitkeep
 !docs/handoffs/SESSION-*.md
+
+.venv/
