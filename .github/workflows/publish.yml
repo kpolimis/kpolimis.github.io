@@ -8,6 +8,9 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
@@ -19,7 +22,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-          pip install matplotlib seaborn ipykernel jupyter-cache
+          pip install matplotlib seaborn ipykernel jupyter-cache nbstripout
 
       - name: Register blog kernel
         run: python -m ipykernel install --user --name blog --display-name "blog"
@@ -45,5 +48,43 @@ jobs:
           external_repository: kpolimis/kpolimis.github.io
           publish_branch: gh-pages
           publish_dir: ./_site
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+
+      - name: Assemble public source tree
+        run: |
+          mkdir -p _public_src
+          # Manifest-driven export: only tracked files matching these patterns.
+          # Fail-closed: new files are excluded by default unless added here.
+          git ls-files \
+            -- '*.qmd' \
+               '_quarto.yml' 'custom.scss' 'styles.css' \
+               'bayesian-waves-bg.js' 'include-script.html' \
+               'requirements.txt' 'LICENSE' \
+               'images/**' 'technical_files/**' \
+               'posts/**/*.qmd' 'posts/**/*.py' 'posts/**/*.ipynb' \
+               'posts/**/data/**' 'posts/**/*.png' 'posts/**/*.gif' \
+               'posts/**/*.jpg' 'posts/**/*.svg' 'posts/**/*.csv' \
+               'downloads/**' \
+            | while IFS= read -r f; do
+                mkdir -p "_public_src/$(dirname "$f")"
+                cp "$f" "_public_src/$f"
+              done
+          # Strip notebook outputs before publishing
+          find _public_src -name '*.ipynb' -exec nbstripout {} \;
+          # Belt-and-suspenders: remove any .md files that slipped through
+          find _public_src -name '*.md' -delete
+          # README for the public mirror
+          printf '# Blog source mirror\n\nSource files for [kivanpolimis.com](https://kivanpolimis.com) — QMDs, notebooks, and code for reproducibility.\n\nBuilt site at the link above. Do not open PRs here.\n' > _public_src/README.md
+
+      - name: Sync source to public main
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e  # v4.0.0
+        with:
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: kpolimis/kpolimis.github.io
+          publish_branch: main
+          publish_dir: ./_public_src
+          force_orphan: true
+          full_commit_message: "sync: blog-source@${{ github.sha }}"
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
