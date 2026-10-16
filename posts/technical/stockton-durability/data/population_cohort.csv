@@ -26,6 +26,7 @@ Steve Alford,alforst01,a,G,1988,1991,1980s
 Jerome Allen,allenje01,a,G,1996,1997,1990s
 Malik Allen,allenma01,a,F-C,2002,2011,2000s
 Randy Allen,allenra01,a,F,1989,1990,1980s
+Ray Allen,allenra02,a,G,1997,2014,1990s
 Tony Allen,allento01,a,G-F,2005,2018,2000s
 Lance Allred,allrela01,a,C,2008,2008,2000s
 Darrell Allums,allumda01,a,F,1981,1981,1980s
@@ -56,6 +57,7 @@ Willie Anderson,anderwi01,a,G-F,1989,1997,1980s
 Martynas AndriuÅ¡keviÄius,andrima01,a,C,2006,2006,2000s
 Michael Ansley,anslemi01,a,F,1990,1992,1990s
 Chris Anstey,anstech01,a,C,1998,2000,1990s
+Carmelo Anthony,anthoca01,a,F,2004,2022,2000s
 Greg Anthony,anthogr01,a,G,1992,2002,1990s
 Joel Anthony,anthojo01,a,C,2008,2017,2000s
 Rafael AraÃºjo,araujra01,a,C,2005,2007,2000s
@@ -99,6 +101,7 @@ Leandro Barbosa,barbole01,b,G,2004,2017,2000s
 Steve Bardo,bardost01,b,G,1992,1996,1990s
 J.J. Barea,bareajo01,b,G,2007,2020,2000s
 Andrea Bargnani,bargnan01,b,F-C,2007,2016,2000s
+Charles Barkley,barklch01,b,F,1985,2000,1980s
 Erick Barkley,barkler01,b,G,2001,2002,2000s
 Matt Barnes,barnema02,b,F,2004,2017,2000s
 Andre Barrett,barrean01,b,G,2005,2008,2000s
@@ -145,7 +148,9 @@ Walter Berry,berrywa01,b,F,1987,1989,1980s
 Travis Best,besttr01,b,G,1996,2005,1990s
 Mike Bibby,bibbymi01,b,G,1999,2012,1990s
 Andris BiedriÅÅ¡,biedran01,b,C,2005,2014,2000s
+Chauncey Billups,billuch01,b,G,1998,2014,1990s
 Joe Binion,biniojo01,b,F,1987,1987,1980s
+Larry Bird,birdla01,b,F,1980,1992,1980s
 Uwe Blab,blabuw01,b,C,1986,1990,1980s
 Norman Black,blackno01,b,G,1981,1981,1980s
 Rolando Blackman,blackro01,b,G,1982,1994,1980s
@@ -180,6 +185,7 @@ Keith Booth,boothke01,b,F,1998,1999,1990s
 Carlos Boozer,boozeca01,b,F-C,2003,2015,2000s
 Curtis Borchardt,borchcu01,b,C,2004,2005,2000s
 Lazaro Borrell,borrela01,b,F,2000,2000,2000s
+Chris Bosh,boshch01,b,F-C,2004,2016,2000s
 Lawrence Boston,bostola01,b,F,1980,1980,1980s
 Ruben Boumtje-Boumtje,boumtru01,b,C,2002,2004,2000s
 Cal Bowdler,bowdlca01,b,F,2000,2002,2000s
@@ -224,7 +230,8 @@ Andre Brown,brownan01,b,F,2007,2009,2000s
 Bobby Brown,brownbo02,b,G,2009,2018,2000s
 Chucky Brown,brownch01,b,F,1990,2002,1990s
 Damone Brown,brownda02,b,F,2002,2005,2000s
-Dee Brown,brownde03,b,G,1991,2002,1990s
+Dee Brown,brownde01,b,G,1991,2002,1990s
+Dee Brown,brownde03,b,G,2007,2009,2000s
 Derrick Brown,brownde04,b,F,2010,2012,2010s
 Devin Brown,brownde02,b,G,2003,2010,2000s
 Ernest Brown,browner01,b,C,2002,2002,2000s
@@ -244,6 +251,7 @@ Tierre Brown,brownti01,b,G,2002,2005,2000s
 Tony Brown,brownto01,b,F-G,1985,1992,1980s
 Stanley Brundy,brundst01,b,F,1990,1990,1990s
 Rick Brunson,brunsri01,b,G,1998,2006,1990s
+Kobe Bryant,bryanko01,b,G-F,1997,2016,1990s
 Mark Bryant,bryanma01,b,F-C,1989,2003,1980s
 Wallace Bryant,bryanwa01,b,C,1984,1986,1980s
 Torgeir Bryn,brynto01,b,C,1990,1990,1990s
@@ -297,6 +305,7 @@ Butch Carter,cartebu01,c,G,1981,1986,1980s
 Howard Carter,carteho01,c,G,1984,1985,1980s
 Maurice Carter,cartema01,c,G,2004,2004,2000s
 Reggie Carter,cartere01,c,G,1981,1982,1980s
+Vince Carter,cartevi01,c,G-F,1999,2020,1990s
 Bill Cartwright,cartwbi01,c,C,1980,1995,1980s
 Sam Cassell,cassesa01,c,G,1994,2008,1990s
 Omri Casspi,casspom01,c,F,2010,2019,2010s
@@ -421,7 +430,8 @@ Emanual Davis,davisem01,d,G,1997,2003,1990s
 Glen Davis,davisgl01,d,F-C,2008,2015,2000s
 Hubert Davis,davishu01,d,G,1993,2004,1990s
 Josh Davis,davisjo02,d,F,2004,2012,2000s
-Mark Davis,davisma02,d,F-G,1989,1989,1980s
+Mark Davis,davisma01,d,F-G,1989,1989,1980s
+Mark Davis,davisma02,d,G-F,1996,2000,1990s
 Mike Davis,davismi03,d,F,1983,1983,1980s
 Monti Davis,davismo01,d,F,1981,1981,1980s
 Paul Davis,davispa01,d,C,2007,2010,2000s
@@ -458,9 +468,11 @@ Mickey Dillard,dillami01,d,G,1982,1982,1980s
 Byron Dinkins,dinkiby01,d,G,1990,1991,1990s
 Ike Diogu,dioguik01,d,F,2006,2012,2000s
 DeSagana Diop,diopde01,d,C,2002,2013,2000s
+Vlade Divac,divacvl01,d,C,1990,2005,1990s
 Juan Dixon,dixonju01,d,G,2003,2009,2000s
 Michael Doleac,doleami01,d,C,1999,2008,1990s
 James Donaldson,donalja01,d,C,1981,1995,1980s
+Billy Donovan,donovbi01,d,G,1988,1988,1980s
 Keyon Dooling,doolike01,d,G,2001,2013,2000s
 Aleksandar Djordjevic,djordal01,d,G,1997,1997,1990s
 Joey Dorsey,dorsejo01,d,F,2009,2015,2000s
@@ -475,6 +487,7 @@ Goran DragiÄ,dragigo01,d,G,2009,2023,2000s
 Greg Dreiling,dreilgr01,d,C,1987,1997,1980s
 Bryce Drew,drewbr01,d,G,1999,2004,1990s
 Larry Drew,drewla01,d,G,1981,1991,1980s
+Clyde Drexler,drexlcl01,d,G,1984,1998,1980s
 Nate Driggers,driggna01,d,G,1997,1997,1990s
 Predrag Drobnjak,drobnpr01,d,C,2002,2005,2000s
 Ralph Drollinger,drollra01,d,C,1981,1981,1980s
@@ -483,8 +496,10 @@ Chris Dudley,dudlech02,d,C,1988,2003,1980s
 Jared Dudley,dudleja01,d,F-G,2008,2021,2000s
 Terry Duerod,duerote01,d,G,1980,1983,1980s
 Chris Duhon,duhonch01,d,G,2005,2013,2000s
+Joe Dumars,dumarjo01,d,G,1986,1999,1980s
 Richard Dumas,dumasri02,d,F,1993,1996,1990s
 Tony Dumas,dumasto01,d,G,1995,1998,1990s
+Tim Duncan,duncati01,d,F-C,1998,2016,1990s
 Mike Dunleavy,dunlemi02,d,F-G,2003,2017,2000s
 Ronald Dupree,duprero01,d,F,2004,2011,2000s
 Kevin Durant,duranke01,d,F-G,2008,2026,2000s
@@ -538,6 +553,7 @@ Mike Evans,evansmi01,e,G,1980,1988,1980s
 Reggie Evans,evansre01,e,F,2003,2015,2000s
 Tyreke Evans,evansty01,e,G-F,2010,2019,2010s
 Daniel Ewing,ewingda01,e,G,2006,2007,2000s
+Patrick Ewing,ewingpa01,e,C-F,1986,2002,1980s
 Jordan Farmar,farmajo01,f,G,2007,2017,2000s
 Desmon Farmer,farmede01,f,G,2007,2009,2000s
 Jim Farmer,farmeji01,f,G,1988,1994,1980s
@@ -607,6 +623,7 @@ Gary Garland,garlaga01,g,G,1980,1980,1980s
 Winston Garland,garlawi01,g,G,1988,1995,1980s
 Chris Garner,garnech01,g,G,1998,2001,1990s
 Bill Garnett,garnebi02,g,F,1983,1986,1980s
+Kevin Garnett,garneke01,g,F-C,1996,2016,1990s
 Marlon Garnett,garnema01,g,G,1999,1999,1990s
 Calvin Garrett,garreca01,g,F,1981,1984,1980s
 Dean Garrett,garrede01,g,C,1997,2002,1990s
@@ -615,6 +632,7 @@ John Garris,garrijo01,g,F,1984,1984,1980s
 Kiwane Lemorris Garris,garriki01,g,G,1998,2000,1990s
 Pat Garrity,garripa01,g,F,1999,2008,1990s
 Marc Gasol,gasolma01,g,C,2009,2021,2000s
+Pau Gasol,gasolpa01,g,C-F,2002,2019,2000s
 Chris Gatling,gatlich01,g,F-C,1992,2002,1990s
 Kenny Gattison,gattike01,g,F-C,1987,1996,1980s
 Rudy Gay,gayru01,g,F,2007,2023,2000s
@@ -635,6 +653,7 @@ Eddie Gill,gilled01,g,G,2001,2009,2000s
 Kendall Gill,gillke01,g,G,1991,2005,1990s
 Ben Gillery,gillebe01,g,C,1989,1989,1980s
 Armen Gilliam,gilliar01,g,F-C,1988,2000,1980s
+Manu GinÃ³bili,ginobma01,g,G,2003,2018,2000s
 Gordan GiriÄek,giricgo01,g,G-F,2003,2008,2000s
 Gerald Glass,glassge01,g,G-F,1991,1996,1990s
 Georgi Glouchkov,gloucge01,g,F,1986,1986,1980s
@@ -729,6 +748,7 @@ Travis Hansen,hansetr01,h,G,2004,2004,2000s
 Reggie Hanson,hansore01,h,F,1998,1998,1990s
 Bill Hanzlik,hanzlbi01,h,G-F,1981,1990,1980s
 Anfernee Hardaway,hardaan01,h,G-F,1994,2008,1990s
+Tim Hardaway,hardati01,h,G,1990,2003,1990s
 James Harden,hardeja01,h,G,2010,2026,2010s
 Alan Hardy,hardyal01,h,F,1981,1982,1980s
 Jerome Harmon,harmoje01,h,G,1995,1995,1990s
@@ -766,9 +786,11 @@ Luther Head,headlu01,h,G,2006,2011,2000s
 Shane Heal,healsh01,h,G,1997,2004,1990s
 Alvin Heggs,heggsal01,h,F,1996,1996,1990s
 Alan Henderson,hendeal01,h,F,1996,2007,1990s
-Cedric Henderson,hendece02,h,F,1987,1987,1980s
+Cedric Henderson,hendece01,h,F,1987,1987,1980s
+Cedric Henderson,hendece02,h,F,1998,2002,1990s
 Dave Henderson,hendeda01,h,G,1988,1988,1980s
-Gerald Henderson,hendege02,h,G,1980,1992,1980s
+Gerald Henderson,hendege01,h,G,1980,1992,1980s
+Gerald Henderson,hendege02,h,G,2010,2017,2010s
 J.R. Henderson,hendejr01,h,F,1999,1999,1990s
 Jerome Henderson,hendeje01,h,C-F,1986,1987,1980s
 Kevin Henderson,hendeke01,h,G,1987,1988,1980s
@@ -788,6 +810,7 @@ Sean Higgins,higgise01,h,G-F,1991,1998,1990s
 Johnny High,highjo01,h,G,1980,1984,1980s
 NenÃª,hilarne01,h,F-C,2003,2019,2000s
 George Hill,hillge01,h,G,2009,2023,2000s
+Grant Hill,hillgr01,h,F-G,1995,2013,1990s
 Jordan Hill,hilljo01,h,C-F,2010,2017,2010s
 Steven Hill,hillst01,h,C,2009,2009,2000s
 Tyrone Hill,hillty01,h,F,1991,2004,1990s
@@ -818,6 +841,7 @@ Allan Houston,houstal01,h,G,1994,2005,1990s
 Byron Houston,houstby01,h,F,1993,1996,1990s
 Tom Hovasse,hovasto01,h,F,1995,1995,1990s
 Brian Howard,howarbr01,h,F,1992,1993,1990s
+Dwight Howard,howardw01,h,C,2005,2022,2000s
 Josh Howard,howarjo01,h,F-G,2004,2013,2000s
 Juwan Howard,howarju01,h,F-C,1995,2013,1990s
 Stephen Howard,howarst01,h,F,1993,1998,1990s
@@ -848,6 +872,7 @@ Mile IliÄ,ilicmi01,i,C,2007,2007,2000s
 Ersan Ä°lyasova,ilyaser01,i,F,2007,2021,2000s
 Byron Irvin,irvinby01,i,G,1990,1993,1990s
 Mike Iuzzolino,iuzzomi01,i,G,1992,1993,1990s
+Allen Iverson,iversal01,i,G,1997,2010,1990s
 Royal Ivey,iveyro01,i,G,2005,2014,2000s
 Jarrett Jack,jackja01,j,G,2006,2018,2000s
 Bobby Jackson,jacksbo01,j,G,1998,2009,1990s
@@ -873,7 +898,7 @@ Dave Jamerson,jamerda01,j,G-F,1991,1994,1990s
 Henry James,jameshe01,j,F,1991,1998,1990s
 Jerome James,jamesje01,j,C,1999,2009,1990s
 LeBron James,jamesle01,j,F-G,2004,2026,2000s
-Mike James,jamesmi02,j,G,2002,2014,2000s
+Mike James,jamesmi01,j,G,2002,2014,2000s
 Tim James,jamesti01,j,F,2000,2002,2000s
 Antawn Jamison,jamisan01,j,F,1999,2014,1990s
 Harold Jamison,jamisha01,j,F,2000,2002,2000s
@@ -913,11 +938,13 @@ Frank Johnson,johnsfr01,j,G,1982,1994,1980s
 James Johnson,johnsja01,j,F,2010,2025,2010s
 Joe Johnson,johnsjo02,j,G-F,2002,2022,2000s
 Kannard Johnson,johnska01,j,F,1988,1988,1980s
-Ken Johnson,johnske03,j,F,1986,1986,1980s
+Ken Johnson,johnske01,j,F,1986,1986,1980s
+Ken Johnson,johnske03,j,F-C,2003,2003,2000s
 Kevin Johnson,johnske02,j,G,1988,2000,1980s
 Larry Johnson,johnsla02,j,F,1992,2001,1990s
 Lee Johnson,johnsle01,j,F,1981,1981,1980s
 Linton Johnson,johnsli01,j,F,2004,2009,2000s
+Magic Johnson,johnsma02,j,G-F,1980,1996,1980s
 Reggie Johnson,johnsre01,j,F-C,1981,1984,1980s
 Steffond Johnson,johnsst02,j,F,1987,1987,1980s
 Steve Johnson,johnsst03,j,C-F,1982,1991,1980s
@@ -930,7 +957,9 @@ Anthony Jones,jonesan01,j,G-F,1987,1990,1980s
 Askia Jones,jonesas01,j,G,1995,1995,1990s
 Bill Jones,jonesbi01,j,F,1989,1989,1980s
 Bobby Jones,jonesbo02,j,F,2007,2008,2000s
-Charles Jones,jonesch03,j,F-C,1984,1998,1980s
+Charles Jones,jonesch01,j,F-C,1984,1998,1980s
+Charles Jones,jonesch02,j,F,1985,1989,1980s
+Charles Jones,jonesch03,j,G,1999,2000,1990s
 Dahntay Jones,jonesda02,j,G-F,2004,2017,2000s
 Damon Jones,jonesda01,j,G,1999,2009,1990s
 Dontae' Jones,jonesdo01,j,F,1998,1998,1990s
@@ -943,13 +972,15 @@ Hutch Jones,joneshu01,j,F,1983,1984,1980s
 James Jones,jonesja02,j,F-G,2004,2017,2000s
 Jumaine Jones,jonesju01,j,F,2000,2007,2000s
 Major Jones,jonesma01,j,F,1980,1985,1980s
-Mark Jones,jonesma03,j,G,1984,1984,1980s
+Mark Jones,jonesma02,j,G,1984,1984,1980s
+Mark Jones,jonesma03,j,G,2005,2005,2000s
 Ozell Jones,jonesoz01,j,C-F,1985,1986,1980s
 Popeye Jones,jonespo01,j,F,1994,2004,1990s
 Shelton Jones,jonessh01,j,F,1989,1989,1980s
 Solomon Jones,jonesso01,j,F,2007,2014,2000s
 Adonis Jordan,jordaad01,j,G,1994,1999,1990s
 DeAndre Jordan,jordade01,j,C,2009,2026,2000s
+Michael Jordan,jordami01,j,G-F,1985,2003,1980s
 Reggie Jordan,jordare01,j,G,1994,2000,1990s
 Thomas Jordan,jordath01,j,F-C,1993,1993,1990s
 Walter Jordan,jordawa01,j,F,1981,1981,1980s
@@ -973,6 +1004,7 @@ Alec Kessler,kesslal01,k,F-C,1991,1994,1990s
 Lari Ketner,ketnela01,k,F-C,2000,2001,2000s
 Randolph Keys,keysra01,k,F-G,1989,1996,1980s
 Viktor Khryapa,khryavi01,k,F,2005,2008,2000s
+Jason Kidd,kiddja01,k,G,1995,2013,1990s
 Warren Kidd,kiddwa01,k,F,1994,1994,1990s
 Irv Kiffin,kiffiir01,k,F,1980,1980,1980s
 Carl Kilpatrick,kilpaca01,k,C,1980,1980,1980s
@@ -1010,6 +1042,7 @@ Wayne Kreklow,kreklwa01,k,G,1981,1981,1980s
 Nenad KrstiÄ,krstine01,k,C,2005,2011,2000s
 Larry Krystkowiak,krystla01,k,F-C,1987,1997,1980s
 Bruce Kuczenski,kuczebr01,k,F,1984,1984,1980s
+Toni KukoÄ,kukocto01,k,F,1994,2006,1990s
 Rob Kurz,kurzro01,k,F,2009,2009,2000s
 Ibo Kutluay,kutluib01,k,G,2005,2005,2000s
 Raef LaFrentz,lafrera01,l,F-C,1999,2008,1990s
@@ -1107,6 +1140,7 @@ Rick Mahorn,mahorri01,m,C-F,1981,1999,1980s
 Dan Majerle,majerda01,m,G-F,1989,2002,1980s
 Renaldo Major,majorre01,m,F,2007,2007,2000s
 Jeff Malone,malonje01,m,G,1984,1996,1980s
+Karl Malone,malonka01,m,F,1986,2004,1980s
 Matt Maloney,malonma01,m,G,1997,2003,1990s
 Steve Malovic,malovst01,m,F,1980,1980,1980s
 Danny Manning,mannida01,m,F-C,1989,2003,1980s
@@ -1114,6 +1148,7 @@ Rich Manning,manniri01,m,C,1996,1997,1990s
 Pace Mannion,mannipa01,m,G,1984,1989,1980s
 Roy Marble,marblro01,m,G-F,1990,1994,1990s
 Stephon Marbury,marbust01,m,G,1997,2009,1990s
+Å arÅ«nas MarÄiulionis,marcisa01,m,G,1990,1997,1990s
 Shawn Marion,mariosh01,m,F,2000,2015,2000s
 Damir Markota,markoda01,m,C,2007,2007,2000s
 Sean Marks,marksse01,m,F-C,1999,2011,1990s
@@ -1174,7 +1209,9 @@ Antonio McDyess,mcdyean01,m,F-C,1996,2011,1990s
 Ivan McFarlin,mcfariv01,m,F,2007,2007,2000s
 JaVale McGee,mcgeeja01,m,C,2009,2024,2000s
 Mike McGee,mcgeemi01,m,G-F,1982,1990,1980s
+Tracy McGrady,mcgratr01,m,G-F,1998,2012,1990s
 Dominic McGuire,mcguido01,m,F,2008,2013,2000s
+Kevin McHale,mchalke01,m,F-C,1981,1993,1980s
 Jim McIlvaine,mcilvji01,m,C,1995,2001,1990s
 Jeff McInnis,mcinnje01,m,G,1997,2008,1990s
 Kevin McKenna,mckenke01,m,G-F,1982,1988,1980s
@@ -1211,11 +1248,13 @@ Brad Miller,millebr01,m,C-F,1999,2012,1990s
 Dick Miller,milledi01,m,F,1981,1981,1980s
 Mike Miller,millemi01,m,F-G,2001,2017,2000s
 Oliver Miller,milleol01,m,C,1993,2004,1990s
+Reggie Miller,millere01,m,G-F,1988,2005,1980s
 Chris Mills,millsch01,m,F,1994,2003,1990s
 Patty Mills,millspa02,m,G,2010,2025,2010s
 Terry Mills,millste01,m,F,1991,2001,1990s
 Paul Millsap,millspa01,m,F,2007,2022,2000s
 Harold Miner,minerha01,m,G,1993,1996,1990s
+Yao Ming,mingya01,m,C,2003,2011,2000s
 Dirk Minniefield,minnidi01,m,G,1986,1988,1980s
 Greg Minor,minorgr01,m,G-F,1995,1999,1990s
 Jason Miskiri,miskija01,m,G,2000,2000,2000s
@@ -1226,6 +1265,7 @@ Eric Mobley,mobleer01,m,C,1995,1997,1990s
 Nazr Mohammed,mohamna01,m,C,1999,2016,1990s
 JÃ©rÃ´me MoÃ¯so,moisoje01,m,F-C,2001,2005,2000s
 Paul Mokeski,mokespa01,m,C-F,1980,1991,1980s
+Sidney Moncrief,moncrsi01,m,G,1980,1991,1980s
 Sergei Monia,moniase01,m,F,2006,2006,2000s
 Rodney Monroe,monroro01,m,G,1992,1992,1990s
 Eric Montross,montrer01,m,C,1995,2002,1990s
@@ -1251,7 +1291,9 @@ Richard Morton,mortori01,m,G,1989,1989,1980s
 Perry Moss,mosspe01,m,G,1986,1987,1980s
 Lawrence Moten,motenla01,m,G,1996,1998,1990s
 Hanno MÃ¶ttÃ¶lÃ¤,mottoha01,m,F-C,2001,2002,2000s
+Alonzo Mourning,mournal01,m,C-F,1993,2008,1990s
 Byron Mullens,mulleby01,m,C-F,2010,2014,2010s
+Chris Mullin,mullich01,m,F-G,1986,2001,1980s
 Todd Mundt,mundtto01,m,C,1996,1996,1990s
 Chris Munk,munkch01,m,F,1991,1991,1990s
 Eric Murdock,murdoer01,m,G,1992,2000,1990s
@@ -1264,6 +1306,7 @@ Lamond Murray,murrala01,m,F,1995,2006,1990s
 Ronald Murray,murraro01,m,G,2003,2010,2000s
 Tracy Murray,murratr01,m,F,1993,2004,1990s
 Jerrod Mustaf,mustaje01,m,F-C,1991,1994,1990s
+Dikembe Mutombo,mutomdi01,m,C,1992,2009,1990s
 Martin MÃ¼Ã¼rsepp,muursma01,m,F,1997,1998,1990s
 Pete Myers,myerspe01,m,G-F,1987,1998,1980s
 Makhtar N'Diaye,ndiayma01,n,F,1999,1999,1990s
@@ -1273,6 +1316,7 @@ BoÅ¡tjan Nachbar,nachbbo01,n,F,2003,2008,2000s
 Lee Nailon,nailole01,n,F,2001,2006,2000s
 Eduardo NÃ¡jera,najered01,n,F,2001,2012,2000s
 Larry Nance,nancela01,n,F-C,1982,1994,1980s
+Steve Nash,nashst01,n,G,1997,2014,1990s
 Howard Nathan,nathaho01,n,G,1996,1996,1990s
 Calvin Natt,nattca01,n,F,1980,1990,1980s
 Kenny Natt,nattke01,n,G,1981,1985,1980s
@@ -1305,6 +1349,7 @@ Audie Norris,norriau01,n,C,1983,1985,1980s
 Moochie Norris,norrimo01,n,G,1997,2006,1990s
 Sylvester Norris,norrisy01,n,C,1980,1980,1980s
 Steve Novak,novakst01,n,F,2007,2017,2000s
+Dirk Nowitzki,nowitdi01,n,F-C,1999,2019,1990s
 Dennis Nutt,nuttde01,n,G,1987,1987,1980s
 Julius Nwosu,nwosuju01,n,C,1995,1995,1990s
 Charles O'Bannon,obannch01,o,G-F,1998,1999,1990s
@@ -1312,6 +1357,7 @@ Ed O'Bannon,obanned01,o,F,1996,1997,1990s
 Patrick O'Bryant,obryapa01,o,C,2007,2010,2000s
 Mike O'Koren,okoremi01,o,F-G,1981,1988,1980s
 Jermaine O'Neal,onealje01,o,C-F,1997,2014,1990s
+Shaquille O'Neal,onealsh01,o,C,1993,2011,1990s
 Dan O'Sullivan,osullda01,o,C,1991,1996,1990s
 Charles Oakley,oaklech01,o,F-C,1986,2004,1980s
 Fabricio Oberto,obertfa01,o,C-F,2006,2011,2000s
@@ -1320,6 +1366,7 @@ Lamar Odom,odomla01,o,F,2000,2013,2000s
 Alan Ogg,oggal01,o,C,1991,1993,1990s
 Emeka Okafor,okafoem01,o,C-F,2005,2018,2000s
 Mehmet Okur,okurme01,o,C-F,2003,2012,2000s
+Hakeem Olajuwon,olajuha01,o,C,1985,2002,1980s
 Jawann Oldham,oldhaja01,o,C,1981,1991,1980s
 Brian Oliver,olivebr01,o,G,1991,1998,1990s
 Dean Oliver,olivede01,o,G,2002,2003,2000s
@@ -1349,6 +1396,7 @@ Andy Panko,pankoan01,p,F,2001,2001,2000s
 Jannero Pargo,pargoja01,p,G,2003,2015,2000s
 Anthony Parker,parkean01,p,G,1998,2012,1990s
 Smush Parker,parkesm01,p,G,2003,2008,2000s
+Tony Parker,parketo01,p,G,2002,2019,2000s
 Cherokee Parks,parksch02,p,C-F,1996,2004,1990s
 Å½arko Paspalj,paspaza01,p,F,1990,1990,1990s
 Myles Patrick,patrimy01,p,F,1981,1981,1980s
@@ -1359,6 +1407,7 @@ Sasha PavloviÄ,pavloal01,p,G-F,2004,2013,2000s
 Jim Paxson,paxsoji02,p,G-F,1980,1990,1980s
 John Paxson,paxsojo01,p,G,1984,1994,1980s
 Kenny Payne,payneke01,p,F-G,1990,1993,1990s
+Gary Payton,paytoga01,p,G,1991,2007,1990s
 Oleksiy Pecherov,pecheol01,p,C,2008,2010,2000s
 Wiley Peck,peckwi01,p,G,1980,1980,1980s
 Anthony Peeler,peelean01,p,G,1993,2005,1990s
@@ -1378,18 +1427,21 @@ Wesley Person,persowe01,p,G,1995,2005,1990s
 Jim Petersen,peterji01,p,F-C,1985,1992,1980s
 Morris Peterson,petermo01,p,F,2001,2011,2000s
 Johan Petro,petrojo01,p,C,2006,2013,2000s
+DraÅ¾en PetroviÄ,petrodr01,p,G,1990,1993,1990s
 Richard PetruÅ¡ka,petruri01,p,C-F,1994,1994,1990s
 Derrick Phelps,phelpde01,p,G,1995,1995,1990s
 Michael Phelps,phelpmi01,p,G,1986,1988,1980s
 Eddie Phillips,philled01,p,F,1983,1983,1980s
 Bobby Phills,phillbo01,p,G,1992,2000,1990s
 Eric Piatkowski,piatker01,p,G-F,1995,2008,1990s
+Paul Pierce,piercpa01,p,F-G,1999,2017,1990s
 Ricky Pierce,piercri01,p,G,1983,1998,1980s
 MickaÃ«l PiÃ©trus,pietrmi01,p,G-F,2004,2013,2000s
 Ed Pinckney,pincked01,p,F,1986,1997,1980s
 Kevinn Pinkney,pinknke01,p,F,2007,2007,2000s
 John Pinone,pinonjo01,p,F,1984,1984,1980s
 Tom Piotrowski,piotrto01,p,C,1984,1984,1980s
+Scottie Pippen,pippesc01,p,F-G,1988,2004,1980s
 Charles Pittman,pittmch01,p,F,1983,1986,1980s
 Zoran PlaniniÄ,planizo01,p,G,2004,2006,2000s
 Gary Plummer,plummga01,p,F-C,1985,1993,1980s
@@ -1426,6 +1478,7 @@ Anthony Pullard,pullaan01,p,F,1993,1993,1990s
 Chris Quinn,quinnch01,q,G,2007,2013,2000s
 Brian Quinnett,quinnbr01,q,F,1990,1992,1990s
 Mark Radford,radfoma01,r,G,1982,1983,1980s
+Dino Radja,radjadi01,r,F-C,1994,1997,1990s
 Vladimir RadmanoviÄ,radmavl01,r,F,2002,2013,2000s
 Aleksandar RadojeviÄ,radojal01,r,C,2000,2005,2000s
 Ed Rains,rainsed01,r,F,1982,1983,1980s
@@ -1468,12 +1521,14 @@ Jeremy Richardson,richaje01,r,G-F,2007,2009,2000s
 Norm Richardson,richano01,r,G,2002,2002,2000s
 Pooh Richardson,richapo01,r,G,1990,1999,1990s
 Quentin Richardson,richaqu01,r,G-F,2001,2013,2000s
+Mitch Richmond,richmmi01,r,G,1989,2002,1980s
 Isaiah Rider,rideris01,r,G,1994,2002,1990s
 Luke Ridnour,ridnolu01,r,G,2004,2015,2000s
 Antoine Rigaudeau,rigauan01,r,G,2003,2003,2000s
 Eric Riley,rileyer01,r,C,1994,1999,1990s
 RamÃ³n Rivas,rivasra01,r,F-C,1989,1989,1980s
 David Rivers,riverda01,r,G,1989,1992,1980s
+Doc Rivers,riverdo01,r,G,1984,1996,1980s
 Anthony Roberson,roberan02,r,G,2006,2009,2000s
 Terrance Roberson,roberte01,r,F,2001,2001,2000s
 Fred Roberts,roberfr01,r,F-C,1984,1997,1980s
@@ -1485,6 +1540,7 @@ Bernard Robinson,robinbe01,r,G-F,2005,2007,2000s
 Chris Robinson,robinch01,r,G,1997,1998,1990s
 Cliff Robinson,robincl01,r,F,1980,1992,1980s
 Clifford Robinson,robincl02,r,F-C,1990,2007,1990s
+David Robinson,robinda01,r,C,1990,2003,1990s
 Eddie Robinson,robined01,r,G-F,2000,2004,2000s
 Glenn Robinson,robingl01,r,F,1995,2005,1990s
 Jamal Robinson,robinja03,r,F,2001,2001,2000s
@@ -1494,6 +1550,7 @@ Nate Robinson,robinna01,r,G,2006,2016,2000s
 Oliver Robinson,robinol01,r,G,1983,1983,1980s
 Rumeal Robinson,robinru01,r,G,1991,1997,1990s
 Wayne Robinson,robinwa01,r,F,1981,1981,1980s
+Dennis Rodman,rodmade01,r,F,1987,2000,1980s
 Sergio RodrÃ­guez,rodrise01,r,G,2007,2017,2000s
 Lou Roe,roelo01,r,F,1996,1997,1990s
 Carlos Rogers,rogerca01,r,C-F,1995,2002,1990s
@@ -1526,13 +1583,15 @@ Stefano Rusconi,ruscost01,r,C-F,1996,1996,1990s
 Brandon Rush,rushbr01,r,G-F,2009,2017,2000s
 Kareem Rush,rushka01,r,G,2003,2010,2000s
 Bryon Russell,russebr01,r,F,1994,2006,1990s
-Walker Russell,russewa02,r,G,1983,1988,1980s
+Walker Russell,russewa01,r,G,1983,1988,1980s
+Arvydas Sabonis,sabonar01,s,C,1996,2003,1990s
 John Salley,sallejo01,s,F-C,1987,2000,1980s
 John Salmons,salmojo01,s,G-F,2003,2015,2000s
 Kevin Salvadori,salvake01,s,C,1997,1998,1990s
 Soumaila Samake,samakso01,s,C,2001,2003,2000s
 Cheikh Samb,sambch01,s,C,2008,2009,2000s
 Jamal Sampson,sampsja01,s,F-C,2003,2007,2000s
+Ralph Sampson,sampsra01,s,C-F,1984,1992,1980s
 Pepe SÃ¡nchez,sanchpe01,s,G,2001,2003,2000s
 Jeff Sanders,sandeje01,s,F,1990,1993,1990s
 Melvin Sanders,sandeme01,s,G-F,2006,2006,2000s
@@ -1603,8 +1662,10 @@ Tamar Slay,slayta01,s,G,2003,2005,2000s
 UroÅ¡ Slokar,slokaur01,s,F,2007,2007,2000s
 Tom Sluby,slubyto01,s,G,1985,1985,1980s
 Keith Smart,smartke01,s,G,1989,1989,1980s
-Charles Smith,smithch04,s,F-C,1989,1997,1980s
-Chris Smith,smithch05,s,G,1993,1995,1990s
+Charles Smith,smithch01,s,F-C,1989,1997,1980s
+Charles Smith,smithch02,s,G,1990,1996,1990s
+Charles Smith,smithch04,s,G,1998,2006,1990s
+Chris Smith,smithch03,s,G,1993,1995,1990s
 Clinton Smith,smithcl01,s,F,1987,1991,1980s
 Craig Smith,smithcr01,s,F,2007,2012,2000s
 Derek Smith,smithde02,s,G-F,1983,1991,1980s
@@ -1621,7 +1682,8 @@ Kenny Smith,smithke01,s,G,1988,1997,1980s
 LaBradford Smith,smithla02,s,G,1992,1994,1990s
 Larry Smith,smithla01,s,F-C,1981,1993,1980s
 Leon Smith,smithle01,s,C,2002,2004,2000s
-Michael Smith,smithmi02,s,F,1990,1995,1990s
+Michael Smith,smithmi01,s,F,1990,1995,1990s
+Michael Smith,smithmi02,s,F,1995,2001,1990s
 Mike Smith,smithmi03,s,F,2001,2001,2000s
 Otis Smith,smithot01,s,G-F,1987,1992,1980s
 Reggie Smith,smithre01,s,C,1993,1994,1990s
@@ -1663,12 +1725,14 @@ Michael Stewart,stewami01,s,C,1998,2005,1990s
 Steve Stipanovich,stipast01,s,C,1984,1988,1980s
 Bryant Stith,stithbr01,s,G,1993,2002,1990s
 Alex Stivrins,stivral01,s,F,1986,1993,1980s
+John Stockton,stockjo01,s,G,1985,2003,1980s
 Peja StojakoviÄ,stojape01,s,F,1999,2011,1990s
 Ed Stokes,stokeed01,s,C,1998,1998,1990s
 Greg Stokes,stokegr01,s,F-C,1986,1990,1980s
 Awvee Storey,storeaw01,s,G-F,2005,2008,2000s
 Damon Stoudamire,stoudda01,s,G,1996,2008,1990s
 Salim Stoudamire,stoudsa01,s,G,2006,2008,2000s
+Amar'e Stoudemire,stoudam01,s,F-C,2003,2016,2000s
 D.J. Strawberry,strawdj01,s,G,2008,2008,2000s
 Erick Strickland,stricer01,s,G,1997,2005,1990s
 Mark Strickland,stricma01,s,F,1995,2003,1990s
@@ -1700,7 +1764,7 @@ Roy Tarpley,tarplro01,t,C-F,1987,1995,1980s
 Anthony Taylor,tayloan01,t,G,1989,1989,1980s
 Donell Taylor,taylodo01,t,G,2006,2007,2000s
 Jay Taylor,tayloja01,t,G,1990,1990,1990s
-Jeff Taylor,tayloje03,t,G,1983,1987,1980s
+Jeff Taylor,tayloje01,t,G,1983,1987,1980s
 Jermaine Taylor,tayloje02,t,G,2010,2011,2010s
 Johnny Taylor,taylojo01,t,F,1998,2000,1990s
 Leonard Taylor,taylole01,t,F,1990,1990,1990s
@@ -1721,6 +1785,7 @@ Carl Thomas,thomaca01,t,G,1992,1998,1990s
 Charles Thomas,thomach01,t,G,1992,1992,1990s
 Etan Thomas,thomaet01,t,F,2002,2011,2000s
 Irving Thomas,thomair01,t,F,1991,1991,1990s
+Isiah Thomas,thomais01,t,G,1982,1994,1980s
 Jamel Thomas,thomaja01,t,F,2000,2001,2000s
 James Thomas,thomaja02,t,F,2005,2006,2000s
 Jim Thomas,thomaji01,t,G,1984,1991,1980s
@@ -1813,6 +1878,7 @@ Stojko VrankoviÄ,vrankst01,v,C,1991,1999,1990s
 Brett Vroman,vromabr01,v,C,1981,1981,1980s
 Jackson Vroman,vromaja01,v,F-C,2005,2006,2000s
 Sasha VujaÄiÄ,vujacsa01,v,G,2005,2017,2000s
+Dwyane Wade,wadedw01,w,G,2004,2019,2000s
 Mark Wade,wadema01,w,G,1988,1990,1980s
 Von Wafer,wafervo01,w,G,2006,2012,2000s
 Dajuan Wagner,wagneda02,w,G,2003,2007,2000s
@@ -1823,6 +1889,7 @@ Darrell Walker,walkeda01,w,G,1984,1993,1980s
 Henry Walker,walkebi01,w,F,2009,2015,2000s
 Kenny Walker,walkeke01,w,F,1987,1995,1980s
 Samaki Walker,walkesa01,w,F,1997,2006,1990s
+Ben Wallace,wallabe01,w,F-C,1997,2012,1990s
 Gerald Wallace,wallage01,w,F,2002,2015,2000s
 John Wallace,wallajo01,w,F,1997,2004,1990s
 Rasheed Wallace,wallara01,w,F-C,1996,2013,1990s
@@ -1846,6 +1913,7 @@ Clarence Weatherspoon,weathcl01,w,F,1993,2005,1990s
 Kyle Weaver,weaveky01,w,G,2009,2011,2000s
 Marcus Webb,webbma01,w,F-C,1993,1993,1990s
 Spud Webb,webbsp01,w,G,1986,1998,1980s
+Chris Webber,webbech01,w,F-C,1994,2008,1990s
 Jeff Webster,webstje01,w,F,1996,1996,1990s
 Martell Webster,webstma02,w,G-F,2006,2015,2000s
 Sonny Weems,weemsso01,w,G-F,2009,2016,2000s
@@ -1888,6 +1956,7 @@ Michael Wiley,wileymi01,w,F,1981,1982,1980s
 Morlon Wiley,wileymo01,w,G,1989,1995,1980s
 James Wilkes,wilkeja02,w,F,1981,1983,1980s
 Damien Wilkins,wilkida02,w,F-G,2005,2018,2000s
+Dominique Wilkins,wilkido01,w,F-G,1983,1999,1980s
 Eddie Lee Wilkins,wilkied01,w,F-C,1985,1993,1980s
 Gerald Wilkins,wilkige01,w,G-F,1986,1999,1980s
 Jeff Wilkins,wilkije01,w,C-F,1981,1986,1980s
@@ -1895,7 +1964,7 @@ Dale Wilkinson,wilkida01,w,F,1985,1985,1980s
 Mike Wilks,wilksmi01,w,G,2003,2010,2000s
 Aaron Williams,williaa01,w,F-C,1994,2008,1990s
 Alvin Williams,willial02,w,G,1998,2007,1990s
-Brandon Williams,willibr03,w,G,1998,2003,1990s
+Brandon Williams,willibr01,w,G,1998,2003,1990s
 Buck Williams,willibu01,w,F-C,1982,1998,1980s
 Corey Williams,willico01,w,G,1993,1994,1990s
 Deron Williams,willide01,w,G,2006,2017,2000s
@@ -1916,14 +1985,16 @@ Kenny Williams,willike03,w,F,1991,1994,1990s
 Kevin Williams,willike01,w,G,1984,1989,1980s
 Lorenzo Williams,willilo01,w,F-C,1993,2000,1990s
 Lou Williams,willilo02,w,G,2006,2022,2000s
-Marcus Williams,willima04,w,G,2007,2010,2000s
+Marcus Williams,willima03,w,G,2007,2010,2000s
+Marcus Williams,willima04,w,F,2008,2009,2000s
 Marvin Williams,willima02,w,F,2006,2020,2000s
 Micheal Williams,willimi02,w,G,1989,1999,1980s
 Mike Williams,willimi03,w,F,1990,1990,1990s
 Mo Williams,willima01,w,G,2004,2016,2000s
 Monty Williams,willimo01,w,F,1995,2003,1990s
 Pete Williams,willipe01,w,F,1986,1987,1980s
-Reggie Williams,willire02,w,F-G,1988,1997,1980s
+Reggie Williams,willire01,w,F-G,1988,1997,1980s
+Reggie Williams,willire02,w,F,2010,2017,2010s
 Rickey Williams,williri01,w,G,1983,1983,1980s
 Rob Williams,williro02,w,G,1983,1984,1980s
 Sam Williams,willisa02,w,F,1982,1985,1980s
@@ -1966,6 +2037,7 @@ Mike Woodson,woodsmi01,w,G-F,1981,1991,1980s
 Orlando Woolridge,woolror01,w,F,1982,1994,1980s
 Haywoode Workman,workmha01,w,G,1990,2000,1990s
 Sam Worthen,worthsa01,w,G,1981,1982,1980s
+James Worthy,worthja01,w,F,1983,1994,1980s
 Antoine Wright,wrighan01,w,G-F,2006,2011,2000s
 Bracey Wright,wrighbr02,w,G,2006,2007,2000s
 Brad Wright,wrighbr01,w,F,1987,1988,1980s

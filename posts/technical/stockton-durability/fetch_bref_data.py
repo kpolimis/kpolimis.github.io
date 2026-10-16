@@ -388,7 +388,7 @@ def fetch_population_cohort(limit: int | None = None) -> None:
     for row in players:
         pid = row["player_id"]
         initial = row["initial"]
-        first = int(row["debut_year"]) + 1  # BRef season = year+1 for rookie year
+        first = int(row["debut_year"])  # BRef season = season-ending year, debut_year already correct
         last = int(row["final_year"])
         name = row["player_name"]
         logger.info("%s (%s) %d–%d", name, pid, first, last)
@@ -438,25 +438,35 @@ def build_population_cohort() -> None:
         if "Player" not in df.columns:
             continue
 
-        # Pre-build name→player_id mapping once per letter page (O(n) not O(n²))
+        # Row-aligned extraction: get pid from each row's own <th><a> tag.
+        # Avoids name-collision clobbering and HOF-asterisk misses from a shared dict.
         player_link_re = re.compile(rf"/players/{letter}/(\w+)\.html")
-        name_to_pid: dict[str, str] = {}
-        for tag in soup.find_all("a", href=player_link_re):
-            m = player_link_re.search(tag["href"])
-            if m:
-                name_to_pid[tag.get_text(strip=True)] = m.group(1)
-
-        for _, r in df.iterrows():
-            name = str(r.get("Player", "")).strip()
-            pos = str(r.get("Pos", "")).strip()
-            from_yr = r.get("From", None)
-            to_yr = r.get("To", None)
-            if not name or not pos:
+        tbody = table.find("tbody") or table
+        for tr in tbody.find_all("tr"):
+            th = tr.find("th", {"data-stat": "player"})
+            if th is None:
                 continue
+            a = th.find("a")
+            if a is None:
+                continue
+            m = player_link_re.search(a.get("href", ""))
+            if not m:
+                continue
+            pid = m.group(1)
+            # Strip HOF asterisk from display name (BRef marks HOFers "Name*")
+            name = a.get_text(strip=True).rstrip("*")
+
+            def _td(stat: str) -> str:
+                tag = tr.find("td", {"data-stat": stat})
+                return tag.get_text(strip=True) if tag else ""
+
+            pos = _td("pos")
             try:
-                debut = int(from_yr)
-                final = int(to_yr)
+                debut = int(_td("year_min"))
+                final = int(_td("year_max"))
             except (ValueError, TypeError):
+                continue
+            if not name or not pos:
                 continue
 
             pos_parts = set(pos.replace("-", " ").split())
@@ -468,9 +478,6 @@ def build_population_cohort() -> None:
             if not ((is_guard or is_forward or is_center) and modern_era):
                 continue
 
-            pid = name_to_pid.get(name)
-            if not pid:
-                continue
             era = f"{(debut // 10) * 10}s"
             rows.append(
                 {
@@ -484,7 +491,9 @@ def build_population_cohort() -> None:
                 }
             )
 
-    pop = pd.DataFrame(rows).drop_duplicates("player_id")
+    pop = pd.DataFrame(rows)
+    dupes = pop[pop.duplicated("player_id", keep=False)]
+    assert dupes.empty, f"Duplicate player_ids after rebuild — bug: {dupes['player_id'].tolist()}"
     logger.info("Population candidates: %d (before career threshold)", len(pop))
     pop.to_csv(DATA_DIR / "population_cohort.csv", index=False)
     logger.info("Saved data/population_cohort.csv")
