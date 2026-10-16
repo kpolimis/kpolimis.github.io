@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-13 (v4)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-16 (v6)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -64,14 +64,14 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | `fetch_quarter_splits.py` | Quarter box score scraper; cached by game ID; 3.5s/request + jitter |
 | `analyze_quarter_splits.py` | E2/E4/E5; mixed-effects model; player-level permutation |
 
-**Data fetch: complete for PG and PF cohorts; population fetch running on Apollo via Docker + ProtonVPN.**
+**Data fetch: complete for all cohorts.**
 
 | Status | Players |
 |:-------|:--------|
 | Full PG game logs + quarter splits | Stockton, Payton, Jackson, Harper |
 | Full PG game logs only | Thomas, Hardaway, K. Johnson, Porter, Bogues, Strickland, Kidd, Nash, Blaylock, Anderson, Douglas |
 | PF game logs + quarter splits (all 6) | Diaw, Nowitzki, Boozer, Jamison, Marion, Lewis |
-| Population (Apollo Docker fetch) | 594/1,995 players fetched; production retry + VPN-rotation fixes applied 2026-10-13 |
+| Population fetch (complete) | **2,067/2,067 players, 656,839 rows** — 0% NULLs; includes Jordan, Kobe, Duncan, Garnett, Barkley, Malone, Hakeem, Bird, Worthy |
 
 **Post drafts:**
 
@@ -96,10 +96,11 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 | Step | Blocker | Est. |
 |:-----|:--------|:-----|
-| Population fetch (Apollo Docker) | Running — 594/1,995 done; ~1,400 remaining | 2–3 days |
-| Population analysis + post | Population fetch complete | 1 day |
+| ~~Run final fetch audit → save `docs/fetch-audit.md`~~ | **Done** — 0 missing players; `docs/fetch-audit.md` written 2026-10-16 | — |
+| Population analysis + post | Fetch complete | 1 day |
 | Jacobs outreach (#22) — manual browser form | Human action required | 20 min |
-| Blog infra: Makefile/CI/JS hardening (C1–C9) | Changes staged locally — awaiting commit | 30 min |
+| Blog infra: Makefile/CI/JS hardening (C1–C9) | Committed `fd9c8a1` 2026-10-13 | **Done** |
+| Blog repo split (private source → public mirror) | `publish.yml` updated locally, not yet pushed | <1 hr |
 
 ---
 
@@ -108,6 +109,37 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v6 — 2026-10-15/16
+
+- **Population fetch complete: 2,067/2,067 players, 656,839 rows** — all cohort members fetched including full HOF roster
+- **BRef player ID disambiguation bug fixed** (see `docs/bref-id-disambiguation.md`):
+  - Bug 1: 16 wrong IDs from name-collision clobbering in `build_population_cohort()`; all corrected via cached index HTML
+  - Bug 2: ~59 HOFers missing due to BRef's `*` asterisk on HOF anchor text; scraper now strips `*` before lookup
+  - Fix: replaced page-level `name_to_pid` dict with row-aligned `<th><a>` extraction; `drop_duplicates` → assertion
+  - 95 contaminated rows purged (wrong Michael Smith + wrong Marcus Williams)
+  - Cohort rebuilt from cache: 1,995 → 2,067 players (+72)
+  - Issues filed: blog-source #2 (wrong IDs), #3 (HOF asterisk)
+- **Off-by-one fix** (`fetch_bref_data.py` line 391): `debut_year + 1` → `debut_year`; was skipping every player's rookie season
+- **Wave 3 local fetch**: ran on local IP (no VPN) resolving all BRef 403s that blocked Apollo; recovered 393/450 previously missing players
+- **James Worthy**: fetched directly (926 rows, 12 seasons); last HOFer to land
+- **3 confirmed empty pages**: Zevenbergen, Zimmerman, Zoet — all 1-game players, fetched but returned 17 rows combined; cohort complete
+- **`audit_fetch.py`** written; `data/fetch_gaps.csv` generated; `docs/fetch-audit-wave1.md` saved as before baseline
+- **Final fetch audit complete** — 2,067/2,067 players confirmed present; 0 missing players; `docs/fetch-audit.md` written; verdict FETCH COMPLETE
+
+### v5 — 2026-10-14/15
+
+- **Population Wave 1 complete** — Docker container exited cleanly (exit code 0); 589,793 rows, 15M parquet pulled from Apollo
+- **Fetch audit written** (`audit_fetch.py`) — cross-references `game_logs.parquet` vs `population_cohort.csv`; reports missing players, missing seasons, low game counts, NULL rates; writes `data/fetch_gaps.csv`
+- **Wave 1 audit results** (see `docs/fetch-audit-wave1.md`):
+  - 1,552/1,995 players fetched; 450 completely missing; 1,534 with ≥1 missing season
+  - 2,375 missing (player, season) pairs; 1,228 low-game-count pairs (flagged, not errors)
+  - 0% NULLs on all key columns — fetched rows are clean
+  - Verdict: NEEDS SECOND WAVE
+- **Off-by-one bug fixed** (`fetch_bref_data.py` line 391) — `first = int(row["debut_year"]) + 1` incorrectly skipped every player's rookie season; removed `+ 1`; the `debut_year` column already stores season-ending year consistent with BRef
+- **DNS/VPN instability** caused the 450 fully-missing players — all requests exhausted retries during gluetun outages; Wave 2 will re-attempt via `fetch_gaps.csv`
+- **`docs/fetch-audit-wave1.md`** created as before/after baseline for population post
+- **`docs/README.md`** created — maps both wave audit files and explains naming convention
 
 ### v4 — 2026-10-13
 
