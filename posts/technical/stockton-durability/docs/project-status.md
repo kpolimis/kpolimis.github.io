@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-16 (v6)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-18 (v7)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -55,14 +55,15 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 ## Current Status
 
-**Infrastructure: complete.** 141 tests passing across four scripts:
+**Infrastructure: complete.** 141 tests passing across five scripts:
 
 | Script | Purpose |
 |:-------|:--------|
 | `fetch_bref_data.py` | BRef game log scraper; HTML-cached per (player, season); 4 sec/request |
-| `analyze_durability.py` | E1 + E3; OLS + permutation; emits `{cohort}_comparators.csv` |
-| `fetch_quarter_splits.py` | Quarter box score scraper; cached by game ID; 3.5s/request + jitter |
+| `analyze_durability.py` | E1 + E3 + E7; permutation tests; multi-threshold (400/600/820 games, 5,000 TSA) |
+| `fetch_quarter_splits.py` | Quarter box score scraper (named cohorts); cached by game ID; 3.5s/request + jitter |
 | `analyze_quarter_splits.py` | E2/E4/E5; mixed-effects model; player-level permutation |
+| `fetch_season_splits.py` | Season-level splits scraper (population); cached per (player, season); 4s/request |
 
 **Data fetch: complete for all cohorts.**
 
@@ -71,19 +72,27 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | Full PG game logs + quarter splits | Stockton, Payton, Jackson, Harper |
 | Full PG game logs only | Thomas, Hardaway, K. Johnson, Porter, Bogues, Strickland, Kidd, Nash, Blaylock, Anderson, Douglas |
 | PF game logs + quarter splits (all 6) | Diaw, Nowitzki, Boozer, Jamison, Marion, Lewis |
-| Population fetch (complete) | **2,067/2,067 players, 656,839 rows** — 0% NULLs; includes Jordan, Kobe, Duncan, Garnett, Barkley, Malone, Hakeem, Bird, Worthy |
+| Population game logs (complete) | **2,067/2,067 players, 656,839 rows** — 0% NULLs |
+| Population season splits (complete) | **738/738 players (≥400 games), 665,598 rows** — home/away, rest, W/L, month, opponent |
+
+**Analysis: E7 (career TS%) implemented; population E1/E3 not yet run.**
+
+| Estimand | Primary cohort | Sensitivity cohorts | Status |
+|:---------|:--------------|:--------------------|:-------|
+| E7 TS% | ≥5,000 TSA (464 players, BRef standard) | ≥400 games (738), ≥820 games (233) | **Done** — Stockton rank 10/464 (p=0.022), robust across all sensitivities |
+| E1/E3 population | ≥400 games (738 players, BRef standard) | ≥600 games (478), ≥820 games (233) | **Not yet run** |
 
 **Post drafts:**
 
-| Post | E1/E3 | E2/E4/E5 | E6 | Status |
-|:-----|:------|:---------|:---|:-------|
-| Stockton | Written | E2 written; E4/E5 dropped | Written | **Published** (draft removed; freeze committed) |
-| Diaw | Written | E2 written (null); E4/E5 dropped | Written | **Published** (draft removed; freeze committed) |
-| Population | — | — | — | Outline only — blocked on population fetch |
+| Post | E1/E3 | E2/E4/E5 | E6 | E7 | Status |
+|:-----|:------|:---------|:---|:---|:-------|
+| Stockton | Written | E2 written; E4/E5 dropped | Written | — | **Published** |
+| Diaw | Written | E2 written (null); E4/E5 dropped | Written | — | **Published** |
+| Population | Not run | — | — | Done | Outline only |
 
 ## Caveats (mandatory in every post)
 
-1. **Selection-on-outcome bias** — >=600-game threshold conditions on the dependent variable; E1 estimates durability *among players who completed long careers*, not all players.
+1. **Selection-on-outcome bias** — ≥400-game threshold (BRef qualifying minimum) conditions on the dependent variable; E1 estimates durability *among players who completed substantial careers*, not all players.
 2. **B2B state selection** — playing a B2B selects healthier player-states; within-player pairing removes stable effects but not selection.
 3. **Blowout/garbage time** — starters sit in non-competitive games; 4Q minutes are not random. Compresses treatment effect toward zero.
 4. **Intentional fouling** — close-game FTA inflation in Q4; FT% estimates partly reflect pressure context, not just physical state.
@@ -97,10 +106,15 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | Step | Blocker | Est. |
 |:-----|:--------|:-----|
 | ~~Run final fetch audit → save `docs/fetch-audit.md`~~ | **Done** — 0 missing players; `docs/fetch-audit.md` written 2026-10-16 | — |
-| Population analysis + post | Fetch complete | 1 day |
+| ~~E7 career TS% analysis~~ | **Done** — Stockton rank 10/464 (98.1 pctile, p=0.022); 3-threshold sensitivity; figures in `data/figures/population*/` | — |
+| ~~Season splits fetch~~ | **Done** — 738/738 players, 665,598 rows, `data/season_splits.parquet` | — |
+| **Commit all pending** | `analyze_durability.py`, `fetch_season_splits.py`, `season_splits.parquet`, E7 CSVs + figures | <30 min |
+| **Push `publish.yml` → verify CI** | 7 commits ahead of origin; blog-source push triggers two-deploy | <1 hr |
+| **Run population E1/E3** at 400/600/820 thresholds | `python analyze_durability.py --cohort population` | 30 min |
+| **Draft Post 3 outline** | E1/E3/E7 results; BRef disambiguation methods note | 2 hr |
+| Season splits analysis script | home/away, rest, W/L angles → Post 4 | 1 day |
+| E8: quarter splits for top-50 most-durable players | ~44 hrs fetch; deferred to Post 4 | future |
 | Jacobs outreach (#22) — manual browser form | Human action required | 20 min |
-| Blog infra: Makefile/CI/JS hardening (C1–C9) | Committed `fd9c8a1` 2026-10-13 | **Done** |
-| Blog repo split (private source → public mirror) | `publish.yml` updated locally, not yet pushed | <1 hr |
 
 ---
 
@@ -109,6 +123,14 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v7 — 2026-10-18
+
+- **Season splits fetch complete** — `fetch_season_splits.py` (new script); 738/738 ≥400-game players; 665,598 rows; `data/season_splits.parquet` (6.8MB); captures home/away, rest, W/L, month, role, minutes, opponent splits per (player, season); quarter/half splits confirmed absent from BRef season splits pages (PBP-only)
+- **E7 career shooting efficiency implemented** — `analyze_durability.py` extended; primary: ≥5,000 TSA (464 players, BRef TS% standard); Stockton rank 10/464 (98.1 pctile, p=0.022), robust across ≥400-game (rank 12/738, p=0.016) and ≥820-game (rank 10/233, p=0.043) sensitivities; Diaw 61.9 pctile primary, drops to 50.6 pctile among 10-year veterans
+- **Population E1/E3 threshold standardized** — primary cohort now ≥400 games (BRef qualifying minimum); sensitivities at 600 and 820; `MIN_GAMES = 400` constant; outputs routed to `population/`, `population_600/`, `population_820/` subdirs
+- **E8 scoped** — Q4 vs Q1 TS% margin for population requires per-game PBP (not season splits); deferred; top-50 most-durable players via `fetch_quarter_splits.py` is the feasible path (~44 hrs)
+- **Threshold grounding**: ≥400 games = BRef rate stat qualifier (citable); ≥5,000 TSA = BRef TS% qualifier (citable); ≥820 games = NBA CBA 10-year veteran
 
 ### v6 — 2026-10-15/16
 
