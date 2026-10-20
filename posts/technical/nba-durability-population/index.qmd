@@ -1,6 +1,6 @@
 ---
 title: "How Unusual Is 1.2 Games Missed Per 82? A Population View of NBA Durability"
-description: "Places Stockton and Diaw in the full BRef-era distribution of guards and forwards (1980–2010). E1, E3, and E7 at population scale across 738 players with ≥400 career games."
+description: "Places Stockton and Diaw in the full BRef-era player distribution (1980–2010). E1, E3, and E7 at population scale across 738 players with ≥400 career games."
 author: "Kivan Polimis"
 date: "2026-10-19"
 draft: true
@@ -32,7 +32,7 @@ If both players stand out in the full distribution at the same position in the t
 
 **Threshold.** The primary analysis cohort requires ≥400 active career game rows — Basketball-Reference's qualifying minimum for career rate statistics. This yields **738 players**. Sensitivity checks at ≥600 games (478 players) and ≥820 games (233 players, the NBA CBA 10-year veteran threshold) are reported alongside the primary results.
 
-**A data quality note worth stating plainly.** During validation, we found two bugs in the initial player-ID scrape. First, Basketball-Reference's player index marks Hall of Famers with a trailing asterisk in anchor text (e.g., "Michael Jordan\*"); our scraper stripped the asterisk from display names but not from the lookup key, silently excluding roughly 59 Hall of Famers — including Jordan, Bird, Barkley, Olajuwon, Duncan, and Garnett. Second, when two players share a display name on the same index page (for instance, two "Dee Brown"s), the second entry overwrote the first in our name-to-ID dictionary, assigning the wrong player ID to 16 players. Both bugs were caught during a post-fetch audit and corrected before any analysis ran. The final cohort covers 2,067 players, 72 more than the initial pass.
+**A data quality note worth stating plainly.** During validation, we found two bugs in the initial player-ID scrape. First, Basketball-Reference's player index marks Hall of Famers with a trailing asterisk in anchor text (e.g., "Michael Jordan\*"); our scraper stripped the asterisk from display names but not from the lookup key, silently excluding roughly 59 Hall of Famers — including Jordan, Bird, Barkley, Olajuwon, Duncan, and Garnett. Second, when two players share a display name on the same index page (for instance, two "Dee Brown"s), the second entry overwrote the first in our name-to-ID dictionary, assigning the wrong player ID to 16 players. Both bugs were caught during a post-fetch audit and corrected before any analysis ran. The final cohort covers 2,067 players, 75 more than the initial pass (59 excluded HOFers plus 16 overwritten duplicates, with some overlap).
 
 ---
 
@@ -79,11 +79,11 @@ if p.exists():
     display(Image(filename=str(p)))
 ```
 
-On back-to-back nights, Stockton's three-point attempt rate shifts by +0.002 per FGA — essentially flat — while his free-throw attempt rate falls by −0.049 per FGA. The FTA/FGA decline is the largest in the curated PG cohort and sits in the lower range of the full population as well; the direction (drawing fewer fouls on consecutive nights) is common, but the magnitude is not.
+On back-to-back nights, Stockton's three-point attempt rate shifts by +0.002 per FGA — essentially flat, 69th percentile of the population — while his free-throw attempt rate falls by −0.049 per FGA, placing him at the **11.8th percentile** of the 738-player distribution (88% of long-career players show a smaller FTA/FGA decline on consecutive nights). The direction is common in the population; the magnitude is in the lower tail.
 
-Diaw's B2B shift is +0.007 in 3PA/FGA and −0.033 in FTA/FGA. Both players move toward lower-contact shot profiles on consecutive nights, which is the inverse of what pure fatigue-driven shot-selection would predict.
+Diaw's B2B shift is +0.007 in 3PA/FGA (82nd percentile — among those who shift most toward threes) and −0.030 in FTA/FGA (23rd percentile). Both players move toward lower-contact shot profiles on consecutive nights, which is the inverse of what pure fatigue-driven shot-selection would predict.
 
-The population scatter is instructive: the cloud is centered near (0, 0), meaning most players show little systematic B2B change. Players in the lower-right quadrant — Stockton, Diaw, and a handful of others — show a deliberate shift toward the arc and away from the free-throw line on tired legs. Whether that pattern reflects physical resilience, coaching adjustment, or selection of which games to play on back-to-back nights cannot be determined from box scores alone.
+The population scatter is instructive: the cloud is centered near (0, 0), meaning most players show little systematic B2B change. Players in the lower half of the plot — Diaw, Stockton, and a handful of others — show a deliberate shift away from the free-throw line on tired legs. Unlike E1 (0.3rd percentile) and E7 (97.8th percentile), Stockton's E3 placement is notable but not extreme at population scale: roughly 1-in-8 long-career players show a comparably large FTA/FGA decline on back-to-back nights. Whether that pattern reflects physical resilience, coaching adjustment, or selection of which games to play cannot be determined from box scores alone.
 
 ---
 
@@ -113,7 +113,7 @@ if p.exists():
     display(Image(filename=str(p)))
 ```
 
-Stockton's career TS% is **0.608** — **rank 10 out of 464**, 98.1st percentile (p = 0.022). The players above him are almost exclusively rim-runners and interior specialists: DeAndre Jordan (0.646), Tyson Chandler (0.630), Stephen Curry (0.629). Stockton is the highest-ranked point guard in the distribution.
+Stockton's career TS% is **0.608** — **rank 10 out of 464**, 97.8th percentile (p = 0.022). The players above him are almost exclusively rim-runners and interior specialists: DeAndre Jordan (0.646), Tyson Chandler (0.630), Stephen Curry (0.629). Stockton is the highest-ranked point guard in the distribution.
 
 The scatter reveals the mechanism. His FTA/FGA rate of 0.424 places him at the 86.9th percentile — he drew an unusual volume of fouls for a point guard — and his eFG% of 0.546 places him at the 93.8th percentile. Both components contribute to the TS% result; it is not a single-lever effect.
 
@@ -121,10 +121,20 @@ Diaw's career TS% is **0.547** — 62.5th percentile, close to population averag
 
 | | TS% | Pctile | eFG% | Pctile | FTA/FGA | Pctile |
 |:--|----:|-------:|-----:|-------:|--------:|-------:|
-| Stockton | 0.608 | 98.1 | 0.546 | 93.8 | 0.424 | 86.9 |
+| Stockton | 0.608 | 97.8 | 0.546 | 93.8 | 0.424 | 86.9 |
 | Diaw | 0.547 | 62.5 | 0.524 | 84.9 | 0.189 | 9.7 |
 
 The TS% result is robust across sensitivity cohorts. Among ≥400-game players (738 players), Stockton ranks 12th (p = 0.016). Among 10-year veterans only (233 players), he ranks 10th (p = 0.043). The E7 finding strengthens slightly with larger populations and holds at the most restrictive threshold.
+
+---
+
+## E8: Within-Game Resilience at Population Scale
+
+*This section is pending completion of the quarter-splits fetch for the top-50 most-durable players (container `bref-qs-fetch` on Apollo; ~59,837 games to process). Results will be added here once data is available.*
+
+E1, E3, and E7 measure career-aggregate patterns. E8 asks a finer question: among the 50 players with the most active career game rows, do Stockton and Diaw show distinct within-game shooting profiles — specifically, a Q4 true shooting percentage that holds up or improves relative to Q1–Q3 — compared to the other long-career peers?
+
+The analysis will use `fetch_quarter_splits.py --top-n-by-games 50` output (`quarter_splits_e8.parquet`) and the same permutation framework as E2 in Posts 1 and 2. Stockton is rank 3 in the top-50 cohort (1,504 active games). Diaw is just outside it: his 1,064 active games fall 6 short of the 50th-ranked player's 1,070, making the E8 estimand Stockton-only — whether his Q4 TS% profile relative to the 49 most-durable peers is consistent with the within-game resilience hypothesis.
 
 ---
 

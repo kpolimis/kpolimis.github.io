@@ -87,7 +87,7 @@ For instance, Rashard Lewis shows a similar FTA/FGA decline on B2B (−0.033) bu
 
 ## Within-Game Resilience: E2, E4, E5
 
-Quarter data is available for four of the six PF cohort players — Diaw, Nowitzki, Marion, and Lewis (the three closest comparators by games-missed-per-82). Boozer and Jamison are not in the within-game window. Unlike the Stockton analysis, there is no age-regime caveat here: Diaw's quarter-level data spans his full BRef career (2004–2016, ages 22–33).
+The within-game window uses four of the six PF cohort players — Diaw, Nowitzki, Marion, and Lewis (the three closest comparators by games-missed-per-82). Boozer and Jamison were excluded as a design choice to keep the within-game cohort comparable in era and career overlap; BRef play-by-play data exists for both. Unlike the Stockton analysis, there is no age-regime caveat here: Diaw's quarter-level data spans his full BRef career (2004–2016, ages 22–33).
 
 ```{python}
 #| echo: false
@@ -101,7 +101,7 @@ else:
     print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
 ```
 
-Diaw's Q4 free throw percentage (0.689) is 2.3 percentage points lower than his Q1–Q3 average (0.712) — a slight decline, not resilience. Among the four players in the window, Marion shows the largest Q4 improvement (+4.0 pp, from 0.792 to 0.832), while Nowitzki holds flat (+0.7 pp). Diaw and Lewis both decline slightly (−2.3 and −1.6 pp respectively). The mixed-effects interaction coefficient (Q4 × is_treated) is −0.043 (p = 0.506, two-sided permutation, n = 5,000). With four players in the analysis window, the minimum achievable two-sided p is approximately 0.50 — the result is at the floor of what the test can detect.
+Diaw's Q4 free throw percentage (0.689) is 2.3 percentage points lower than his Q1–Q3 average (0.712) — a slight decline, not resilience. (The E6 quarter-profile figure shows 67.7% for Q4; the difference reflects attempt-weighted season averages in E6 vs. game-weighted averages in E2. The direction is the same under both methods.) Among the four players in the window, Marion shows the largest Q4 improvement (+4.0 pp, from 0.792 to 0.832), while Nowitzki holds flat (+0.7 pp). Diaw and Lewis both decline slightly (−2.3 and −1.6 pp respectively). The mixed-effects interaction coefficient (Q4 × is_treated) is −0.043 (p = 0.506, two-sided permutation, n = 5,000). With four players in the analysis window, the minimum achievable two-sided p is approximately 0.50 — the result is at the floor of what the test can detect.
 
 The directional finding is clear: Diaw does not show late-game free throw resilience in this window, and Marion — not Diaw — is the Q4 outlier in the favorable direction. This is a genuine null for E2 and should be read as such. The E1 and E3 signals are present; the within-game FT% pattern is not among them. Diaw's durability advantage appears in the aggregate record — fewer missed games, a distinctive B2B shot-selection shift — rather than in within-quarter efficiency.
 

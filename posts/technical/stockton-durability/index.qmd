@@ -19,7 +19,7 @@ sys.path.insert(0, str(pathlib.Path(".")))
 
 John Stockton reportedly had a resting heart rate near 35 beats per minute. In the context of an NBA career that produced 1,504 regular-season games over 19 seasons — the most in league history at his retirement — a number that specific invites scrutiny. If an unusually low resting heart rate reflects genuinely superior cardiovascular adaptation, we should expect some trace in the box score: fewer missed games than peers, steadier late-game decision-making, and a shot selection that holds up under accumulated fatigue.
 
-This post asks whether that trace is detectable — not whether it is caused by cardiovascular physiology. The analysis uses permutation inference throughout, comparing Stockton to 14 matched point-guard contemporaries who met the same career-length threshold. The methodology follows [a companion analysis of Boris Diaw](../diaw-35bpm/index.qmd), who shares the same reported resting heart rate and whose case was the cleaner test: Diaw played entirely within the BRef play-by-play era, the sourcing on his 35 BPM figure is better documented, and no age-regime caveat applies to his prime career. Stockton is the harder, earlier, and in some ways more famous version of the same question.
+This post asks whether that trace is detectable — not whether it is caused by cardiovascular physiology. The analysis uses permutation inference throughout, comparing Stockton to 14 matched point-guard contemporaries who met the same career-length threshold. The methodology follows [a companion analysis of Boris Diaw](../diaw-35bpm/index.qmd), who shares the same reported resting heart rate and whose case was the cleaner test: Diaw played entirely within the BRef play-by-play era, the sourcing on his 35 BPM figure is better documented, and no age-regime caveat applies to his prime career. Stockton is the harder, earlier, and in some ways more famous version of the same question. A [population study](../nba-durability-population/index.qmd) checks whether both signals hold when the reference class is every BRef-era long-career player, not a hand-selected cohort of contemporaries.
 
 **Sourcing note.** The 35 BPM figure for Diaw comes from multiple post-retirement interviews and is well-attested. The equivalent figure for Stockton appears in circulation but is less directly documented. The analysis below treats it as a prior — a physiological claim consistent enough to motivate a box-score test — not as an established fact.
 
@@ -27,7 +27,7 @@ This post asks whether that trace is detectable — not whether it is caused by 
 
 ## Who to Compare Stockton To
 
-The reference class is point guards who debuted between 1984 and 2001, played at least 600 career games, and averaged at least 28 minutes per game. Fifteen players meet this threshold, including three — Isiah Thomas, Kevin Johnson, and Tim Hardaway — who retired before the BRef play-by-play era (1996-97 onward), and others like Jason Kidd and Steve Nash who overlapped with Stockton's final seasons.
+The reference class is point guards primarily active during Stockton's career (1984–2003), with at least 600 career games and averaging at least 28 minutes per game. Fifteen players meet this threshold, including Isiah Thomas — who retired in 1994, before the BRef play-by-play era (1996-97) — and others like Kevin Johnson, Tim Hardaway, Jason Kidd, and Steve Nash who overlapped with Stockton at different points of their careers.
 
 | Player | Career | Active Games | Years |
 |:---|---:|---:|:---|
@@ -67,7 +67,7 @@ if p.exists():
 
 Stockton missed 1.18 games per 82 over his career — the lowest figure in the reference class, at the 6.7th percentile of the 15-player distribution. The next closest is Gary Payton at 1.63 games per 82. The permutation null (5,000 reassignments of the "treated" label across cohort members) places the observed gap at p = 0.194, two-sided. With n = 15, the minimum achievable two-sided p is approximately 0.13 — so the result is near the floor of what is detectable with this cohort size.
 
-That is an honest framing of a genuine finding. Stockton sits at an extreme of the durability distribution. The permutation test cannot rule out chance with conventional thresholds because the reference class is small — not because the result is ambiguous. For instance, Kevin Johnson's 20.75 games missed per 82 compared to Stockton's 1.18 represents a 17.5-game gap across a full career; that magnitude is large regardless of a p-value. The appropriate inference is that Stockton's durability is *consistent with* unusually robust physical maintenance rather than injury luck or schedule protection, while acknowledging that the evidence alone cannot distinguish between the two.
+That is an honest framing of a genuine finding. Stockton sits at an extreme of the durability distribution. The permutation test cannot rule out chance with conventional thresholds because the reference class is small — not because the result is ambiguous. For instance, Kevin Johnson's 20.75 games missed per 82 compared to Stockton's 1.18 represents a 19.6-game gap across a full career; that magnitude is large regardless of a p-value. The appropriate inference is that Stockton's durability is *consistent with* unusually robust physical maintenance rather than injury luck or schedule protection, while acknowledging that the evidence alone cannot distinguish between the two.
 
 **Season correction.** Games-missed-per-82 denominators are adjusted for shortened seasons: 1999 (50 games), 2012 (66 games), 2020 (65 games), 2021 (72 games).
 
@@ -111,9 +111,9 @@ else:
     print("Figure not found — re-run: analyze_quarter_splits.py --cohort pg")
 ```
 
-In the seven seasons where quarter-level play-by-play data exists (1996–97 through 2002–03), Stockton's Q4 free throw percentage is 0.836 — 4.1 percentage points *higher* than his Q1–Q3 average of 0.795. Among the three contemporaries for whom the same window was available (Payton, Jackson, Harper), Harper shows the sharpest Q4 degradation (−19.6 pp, from 0.773 to 0.577), while Payton and Jackson hold flat (+0.7 and +0.3 pp respectively). Stockton is the only player in the four-person window whose Q4 free throw shooting improves.
+In the seven seasons where quarter-level play-by-play data exists (1996–97 through 2002–03), Stockton's Q4 free throw percentage is 0.836 — 4.1 percentage points *higher* than his Q1–Q3 average of 0.795. (The E6 quarter-profile figure shows slightly different values — 84.7% for Q4 — because E6 uses attempt-weighted season averages while E2 uses game-weighted averages; the direction and magnitude of the result are the same under both methods.) Among the three contemporaries for whom the same window was available (Payton, Jackson, Harper), Harper shows the sharpest Q4 degradation (−19.6 pp, from 0.773 to 0.577), while Payton and Jackson hold flat (+0.7 and +0.3 pp respectively). Stockton is the only player in the four-person window whose Q4 free throw shooting improves.
 
-The mixed-effects interaction coefficient (Q4 × is_treated) is +0.0504 (p = 0.494, two-sided permutation, n = 5,000). With four players in the analysis window, the minimum achievable two-sided p is approximately 0.50 — the result is at the floor of what the test can detect. The p-value reflects sample size more than effect size: Stockton occupies the favorable extreme of a four-player distribution, and the test cannot rule out chance at conventional thresholds given n = 4. The directional finding — the only player whose late-game free throw shooting holds up or improves — is the appropriate takeaway.
+The mixed-effects interaction coefficient (Q4 × is_treated) is +0.0504 (p ≈ 0.50, two-sided permutation, n = 5,000). With four players in the analysis window, the exact two-sided permutation floor is 0.50 — the result is at the floor of what the test can detect. (The Monte Carlo estimate of 0.494 falls marginally below due to resampling noise; with n = 4, the permutation space is exactly enumerable.) The p-value reflects sample size more than effect size: Stockton occupies the favorable extreme of a four-player distribution, and the test cannot rule out chance at conventional thresholds given n = 4. The directional finding — the only player whose late-game free throw shooting holds up or improves — is the appropriate takeaway.
 
 The blowout-game sensitivity (restricted to Q4 margin ≤ 10) could not be run: only 18 player-quarter observations had score margin data available, below the minimum for stable estimation.
 
@@ -178,7 +178,7 @@ The Diaw case — where full-career quarter data is available, the sourcing is c
 
 ## Technical Notes
 
-- Methodology: as established in [Boris Diaw post](../diaw-35bpm/index.qmd).
+- Methodology: as established in [Boris Diaw post](../diaw-35bpm/index.qmd). Population-scale results in [population study](../nba-durability-population/index.qmd).
 - All intervals permutation-based (n = 5,000); no p-value thresholds applied.
 - E1/E3: `analyze_durability.py --cohort pg` (n=15 reference class, corrected player IDs)
 - E2/E4/E5: `analyze_quarter_splits.py --cohort pg` (n=4 players, 1996–2003 window; E4/E5 not interpretable at per-quarter resolution)
