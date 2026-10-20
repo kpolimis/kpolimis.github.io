@@ -52,10 +52,39 @@ RATE_LIMIT_JITTER = 1.5
 SESSION_COOLDOWN_PAGES = int(os.environ.get("SESSION_COOLDOWN_PAGES", 100))
 SESSION_COOLDOWN_SEC = int(os.environ.get("SESSION_COOLDOWN_SEC", 300))
 _MAX_403_BACKOFF = int(os.environ.get("MAX_403_BACKOFF_SEC", 600))
+GLUETUN_CTRL_URL = os.environ.get("GLUETUN_CTRL_URL", "")
 
 import random as _random  # noqa: E402
 
 _ip_blocked_until: float = 0.0
+
+
+def _rotate_vpn() -> bool:
+    """Stop and restart the Gluetun VPN to get a fresh exit IP.
+
+    Only active when GLUETUN_CTRL_URL is set (e.g. http://localhost:8000 in
+    the Docker network). Returns True if the rotation completed successfully.
+    """
+    if not GLUETUN_CTRL_URL:
+        return False
+    import json as _json
+    try:
+        for status in ("stopped", "running"):
+            r = requests.put(
+                f"{GLUETUN_CTRL_URL}/v1/vpn/status",
+                data=_json.dumps({"status": status}),
+                headers={"Content-Type": "application/json"},
+                timeout=5,
+            )
+            r.raise_for_status()
+            if status == "stopped":
+                time.sleep(2)
+        time.sleep(15)  # wait for reconnect and new IP assignment
+        logger.info("VPN rotated via Gluetun — new exit IP active")
+        return True
+    except Exception as exc:
+        logger.warning("VPN rotation failed: %s", exc)
+        return False
 _session_page_count: int = 0
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
@@ -119,6 +148,10 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
                 time.sleep(RATE_LIMIT_SEC + _random.uniform(0, RATE_LIMIT_JITTER))
             return resp.text, False
         if resp.status_code == 429:
+            # Rate limit — wait out the Retry-After header; do NOT rotate VPN here
+            # because BRef may have rate-limited multiple IPs in the pool, causing
+            # an infinite rotation loop with no pages fetched. The wait-based approach
+            # (which worked for 13h of successful fetching) is more reliable.
             retry_after = resp.headers.get("Retry-After")
             wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
             logger.warning(
@@ -131,17 +164,20 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
             _ip_blocked_until = time.time() + wait
             time.sleep(wait)
         elif resp.status_code == 403:
-            # IP block — sleep to let VPN rotate (gluetun health restart), then retry
-            wait = min(_MAX_403_BACKOFF, 120 * (2**attempt))
-            logger.warning(
-                "HTTP 403 game_id=%s (pbp=%s) — sleeping %ds for VPN rotation (attempt %d)",
-                game_id,
-                pbp,
-                wait,
-                attempt + 1,
-            )
-            _ip_blocked_until = time.time() + wait
-            time.sleep(wait)
+            # Hard IP block — rotate VPN to get a fresh exit IP, then retry
+            if _rotate_vpn():
+                _ip_blocked_until = 0.0
+            else:
+                wait = min(_MAX_403_BACKOFF, 120 * (2**attempt))
+                logger.warning(
+                    "HTTP 403 game_id=%s (pbp=%s) — sleeping %ds (attempt %d)",
+                    game_id,
+                    pbp,
+                    wait,
+                    attempt + 1,
+                )
+                _ip_blocked_until = time.time() + wait
+                time.sleep(wait)
         elif resp.status_code == 404:
             return None, False  # don't log 404 — pre-PBP-era games are expected
         else:
@@ -501,6 +537,7 @@ def fetch_quarter_splits(
     all_rows = []
     new_requests = 0
     cache_hits = 0
+    _last_save = 0
 
     for _, grow in game_index.iterrows():
         pid = grow["player_id"]
@@ -539,12 +576,16 @@ def fetch_quarter_splits(
 
         all_rows.extend(rows)
 
-        # Incremental save every 500 new requests — allow resume on container restart
-        if new_requests > 0 and new_requests % 500 == 0 and all_rows:
+        # Incremental save every 500 new requests — allow resume on container restart.
+        # Use delta (not modulo) to avoid skipped triggers when a single iteration
+        # increments new_requests by 2 (PBP miss + box fetch), and to avoid per-game
+        # rewrites when new_requests sits exactly on a prior multiple of 500.
+        if new_requests - _last_save >= 500 and all_rows:
             _tmp = pd.DataFrame(all_rows)
             _combined = pd.concat([existing, _tmp], ignore_index=True) if not existing.empty else _tmp
             _combined.to_parquet(out_path, index=False)
             logger.info("Incremental save: %d rows (%d new requests so far)", len(_combined), new_requests)
+            _last_save = new_requests
 
     logger.info(
         "Fetch complete: %d new network requests, %d cache hits",
