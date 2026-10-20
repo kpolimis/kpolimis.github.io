@@ -32,6 +32,7 @@ Usage:
 
 import argparse
 import logging
+import os
 import pathlib
 import re
 import time
@@ -39,8 +40,6 @@ import time
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-
-import os
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 HTML_CACHE_QUARTER = DATA_DIR / "html_cache" / "quarter"

@@ -16,6 +16,7 @@ KEY_COLUMNS = ["Date", "MP", "mp_float", "PTS", "player_id", "season", "player_n
 
 
 def print_capped(lines):
+    """Print up to MAX_PRINT lines, then summarize the remainder."""
     for line in lines[:MAX_PRINT]:
         print(line)
     if len(lines) > MAX_PRINT:
@@ -23,6 +24,7 @@ def print_capped(lines):
 
 
 def main():
+    """Audit fetched game logs against the population cohort for gaps and quality issues."""
     parquet_path = DATA_DIR / "game_logs.parquet"
     cohort_path = DATA_DIR / "population_cohort.csv"
 
@@ -81,7 +83,7 @@ def main():
     print_capped(
         [f"  {pid:<12} {names.get(pid, '?'):<28} {season}  ({n} games)" for (pid, season), n in low.items()]
     )
-    for (pid, season), n in low.items():
+    for (pid, season), _n in low.items():
         gaps.append((pid, names.get(pid, ""), season, "low_game_count"))
 
     # --- NULL audit ---

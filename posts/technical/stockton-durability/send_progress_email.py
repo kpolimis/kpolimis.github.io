@@ -288,6 +288,7 @@ All three posts currently have `draft: true`. Not yet pushed to origin.
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> int:
+    """Render progress docs to PDF and email the result."""
     ap = argparse.ArgumentParser(description="Render progress docs to PDF and email.")
     ap.add_argument("--no-email", action="store_true", help="Build PDFs but skip sending.")
     ap.add_argument("--subject", default=None, help="Override email subject line.")

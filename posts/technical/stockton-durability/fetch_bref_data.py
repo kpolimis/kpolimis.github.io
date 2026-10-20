@@ -456,8 +456,8 @@ def build_population_cohort() -> None:
             # Strip HOF asterisk from display name (BRef marks HOFers "Name*")
             name = a.get_text(strip=True).rstrip("*")
 
-            def _td(stat: str) -> str:
-                tag = tr.find("td", {"data-stat": stat})
+            def _td(stat: str, _tr=tr) -> str:
+                tag = _tr.find("td", {"data-stat": stat})
                 return tag.get_text(strip=True) if tag else ""
 
             pos = _td("pos")

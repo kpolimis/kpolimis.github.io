@@ -590,7 +590,7 @@ def plot_e7_ts_distribution(
     sns.kdeplot(x=shooting["TS_pct"], fill=True, color="#4C72B0", alpha=0.4, ax=ax)
     sns.rugplot(x=shooting["TS_pct"], color="#4C72B0", alpha=0.4, ax=ax)
 
-    for (pid, label), color in zip(E7_TREATED, ["crimson", "darkorange"]):
+    for (pid, label), color in zip(E7_TREATED, ["crimson", "darkorange"], strict=False):
         mask = shooting["player_id"] == pid
         if mask.any():
             tx = float(shooting.loc[mask, "TS_pct"].iloc[0])
