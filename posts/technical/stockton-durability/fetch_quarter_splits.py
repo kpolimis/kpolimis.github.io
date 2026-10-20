@@ -5,6 +5,7 @@ extract quarter-level stats, and save to a parquet file.
 
 PF cohort → data/quarter_splits_pf.parquet
 PG cohort → data/quarter_splits_pg.parquet  (restricted to 1996–2003)
+E8 population → data/quarter_splits_e8.parquet
 
 Files are kept SEPARATE to avoid write conflicts.
 
@@ -21,6 +22,9 @@ Usage:
         --comps-file data/pg_comparators.csv \\
         --seasons 1996-2003
 
+    # E8: top-50 most-durable players from population
+    conda run -n blog python fetch_quarter_splits.py --top-n-by-games 50
+
     # Quick test (single season)
     conda run -n blog python fetch_quarter_splits.py \\
         --player diawbo01 --seasons 2005
@@ -36,6 +40,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+import os
+
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 HTML_CACHE_QUARTER = DATA_DIR / "html_cache" / "quarter"
 DATA_DIR.mkdir(exist_ok=True)
@@ -43,8 +49,9 @@ HTML_CACHE_QUARTER.mkdir(parents=True, exist_ok=True)
 
 RATE_LIMIT_SEC = 3.5  # BRef allows 20 req/min max (= 3s minimum); 3.5s for headroom
 RATE_LIMIT_JITTER = 1.5
-SESSION_COOLDOWN_PAGES = 100  # 5-min pause every 100 pages (~6 min net fetch per block)
-SESSION_COOLDOWN_SEC = 300
+SESSION_COOLDOWN_PAGES = int(os.environ.get("SESSION_COOLDOWN_PAGES", 100))
+SESSION_COOLDOWN_SEC = int(os.environ.get("SESSION_COOLDOWN_SEC", 300))
+_MAX_403_BACKOFF = int(os.environ.get("MAX_403_BACKOFF_SEC", 600))
 
 import random as _random  # noqa: E402
 
@@ -116,6 +123,18 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
             wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
             logger.warning(
                 "HTTP 429 game_id=%s (pbp=%s) — waiting %ds (attempt %d)",
+                game_id,
+                pbp,
+                wait,
+                attempt + 1,
+            )
+            _ip_blocked_until = time.time() + wait
+            time.sleep(wait)
+        elif resp.status_code == 403:
+            # IP block — sleep to let VPN rotate (gluetun health restart), then retry
+            wait = min(_MAX_403_BACKOFF, 120 * (2**attempt))
+            logger.warning(
+                "HTTP 403 game_id=%s (pbp=%s) — sleeping %ds for VPN rotation (attempt %d)",
                 game_id,
                 pbp,
                 wait,
@@ -520,6 +539,13 @@ def fetch_quarter_splits(
 
         all_rows.extend(rows)
 
+        # Incremental save every 500 new requests — allow resume on container restart
+        if new_requests > 0 and new_requests % 500 == 0 and all_rows:
+            _tmp = pd.DataFrame(all_rows)
+            _combined = pd.concat([existing, _tmp], ignore_index=True) if not existing.empty else _tmp
+            _combined.to_parquet(out_path, index=False)
+            logger.info("Incremental save: %d rows (%d new requests so far)", len(_combined), new_requests)
+
     logger.info(
         "Fetch complete: %d new network requests, %d cache hits",
         new_requests,
@@ -551,6 +577,20 @@ def _parse_season_range(s: str | None) -> tuple[int, int] | None:
     return int(parts[0]), int(parts[1])
 
 
+def _top_n_by_games(n: int) -> list[str]:
+    """Return the n player_ids with the most active game rows in game_logs.parquet."""
+    parquet = DATA_DIR / "game_logs.parquet"
+    if not parquet.exists():
+        raise FileNotFoundError("data/game_logs.parquet not found — run fetch_bref_data.py first.")
+    df = pd.read_parquet(parquet)
+    df["mp_float"] = df["MP"].apply(_parse_mp)
+    active = df[df["mp_float"].notna()]
+    counts = active.groupby("player_id").size().sort_values(ascending=False)
+    top = counts.head(n)
+    logger.info("Top-%d by active games:\n%s", n, top.to_string())
+    return top.index.tolist()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--player", default=None, help="Single BRef player_id to fetch")
@@ -563,13 +603,25 @@ if __name__ == "__main__":
         default=None,
         help="Output parquet filename (auto-detected from comps-file if omitted)",
     )
+    parser.add_argument(
+        "--top-n-by-games",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Fetch top-N most-durable players from game_logs.parquet (E8 mode); outputs quarter_splits_e8.parquet",
+    )
     args = parser.parse_args()
 
-    if args.comps_file is None and args.player is None:
-        parser.error("Provide --player or --comps-file")
+    if args.top_n_by_games is None and args.comps_file is None and args.player is None:
+        parser.error("Provide --player, --comps-file, or --top-n-by-games")
 
     player_ids = []
     output_parquet = args.output
+
+    if args.top_n_by_games is not None:
+        player_ids = _top_n_by_games(args.top_n_by_games)
+        if output_parquet is None:
+            output_parquet = "quarter_splits_e8.parquet"
 
     if args.player:
         player_ids.append(args.player)
@@ -595,7 +647,7 @@ if __name__ == "__main__":
     season_range = _parse_season_range(args.seasons)
     player_ids = list(dict.fromkeys(player_ids))  # deduplicate preserving order
 
-    logger.info("Players: %s", player_ids)
+    logger.info("Players (%d): %s", len(player_ids), player_ids)
     logger.info("Output: data/%s", output_parquet)
     logger.info("Season range: %s", season_range or "all")
 

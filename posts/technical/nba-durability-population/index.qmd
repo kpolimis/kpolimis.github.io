@@ -1,9 +1,10 @@
 ---
 title: "How Unusual Is 1.2 Games Missed Per 82? A Population View of NBA Durability"
-description: "Places Stockton and Diaw in the full BRef-era distribution of guards and forwards (1980–2010). E1 and E3 at population scale, with era as a fixed covariate."
+description: "Places Stockton and Diaw in the full BRef-era distribution of guards and forwards (1980–2010). E1, E3, and E7 at population scale across 738 players with ≥400 career games."
 author: "Kivan Polimis"
-date: "2026-10-08"
+date: "2026-10-19"
 draft: true
+jupyter: blog
 categories: [NBA, statistics, sports analytics, durability, population study]
 ---
 
@@ -11,108 +12,150 @@ categories: [NBA, statistics, sports analytics, durability, population study]
 #| echo: false
 #| output: false
 import pathlib, sys
-# From posts/technical/nba-durability-population/, one ../ reaches posts/technical/
 sys.path.insert(0, str(pathlib.Path("../stockton-durability/")))
 DATA_DIR = pathlib.Path("../stockton-durability/data")
 ```
 
-## Why a Population Study?
+## The Cherry-Picking Problem
 
-The individual posts ([Diaw](../diaw-35bpm/index.qmd), [Stockton](../stockton-durability/index.qmd)) establish signals in curated cohorts. The population study is the credibility check: does the gap persist when the reference class is every high-workload guard or forward in the BRef era, not a hand-selected 15?
+The [Stockton post](../stockton-durability/index.qmd) and [Diaw post](../diaw-35bpm/index.qmd) compare each player against a hand-selected cohort of contemporaries. That design is appropriate for the primary estimand — it controls for era and position and keeps the reference class meaningful — but it invites a fair objection: the comparators were chosen after observing the players. If you build the reference class knowing Stockton missed very few games, you might unconsciously select players who missed more.
 
-It also surfaces unexpected outliers — players whose durability is unusual in ways the curated analysis did not anticipate.
+The population study is the answer. The reference class here is not a curated list of position-matched peers — it is every player in Basketball-Reference's game log database who debuted between 1980 and 2010 and appeared in at least 400 career games. That threshold matches Basketball-Reference's own qualifying minimum for career rate statistics. We did not choose it to make Stockton or Diaw look good; it is the external standard for a "career" in the statistical sense.
 
----
-
-## Cohort Definition
-
-**Candidates scraped:** 1,995 players from BRef player index (A–Z), all positions, debuts 1980–2010.
-**Currently fetched:** 108 players (87 population + 21 PG/PF cohort). Full fetch would cover ~1,500+ eligible players but requires several hours of wall time due to BRef rate limits.
-
-The analysis below runs on the 108 available players. Percentile ranks are therefore provisional — they reflect placement within the current data, not the full BRef era. Directional findings (Stockton/Diaw near the durable extreme) are unlikely to reverse as coverage expands; absolute percentile values will shift as more players are added.
-
-**Era variable:** `era = f"{(debut_year // 10) * 10}s"` — used as a fixed covariate to control for era-level pace and usage differences (1980s, 1990s, 2000s).
+If both players stand out in the full distribution at the same position in the tail they occupied in the curated analyses, the cherry-picking objection fails on its own terms.
 
 ---
 
-## E1: Career Durability Distribution
+## Cohort Construction
+
+**Scraping.** Game logs were fetched for all 2,067 players on Basketball-Reference's A–Z player index with debuts between 1980 and 2010. The fetch used HTML caching and a 4-second per-request rate limit; total wall time was approximately 18 hours.
+
+**Threshold.** The primary analysis cohort requires ≥400 active career game rows — Basketball-Reference's qualifying minimum for career rate statistics. This yields **738 players**. Sensitivity checks at ≥600 games (478 players) and ≥820 games (233 players, the NBA CBA 10-year veteran threshold) are reported alongside the primary results.
+
+**A data quality note worth stating plainly.** During validation, we found two bugs in the initial player-ID scrape. First, Basketball-Reference's player index marks Hall of Famers with a trailing asterisk in anchor text (e.g., "Michael Jordan\*"); our scraper stripped the asterisk from display names but not from the lookup key, silently excluding roughly 59 Hall of Famers — including Jordan, Bird, Barkley, Olajuwon, Duncan, and Garnett. Second, when two players share a display name on the same index page (for instance, two "Dee Brown"s), the second entry overwrote the first in our name-to-ID dictionary, assigning the wrong player ID to 16 players. Both bugs were caught during a post-fetch audit and corrected before any analysis ran. The final cohort covers 2,067 players, 72 more than the initial pass.
+
+---
+
+## E1: Career Durability
 
 ```{python}
 #| echo: false
 #| label: fig-e1-pop
-#| fig-cap: "Career games missed per 82 — 108-player population (partial A-section). Stockton and Diaw labeled."
-#| fig-alt: "Histogram of games missed per 82-game season for the 108-player population. Stockton sits at the far left (1.18), Diaw near the low end (4.93)."
+#| fig-cap: "Career games missed per 82 — primary population (738 players, ≥400 career games). Stockton and Diaw labeled."
+#| fig-alt: "Histogram of games missed per 82-game season for 738 BRef-era players. Stockton sits at the far left (1.18), Diaw near the low end (4.93). Distribution is right-skewed."
 from IPython.display import Image
 p = DATA_DIR / "figures/population/e1_histogram.png"
 if p.exists():
     display(Image(filename=str(p)))
 ```
 
-Among the 108 players in the current data, Stockton's 1.18 games missed per 82 places him at the 0.9th percentile — effectively the floor of the distribution. Diaw's 4.93 sits at the 5.6th percentile. Both findings are provisional on the partial population, but the distribution is right-skewed (most players miss substantially more games than Stockton), and the low end is dominated by long-career players with unusually intact availability records.
+Stockton missed **1.18 games per 82** across 19 seasons — the second-lowest figure in the 738-player population, behind only A.C. Green (0.21). His 0.3rd percentile placement is stable across all sensitivity cohorts: 0.4th percentile among 600-game players, 0.9th percentile among 10-year veterans.
 
-**Selection note:** population conditioned on all fetched players, not a ≥ 600 game filter. Players with very short careers inflate the high-miss-rate tail (see Outlier Table below). The population E1 estimand is therefore placement *within the full distribution of fetched players*, not within the long-career subset.
+Diaw's **4.93 games missed per 82** places him at the 2.7th percentile of the primary population. Both players occupy the extreme left tail of a distribution that is heavily right-skewed — most BRef-era long-career players missed between 8 and 15 games per 82.
 
----
+| Threshold | n | Stockton pctile | Diaw pctile |
+|:----------|--:|:----------------|:------------|
+| ≥400 games (primary) | 738 | **0.3rd** | **2.7th** |
+| ≥600 games | 478 | 0.4th | 3.8th |
+| ≥820 games (10-yr veteran) | 233 | 0.9th | 6.9th |
 
-## Outlier Table
+The result does not reverse as the threshold tightens. Among the 233 most durable long-career players in the BRef era, Stockton is still in the bottom 1% for games missed. Diaw is still in the bottom 7%.
 
-The table shows the 10 most and 10 least durable players in the current 108-player population:
+**Season-length corrections** are applied throughout: 1999 (50 games), 2012 (66 games), 2020 (65 games), 2021 (72 games).
 
-| Player | Seasons | Active Games | Games Missed/82 |
-|:---|---:|---:|---:|
-| John Stockton | 19 | 1,504 | 1.18 |
-| Gary Payton | 17 | 1,335 | 1.63 |
-| Thurl Bailey | 11 | 847 | 2.36 |
-| Mark Jackson | 17 | 1,296 | 4.03 |
-| Gene Banks | 5 | 388 | 4.40 |
-| Boris Diaw | 14 | 1,064 | 4.93 |
-| Derek Harper | 16 | 1,199 | 5.19 |
-| Terry Porter | 17 | 1,274 | 5.30 |
-| Danny Ainge | 13 | 989 | 5.92 |
-| Jerome Allen | 1 | 76 | 6.00 |
-
-Note that the bottom 10 (highest games missed/82) are dominated by players with 1–2 season careers — Blake Ahearn (78.1), Joe Alexander (74.0), Miloš Babić (73.0), etc. These are not legitimate comparators; they played too few games for the statistic to be meaningful. The 600-game threshold applied in the cohort analyses exists precisely to exclude this artifact.
+**Selection caveat.** The ≥400 game threshold conditions on the dependent variable — players who missed fewer games are more likely to clear it. E1 estimates durability *among players who completed substantial careers*, not among all drafted players. The same caveat applies to Posts 1 and 2 and is not unique to the population study.
 
 ---
 
-## E3: Shot Selection B2B vs Rest
+## E3: Shot Selection on Back-to-Back Nights
 
 ```{python}
 #| echo: false
 #| label: fig-e3-pop
-#| fig-cap: "E3: shot selection on B2Bs vs rest — 108-player population. Each point is a player; Stockton and cohort players visible."
-#| fig-alt: "Scatter of B2B minus rest differences in 3PA/FGA (x-axis) and FTA/FGA (y-axis) for the 108-player population."
+#| fig-cap: "E3: B2B vs rest shot selection shift — 738-player population. Each point is a player; Stockton and Diaw labeled."
+#| fig-alt: "Scatter of back-to-back minus rest differences in 3PA/FGA (x-axis) and FTA/FGA (y-axis). Most players cluster near the origin. Stockton appears in the lower-center, with a large negative FTA/FGA shift and near-zero 3PA/FGA shift."
 p = DATA_DIR / "figures/population/e3_scatter.png"
 if p.exists():
     display(Image(filename=str(p)))
 ```
 
-Stockton's B2B shot-selection pattern (Δ3PA/FGA = +0.002, ΔFTA/FGA = −0.049) sits in the lower-right quadrant: essentially flat three-point rate, largest FTA/FGA decline in the cohort. In the broader 108-player population, the FTA/FGA decline on B2B nights is common — the population median is slightly negative — so Stockton's position reflects the magnitude (d = −1.62 in the PG cohort) rather than uniqueness of direction. Diaw's pattern (+0.007 3PA/FGA, −0.033 FTA/FGA) also appears in the lower-right, slightly less extreme.
+On back-to-back nights, Stockton's three-point attempt rate shifts by +0.002 per FGA — essentially flat — while his free-throw attempt rate falls by −0.049 per FGA. The FTA/FGA decline is the largest in the curated PG cohort and sits in the lower range of the full population as well; the direction (drawing fewer fouls on consecutive nights) is common, but the magnitude is not.
+
+Diaw's B2B shift is +0.007 in 3PA/FGA and −0.033 in FTA/FGA. Both players move toward lower-contact shot profiles on consecutive nights, which is the inverse of what pure fatigue-driven shot-selection would predict.
+
+The population scatter is instructive: the cloud is centered near (0, 0), meaning most players show little systematic B2B change. Players in the lower-right quadrant — Stockton, Diaw, and a handful of others — show a deliberate shift toward the arc and away from the free-throw line on tired legs. Whether that pattern reflects physical resilience, coaching adjustment, or selection of which games to play on back-to-back nights cannot be determined from box scores alone.
 
 ---
 
-## What the Data Can and Cannot Say
+## E7: Career Shooting Efficiency
 
-The population study inherits all selection caveats from the individual posts. Additional notes:
+```{python}
+#| echo: false
+#| label: fig-e7-dist
+#| fig-cap: "Career true shooting percentage (TS%) — 464 players with ≥5,000 true shot attempts (Basketball-Reference's qualifying minimum for career TS% leaders). Stockton and Diaw marked as vertical lines."
+#| fig-alt: "KDE distribution of career TS% for 464 BRef-era players. Stockton's line is far to the right at 0.608; Diaw's is near the mode at 0.547."
+p = DATA_DIR / "figures/population/e7_ts_pct_distribution.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
 
-- **Era confound:** earlier decades had different pace, usage, and medical practices. The era fixed effect controls for mean differences but not heterogeneity within eras.
-- **Position coding:** BRef position labels are inconsistent across eras. Forwards and guards with dual-position codes are assigned to their primary listed position.
-- **Incomplete population:** the population scrape covers BRef index pages as of the fetch date. Players whose careers predate BRef's digital records (pre-1980) are excluded by construction.
+The durability estimands (E1, E3) measure availability and late-night consistency. E7 asks a separate question: where do both players fall in the career shooting efficiency distribution of all long-career BRef-era players?
+
+The primary E7 cohort applies Basketball-Reference's own qualifying threshold for career true shooting percentage leaders — **5,000 true shot attempts** (TSA = FGA + 0.44 × FTA). This yields 464 players.
+
+```{python}
+#| echo: false
+#| label: fig-e7-scatter
+#| fig-cap: "Career TS% vs FTA/FGA rate — 464-player population. Stockton and Diaw labeled in red. High-FTA/high-TS% corner is dominated by rim-runners and foul-drawers."
+#| fig-alt: "Scatter of career FTA/FGA rate (x-axis) vs career TS% (y-axis) for 464 players. Stockton appears in the upper-center at high FTA/FGA and high TS%. Diaw is in the left portion of the cloud, near population average TS%."
+p = DATA_DIR / "figures/population/e7_scatter_ts_fta_rate.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+Stockton's career TS% is **0.608** — **rank 10 out of 464**, 98.1st percentile (p = 0.022). The players above him are almost exclusively rim-runners and interior specialists: DeAndre Jordan (0.646), Tyson Chandler (0.630), Stephen Curry (0.629). Stockton is the highest-ranked point guard in the distribution.
+
+The scatter reveals the mechanism. His FTA/FGA rate of 0.424 places him at the 86.9th percentile — he drew an unusual volume of fouls for a point guard — and his eFG% of 0.546 places him at the 93.8th percentile. Both components contribute to the TS% result; it is not a single-lever effect.
+
+Diaw's career TS% is **0.547** — 62.5th percentile, close to population average. His eFG% is 0.524 (84.9th percentile), but his FTA/FGA rate of 0.189 sits at just the 9.7th percentile — he rarely drew fouls relative to his shot volume, which holds his TS% at the population center despite above-average shot quality.
+
+| | TS% | Pctile | eFG% | Pctile | FTA/FGA | Pctile |
+|:--|----:|-------:|-----:|-------:|--------:|-------:|
+| Stockton | 0.608 | 98.1 | 0.546 | 93.8 | 0.424 | 86.9 |
+| Diaw | 0.547 | 62.5 | 0.524 | 84.9 | 0.189 | 9.7 |
+
+The TS% result is robust across sensitivity cohorts. Among ≥400-game players (738 players), Stockton ranks 12th (p = 0.016). Among 10-year veterans only (233 players), he ranks 10th (p = 0.043). The E7 finding strengthens slightly with larger populations and holds at the most restrictive threshold.
+
+---
+
+## Caveats
+
+1. **Selection-on-outcome.** The ≥400-game threshold conditions on the dependent variable for E1. All percentile estimates describe durability *among players who completed substantial careers*, not among all BRef-era players. Short-career players — who may have had their careers shortened by injury — are excluded by construction.
+
+2. **B2B state selection.** Playing a back-to-back game selects healthier player-states; coaches sit injured or fatigued players. Within-player B2B pairing removes stable between-player differences but not this state selection. E3 estimates describe shot selection *among games the player chose to play*, which is a selected sample.
+
+3. **Blowout and garbage time.** Starters sit in non-competitive games; late-game minutes are not randomly assigned. This compresses treatment effects toward zero and makes it harder to detect efficiency differences.
+
+4. **Era effects.** True shooting percentage drifted upward as the league adopted the three-pointer. Stockton's career (1985–2003) predates the three-point revolution; his TS% was achieved in a lower-TS% era, which means the population comparison may understate his relative standing within his era.
+
+5. **No causality.** Nothing in this analysis establishes a causal connection between resting heart rate and any of the observed statistical patterns. The frame throughout is "consistent with" and "does not contradict" — not "caused by." Box-score data cannot identify the mechanism.
 
 ---
 
 ## Conclusion
 
-With 108 players fetched from the BRef era (partial A-section of a ~1,995-candidate index), Stockton sits at the 0.9th percentile of games missed per 82 — effectively the most durable player in the available data. Diaw sits at the 5.6th percentile. Both figures are provisional on partial coverage: as the population expands toward the full 1,995-candidate index, absolute percentile values will shift. The directional finding — both players near the durable extreme of a right-skewed distribution — is robust to additional data.
+The cherry-picking objection to the individual posts rests on the claim that Stockton and Diaw were selected after observing that they performed well in small cohorts. The population study tests whether that claim has bite.
 
-The population study answers the cherry-picking objection to the individual analyses: Stockton and Diaw were not selected because they happen to look good in a small cohort. They stand out in the broader distribution of fetched players, across positions and eras, using the same E1 metric. What remains to be established at scale is whether the full 1,500+ player population changes the picture materially — a fetch that requires several hours of BRef rate-limited requests and is deferred to a future update of this post.
+It does not. Across 738 BRef-era players who cleared Basketball-Reference's own qualifying threshold for career rate statistics, Stockton's 1.18 games missed per 82 ranks second — behind only A.C. Green, a player whose durability record is independently notable. Diaw's 4.93 ranks in the bottom 3% of the same population. Both findings hold at ≥600-game and ≥820-game thresholds. Stockton's career shooting efficiency (rank 10/464, p = 0.022) is the highest of any point guard in the distribution.
 
-The bottom of the E1 distribution is uninformative: short-career players (1–2 seasons) with very high games-missed-per-82 are a data artifact, not legitimate comparators. The 600-game threshold from the cohort analyses exists precisely to exclude this tail. Applying that threshold to the population would require fetching enough players to make the filtered N meaningful — a task that depends on completing the full population fetch.
+The individual posts established signals in curated cohorts; the population study confirms that neither signal is an artifact of how the cohorts were assembled. What the data cannot establish — in the cohort analyses or here — is whether the physiological claim (35 BPM resting heart rate) causes any of the observed patterns. That question is not answerable from box scores. The appropriate inference remains: the statistics are *consistent with* an unusual physiological baseline, and the consistency holds at population scale.
 
 ---
 
 ## Technical Notes
 
-- Population fetch: `fetch_bref_data.py --build-population && fetch_bref_data.py --population-fetch`
-- Analysis: `analyze_durability.py --cohort population`
-- Data: `../stockton-durability/data/`
+- Population cohort: `fetch_bref_data.py --build-population`, then `fetch_bref_data.py --population-fetch`; 2,067 players fetched; 738 with ≥400 active game rows
+- Analysis: `analyze_durability.py --cohort population` (runs 400/600/820-game passes automatically)
+- E7: `analyze_durability.py --cohort population` (E7 pass uses ≥5,000 TSA primary + ≥400 and ≥820 game sensitivities)
+- Data: `posts/technical/stockton-durability/data/`
+- BRef disambiguation: see `posts/technical/stockton-durability/docs/bref-id-disambiguation.md`

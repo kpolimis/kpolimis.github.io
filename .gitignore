@@ -155,3 +155,9 @@ posts/technical/stockton-durability/tests/__pycache__/
 docs/handoffs/*
 !docs/handoffs/.gitkeep
 !docs/handoffs/SESSION-*.md
+
+# uv lock file — not used in CI
+uv.lock
+
+# Multi-LLM panel synthesis working docs — not post content
+panel_synthesis_*.md
