@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Data artifacts — regenerate via make cohort-pg / population-fetch
+data/game_logs.parquet
+data/population_cohort.csv
+data/quarter_splits_*.parquet
+data/*_permutation.parquet
+data/e1_*.parquet
+data/e2_*.parquet
+data/e4_*.parquet
+data/e5_*.parquet
+data/e7_*.csv
+data/cohort_summary.csv
+data/fetch_gaps.csv
+data/*.lock
+
+# HTML cache — regenerate on re-fetch
+data/html_cache/
+
+# Figures are committed intentionally — blog posts reference them by path
+# and Quarto rendering requires them at build time.
+# Uncomment the line below if you move to a CI-generated figures workflow:
+# data/figures/
+
+# Logs
+logs/
+*.log
+
+# Session / working docs
+docs/pdf/session-report-*.md
+docs/pdf/session-report-*.pdf
+panel_synthesis_*.md
+
+# VPN credentials
+vpn/*.conf
+vpn/*.key

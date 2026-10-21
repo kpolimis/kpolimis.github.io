@@ -1,8 +1,9 @@
 """Tests for fetch_bref_data.py — cohort structure, parsing, and CSV output."""
 
-import fetch_bref_data as fb
 import pandas as pd
 import pytest
+
+import fetch_bref_data as fb
 
 
 class TestCohortStructure:

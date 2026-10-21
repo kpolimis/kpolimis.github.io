@@ -1,0 +1,14 @@
+beautifulsoup4>=4.12
+lxml>=5.0
+matplotlib>=3.8
+numpy>=1.26
+pandas>=2.1
+pyarrow>=14.0
+requests>=2.31
+scipy>=1.11
+seaborn>=0.13
+statsmodels>=0.14
+
+# Dev / CI
+pytest>=8.0
+ruff>=0.6

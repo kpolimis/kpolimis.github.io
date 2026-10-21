@@ -18,6 +18,7 @@ Generates two PDFs:
 Models after ~/repos/homelab-docs/scripts/steve_md_to_pdf_email.py (weasyprint pattern)
 but uses pandoc (available in PATH) since weasyprint is not in the blog conda env.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -40,10 +41,14 @@ OUT_DIR = DOCS_DIR / "pdf"
 
 PANDOC_FLAGS = [
     "--pdf-engine=xelatex",
-    "-V", "geometry:margin=1in",
-    "-V", "fontsize=11pt",
-    "-V", "colorlinks=true",
-    "-V", "linkcolor=NavyBlue",
+    "-V",
+    "geometry:margin=1in",
+    "-V",
+    "fontsize=11pt",
+    "-V",
+    "colorlinks=true",
+    "-V",
+    "linkcolor=NavyBlue",
     "--highlight-style=tango",
     "--toc",
     "--toc-depth=2",
@@ -51,10 +56,14 @@ PANDOC_FLAGS = [
 
 PANDOC_FLAGS_NOTOC = [
     "--pdf-engine=xelatex",
-    "-V", "geometry:margin=1in",
-    "-V", "fontsize=11pt",
-    "-V", "colorlinks=true",
-    "-V", "linkcolor=NavyBlue",
+    "-V",
+    "geometry:margin=1in",
+    "-V",
+    "fontsize=11pt",
+    "-V",
+    "colorlinks=true",
+    "-V",
+    "linkcolor=NavyBlue",
     "--highlight-style=tango",
 ]
 
@@ -70,8 +79,18 @@ def _render_pdf(md_path: Path, out_path: Path, toc: bool = True) -> bool:
             logger.info("Rendered %s  (%d KB)", out_path.name, size_kb)
             return True
         # Retry without xelatex on engine failure
-        cmd_fb = ["pandoc", "-f", "markdown", "-t", "pdf",
-                  "-V", "geometry:margin=1in", str(md_path), "-o", str(out_path)]
+        cmd_fb = [
+            "pandoc",
+            "-f",
+            "markdown",
+            "-t",
+            "pdf",
+            "-V",
+            "geometry:margin=1in",
+            str(md_path),
+            "-o",
+            str(out_path),
+        ]
         r2 = subprocess.run(cmd_fb, capture_output=True, text=True)
         if r2.returncode == 0 and out_path.exists():
             logger.info("Rendered %s via fallback engine", out_path.name)
@@ -85,6 +104,7 @@ def _render_pdf(md_path: Path, out_path: Path, toc: bool = True) -> bool:
 
 # ── E8 live stats ─────────────────────────────────────────────────────────────
 
+
 def _e8_fetch_stats() -> dict:
     """Pull live E8 fetch stats from Apollo container logs + parquet inventory."""
     stats: dict = {
@@ -97,9 +117,9 @@ def _e8_fetch_stats() -> dict:
 
     # Container status
     r = subprocess.run(
-        ["ssh", "apollo",
-         "docker ps -a --filter name=bref-qs-fetch --format '{{.Status}}'"],
-        capture_output=True, text=True,
+        ["ssh", "apollo", "docker ps -a --filter name=bref-qs-fetch --format '{{.Status}}'"],
+        capture_output=True,
+        text=True,
     )
     if r.returncode == 0:
         stats["container_status"] = r.stdout.strip() or "not found"
@@ -107,15 +127,18 @@ def _e8_fetch_stats() -> dict:
     # Log tail
     r = subprocess.run(
         ["ssh", "apollo", "docker logs --tail 40 bref-qs-fetch 2>&1"],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     if r.returncode == 0:
         stats["log_tail"] = r.stdout.strip()
 
     # Parquet inventory on Apollo
     r = subprocess.run(
-        ["ssh", "apollo",
-         """python3 -c "
+        [
+            "ssh",
+            "apollo",
+            """python3 -c "
 import sys
 try:
     import pyarrow.parquet as pq, os
@@ -128,8 +151,10 @@ try:
         print('0|0|0')
 except Exception as e:
     print(f'err:{e}')
-" """],
-        capture_output=True, text=True,
+" """,
+        ],
+        capture_output=True,
+        text=True,
     )
     if r.returncode == 0 and "|" in r.stdout:
         parts = r.stdout.strip().split("|")
@@ -143,6 +168,7 @@ except Exception as e:
     if local_e8.exists():
         try:
             import pandas as pd
+
             df = pd.read_parquet(local_e8)
             stats["local_rows"] = len(df)
             stats["local_players"] = df["player_id"].nunique()
@@ -159,6 +185,7 @@ def _data_inventory() -> list[dict]:
         row = {"name": p.name, "size_mb": p.stat().st_size / 1e6, "rows": None}
         try:
             import pandas as pd
+
             df = pd.read_parquet(p)
             row["rows"] = len(df)
         except Exception:
@@ -169,17 +196,18 @@ def _data_inventory() -> list[dict]:
 
 # ── Report generators ──────────────────────────────────────────────────────────
 
+
 def _build_e8_progress_md(stats: dict, inventory: list[dict]) -> str:
     """Build the E8 progress report markdown."""
     rows_k = f"{stats['parquet_rows']:,}"
-    players = stats['parquet_players']
-    size = stats['parquet_size_mb']
-    status = stats['container_status']
-    log = stats['log_tail']
+    players = stats["parquet_players"]
+    size = stats["parquet_size_mb"]
+    status = stats["container_status"]
+    log = stats["log_tail"]
 
     inv_table = "| File | Rows | Size (MB) |\n|:--|--:|--:|\n"
     for item in inventory:
-        rows_str = f"{item['rows']:,}" if item['rows'] is not None else "—"
+        rows_str = f"{item['rows']:,}" if item["rows"] is not None else "—"
         inv_table += f"| `{item['name']}` | {rows_str} | {item['size_mb']:.1f} |\n"
 
     top50_section = """
@@ -287,6 +315,7 @@ All three posts currently have `draft: true`. Not yet pushed to origin.
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+
 def main() -> int:
     """Render progress docs to PDF and email the result."""
     ap = argparse.ArgumentParser(description="Render progress docs to PDF and email.")
@@ -326,11 +355,9 @@ def main() -> int:
     from claude_notify import notify  # type: ignore
 
     rows_k = f"{stats['parquet_rows']:,}"
-    players = stats['parquet_players']
-    container = stats['container_status']
-    subject = args.subject or (
-        f"[stockton] E8 fetch update — {rows_k} rows, {players}/50 players"
-    )
+    players = stats["parquet_players"]
+    container = stats["container_status"]
+    subject = args.subject or (f"[stockton] E8 fetch update — {rows_k} rows, {players}/50 players")
 
     body = f"""**NBA Durability Series — E8 Progress Update**
 

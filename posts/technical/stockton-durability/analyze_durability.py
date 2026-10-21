@@ -23,7 +23,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -62,8 +61,20 @@ PF_IDS = {
 MIN_GAMES = 400  # BRef qualifying minimum for career rate statistics
 
 
+def _ensure_dirs() -> None:
+    """Create required data directories if absent."""
+    DATA_DIR.mkdir(exist_ok=True)
+
+
 def _parse_mp(mp_str: str) -> float | None:
-    """'34:21' → 34.35; returns None for non-playing rows."""
+    """Convert 'MM:SS' to fractional minutes; returns None for non-playing rows.
+
+    Args:
+        mp_str: Minutes-played string in 'MM:SS' format.
+
+    Returns:
+        Fractional minutes as float, or None if unparseable.
+    """
     if not isinstance(mp_str, str) or ":" not in mp_str:
         return None
     try:
@@ -76,8 +87,12 @@ def _parse_mp(mp_str: str) -> float | None:
 def load_cohort(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
     """Load and filter game logs for the given cohort.
 
-    Returns (df, treated_player_id, treated_player_name).
-    For population cohort, treated_id/name are None.
+    Args:
+        cohort: One of 'pg', 'pf', or 'population'.
+
+    Returns:
+        Tuple of (df, treated_player_id, treated_player_name).
+        For population cohort, treated_id/name are None.
     """
     if cohort not in ("pg", "pf", "population"):
         raise ValueError(f"Unknown cohort: {cohort!r}. Use pg, pf, or population.")
@@ -124,9 +139,14 @@ def compute_e1(
 ) -> tuple[pd.DataFrame, float | None]:
     """Compute games-missed-per-82 for each player.
 
-    Returns (summary_df, treated_gmiss_per_82).
-    summary_df columns: player_id, player_name, career_seasons, total_season_games,
-                        active_games, games_missed, games_missed_per_82.
+    Args:
+        df: Game log DataFrame with player_id, season, Date columns.
+        treated_id: Player ID to extract treated value for, or None.
+
+    Returns:
+        Tuple of (summary_df, treated_gmiss_per_82).
+        summary_df columns: player_id, player_name, career_seasons,
+        total_season_games, active_games, games_missed, games_missed_per_82.
     """
     rows = []
     for pid, pdata in df.groupby("player_id"):
@@ -184,7 +204,15 @@ def permutation_e1(
     """Permutation test for E1: does treated player have unusual games_missed_per_82?
 
     Test statistic: treated_value - median(others).
-    Returns (observed_gap, null_distribution, permutation_p).
+
+    Args:
+        summary: E1 summary DataFrame with player_id and games_missed_per_82 columns.
+        treated_id: Player ID to treat as the treatment unit.
+        n_perm: Number of permutation resamples.
+        cohort: Label used for naming the output parquet.
+
+    Returns:
+        Tuple of (observed_gap, null_distribution, permutation_p).
     """
     vals = summary["games_missed_per_82"].values.astype(float)
     pids = summary["player_id"].values
@@ -225,7 +253,13 @@ def compute_e3(
 ) -> pd.DataFrame:
     """E3: shot-selection differences (3PA/FGA, FTA/FGA) back-to-back vs rest.
 
-    Returns per-player difference table.
+    Args:
+        df: Game log DataFrame with 3PA, FGA, FTA, b2b columns.
+        treated_id: Player ID for the treated unit (used only for logging context).
+
+    Returns:
+        Per-player difference table with columns player_id, player_name,
+        b2b_games, rest_games, diff_3pa_fga, diff_fta_fga.
     """
     logger.info(
         "Note: conditioning on B2B games selects healthier player-states; "
@@ -268,7 +302,15 @@ def compute_e3(
 
 
 def cohens_d(values: np.ndarray, reference: float) -> float:
-    """Effect size: distance of reference from values in SD units."""
+    """Effect size: distance of reference from values in SD units.
+
+    Args:
+        values: Array of comparison values.
+        reference: The reference value to compare against the distribution.
+
+    Returns:
+        Cohen's d effect size, or nan if fewer than 2 values.
+    """
     if len(values) < 2:
         return float("nan")
     return (reference - float(np.mean(values))) / float(np.std(values, ddof=1))
@@ -280,7 +322,14 @@ def plot_e1_histogram(
     treated_name: str | None,
     cohort: str,
 ) -> None:
-    """Histogram of games-missed-per-82 with treated player labeled."""
+    """Histogram of games-missed-per-82 with treated player labeled.
+
+    Args:
+        summary: E1 summary DataFrame with games_missed_per_82 column.
+        treated_id: Player ID to mark with a vertical line, or None.
+        treated_name: Display name for the treated player legend label.
+        cohort: Cohort label used for figure directory and title.
+    """
     fig_dir = DATA_DIR / "figures" / cohort
     fig_dir.mkdir(parents=True, exist_ok=True)
 
@@ -311,7 +360,14 @@ def plot_e3_scatter(
     treated_name: str | None,
     cohort: str,
 ) -> None:
-    """Scatter: B2B vs rest 3PA/FGA differences."""
+    """Scatter: B2B vs rest 3PA/FGA and FTA/FGA differences.
+
+    Args:
+        e3_df: E3 per-player difference DataFrame.
+        treated_id: Player ID to highlight in red, or None.
+        treated_name: Display name for annotation label.
+        cohort: Cohort label used for figure directory and title.
+    """
     fig_dir = DATA_DIR / "figures" / cohort
     fig_dir.mkdir(parents=True, exist_ok=True)
 
@@ -351,7 +407,14 @@ def emit_comparators_csv(
     cohort: str,
     n_comps: int = 3,
 ) -> None:
-    """Emit top-N comparators closest in games_missed_per_82 to treated player."""
+    """Emit top-N comparators closest in games_missed_per_82 to treated player.
+
+    Args:
+        summary: E1 summary DataFrame.
+        treated_id: Player ID of the treated unit.
+        cohort: Cohort label used for the output filename.
+        n_comps: Number of closest comparators to include.
+    """
     mask = summary["player_id"] == treated_id
     if not mask.any():
         logger.warning("Treated player %s not found; skipping comparators CSV.", treated_id)
@@ -370,30 +433,25 @@ def emit_comparators_csv(
     logger.info("\n%s", comps[out_cols].to_string(index=False))
 
 
-def run(cohort: str, n_perm: int = 5000, min_games: int = MIN_GAMES) -> None:
-    """Main analysis entry point for one cohort.
+def _run_e1(
+    df: pd.DataFrame,
+    treated_id: str | None,
+    treated_name: str | None,
+    cohort: str,
+    n_perm: int,
+) -> pd.DataFrame:
+    """Run E1 career durability analysis: compute, log, run permutation test.
 
-    For the population cohort, min_games sets the active-game eligibility floor
-    (default MIN_GAMES=400, the BRef qualifying minimum for career rate
-    statistics). Sensitivity runs (600, 820) write outputs to suffixed
-    directories so they never overwrite the primary run.
+    Args:
+        df: Filtered game log DataFrame for the cohort.
+        treated_id: Player ID of the treated unit, or None for population.
+        treated_name: Display name for logging, or None.
+        cohort: Cohort label used for permutation parquet naming.
+        n_perm: Number of permutation resamples.
+
+    Returns:
+        E1 summary DataFrame sorted by games_missed_per_82.
     """
-    df, treated_id, treated_name = load_cohort(cohort)
-
-    label = cohort
-    if cohort == "population":
-        game_counts = df.groupby("player_id").size()
-        eligible = set(game_counts[game_counts >= min_games].index)
-        df = df[df["player_id"].isin(eligible)].copy()
-        if min_games != MIN_GAMES:
-            label = f"{cohort}_{min_games}"
-        logger.info(
-            "Population E1/E3 pass: ≥%d active career games — %d players",
-            min_games,
-            df["player_id"].nunique(),
-        )
-
-    # ── E1: Career durability ──
     logger.info("\n=== E1: Career durability ===")
     e1_summary, treated_gmiss = compute_e1(df, treated_id)
     logger.info("\n%s\n", e1_summary.to_string(index=False))
@@ -429,7 +487,24 @@ def run(cohort: str, n_perm: int = 5000, min_games: int = MIN_GAMES) -> None:
             "completed a long career, not all players."
         )
 
-    # ── E3: Shot selection B2B vs rest ──
+    return e1_summary
+
+
+def _run_e3(
+    df: pd.DataFrame,
+    treated_id: str | None,
+    treated_name: str | None,
+) -> pd.DataFrame:
+    """Run E3 shot-selection analysis: compute and log effect sizes.
+
+    Args:
+        df: Filtered game log DataFrame for the cohort.
+        treated_id: Player ID of the treated unit, or None.
+        treated_name: Display name for logging, or None.
+
+    Returns:
+        E3 per-player difference DataFrame.
+    """
     logger.info("\n=== E3: Shot selection (B2B vs rest) ===")
     e3_df = compute_e3(df, treated_id)
 
@@ -461,73 +536,126 @@ def run(cohort: str, n_perm: int = 5000, min_games: int = MIN_GAMES) -> None:
     else:
         logger.warning("E3: no players had sufficient B2B/rest game counts.")
 
-    # ── Figures ──
+    return e3_df
+
+
+def _save_population_outputs(
+    e1_summary: pd.DataFrame,
+    label: str,
+    min_games: int,
+) -> None:
+    """Save population outliers CSV and log percentile ranks for E7_TREATED players.
+
+    Args:
+        e1_summary: E1 summary DataFrame with games_missed_per_82 column.
+        label: Output label — 'population' for primary, 'population_N' for sensitivity.
+        min_games: Active-game threshold used for this pass (for log message).
+    """
+    top10 = e1_summary.nsmallest(10, "games_missed_per_82")
+    bot10 = e1_summary.nlargest(10, "games_missed_per_82")
+    outliers = pd.concat([top10, bot10]).drop_duplicates("player_id")
+    if label == "population":
+        outliers_path = DATA_DIR / "population_outliers.csv"
+    else:
+        sens_dir = DATA_DIR / "figures" / label
+        sens_dir.mkdir(parents=True, exist_ok=True)
+        outliers_path = sens_dir / "population_outliers.csv"
+    outliers.to_csv(outliers_path, index=False)
+    logger.info("Saved %s", outliers_path)
+
+    for label_id, label_name in [("stockjo01", "Stockton"), ("diawbo01", "Diaw")]:
+        mask = e1_summary["player_id"] == label_id
+        if mask.any():
+            val = float(e1_summary.loc[mask, "games_missed_per_82"].iloc[0])
+            pct = float(stats.percentileofscore(e1_summary["games_missed_per_82"].values, val))
+            logger.info(
+                "%s: %.2f games missed/82, %.1f%% percentile (era-adjusted)",
+                label_name,
+                val,
+                pct,
+            )
+
+    logger.info(
+        "\nPopulation conditioned on ≥%d career games (primary threshold 400 is the "
+        "BRef qualifying minimum for career rate statistics); E1 estimand scope is "
+        "durability among players who completed a long career. Truncated "
+        "distribution — interpret percentile ranks with this in mind.",
+        min_games,
+    )
+
+
+def run(cohort: str, n_perm: int = 5000, min_games: int = MIN_GAMES) -> None:
+    """Main analysis entry point for one cohort.
+
+    For the population cohort, min_games sets the active-game eligibility floor
+    (default MIN_GAMES=400, the BRef qualifying minimum for career rate
+    statistics). Sensitivity runs (600, 820) write outputs to suffixed
+    directories so they never overwrite the primary run.
+
+    Args:
+        cohort: One of 'pg', 'pf', or 'population'.
+        n_perm: Number of permutation resamples for E1.
+        min_games: Active-game floor for population cohort filtering.
+    """
+    _ensure_dirs()
+    df, treated_id, treated_name = load_cohort(cohort)
+
+    label = cohort
+    if cohort == "population":
+        game_counts = df.groupby("player_id").size()
+        eligible = set(game_counts[game_counts >= min_games].index)
+        df = df[df["player_id"].isin(eligible)].copy()
+        if min_games != MIN_GAMES:
+            label = f"{cohort}_{min_games}"
+        logger.info(
+            "Population E1/E3 pass: ≥%d active career games — %d players",
+            min_games,
+            df["player_id"].nunique(),
+        )
+
+    e1_summary = _run_e1(df, treated_id, treated_name, cohort, n_perm)
+    e3_df = _run_e3(df, treated_id, treated_name)
+
     if not e1_summary.empty:
         plot_e1_histogram(e1_summary, treated_id, treated_name, label)
     if not e3_df.empty:
         plot_e3_scatter(e3_df, treated_id, treated_name, label)
 
-    # ── Comparators CSV (pg and pf cohorts) ──
     if treated_id and cohort in ("pg", "pf") and len(e1_summary) >= 4:
         emit_comparators_csv(e1_summary, treated_id, cohort)
 
-    # ── Population-specific outputs ──
     if cohort == "population" and not e1_summary.empty:
-        top10 = e1_summary.nsmallest(10, "games_missed_per_82")
-        bot10 = e1_summary.nlargest(10, "games_missed_per_82")
-        outliers = pd.concat([top10, bot10]).drop_duplicates("player_id")
-        if label == cohort:
-            outliers_path = DATA_DIR / "population_outliers.csv"
-        else:
-            sens_dir = DATA_DIR / "figures" / label
-            sens_dir.mkdir(parents=True, exist_ok=True)
-            outliers_path = sens_dir / "population_outliers.csv"
-        outliers.to_csv(outliers_path, index=False)
-        logger.info("Saved %s", outliers_path)
-
-        for label_id, label_name in [("stockjo01", "Stockton"), ("diawbo01", "Diaw")]:
-            mask = e1_summary["player_id"] == label_id
-            if mask.any():
-                val = float(e1_summary.loc[mask, "games_missed_per_82"].iloc[0])
-                pct = float(stats.percentileofscore(e1_summary["games_missed_per_82"].values, val))
-                logger.info(
-                    "%s: %.2f games missed/82, %.1f%% percentile (era-adjusted)",
-                    label_name,
-                    val,
-                    pct,
-                )
-
-        logger.info(
-            "\nPopulation conditioned on ≥%d career games (primary threshold 400 is the "
-            "BRef qualifying minimum for career rate statistics); E1 estimand scope is "
-            "durability among players who completed a long career. Truncated "
-            "distribution — interpret percentile ranks with this in mind.",
-            min_games,
-        )
+        _save_population_outputs(e1_summary, label, min_games)
 
 
 E7_METRICS = ["TS_pct", "eFG_pct", "FTA_rate", "3PA_rate"]
 E7_TREATED = [("stockjo01", "Stockton"), ("diawbo01", "Diaw")]
 
 
-def compute_e7_career_shooting(
-    min_tsa: int = 5000,
-    min_games: int | None = None,
-) -> pd.DataFrame:
-    """E7: Career shooting-efficiency table for qualifying players.
+def _load_e7_data() -> tuple[pd.DataFrame, pd.Series]:
+    """Load game log columns needed for E7 and coerce numeric types.
 
-    Primary eligibility is career true-shot attempts (TSA = FGA + 0.44·FTA) ≥ min_tsa,
-    the BRef career TS% qualifying minimum (5,000 TSA). min_games, when given, is an
-    optional additional games-played constraint. Aggregates career totals (rows with
-    FGA > 0) into TS%, eFG%, FTA/FGA, 3PA/FGA, plus empirical percentile ranks
-    (0–100) within the qualifying population.
+    Returns:
+        Tuple of (df, games) where games is a Series of per-player row counts.
     """
     parquet = DATA_DIR / "game_logs.parquet"
     if not parquet.exists():
         raise FileNotFoundError("data/game_logs.parquet not found — run fetch_bref_data.py first.")
 
     df = pd.read_parquet(
-        parquet, columns=["player_id", "player_name", "season", "PTS", "FG", "FGA", "3P", "3PA", "FT", "FTA"]
+        parquet,
+        columns=[
+            "player_id",
+            "player_name",
+            "season",
+            "PTS",
+            "FG",
+            "FGA",
+            "3P",
+            "3PA",
+            "FT",
+            "FTA",
+        ],
     )
     for col in ["PTS", "FG", "FGA", "3P", "3PA", "FT", "FTA"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -535,9 +663,27 @@ def compute_e7_career_shooting(
     df["3P"] = df["3P"].fillna(0)
     df["3PA"] = df["3PA"].fillna(0)
 
-    # Eligibility: total games in the parquet (all rows), before FGA>0 filter
     games = df.groupby("player_id").size()
-    # Primary eligibility: career TSA = FGA + 0.44·FTA
+    return df, games
+
+
+def _apply_tsa_threshold(
+    df: pd.DataFrame,
+    games: pd.Series,
+    min_tsa: int,
+    min_games: int | None,
+) -> pd.DataFrame:
+    """Filter df to players meeting career TSA and optional games thresholds.
+
+    Args:
+        df: Full game log DataFrame.
+        games: Series of per-player total row counts (index = player_id).
+        min_tsa: Minimum career true-shot attempts (FGA + 0.44·FTA).
+        min_games: Optional minimum career game count; None skips this filter.
+
+    Returns:
+        Filtered DataFrame containing only qualifying players.
+    """
     career_totals = df.groupby("player_id")[["FGA", "FTA"]].sum()
     career_tsa = career_totals["FGA"] + 0.44 * career_totals["FTA"]
     eligible = set(career_tsa[career_tsa >= min_tsa].index)
@@ -549,8 +695,20 @@ def compute_e7_career_shooting(
     if min_games is not None:
         eligible &= set(games[games >= min_games].index)
         logger.info("E7 eligibility: additional ≥%d games constraint applied", min_games)
-    df = df[df["player_id"].isin(eligible)].copy()
+    return df[df["player_id"].isin(eligible)].copy()
 
+
+def _compute_ts_per_player(df: pd.DataFrame, games: pd.Series) -> pd.DataFrame:
+    """Aggregate per-player career shooting stats into a TS% table.
+
+    Args:
+        df: Filtered game log DataFrame (only qualifying players).
+        games: Series of per-player total row counts (index = player_id).
+
+    Returns:
+        DataFrame with one row per player: player_id, player_name, games,
+        seasons, debut_year, final_year, TS_pct, eFG_pct, FTA_rate, 3PA_rate.
+    """
     rows = []
     for pid, pdata in df.groupby("player_id"):
         shot = pdata[pdata["FGA"] > 0]
@@ -570,8 +728,31 @@ def compute_e7_career_shooting(
                 "3PA_rate": tpa / fga,
             }
         )
+    return pd.DataFrame(rows).sort_values("TS_pct", ascending=False).reset_index(drop=True)
 
-    shooting = pd.DataFrame(rows).sort_values("TS_pct", ascending=False).reset_index(drop=True)
+
+def compute_e7_career_shooting(
+    min_tsa: int = 5000,
+    min_games: int | None = None,
+) -> pd.DataFrame:
+    """E7: Career shooting-efficiency table for qualifying players.
+
+    Primary eligibility is career true-shot attempts (TSA = FGA + 0.44·FTA) ≥ min_tsa,
+    the BRef career TS% qualifying minimum (5,000 TSA). min_games, when given, is an
+    optional additional games-played constraint. Aggregates career totals (rows with
+    FGA > 0) into TS%, eFG%, FTA/FGA, 3PA/FGA, plus empirical percentile ranks
+    (0–100) within the qualifying population.
+
+    Args:
+        min_tsa: Minimum career true-shot attempts for eligibility.
+        min_games: Optional minimum career games played.
+
+    Returns:
+        DataFrame sorted descending by TS_pct with percentile rank columns.
+    """
+    df, games = _load_e7_data()
+    df = _apply_tsa_threshold(df, games, min_tsa, min_games)
+    shooting = _compute_ts_per_player(df, games)
     for metric in E7_METRICS:
         shooting[f"{metric}_pctile"] = shooting[metric].rank(pct=True, method="average") * 100
     return shooting
@@ -582,7 +763,13 @@ def plot_e7_ts_distribution(
     fig_subdir: str = "population",
     pop_label: str = "≥5,000-TSA population",
 ) -> None:
-    """KDE + rug of career TS% with Stockton and Diaw marked."""
+    """KDE + rug of career TS% with Stockton and Diaw marked.
+
+    Args:
+        shooting: E7 shooting DataFrame with TS_pct and player_id columns.
+        fig_subdir: Subdirectory under data/figures/ for the output PNG.
+        pop_label: Population description for the figure title.
+    """
     fig_dir = DATA_DIR / "figures" / fig_subdir
     fig_dir.mkdir(parents=True, exist_ok=True)
 
@@ -613,7 +800,13 @@ def plot_e7_ts_vs_fta_rate(
     fig_subdir: str = "population",
     pop_label: str = "≥5,000-TSA population",
 ) -> None:
-    """Scatter: career TS% vs FTA/FGA rate with Stockton and Diaw labeled."""
+    """Scatter: career TS% vs FTA/FGA rate with Stockton and Diaw labeled.
+
+    Args:
+        shooting: E7 shooting DataFrame with TS_pct, FTA_rate, and player_id columns.
+        fig_subdir: Subdirectory under data/figures/ for the output PNG.
+        pop_label: Population description for the figure title.
+    """
     fig_dir = DATA_DIR / "figures" / fig_subdir
     fig_dir.mkdir(parents=True, exist_ok=True)
 
@@ -649,6 +842,41 @@ def plot_e7_ts_vs_fta_rate(
     logger.info("Saved %s", out)
 
 
+def _log_e7_player_stats(shooting: pd.DataFrame, n: int) -> None:
+    """Log per-player E7 metrics for all E7_TREATED players.
+
+    Args:
+        shooting: E7 shooting DataFrame with metric and percentile columns.
+        n: Total number of players in the qualifying population.
+    """
+    metric_labels = {
+        "TS_pct": "TS%",
+        "eFG_pct": "eFG%",
+        "FTA_rate": "FTA/FGA",
+        "3PA_rate": "3PA/FGA",
+    }
+    for pid, label in E7_TREATED:
+        mask = shooting["player_id"] == pid
+        if not mask.any():
+            logger.warning("%s (%s) not in qualifying population; skipping.", label, pid)
+            continue
+        logger.info("\n%s (%s):", label, pid)
+        for metric in E7_METRICS:
+            obs = float(shooting.loc[mask, metric].iloc[0])
+            pctile = float(shooting.loc[mask, f"{metric}_pctile"].iloc[0])
+            rank = int((shooting[metric] > obs).sum()) + 1  # 1 = highest
+            p_geq = float((shooting[metric] >= obs).mean())
+            logger.info(
+                "  %-9s %.3f  (pctile: %.1f, rank %d/%d, p[>=obs]=%.3f)",
+                metric_labels[metric] + ":",
+                obs,
+                pctile,
+                rank,
+                n,
+                p_geq,
+            )
+
+
 def _run_e7_pass(
     min_tsa: int,
     min_games: int | None,
@@ -662,6 +890,17 @@ def _run_e7_pass(
     Rank-based test on the empirical distribution: each of the n players is a draw
     from the null; p = fraction of players with metric ≥ observed (one-tailed,
     "at least as efficient"). No resampling needed — the population IS the null.
+
+    Args:
+        min_tsa: Minimum career TSA for eligibility.
+        min_games: Optional minimum career games played.
+        header: Label string for log output header.
+        csv_name: Filename for the output CSV (under data/).
+        fig_subdir: Figure subdirectory under data/figures/.
+        pop_label: Population description used in figure titles.
+
+    Returns:
+        E7 shooting DataFrame for this pass.
     """
     shooting = compute_e7_career_shooting(min_tsa=min_tsa, min_games=min_games)
     n = len(shooting)
@@ -682,28 +921,7 @@ def _run_e7_pass(
         ts.max(),
     )
 
-    metric_labels = {"TS_pct": "TS%", "eFG_pct": "eFG%", "FTA_rate": "FTA/FGA", "3PA_rate": "3PA/FGA"}
-    for pid, label in E7_TREATED:
-        mask = shooting["player_id"] == pid
-        if not mask.any():
-            logger.warning("%s (%s) not in qualifying population (%s); skipping.", label, pid, pop_label)
-            continue
-        logger.info("\n%s (%s):", label, pid)
-        for metric in E7_METRICS:
-            obs = float(shooting.loc[mask, metric].iloc[0])
-            pctile = float(shooting.loc[mask, f"{metric}_pctile"].iloc[0])
-            rank = int((shooting[metric] > obs).sum()) + 1  # 1 = highest
-            p_geq = float((shooting[metric] >= obs).mean())
-            logger.info(
-                "  %-9s %.3f  (pctile: %.1f, rank %d/%d, p[>=obs]=%.3f)",
-                metric_labels[metric] + ":",
-                obs,
-                pctile,
-                rank,
-                n,
-                p_geq,
-            )
-
+    _log_e7_player_stats(shooting, n)
     plot_e7_ts_distribution(shooting, fig_subdir=fig_subdir, pop_label=pop_label)
     plot_e7_ts_vs_fta_rate(shooting, fig_subdir=fig_subdir, pop_label=pop_label)
     return shooting
@@ -719,6 +937,13 @@ def analyze_e7_shooting_efficiency(
     with min_games as an optional additional constraint. Sensitivity A re-runs on a
     ≥400-game cohort (BRef rate stat threshold); sensitivity B on a ≥820-game cohort
     (10-year veteran). Returns the primary pass table.
+
+    Args:
+        min_tsa: Minimum career TSA for the primary pass.
+        min_games: Optional minimum career games for the primary pass.
+
+    Returns:
+        Primary pass E7 shooting DataFrame.
     """
     logger.info("\n=== E7: Career Shooting Efficiency ===")
 

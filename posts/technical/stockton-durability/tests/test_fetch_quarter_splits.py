@@ -1,8 +1,9 @@
 """Tests for fetch_quarter_splits.py — game_id extraction and TS% computation."""
 
-import fetch_quarter_splits as fqs
 import pandas as pd
 import pytest
+
+import fetch_quarter_splits as fqs
 
 
 class TestTsPct:

@@ -7,10 +7,11 @@ without touching BRef (no network requests).
 import pathlib
 import tempfile
 
-import analyze_durability as ad
 import numpy as np
 import pandas as pd
 import pytest
+
+import analyze_durability as ad
 
 
 def _build_synthetic_cohort(n_players: int = 6, seasons: int = 10) -> pd.DataFrame:

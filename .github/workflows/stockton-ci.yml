@@ -1,0 +1,41 @@
+name: Stockton Pipeline CI
+
+on:
+  push:
+    paths:
+      - "posts/technical/stockton-durability/**"
+      - "!posts/technical/stockton-durability/index.qmd"
+      - "!posts/technical/stockton-durability/data/**"
+      - "!posts/technical/stockton-durability/docs/**"
+  pull_request:
+    paths:
+      - "posts/technical/stockton-durability/**"
+      - "!posts/technical/stockton-durability/index.qmd"
+      - "!posts/technical/stockton-durability/data/**"
+
+jobs:
+  lint-test:
+    name: Lint + Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        working-directory: posts/technical/stockton-durability
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        working-directory: posts/technical/stockton-durability
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Test
+        working-directory: posts/technical/stockton-durability
+        run: pytest tests/ -v --tb=short

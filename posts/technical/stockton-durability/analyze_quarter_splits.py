@@ -34,7 +34,18 @@ logger = logging.getLogger(__name__)
 
 
 def load_splits(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
-    """Load quarter splits parquet and return (df, treated_id, treated_name)."""
+    """Load quarter splits parquet and return treated player identifiers.
+
+    Args:
+        cohort: Either "pg" (Stockton) or "pf" (Diaw).
+
+    Returns:
+        Tuple of (DataFrame, treated_player_id, treated_player_name).
+
+    Raises:
+        ValueError: If cohort is not "pg" or "pf".
+        FileNotFoundError: If the parquet file has not been generated yet.
+    """
     if cohort not in ("pg", "pf"):
         raise ValueError(f"Unknown cohort: {cohort!r}. Use pg or pf.")
 
@@ -69,7 +80,14 @@ def _prepare_model_df(
     """Prepare DataFrame for mixed-effects model.
 
     Joins rest_days from game_logs if available, creates is_treated and quarter4 flags.
-    Returns None if insufficient data.
+
+    Args:
+        df: Raw quarter-splits DataFrame from load_splits().
+        metric_col: Column name of the outcome variable (e.g. "FT_pct").
+        treated_id: BRef player ID of the treated player.
+
+    Returns:
+        Filtered and feature-enriched DataFrame, or None if data is insufficient.
     """
     required = [metric_col, "player_id", "quarter", "season", "date"]
     missing = [c for c in required if c not in df.columns]
@@ -128,10 +146,19 @@ def permutation_interaction(
     n_perm: int = 5000,
     cohort: str = "cohort",
 ) -> tuple[float, np.ndarray, float]:
-    """Permutation CI on the quarter4:is_treated interaction.
+    """Permutation CI on the quarter4:is_treated interaction coefficient.
 
-    Permutes is_treated label at the player level (not row level).
-    Returns (observed_coef, null_distribution, two_sided_p).
+    Permutes is_treated label at the player level (not row level) to preserve
+    within-player correlation structure.
+
+    Args:
+        mdf: Model-ready DataFrame from _prepare_model_df().
+        metric_col: Outcome column name.
+        n_perm: Number of permutation resamples.
+        cohort: Cohort label used for naming the saved null distribution parquet.
+
+    Returns:
+        Tuple of (observed_coefficient, null_distribution_array, two_sided_p_value).
     """
     mdf = mdf.copy()
     mdf["quarter4_treated"] = mdf["quarter4"] * mdf["is_treated"]
@@ -198,7 +225,17 @@ def run_estimand(
     n_perm: int,
     extra_caveats: list[str] | None = None,
 ) -> None:
-    """Fit model, run permutation test, and print results for one estimand."""
+    """Fit mixed-effects model and run permutation test for one estimand.
+
+    Args:
+        df: Quarter-splits DataFrame with metric_col already computed.
+        metric_col: Outcome column (e.g. "FT_pct", "TS_pct").
+        treated_id: BRef player ID of the treated player.
+        treated_name: Display name of the treated player for logging.
+        cohort: Cohort label (e.g. "pg", "pf") for output file naming.
+        n_perm: Permutation iterations passed to permutation_interaction().
+        extra_caveats: Additional confound warnings to log before fitting.
+    """
     estimand_num = _estimand_from_metric(metric_col)
     logger.info("\n=== E%s: %s ===", estimand_num, metric_col)
 
@@ -257,7 +294,17 @@ def plot_estimand(
     estimand_num: str,
     fname: str,
 ) -> None:
-    """Bar/box comparison of metric by quarter and treatment status."""
+    """Save a side-by-side bar chart of metric by quarter for cohort vs treated player.
+
+    Args:
+        df: Full quarter-splits DataFrame.
+        metric_col: Column to plot (e.g. "FT_pct").
+        treated_id: BRef player ID of the treated player, or None to skip.
+        treated_name: Display name used in chart title, or None.
+        cohort: Cohort label for output subdirectory (e.g. "pg", "pf").
+        estimand_num: Estimand number string (e.g. "2", "4", "5").
+        fname: Output filename (e.g. "e2_q4_ft_degradation.png").
+    """
     fig_dir = DATA_DIR / "figures" / cohort
     fig_dir.mkdir(parents=True, exist_ok=True)
 
@@ -292,7 +339,15 @@ def plot_e6_quarter_profile(
     cohort: str,
     fname: str = "e6_quarter_profile.png",
 ) -> None:
-    """E6: FT% across Q1→Q4 for every player in the cohort window."""
+    """Save attempt-weighted FT% line chart across Q1–Q4 for all cohort players.
+
+    Args:
+        df: Full quarter-splits DataFrame with FT and FTA columns.
+        treated_id: BRef player ID highlighted in red, or None.
+        treated_name: Display name for the treated player's legend entry.
+        cohort: Cohort label for output subdirectory and chart title.
+        fname: Output filename.
+    """
     import matplotlib.ticker as mticker
 
     fig_dir = DATA_DIR / "figures" / cohort
@@ -353,7 +408,12 @@ def plot_e6_quarter_profile(
 
 
 def run(cohort: str, n_perm: int = 5000) -> None:
-    """Main entry point."""
+    """Run the full E2/E4/E5 within-game analysis pipeline for one cohort.
+
+    Args:
+        cohort: Either "pg" (Stockton) or "pf" (Diaw).
+        n_perm: Number of permutation resamples for each estimand.
+    """
     df, treated_id, treated_name = load_splits(cohort)
 
     # Prepare metrics

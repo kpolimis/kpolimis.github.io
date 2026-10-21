@@ -1,9 +1,10 @@
 """Tests for analyze_durability.py — E1/E3 analysis engine."""
 
-import analyze_durability as ad
 import numpy as np
 import pandas as pd
 import pytest
+
+import analyze_durability as ad
 
 
 class TestSeasonGames:

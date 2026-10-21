@@ -21,6 +21,8 @@ import argparse
 import logging
 import pathlib
 import random
+import re
+import string
 import time
 from io import StringIO
 
@@ -30,8 +32,6 @@ from bs4 import BeautifulSoup
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 HTML_CACHE = DATA_DIR / "html_cache"
-DATA_DIR.mkdir(exist_ok=True)
-HTML_CACHE.mkdir(exist_ok=True)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -100,8 +100,21 @@ KEEP_COLS = [
 ]
 
 
+def _ensure_dirs() -> None:
+    """Create DATA_DIR and HTML_CACHE on disk. Called once from main(), not at import time."""
+    DATA_DIR.mkdir(exist_ok=True)
+    HTML_CACHE.mkdir(exist_ok=True)
+
+
 def parse_mp_seconds(mp_str: str) -> float | None:
-    """'34:21' → 34.35. Returns None for non-playing rows."""
+    """Convert a BRef minutes string to a float.
+
+    Args:
+        mp_str: Minutes string in "MM:SS" format (e.g. "34:21").
+
+    Returns:
+        Decimal minutes (e.g. 34.35), or None for non-playing rows.
+    """
     if not isinstance(mp_str, str) or ":" not in mp_str:
         return None
     try:
@@ -115,7 +128,16 @@ _session_page_count: int = 0
 
 
 def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
-    """Return HTML for url, reading from disk cache when available."""
+    """Return HTML for a URL, reading from disk cache when available.
+
+    Args:
+        url: Full URL to fetch.
+        cache_key: Filename stem for the cached HTML file (no extension).
+        cache_subdir: Optional subdirectory under HTML_CACHE for this cache entry.
+
+    Returns:
+        HTML string on success, or None on persistent HTTP error.
+    """
     global _ip_blocked_until, _session_page_count
 
     cache_dir = HTML_CACHE / cache_subdir if cache_subdir else HTML_CACHE
@@ -171,7 +193,17 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
 
 
 def fetch_gamelog(initial: str, player_id: str, season: int) -> pd.DataFrame | None:
-    """Fetch one player-season game log. Returns None on HTTP error or missing table."""
+    """Fetch one player-season game log from BRef.
+
+    Args:
+        initial: First letter of the player's last name (BRef URL key).
+        player_id: BRef player identifier (e.g. "stockjo01").
+        season: Season-ending year (e.g. 1998 for the 1997–98 season).
+
+    Returns:
+        DataFrame of active game rows for the season, or None on HTTP error
+        or missing table.
+    """
     url = f"https://www.basketball-reference.com/players/{initial}/{player_id}/gamelog/{season}/"
     html = _get_html(url, f"{player_id}_{season}")
     if html is None:
@@ -253,14 +285,19 @@ def save(df: pd.DataFrame) -> None:
             df.to_parquet(out, index=False)
         finally:
             fcntl.flock(lf, fcntl.LOCK_UN)
-    print(f"  → saved {len(df):,} rows to data/game_logs.parquet")
+    logger.info("Saved %d rows to data/game_logs.parquet", len(df))
 
 
 def fetch_cohort(
     player_filter: str | None = None,
     cohort_filter: str | None = None,
 ) -> None:
-    """Fetch game logs for all cohort players not already in the parquet cache."""
+    """Fetch game logs for all cohort players not already in the parquet cache.
+
+    Args:
+        player_filter: If set, fetch only this BRef player_id.
+        cohort_filter: If set, restrict to "pg" or "pf" cohort type.
+    """
     existing = load_existing()
     done_keys: set[tuple[str, int]] = set()
     if existing is not None:
@@ -311,7 +348,14 @@ def fetch_cohort(
 
 
 def cohort_summary(save_csv: bool = True) -> pd.DataFrame:
-    """Print career games and MPG to check selection thresholds; save cohort_summary.csv."""
+    """Print career games and MPG to check selection thresholds; save cohort_summary.csv.
+
+    Args:
+        save_csv: Whether to write cohort_summary.csv to DATA_DIR.
+
+    Returns:
+        Summary DataFrame with career_games, career_mpg, and meets_threshold columns.
+    """
     existing = load_existing()
     if existing is None:
         logger.error("No data yet — run fetch first.")
@@ -334,7 +378,7 @@ def cohort_summary(save_csv: bool = True) -> pd.DataFrame:
         summary["career_mpg"] >= MIN_CAREER_MPG
     )
 
-    print(summary.to_string(index=False))
+    logger.info("Cohort threshold summary:\n%s", summary.to_string(index=False))
 
     # Document borderline cases
     borderline = summary[
@@ -364,7 +408,11 @@ def cohort_summary(save_csv: bool = True) -> pd.DataFrame:
 
 
 def fetch_population_cohort(limit: int | None = None) -> None:
-    """Fetch game logs for population cohort players listed in data/population_cohort.csv."""
+    """Fetch game logs for population cohort players listed in data/population_cohort.csv.
+
+    Args:
+        limit: If set, fetch at most this many new players (for testing).
+    """
     pop_csv = DATA_DIR / "population_cohort.csv"
     if not pop_csv.exists():
         logger.error("data/population_cohort.csv not found — run build_population_cohort() first.")
@@ -388,7 +436,9 @@ def fetch_population_cohort(limit: int | None = None) -> None:
     for row in players:
         pid = row["player_id"]
         initial = row["initial"]
-        first = int(row["debut_year"])  # BRef season = season-ending year, debut_year already correct
+        first = int(
+            row["debut_year"]
+        )  # BRef season = season-ending year, debut_year already correct
         last = int(row["final_year"])
         name = row["player_name"]
         logger.info("%s (%s) %d–%d", name, pid, first, last)
@@ -407,6 +457,113 @@ def fetch_population_cohort(limit: int | None = None) -> None:
         logger.warning("No data fetched.")
 
 
+def _parse_player_row(
+    a_tag,
+    tr,
+    letter: str,
+    link_re,
+) -> dict | None:
+    """Parse a single BRef index table row into a player dict.
+
+    Args:
+        a_tag: BeautifulSoup anchor tag inside the player <th> cell.
+        tr: BeautifulSoup <tr> tag for this row.
+        letter: Alphabet letter for this index page (used as initial).
+        link_re: Compiled regex to extract player_id from the anchor href.
+
+    Returns:
+        Player dict with keys (player_name, player_id, initial, position,
+        debut_year, final_year, era), or None if the row is invalid or
+        outside the modern-era guard/forward/center scope.
+    """
+    m = link_re.search(a_tag.get("href", ""))
+    if not m:
+        return None
+    pid = m.group(1)
+    # Strip HOF asterisk from display name (BRef marks HOFers "Name*")
+    name = a_tag.get_text(strip=True).rstrip("*")
+
+    def _td(stat: str, _tr=tr) -> str:
+        tag = _tr.find("td", {"data-stat": stat})
+        return tag.get_text(strip=True) if tag else ""
+
+    pos = _td("pos")
+    try:
+        debut = int(_td("year_min"))
+        final = int(_td("year_max"))
+    except (ValueError, TypeError):
+        return None
+    if not name or not pos:
+        return None
+
+    pos_parts = set(pos.replace("-", " ").split())
+    is_guard = bool(pos_parts & {"G", "PG", "SG"})
+    is_forward = bool(pos_parts & {"F", "PF", "SF"})
+    is_center = bool(pos_parts & {"C"})
+    modern_era = 1980 <= debut <= 2010
+
+    if not ((is_guard or is_forward or is_center) and modern_era):
+        return None
+
+    era = f"{(debut // 10) * 10}s"
+    return {
+        "player_name": name,
+        "player_id": pid,
+        "initial": letter,
+        "position": pos,
+        "debut_year": debut,
+        "final_year": final,
+        "era": era,
+    }
+
+
+def _scrape_letter_page(letter: str) -> list[dict]:
+    """Fetch and parse one BRef A–Z player index page.
+
+    Args:
+        letter: Single lowercase letter for the BRef player index URL.
+
+    Returns:
+        List of player dicts for players on this page that meet era/position
+        scope (modern era guards, forwards, centers). Empty list on HTTP
+        error or missing table.
+    """
+    url = f"https://www.basketball-reference.com/players/{letter}/"
+    html = _get_html(url, f"_index_{letter}", cache_subdir="index")
+    if html is None:
+        return []
+    soup = BeautifulSoup(html, "html.parser")
+    table = soup.find("table", {"id": "players"})
+    if table is None:
+        return []
+    try:
+        df = pd.read_html(StringIO(str(table)))[0]
+    except Exception:
+        return []
+
+    # Normalise column names (BRef table header varies by letter page)
+    df.columns = [str(c).strip() for c in df.columns]
+    if "Player" not in df.columns:
+        return []
+
+    # Row-aligned extraction: get pid from each row's own <th><a> tag.
+    # Avoids name-collision clobbering and HOF-asterisk misses from a shared dict.
+    link_re = re.compile(rf"/players/{letter}/(\w+)\.html")
+    tbody = table.find("tbody") or table
+    players = []
+    for tr in tbody.find_all("tr"):
+        th = tr.find("th", {"data-stat": "player"})
+        if th is None:
+            continue
+        a = th.find("a")
+        if a is None:
+            continue
+        row = _parse_player_row(a, tr, letter, link_re)
+        if row is not None:
+            players.append(row)
+    return players
+
+
 def build_population_cohort() -> None:
     """Scrape BRef player index (A–Z) and build data/population_cohort.csv.
 
@@ -415,81 +572,9 @@ def build_population_cohort() -> None:
     Writes population_cohort.csv with columns:
         player_name, player_id, initial, position, debut_year, final_year, era
     """
-    import re
-    import string
-
     rows = []
     for letter in string.ascii_lowercase:
-        url = f"https://www.basketball-reference.com/players/{letter}/"
-        html = _get_html(url, f"_index_{letter}", cache_subdir="index")
-        if html is None:
-            continue
-        soup = BeautifulSoup(html, "html.parser")
-        table = soup.find("table", {"id": "players"})
-        if table is None:
-            continue
-        try:
-            df = pd.read_html(StringIO(str(table)))[0]
-        except Exception:
-            continue
-
-        # Normalise column names (BRef table header varies by letter page)
-        df.columns = [str(c).strip() for c in df.columns]
-        if "Player" not in df.columns:
-            continue
-
-        # Row-aligned extraction: get pid from each row's own <th><a> tag.
-        # Avoids name-collision clobbering and HOF-asterisk misses from a shared dict.
-        player_link_re = re.compile(rf"/players/{letter}/(\w+)\.html")
-        tbody = table.find("tbody") or table
-        for tr in tbody.find_all("tr"):
-            th = tr.find("th", {"data-stat": "player"})
-            if th is None:
-                continue
-            a = th.find("a")
-            if a is None:
-                continue
-            m = player_link_re.search(a.get("href", ""))
-            if not m:
-                continue
-            pid = m.group(1)
-            # Strip HOF asterisk from display name (BRef marks HOFers "Name*")
-            name = a.get_text(strip=True).rstrip("*")
-
-            def _td(stat: str, _tr=tr) -> str:
-                tag = _tr.find("td", {"data-stat": stat})
-                return tag.get_text(strip=True) if tag else ""
-
-            pos = _td("pos")
-            try:
-                debut = int(_td("year_min"))
-                final = int(_td("year_max"))
-            except (ValueError, TypeError):
-                continue
-            if not name or not pos:
-                continue
-
-            pos_parts = set(pos.replace("-", " ").split())
-            is_guard = bool(pos_parts & {"G", "PG", "SG"})
-            is_forward = bool(pos_parts & {"F", "PF", "SF"})
-            is_center = bool(pos_parts & {"C"})
-            modern_era = 1980 <= debut <= 2010
-
-            if not ((is_guard or is_forward or is_center) and modern_era):
-                continue
-
-            era = f"{(debut // 10) * 10}s"
-            rows.append(
-                {
-                    "player_name": name,
-                    "player_id": pid,
-                    "initial": letter,
-                    "position": pos,
-                    "debut_year": debut,
-                    "final_year": final,
-                    "era": era,
-                }
-            )
+        rows.extend(_scrape_letter_page(letter))
 
     pop = pd.DataFrame(rows)
     dupes = pop[pop.duplicated("player_id", keep=False)]
@@ -499,7 +584,10 @@ def build_population_cohort() -> None:
     logger.info("Saved data/population_cohort.csv")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse CLI arguments and dispatch to the appropriate fetch or analysis function."""
+    _ensure_dirs()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--player", default=None, help="BRef player_id to fetch only one player")
     parser.add_argument(
@@ -534,3 +622,7 @@ if __name__ == "__main__":
         fetch_population_cohort(limit=args.limit)
     else:
         fetch_cohort(player_filter=args.player, cohort_filter=args.cohort)
+
+
+if __name__ == "__main__":
+    main()

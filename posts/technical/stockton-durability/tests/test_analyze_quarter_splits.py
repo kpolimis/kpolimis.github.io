@@ -1,9 +1,10 @@
 """Tests for analyze_quarter_splits.py — E2/E4/E5 within-game analysis."""
 
-import analyze_quarter_splits as aqs
 import numpy as np
 import pandas as pd
 import pytest
+
+import analyze_quarter_splits as aqs
 
 
 class TestAddAstTov:

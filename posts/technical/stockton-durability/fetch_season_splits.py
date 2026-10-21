@@ -152,9 +152,7 @@ def _get_html(player_id: str, season: int) -> str | None:
             return resp.text
         if resp.status_code == 429:
             retry_after = resp.headers.get("Retry-After")
-            wait = (
-                int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
-            )
+            wait = int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
             _ip_blocked_until = time.time() + wait
             logger.warning(
                 "HTTP 429 for %s — IP blocked, sleeping %ds (attempt %d/%d)",
