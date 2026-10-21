@@ -47,7 +47,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e  # v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          external_repository: kpolimis/kpolimis.github.io
           publish_branch: gh-pages
           publish_dir: ./_site
           user_name: "github-actions[bot]"
@@ -83,8 +82,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e  # v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          external_repository: kpolimis/kpolimis.github.io
-          publish_branch: main
+          publish_branch: public-src
           publish_dir: ./_public_src
           force_orphan: true
           full_commit_message: "sync: blog-source@${{ github.sha }}"
