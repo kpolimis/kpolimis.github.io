@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-18 (v7)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-20 (v8)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -75,20 +75,21 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | Population game logs (complete) | **2,067/2,067 players, 656,839 rows** — 0% NULLs |
 | Population season splits (complete) | **738/738 players (≥400 games), 665,598 rows** — home/away, rest, W/L, month, opponent |
 
-**Analysis: E7 (career TS%) implemented; population E1/E3 not yet run.**
+**Analysis: E1/E3/E7 population complete. E8 fetch running on Apollo.**
 
 | Estimand | Primary cohort | Sensitivity cohorts | Status |
 |:---------|:--------------|:--------------------|:-------|
-| E7 TS% | ≥5,000 TSA (464 players, BRef standard) | ≥400 games (738), ≥820 games (233) | **Done** — Stockton rank 10/464 (p=0.022), robust across all sensitivities |
-| E1/E3 population | ≥400 games (738 players, BRef standard) | ≥600 games (478), ≥820 games (233) | **Not yet run** |
+| E7 TS% | ≥5,000 TSA (464 players, BRef standard) | ≥400 games (738), ≥820 games (233) | **Done** — Stockton rank 10/464 (97.8 pctile, p=0.022) |
+| E1/E3 population | ≥400 games (738 players, BRef standard) | ≥600 games (478), ≥820 games (233) | **Done** — Stockton 0.3rd/2.7th pctile; E3 percentiles quantified |
+| E8 quarter splits | Top-50 most-durable players (59,837 games) | — | **In progress** — Apollo `bref-qs-fetch` container; 429 rate-limit active; est. completion ~2026-10-27 |
 
 **Post drafts:**
 
-| Post | E1/E3 | E2/E4/E5 | E6 | E7 | Status |
-|:-----|:------|:---------|:---|:---|:-------|
-| Stockton | Written | E2 written; E4/E5 dropped | Written | — | **Published** |
-| Diaw | Written | E2 written (null); E4/E5 dropped | Written | — | **Published** |
-| Population | Not run | — | — | Done | Outline only |
+| Post | E1/E3 | E2/E4/E5 | E6 | E7 | E8 | Status |
+|:-----|:------|:---------|:---|:---|:---|:-------|
+| Stockton | Written | E2 written; E4/E5 dropped | Written | — | — | **draft: true** (ready to publish) |
+| Diaw | Written | E2 written (null); E4/E5 dropped | Written | — | — | **draft: true** (ready to publish) |
+| Population | Done | — | — | Done | Stub | **draft: true** — complete draft; E8 section pending fetch |
 
 ## Caveats (mandatory in every post)
 
@@ -105,16 +106,18 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 | Step | Blocker | Est. |
 |:-----|:--------|:-----|
-| ~~Run final fetch audit → save `docs/fetch-audit.md`~~ | **Done** — 0 missing players; `docs/fetch-audit.md` written 2026-10-16 | — |
-| ~~E7 career TS% analysis~~ | **Done** — Stockton rank 10/464 (98.1 pctile, p=0.022); 3-threshold sensitivity; figures in `data/figures/population*/` | — |
-| ~~Season splits fetch~~ | **Done** — 738/738 players, 665,598 rows, `data/season_splits.parquet` | — |
-| **Commit all pending** | `analyze_durability.py`, `fetch_season_splits.py`, `season_splits.parquet`, E7 CSVs + figures | <30 min |
-| **Push `publish.yml` → verify CI** | 7 commits ahead of origin; blog-source push triggers two-deploy | <1 hr |
-| **Run population E1/E3** at 400/600/820 thresholds | `python analyze_durability.py --cohort population` | 30 min |
-| **Draft Post 3 outline** | E1/E3/E7 results; BRef disambiguation methods note | 2 hr |
-| Season splits analysis script | home/away, rest, W/L angles → Post 4 | 1 day |
-| E8: quarter splits for top-50 most-durable players | ~44 hrs fetch; deferred to Post 4 | future |
-| Jacobs outreach (#22) — manual browser form | Human action required | 20 min |
+| ~~Run final fetch audit → save `docs/fetch-audit.md`~~ | **Done** | — |
+| ~~E7 career TS% analysis~~ | **Done** — Stockton rank 10/464 (97.8 pctile, p=0.022) | — |
+| ~~Season splits fetch~~ | **Done** — 738/738 players, 665,598 rows | — |
+| ~~Population E1/E3~~ | **Done** — Stockton 0.3rd pctile/738, Diaw 2.7th; E3 percentiles quantified | — |
+| ~~Population post draft~~ | **Done** — E1/E3/E7/E8 stub written; `draft: true` | — |
+| ~~Fable 5 audit (Posts 1+2+3)~~ | **Done** — 6 stat fixes applied (gap, percentile, cohort desc, p-value floor, FT% footnotes) | — |
+| ~~Standards playbook remediation~~ | **Done** — Stage 0 compliance: README, pyproject, .gitignore, CI, untrack data artifacts | — |
+| **E8 fetch** | Apollo `bref-qs-fetch` container; 429 rate-limiting; est. ~2026-10-27 | 1 week |
+| **E8 analysis + fill section** | Depends on fetch; then `analyze_quarter_splits.py` E8 pass | 2 hr |
+| **Set `draft: false` on all 3 posts** | User decision; CI publish triggers on push | 30 min |
+| **Jacobs outreach (#22)** — manual browser form | Human action; pre-1996 Stockton quarter data | 20 min |
+| Season splits analysis script | home/away, rest, W/L angles → potential Post 4 | future |
 
 ---
 
@@ -123,6 +126,26 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v8 — 2026-10-20
+
+- **Population post complete draft** — E1 (Stockton 0.3rd pctile/738, Diaw 2.7th; stable at ≥600/≥820 thresholds), E3 population percentiles (Stockton FTA/FGA 11.8th pctile, Diaw 3PA/FGA 82nd, FTA/FGA 23rd), E7 (rank 10/464, 97.8th pctile, p=0.022), E8 stub pending fetch; `draft: true`
+- **Fable 5 statistical audit** — 6 fixes across all 3 posts:
+  - Stockton post: 17.5-game gap → 19.6 (20.75 − 1.18); cohort rule "debuted 1984–2001" → "primarily active 1984–2003"; Thomas/KJ/Hardaway era clarification; p=0.494 → p≈0.50 (permutation floor note); E2 FT% method footnote (game-weighted vs attempt-weighted)
+  - Population post: "guards and forwards" → full BRef-era player distribution; 98.1st → 97.8th percentile (10/464 = 97.84%); "72 more" → "75 more (59 HOFers + 16 duplicates)"; E3 "lower-right quadrant" → "lower half of plot"
+  - Diaw post: Boozer/Jamison exclusion clarified (BRef data exists, excluded by design); E2 FT% footnote
+- **E8 fetch container** — Delta save trigger fixed (modulo → `_last_save` counter); VPN rotation reverted to 403-only (429 rotation caused infinite loop cycling rate-limited IPs); gluetun VPN failure diagnosed and recovered; container running with `Retry-After: 3600` wait behavior; est. completion ~2026-10-27
+- **Standards playbook remediation (Stage 0 compliance):**
+  - C1–C3: `README.md`, folder-level `pyproject.toml` (max-complexity=10), `.gitignore`
+  - C4: Module-level `.mkdir()` side effects → `_ensure_dirs()` in all 3 fetch/analysis scripts
+  - C5: `print()` → `logger.*` in pipeline scripts
+  - C6: Root `pyproject.toml` max-complexity fixed 20 → 10
+  - C7: 21 committed data artifacts untracked (`git rm --cached`)
+  - C8: `.github/workflows/stockton-ci.yml` scoped to `stockton-durability/**` changes
+  - M1: 8 oversized functions refactored under 60-line limit
+  - M2: Google-style `Args:`/`Returns:` docstrings added throughout
+  - M3–M5: `.env.example`, `CHANGELOG.md`, `requirements.txt`, Makefile `help/lint/install/check` targets
+- **E7 percentile correction** — 98.1st → 97.8th throughout (10/464 = 0.0216; 1 − 0.0216 = 97.84%)
 
 ### v7 — 2026-10-18
 
