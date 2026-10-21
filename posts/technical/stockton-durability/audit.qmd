@@ -22,15 +22,15 @@ execute:
 import sys
 from pathlib import Path
 
-# Scripts live alongside this doc; add to path
-sys.path.insert(0, str(Path(__file__).parent))
+# Quarto executes from the document directory; scripts live alongside this file
+sys.path.insert(0, ".")
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR = Path("data")
 ```
 
 Every post in this series draws on four datasets scraped from Basketball-Reference. This appendix answers three questions a careful reader should ask: Is the population complete? Are the per-game stats clean? Are the quarter-level stats trustworthy?
