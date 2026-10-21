@@ -259,8 +259,33 @@ def _extract_game_id(row: pd.Series) -> str | None:
     return f"{date_str}0{home.upper()}"
 
 
+def _split_play(play: str) -> tuple[str, str]:
+    """Split a BRef play description into main action and parenthetical content.
+
+    Args:
+        play: Lowercased play description string.
+
+    Returns:
+        Tuple of (main_action, parentheticals) where parentheticals is a
+        space-joined string of all text inside parentheses.
+    """
+    parens_content = " ".join(re.findall(r"\(([^)]*)\)", play))
+    main = re.sub(r"\([^)]*\)", "", play).strip()
+    return main, parens_content
+
+
 def _classify_play(play_lower: str, last_name: str, first_name: str) -> dict:
     """Return per-stat increments for one BRef PBP play text.
+
+    Uses shooter-anchored attribution: the player must appear in the main action
+    (outside parentheticals) to receive FG/FT/TOV credit. AST is the exception —
+    the player's name must appear after "assist by" in a parenthetical. Prevents
+    "steal by Stockton" plays from charging him a TOV, and "assist by Stockton"
+    plays from crediting him a field goal.
+
+    BRef field-goal format: "makes 2-pt jump shot from X ft", "makes 3-pt jump
+    shot", "misses 2-pt/3-pt ...". Free throws: "makes/misses free throw N of M".
+    PTS includes free-throw points (1 per made FT).
 
     Args:
         play_lower: Lowercased play description string.
@@ -271,30 +296,29 @@ def _classify_play(play_lower: str, last_name: str, first_name: str) -> dict:
         Dict with keys FT, FTA, FGA, PTS, AST, TOV and integer increment values.
     """
     increments = {"FT": 0, "FTA": 0, "FGA": 0, "PTS": 0, "AST": 0, "TOV": 0}
+    main, parens = _split_play(play_lower)
+    player_in_main = last_name in main or first_name in main
 
-    if re.search(r"makes free throw", play_lower):
-        increments["FT"] += 1
-        increments["FTA"] += 1
-    elif re.search(r"misses free throw", play_lower):
-        increments["FTA"] += 1
-    elif re.search(
-        r"makes (two|three|2|3)[-\s]point|makes (jump|layup|dunk|tip|hook|fadeaway|running|driving)",
-        play_lower,
-    ):
-        increments["FGA"] += 1
-        pts = 3 if re.search(r"three|3-point", play_lower) else 2
-        increments["PTS"] += pts
-    elif re.search(
-        r"misses (jump|layup|dunk|tip|hook|fadeaway|running|driving|two|three)", play_lower
-    ):
-        increments["FGA"] += 1
-    elif re.search(r"\bassist\b", play_lower):
-        # BRef: "Player A makes ... (assist by Player B)" — Player B credited
-        if re.search(rf"assist\b.*\b{re.escape(last_name)}\b", play_lower):
-            increments["AST"] += 1
+    if player_in_main:
+        if re.search(r"makes free throw", main):
+            increments["FT"] += 1
+            increments["FTA"] += 1
+            increments["PTS"] += 1
+        elif re.search(r"misses free throw", main):
+            increments["FTA"] += 1
+        elif re.search(r"makes 3-pt", main):
+            increments["FGA"] += 1
+            increments["PTS"] += 3
+        elif re.search(r"makes 2-pt", main):
+            increments["FGA"] += 1
+            increments["PTS"] += 2
+        elif re.search(r"misses (2|3)-pt", main):
+            increments["FGA"] += 1
+        if re.search(r"turnover by", main):
+            increments["TOV"] += 1
 
-    if re.search(r"turnover by", play_lower):
-        increments["TOV"] += 1
+    if re.search(rf"assist by\b[^)]*\b{re.escape(last_name)}\b", parens):
+        increments["AST"] += 1
 
     return increments
 
@@ -318,6 +342,36 @@ def _parse_quarter_label(row_text: str) -> str | None:
     if period in ("overtime", "period"):
         return {"1st": "OT1", "2nd": "OT2", "3rd": "OT3", "4th": "OT4"}.get(ordinal, f"OT{ordinal}")
     return {"1st": "1", "2nd": "2", "3rd": "3", "4th": "4"}.get(ordinal, ordinal)
+
+
+def _process_play(
+    play_text: str,
+    first_name: str,
+    last_name: str,
+    current_quarter: str,
+    quarters: dict[str, dict],
+) -> None:
+    """Apply one PBP play to the quarters accumulator in place.
+
+    Args:
+        play_text: Raw play cell text (visitor or home column).
+        first_name: Lowercased player first name.
+        last_name: Lowercased player last name.
+        current_quarter: Active quarter label (e.g. '1', 'OT1').
+        quarters: Mutable accumulator dict updated in place.
+    """
+    if not play_text:
+        return
+    play_lower = play_text.lower()
+    if last_name not in play_lower and first_name not in play_lower:
+        return
+    inc = _classify_play(play_lower, last_name, first_name)
+    if not any(inc.values()):
+        return
+    if current_quarter not in quarters:
+        quarters[current_quarter] = {k: 0 for k in inc}
+    for k, v in inc.items():
+        quarters[current_quarter][k] += v
 
 
 def _accumulate_pbp_stats(pbp_table, first_name: str, last_name: str) -> dict[str, dict]:
@@ -352,25 +406,8 @@ def _accumulate_pbp_stats(pbp_table, first_name: str, last_name: str) -> dict[st
 
         visitor_play = tds[1].get_text(" ", strip=True)
         home_play = tds[3].get_text(" ", strip=True)
-
         for play_text in (visitor_play, home_play):
-            if not play_text:
-                continue
-            play_lower = play_text.lower()
-            if last_name not in play_lower and first_name not in play_lower:
-                continue
-            if current_quarter not in quarters:
-                quarters[current_quarter] = {
-                    "FT": 0,
-                    "FTA": 0,
-                    "AST": 0,
-                    "TOV": 0,
-                    "FGA": 0,
-                    "PTS": 0,
-                }
-            inc = _classify_play(play_lower, last_name, first_name)
-            for k, v in inc.items():
-                quarters[current_quarter][k] += v
+            _process_play(play_text, first_name, last_name, current_quarter, quarters)
 
     return quarters
 

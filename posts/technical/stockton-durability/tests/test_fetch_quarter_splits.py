@@ -97,6 +97,7 @@ class TestParsePbpQuarters:
         assert len(rows) == 1
         assert rows[0]["FT"] == 1
         assert rows[0]["FTA"] == 1
+        assert rows[0]["PTS"] == 1
         assert rows[0]["quarter"] == "1"
 
     def test_ft_missed_only_increments_fta(self):
@@ -108,7 +109,7 @@ class TestParsePbpQuarters:
         assert rows[0]["FTA"] == 1
 
     def test_fg_made_increments_fga_and_pts(self):
-        html = self._make_pbp_html(["John Stockton makes two-point shot from 15 ft"])
+        html = self._make_pbp_html(["John Stockton makes 2-pt jump shot from 15 ft"])
         rows = fqs.parse_pbp_quarters(
             html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
         )
@@ -116,26 +117,47 @@ class TestParsePbpQuarters:
         assert rows[0]["PTS"] == 2
 
     def test_three_pointer_scores_3(self):
-        html = self._make_pbp_html(["John Stockton makes three-point shot from 24 ft"])
+        html = self._make_pbp_html(["John Stockton makes 3-pt jump shot from 24 ft"])
         rows = fqs.parse_pbp_quarters(
             html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
         )
         assert rows[0]["PTS"] == 3
 
     def test_turnover_counted(self):
-        html = self._make_pbp_html(["Turnover by John Stockton: Bad Pass"])
+        html = self._make_pbp_html(["Turnover by John Stockton (bad pass)"])
         rows = fqs.parse_pbp_quarters(
             html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
         )
         assert rows[0]["TOV"] == 1
 
     def test_other_player_ignored(self):
-        html = self._make_pbp_html(["Karl Malone makes jump shot"])
+        html = self._make_pbp_html(["Karl Malone makes 2-pt jump shot from 12 ft"])
         rows = fqs.parse_pbp_quarters(
             html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
         )
-        # No rows for Stockton if he didn't play
         assert len(rows) == 0
+
+    def test_assist_no_fga_for_assister(self):
+        """Player mentioned only in assist-by parenthetical must not receive FGA/PTS."""
+        html = self._make_pbp_html(
+            ["Karl Malone makes 2-pt jump shot from 14 ft (assist by John Stockton)"]
+        )
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert len(rows) == 1
+        assert rows[0]["AST"] == 1
+        assert rows[0]["FGA"] == 0
+        assert rows[0]["PTS"] == 0
+
+    def test_steal_no_tov_for_stealer(self):
+        """Player mentioned only in steal-by parenthetical must not receive a TOV."""
+        html = self._make_pbp_html(["Turnover by Karl Malone (steal by John Stockton)"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        tov_total = sum(r["TOV"] for r in rows)
+        assert tov_total == 0
 
     def test_returns_empty_on_missing_table(self):
         html = "<html><body><p>No PBP table here</p></body></html>"
@@ -156,11 +178,11 @@ class TestParsePbpMultiQuarter:
             '<tr><td colspan="6">Start of 2nd quarter</td></tr>',
             # No Stockton plays in Q2
             '<tr><td colspan="6">Start of 3rd quarter</td></tr>',
-            "<tr><td>11:59</td><td>John Stockton makes three-point shot from 23 ft</td><td>60-65</td><td></td></tr>",
+            "<tr><td>11:59</td><td>John Stockton makes 3-pt jump shot from 23 ft</td><td>60-65</td><td></td></tr>",
             '<tr><td colspan="6">Start of 4th quarter</td></tr>',
-            "<tr><td>11:59</td><td>Turnover by John Stockton: Bad Pass</td><td>80-82</td><td></td></tr>",
+            "<tr><td>11:59</td><td>Turnover by John Stockton (bad pass)</td><td>80-82</td><td></td></tr>",
             '<tr><td colspan="6">Start of 1st overtime</td></tr>',
-            "<tr><td>4:59</td><td>John Stockton makes two-point shot from 8 ft</td><td>95-95</td><td></td></tr>",
+            "<tr><td>4:59</td><td>John Stockton makes 2-pt jump shot from 8 ft</td><td>95-95</td><td></td></tr>",
         ]
         table_html = f'<table id="pbp">{"".join(rows)}</table>'
         return f"<html><body>{table_html}</body></html>"
