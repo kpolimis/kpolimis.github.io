@@ -159,6 +159,55 @@ class TestParsePbpQuarters:
         tov_total = sum(r["TOV"] for r in rows)
         assert tov_total == 0
 
+    def test_technical_ft_made_counted(self):
+        """Technical free throw must increment FT, FTA, and PTS."""
+        html = self._make_pbp_html(["John Stockton makes technical free throw"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert len(rows) == 1
+        assert rows[0]["FT"] == 1
+        assert rows[0]["FTA"] == 1
+        assert rows[0]["PTS"] == 1
+
+    def test_technical_ft_missed_only_fta(self):
+        """Missed technical free throw must increment only FTA."""
+        html = self._make_pbp_html(["John Stockton misses technical free throw"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert len(rows) == 1
+        assert rows[0]["FT"] == 0
+        assert rows[0]["FTA"] == 1
+
+    def test_first_name_substring_no_fga(self):
+        """'john' in last name 'johnson' must not credit Stockton (P6 regression)."""
+        html = self._make_pbp_html(["Avery Johnson makes 2-pt jump shot from 12 ft"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        fga_total = sum(r["FGA"] for r in rows)
+        assert fga_total == 0
+
+    def test_first_name_standalone_no_collision(self):
+        """'john starks' play must not credit Stockton whose first name is 'john'."""
+        html = self._make_pbp_html(["John Starks makes 2-pt jump shot from 14 ft"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        fga_total = sum(r["FGA"] for r in rows)
+        assert fga_total == 0
+
+    def test_misses_three_pointer_fga_no_pts(self):
+        """Missed 3-pt attempt must increment FGA and not PTS."""
+        html = self._make_pbp_html(["John Stockton misses 3-pt jump shot from 26 ft"])
+        rows = fqs.parse_pbp_quarters(
+            html, "stockjo01", "John Stockton", "G1", 2000, None, "stockton_34_40"
+        )
+        assert len(rows) == 1
+        assert rows[0]["FGA"] == 1
+        assert rows[0]["PTS"] == 0
+
     def test_returns_empty_on_missing_table(self):
         html = "<html><body><p>No PBP table here</p></body></html>"
         rows = fqs.parse_pbp_quarters(

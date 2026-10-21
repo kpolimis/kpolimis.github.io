@@ -54,6 +54,11 @@ GLUETUN_CTRL_URL = os.environ.get("GLUETUN_CTRL_URL", "")
 
 _ip_blocked_until: float = 0.0
 _session_page_count: int = 0
+_cache_only = False  # set True via --cache-only CLI flag
+
+# BRef play-by-play data begins with the 1996-97 season; pre-PBP games have
+# no quarter breakdown and would only draw 429s for nothing useful.
+_PBP_ERA_START = 1997
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -154,8 +159,17 @@ def _fetch_with_retry(
         try:
             resp = requests.get(base_url, headers=headers, timeout=20)
         except requests.RequestException as exc:
-            logger.warning("Request error for %s (pbp=%s): %s", game_id, pbp, exc)
-            return None
+            wait = min(15 * (2**attempt), _MAX_403_BACKOFF)
+            logger.warning(
+                "Request error for %s (pbp=%s): %s — retrying in %ds (attempt %d/4)",
+                game_id,
+                pbp,
+                exc,
+                wait,
+                attempt + 1,
+            )
+            time.sleep(wait)
+            continue
         if resp.status_code == 200:
             cache_path.write_text(resp.text, encoding="utf-8")
             _session_page_count += 1
@@ -222,6 +236,9 @@ def _get_html(game_id: str, pbp: bool = False) -> tuple[str | None, bool]:
     cache_path = HTML_CACHE_QUARTER / f"{game_id}{suffix}.html"
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8"), True
+    if _cache_only:
+        logger.warning("Cache miss (--cache-only): %s — skipping", cache_path.name)
+        return None, False
     base_url = (
         f"https://www.basketball-reference.com/boxscores/pbp/{game_id}.html"
         if pbp
@@ -297,14 +314,14 @@ def _classify_play(play_lower: str, last_name: str, first_name: str) -> dict:
     """
     increments = {"FT": 0, "FTA": 0, "FGA": 0, "PTS": 0, "AST": 0, "TOV": 0}
     main, parens = _split_play(play_lower)
-    player_in_main = last_name in main or first_name in main
+    player_in_main = bool(re.search(rf"\b{re.escape(last_name)}\b", main))
 
     if player_in_main:
-        if re.search(r"makes free throw", main):
+        if re.search(r"makes (?:technical |flagrant )?free throw", main):
             increments["FT"] += 1
             increments["FTA"] += 1
             increments["PTS"] += 1
-        elif re.search(r"misses free throw", main):
+        elif re.search(r"misses (?:technical |flagrant )?free throw", main):
             increments["FTA"] += 1
         elif re.search(r"makes 3-pt", main):
             increments["FGA"] += 1
@@ -729,6 +746,9 @@ def _fetch_game_rows(
     if (pid, game_id) in done_games:
         return [], 0, 1
 
+    if season < _PBP_ERA_START:
+        return [], 0, 0
+
     regime = _age_regime(pid, season)
 
     # Try PBP first (gives true quarter-level stats; available ≥1996-97)
@@ -895,10 +915,19 @@ if __name__ == "__main__":
         metavar="N",
         help="Fetch top-N most-durable players from game_logs.parquet (E8 mode); outputs quarter_splits_e8.parquet",
     )
+    parser.add_argument(
+        "--cache-only",
+        action="store_true",
+        help="Serve only from HTML cache; log WARNING and skip any cache-miss game instead of fetching from BRef",
+    )
     args = parser.parse_args()
 
     if args.top_n_by_games is None and args.comps_file is None and args.player is None:
         parser.error("Provide --player, --comps-file, or --top-n-by-games")
+
+    _cache_only = args.cache_only
+    if _cache_only:
+        logger.info("--cache-only mode: no network requests will be made")
 
     player_ids = []
     output_parquet = args.output

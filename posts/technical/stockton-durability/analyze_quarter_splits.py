@@ -27,10 +27,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
+
+
+def _ensure_dirs() -> None:
+    """Create DATA_DIR if it does not exist."""
+    DATA_DIR.mkdir(exist_ok=True)
 
 
 def load_splits(cohort: str) -> tuple[pd.DataFrame, str | None, str | None]:
@@ -105,6 +109,7 @@ def _prepare_model_df(
         if gl_path.exists():
             gl = pd.read_parquet(gl_path)[["player_id", "Date", "rest_days"]].copy()
             gl["date"] = pd.to_datetime(gl["Date"])
+            gl = gl.drop_duplicates(subset=["player_id", "date"])
             mdf["date"] = pd.to_datetime(mdf["date"])
             mdf = mdf.merge(
                 gl[["player_id", "date", "rest_days"]], on=["player_id", "date"], how="left"
@@ -281,7 +286,8 @@ def _add_ast_tov(df: pd.DataFrame) -> pd.DataFrame:
     if "AST" in df.columns and "TOV" in df.columns:
         df["AST"] = pd.to_numeric(df["AST"], errors="coerce")
         df["TOV"] = pd.to_numeric(df["TOV"], errors="coerce")
-        df["AST_TOV_ratio"] = df["AST"] / (df["TOV"] + 0.001)
+        tov = df["TOV"].replace(0, np.nan)
+        df["AST_TOV_ratio"] = df["AST"] / tov
     return df
 
 
@@ -315,7 +321,12 @@ def plot_estimand(
     for ax, (is_treated_val, label) in zip(
         axes, [(0, "Cohort"), (1, treated_name or "Treated")], strict=False
     ):
-        sub = df[df["player_id"] == treated_id] if is_treated_val == 1 and treated_id else df
+        if is_treated_val == 1 and treated_id:
+            sub = df[df["player_id"] == treated_id]
+        elif treated_id:
+            sub = df[df["player_id"] != treated_id]
+        else:
+            sub = df
         if sub.empty:
             continue
         q_means = sub.groupby("quarter")[metric_col].mean()
@@ -354,7 +365,7 @@ def plot_e6_quarter_profile(
     fig_dir.mkdir(parents=True, exist_ok=True)
 
     quarters = ["1", "2", "3", "4"]
-    df_q = df[df["quarter"].astype(str).isin(quarters)].copy()
+    df_q = df[df["quarter"].astype(str).str.strip().isin(quarters)].copy()
     for col in ("FT", "FTA"):
         df_q[col] = pd.to_numeric(df_q[col], errors="coerce")
 
@@ -496,6 +507,7 @@ def run(cohort: str, n_perm: int = 5000) -> None:
 
 
 if __name__ == "__main__":
+    _ensure_dirs()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--cohort", required=True, choices=["pg", "pf"], help="Cohort to analyze (pg or pf)"

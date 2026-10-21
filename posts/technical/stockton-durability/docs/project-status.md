@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-20 (v8)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-21 (v9)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -55,7 +55,7 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 
 ## Current Status
 
-**Infrastructure: complete.** 141 tests passing across five scripts:
+**Infrastructure: complete.** 127 tests passing across five scripts:
 
 | Script | Purpose |
 |:-------|:--------|
@@ -126,6 +126,36 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v9 — 2026-10-21
+
+**Session focus: parser correctness, fetch robustness, audit overhaul, re-parse infrastructure.**
+
+- **Parser fixes** (`fetch_quarter_splits.py`):
+  - P6: last-name-only word-boundary matching (`\b{last_name}\b`) — eliminates first-name false matches ("Avery Johnson" → not Stockton; "John Starks" → not Stockton); first-name-only path removed entirely
+  - P7: technical/flagrant FT support — regex `makes (?:technical |flagrant )?free throw` correctly handles all FT variant text; was missing from classifier
+  - #51: `RequestException` retry with backoff (was returning `None` immediately, aborting entire game)
+  - #70: `--cache-only` flag added — skips all network requests, parses only from HTML cache; safe re-parse after parser fix
+  - Filed #79: `--force-reparse` companion flag (bypasses `done_games` without deleting parquet — not yet implemented)
+- **Analysis fixes** (`analyze_quarter_splits.py`, `analyze_durability.py`):
+  - #55: `drop_duplicates(subset=["player_id", "date"])` before merge — guards against Shawn Marion duplicate row in `game_logs.parquet`
+  - #56: `.str.strip().isin(quarters)` — quarter filter was silently dropping rows with trailing whitespace
+  - #57: Zero-TOV rows → NaN AST/TOV ratio (not epsilon); degenerate zero-TOV games excluded from model
+  - #67: Cohort panel was including treated player rows; fixed with `player_id != treated_id` exclusion
+  - #68: Comment added about zero-game-season bias in `games_missed_per_82` denominator
+  - #65: `_ensure_dirs()` guard replaces module-scope `DATA_DIR.mkdir()` side-effect
+- **Fetch infrastructure** (`fetch_bref_data.py`):
+  - #50/#52: `requests.RequestException` retry with backoff in `_get_html()` — previously only `Timeout`/`ConnectionError` caught
+  - #62: 403 IP-block handler — exponential backoff 60→120→240→480s (capped at 600s); sets `_ip_blocked_until` to gate concurrent requests
+  - #66: `_backfill_cohort_column()` helper extracted — reduces `fetch_cohort` complexity below ruff C901 threshold
+- **Audit overhaul** (`audit_parquet.py`, `audit_fetch.py`):
+  - `audit_parquet.py`: `_REQUIRED_COLS` sentinel; empty-file early exit; missing-core-columns check; `_sample_html_parse` returns `int`; zero-row guard; P6/P7/P8 classifier test cases; `html_issues` included in exit code
+  - `audit_fetch.py` F1: verdict "NEEDS SECOND WAVE" on season gaps; F2: exit code 1 when `missing_gaps or season_gaps`
+  - **Regression fixed**: `%8.2%%` → `%7.2f%%` format string in null-rate logging (was silently raising `ValueError`, suppressing all null-rate output)
+  - **Crash guard added**: `df["quarter"].value_counts()` → guarded by `"quarter" in df.columns` check
+- **Tests**: 6 new tests (P6 first-name collision × 2, P7 technical FT × 2, P8 missed-3pt, zero-TOV NaN behavior); 127 total
+- **Issues closed**: #50, #51, #52, #55, #56, #57, #62, #65, #66, #67, #68, #69, #70 (13 closed)
+- **Background re-parse**: PG + PF quarter splits running locally (HTML cache at 5,114 files); parquets will need `--cache-only --force-reparse` clean re-run after background processes complete
 
 ### v8 — 2026-10-20
 

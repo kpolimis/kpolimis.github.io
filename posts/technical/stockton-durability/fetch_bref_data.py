@@ -44,8 +44,9 @@ RATE_LIMIT_JITTER = (
 )
 SESSION_COOLDOWN_PAGES = 20  # sleep SESSION_COOLDOWN_SEC after every N successful fetches
 SESSION_COOLDOWN_SEC = 300  # 5-minute break every 20 pages (~200 pages/hour cap)
+_MAX_BACKOFF_SEC = 600  # cap for both 429 and 403 exponential backoff
 
-# IP-level block state: when BRef 429s, ALL requests are blocked until this timestamp clears.
+# IP-level block state: when BRef 429s/403s, ALL requests are blocked until this timestamp clears.
 _ip_blocked_until: float = 0.0
 
 # BRef player IDs: first-5-lastname + first-2-firstname + 01
@@ -159,7 +160,13 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
         )
     }
     for attempt in range(4):
-        resp = requests.get(url, headers=headers, timeout=20)
+        try:
+            resp = requests.get(url, headers=headers, timeout=20)
+        except requests.RequestException as exc:
+            wait = min(15 * (2**attempt), _MAX_BACKOFF_SEC)
+            logger.warning("Request error for %s: %s — retrying in %ds (attempt %d/4)", url, exc, wait, attempt + 1)
+            time.sleep(wait)
+            continue
         if resp.status_code == 200:
             cache_path.write_text(resp.text, encoding="utf-8")
             _session_page_count += 1
@@ -175,20 +182,29 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
                 time.sleep(RATE_LIMIT_SEC + random.uniform(0, RATE_LIMIT_JITTER))
             return resp.text
         if resp.status_code == 429:
-            # 429 = IP-level block. Honor Retry-After if present; otherwise exponential backoff.
+            # 429 = rate limit. Honor Retry-After if present; otherwise exponential backoff.
             retry_after = resp.headers.get("Retry-After")
-            wait = (
+            raw_wait = (
                 int(retry_after) if retry_after and retry_after.isdigit() else 120 * (2**attempt)
-            )  # 120s, 240s, 480s, 960s
-            _ip_blocked_until = time.time() + wait  # block all subsequent URLs too
+            )  # 120s, 240s, 480s, 960s before cap
+            wait = min(raw_wait, _MAX_BACKOFF_SEC)
+            _ip_blocked_until = time.time() + wait
             logger.warning(
                 "HTTP 429 for %s — IP blocked, sleeping %ds (attempt %d/4)", url, wait, attempt + 1
+            )
+            time.sleep(wait)
+        elif resp.status_code == 403:
+            # 403 = temporary IP block. Retry with exponential backoff before giving up.
+            wait = min(60 * (2**attempt), _MAX_BACKOFF_SEC)  # 60s, 120s, 240s, 480s
+            _ip_blocked_until = time.time() + wait
+            logger.warning(
+                "HTTP 403 for %s — IP block, sleeping %ds (attempt %d/4)", url, wait, attempt + 1
             )
             time.sleep(wait)
         else:
             logger.warning("HTTP %s for %s", resp.status_code, url)
             return None
-    logger.warning("HTTP 429 persisted after retries for %s", url)
+    logger.warning("HTTP 429/403 persisted after retries for %s", url)
     return None
 
 
@@ -288,6 +304,15 @@ def save(df: pd.DataFrame) -> None:
     logger.info("Saved %d rows to data/game_logs.parquet", len(df))
 
 
+def _backfill_cohort_column(df: pd.DataFrame, cohort_lookup: dict) -> pd.DataFrame:
+    """Ensure 'cohort' column exists; backfill from lookup, defaulting to 'population'."""
+    if "cohort" not in df.columns:
+        df["cohort"] = df["player_id"].map(cohort_lookup).fillna("population")
+    else:
+        df["cohort"] = df["player_id"].map(cohort_lookup).fillna(df["cohort"])
+    return df
+
+
 def fetch_cohort(
     player_filter: str | None = None,
     cohort_filter: str | None = None,
@@ -302,7 +327,7 @@ def fetch_cohort(
     done_keys: set[tuple[str, int]] = set()
     if existing is not None:
         cohort_lookup = {pid: ctype for _, (_, pid, _, _, ctype) in COHORT.items()}
-        existing["cohort"] = existing["player_id"].map(cohort_lookup).fillna(existing["cohort"])
+        existing = _backfill_cohort_column(existing, cohort_lookup)
         done_keys = set(zip(existing["player_id"], existing["season"], strict=False))
         logger.info(
             "Cache: %s rows, %d (player, season) pairs already fetched.",

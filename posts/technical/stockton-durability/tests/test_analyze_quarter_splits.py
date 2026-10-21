@@ -14,11 +14,12 @@ class TestAddAstTov:
         assert "AST_TOV_ratio" in result.columns
         assert result["AST_TOV_ratio"].iloc[0] == pytest.approx(6.0 / 2.001, rel=1e-3)
 
-    def test_zero_tov_avoids_division_by_zero(self):
+    def test_zero_tov_returns_nan(self):
         df = pd.DataFrame({"AST": [5.0], "TOV": [0.0]})
         result = aqs._add_ast_tov(df)
-        # Should not raise; 5 / 0.001 = 5000
-        assert result["AST_TOV_ratio"].iloc[0] == pytest.approx(5000.0, rel=1e-2)
+        import numpy as np
+
+        assert np.isnan(result["AST_TOV_ratio"].iloc[0])
 
     def test_missing_columns_noop(self):
         df = pd.DataFrame({"FT": [5.0]})

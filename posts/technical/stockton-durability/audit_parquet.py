@@ -44,6 +44,13 @@ _CLASSIFIER_CASES = [
         "john",
         {"FGA": 1, "PTS": 0, "FT": 0, "FTA": 0, "AST": 0, "TOV": 0},
     ),
+    # P8: misses 3-pt case
+    (
+        "john stockton misses 3-pt jump shot from 26 ft",
+        "stockton",
+        "john",
+        {"FGA": 1, "PTS": 0, "FT": 0, "FTA": 0, "AST": 0, "TOV": 0},
+    ),
     (
         "john stockton makes free throw 1 of 2",
         "stockton",
@@ -52,6 +59,19 @@ _CLASSIFIER_CASES = [
     ),
     (
         "john stockton misses free throw 2 of 2",
+        "stockton",
+        "john",
+        {"FGA": 0, "PTS": 0, "FT": 0, "FTA": 1, "AST": 0, "TOV": 0},
+    ),
+    # P7: technical free throw — previously undetected because regex required adjacent "free throw"
+    (
+        "john stockton makes technical free throw",
+        "stockton",
+        "john",
+        {"FGA": 0, "PTS": 1, "FT": 1, "FTA": 1, "AST": 0, "TOV": 0},
+    ),
+    (
+        "john stockton misses technical free throw",
         "stockton",
         "john",
         {"FGA": 0, "PTS": 0, "FT": 0, "FTA": 1, "AST": 0, "TOV": 0},
@@ -76,6 +96,19 @@ _CLASSIFIER_CASES = [
         "stockton",
         "john",
         {"FGA": 0, "PTS": 0, "FT": 0, "FTA": 0, "AST": 0, "TOV": 1},
+    ),
+    # P6: first-name substring collision — "john" must not match "johnson" or "johnny"
+    (
+        "avery johnson makes 2-pt jump shot from 12 ft",
+        "stockton",
+        "john",
+        {"FGA": 0, "PTS": 0, "FT": 0, "FTA": 0, "AST": 0, "TOV": 0},
+    ),
+    (
+        "john starks makes 2-pt jump shot from 14 ft",
+        "stockton",
+        "john",
+        {"FGA": 0, "PTS": 0, "FT": 0, "FTA": 0, "AST": 0, "TOV": 0},
     ),
 ]
 
@@ -108,26 +141,51 @@ def _smoke_test_classifier() -> int:
     return failures
 
 
-def _audit_file(path: pathlib.Path) -> int:
+_REQUIRED_COLS = {"FGA", "FTA", "PTS"}
+
+
+def _audit_file(path: pathlib.Path, error_on_missing: bool = False) -> int:
     """Report null/zero rates for all numeric columns in one parquet file.
 
     Args:
         path: Path to a quarter_splits_*.parquet file.
+        error_on_missing: If True, count a missing file as an issue (use for
+            explicit --parquet paths; auto-discovered files are skipped silently).
 
     Returns:
-        Number of unexpected all-zero or all-null columns.
+        Number of unexpected all-zero, all-null, or structural issues.
     """
     if not path.exists():
+        if error_on_missing:
+            print(f"ERROR  {path} — file not found (--parquet path must exist)")
+            return 1
         print(f"SKIP  {path.name} — file not found")
         return 0
 
     df = pd.read_parquet(path)
     issues = 0
     print(f"\n{'=' * 60}")
-    print(f"FILE  {path.name}  ({len(df):,} rows, {df['quarter'].value_counts().to_dict()})")
+
+    if df.empty:
+        print(f"FILE  {path.name}  *** EMPTY PARQUET — 0 rows")
+        print(f"{'=' * 60}")
+        return 1
+
+    qvc = df["quarter"].value_counts().to_dict() if "quarter" in df.columns else "(no quarter col)"
+    print(f"FILE  {path.name}  ({len(df):,} rows, {qvc})")
     print(f"{'=' * 60}")
+
+    missing_core = _REQUIRED_COLS - set(df.columns)
+    if missing_core:
+        print(f"*** MISSING CORE COLUMNS: {missing_core}")
+        issues += len(missing_core)
+
     print(f"{'Column':<16} {'Null%':>7} {'Zero%':>7} {'Mean':>10} {'p50':>10}  Flag")
     print("-" * 60)
+
+    # score_margin is expected all-null only when no box-fallback ("full") rows exist
+    has_full_rows = "quarter" in df.columns and (df["quarter"].astype(str) == "full").any()
+    expected_all_null = _EXPECTED_ALL_NULL if not has_full_rows else set()
 
     for col in _NUMERIC_COLS:
         if col not in df.columns:
@@ -141,11 +199,11 @@ def _audit_file(path: pathlib.Path) -> int:
 
         flag = ""
         if null_pct == 100:
-            if col not in _EXPECTED_ALL_NULL:
+            if col not in expected_all_null:
                 flag = "*** UNEXPECTED ALL-NULL"
                 issues += 1
             else:
-                flag = "(expected — box-score path only)"
+                flag = "(expected — PBP path only)"
         elif zero_pct == 100:
             flag = "*** ALL ZERO"
             issues += 1
@@ -157,18 +215,21 @@ def _audit_file(path: pathlib.Path) -> int:
     return issues
 
 
-def _sample_html_parse(n: int) -> None:
+def _sample_html_parse(n: int) -> int:
     """Parse n cached PBP HTML files and report aggregate stat totals.
 
     Args:
         n: Number of cached files to parse.
+
+    Returns:
+        Number of issues found (0 = clean, >0 = issues).
     """
     import fetch_quarter_splits as fqs  # noqa: PLC0415
 
     pbp_files = sorted(HTML_CACHE.glob("*_pbp.html"))[:n]
     if not pbp_files:
         print("\nNo cached PBP HTML found — skipping HTML sample parse.")
-        return
+        return 0
 
     # Use Stockton for the sample (his games are in the cache)
     totals: dict[str, int] = {"FT": 0, "FTA": 0, "FGA": 0, "PTS": 0, "AST": 0, "TOV": 0}
@@ -188,12 +249,24 @@ def _sample_html_parse(n: int) -> None:
     print(f"HTML SAMPLE PARSE  ({len(pbp_files)} PBP files, Stockton)")
     print(f"{'=' * 60}")
     print(f"Quarter rows produced: {row_count}")
+
+    issues = 0
+    if row_count == 0:
+        print("*** ZERO QUARTER ROWS across all sample files — parser likely broken")
+        issues += 1
+        return issues
+
     for k, v in totals.items():
         print(f"  {k}: {v}")
-    if row_count > 0 and totals["FGA"] == 0:
+    if totals["FGA"] == 0:
         print("*** FGA still 0 across all sample files — parser may still be broken")
+        issues += 1
+    if totals["PTS"] == 0 and totals["FTA"] == 0:
+        print("*** PTS and FTA both 0 — free-throw and scoring regexes may be broken")
+        issues += 1
     if totals["FTA"] > 0:
         print(f"  FT%: {totals['FT'] / totals['FTA']:.3f}")
+    return issues
 
 
 def main() -> int:
@@ -218,6 +291,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    explicit_path = bool(args.parquet)
     if args.parquet:
         paths = [pathlib.Path(args.parquet)]
     else:
@@ -229,24 +303,27 @@ def main() -> int:
 
     total_issues = 0
     for p in paths:
-        total_issues += _audit_file(p)
+        total_issues += _audit_file(p, error_on_missing=explicit_path)
 
     classifier_failures = 0
     if not args.skip_classifier:
         classifier_failures = _smoke_test_classifier()
 
+    html_issues = 0
     if args.sample_html > 0:
-        _sample_html_parse(args.sample_html)
+        html_issues = _sample_html_parse(args.sample_html)
 
     print(f"\n{'=' * 60}")
-    if total_issues or classifier_failures:
+    if total_issues or classifier_failures or html_issues:
         print(
-            f"AUDIT RESULT: {total_issues} parquet issue(s), {classifier_failures} classifier failure(s)"
+            f"AUDIT RESULT: {total_issues} parquet issue(s), "
+            f"{classifier_failures} classifier failure(s), "
+            f"{html_issues} HTML parse issue(s)"
         )
     else:
         print("AUDIT RESULT: clean")
     print(f"{'=' * 60}")
-    return 1 if (total_issues or classifier_failures) else 0
+    return 1 if (total_issues or classifier_failures or html_issues) else 0
 
 
 if __name__ == "__main__":

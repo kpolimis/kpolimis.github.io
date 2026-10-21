@@ -159,7 +159,12 @@ def compute_e1(
         total_sg = per_season["season_games"].sum()
         total_active = per_season["active_games"].sum()
         total_missed = per_season["missed"].sum()
-        # games_missed_per_82 = missed rate normalized to an 82-game season
+        # games_missed_per_82 = missed rate normalized to an 82-game season.
+        # Note: seasons where the player appeared in 0 games are absent from
+        # game_logs.parquet entirely — they are excluded from both total_sg and
+        # total_missed. Zero-game seasons (injury years, overseas stints) are
+        # therefore treated as if the player was not in the league, which
+        # understates games_missed_per_82 for players who missed entire seasons.
         gmiss82 = (total_missed / total_sg * 82) if total_sg > 0 else float("nan")
         rows.append(
             {

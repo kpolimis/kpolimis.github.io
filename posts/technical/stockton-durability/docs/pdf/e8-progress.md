@@ -12,7 +12,7 @@ date: "2026-10-19"
 
 ## E8 Fetch Status (Apollo `bref-qs-fetch`)
 
-**Container status:** `Up 17 minutes`
+**Container status:** `Up 9 hours`
 
 | Metric | Value |
 |:-------|------:|
@@ -25,12 +25,6 @@ date: "2026-10-19"
 ### Container Logs (tail)
 
 ```
-oaklech01    1205
-perkisa01    1204
-johnsjo02    1200
-harpede01    1199
-greenac01    1196
-derozde01    1187
 lowryky01    1177
 thorpot01    1175
 conlemi01    1173
@@ -62,9 +56,15 @@ INFO | Players (50): ['jamesle01', 'nowitdi01', 'stockjo01', 'kiddja01', 'willik
 INFO | Output: data/quarter_splits_e8.parquet
 INFO | Season range: all
 INFO | Game index: 59837 games for 50 player(s) (season range: all)
-INFO | Session cooldown (40 pages) — sleeping 120s
-INFO | Session cooldown (80 pages) — sleeping 120s
-INFO | Session cooldown (120 pages) — sleeping 120s
+WARNING | HTTP 429 game_id=198501060UTA (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198503120LAL (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198511290UTA (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198601290UTA (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198610310DAL (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198701040LAL (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198703170UTA (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198711300UTA (pbp=True) — waiting 3600s (attempt 1)
+WARNING | HTTP 429 game_id=198802140DEN (pbp=True) — waiting 3600s (attempt 1)
 ```
 
 ---
@@ -105,8 +105,6 @@ Stockton is rank 3 (1,504 games), confirming he is in the cohort.
 | `e5_pf_permutation.parquet` | 5,000 | 0.0 |
 | `e5_pg_permutation.parquet` | 5,000 | 0.0 |
 | `game_logs.parquet` | 656,839 | 16.8 |
-| `quarter_splits_pf.parquet` | 13,689 | 0.1 |
-| `quarter_splits_pg.parquet` | 5,585 | 0.1 |
 | `season_splits.parquet` | 665,598 | 7.2 |
 
 
