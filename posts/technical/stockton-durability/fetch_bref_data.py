@@ -164,7 +164,13 @@ def _get_html(url: str, cache_key: str, cache_subdir: str = "") -> str | None:
             resp = requests.get(url, headers=headers, timeout=20)
         except requests.RequestException as exc:
             wait = min(15 * (2**attempt), _MAX_BACKOFF_SEC)
-            logger.warning("Request error for %s: %s — retrying in %ds (attempt %d/4)", url, exc, wait, attempt + 1)
+            logger.warning(
+                "Request error for %s: %s — retrying in %ds (attempt %d/4)",
+                url,
+                exc,
+                wait,
+                attempt + 1,
+            )
             time.sleep(wait)
             continue
         if resp.status_code == 200:

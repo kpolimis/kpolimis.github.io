@@ -2,6 +2,11 @@
 name = "kpolimis-github-io"
 version = "0.1.0"
 requires-python = ">=3.10"
+dependencies = [
+    "soccerdata==1.9.1",
+    # footy is private — install separately:
+    # pip install git+ssh://git@github.com/kpolimis/football.git@80c1d74#subdirectory=footy
+]
 
 [tool.ruff]
 line-length = 100
