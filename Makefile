@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help preview render render-epl render-wc-leagues render-wc-epl \
+        freeze-audit freeze-post \
         data data-refresh clean clean-freeze all bootstrap lint lint-fix check
 
 # C4: all re-executes WC posts then renders the full site (freeze cache handles the rest)
@@ -39,6 +40,18 @@ render:  ## Render entire site (no execution; uses freeze cache)
 
 render-epl:  ## Re-execute and render EPL standings post
 	conda run -n blog quarto render posts/blog/epl-standings/ --execute
+
+# Freeze a post that needs local data unavailable in CI.
+# Generic: make freeze-post POST=posts/technical/stockton-durability/audit.qmd
+# The post's execute block must have freeze: true before running this.
+freeze-audit:  ## Re-execute audit.qmd and write freeze cache (needs local parquets)
+	conda run -n blog quarto render posts/technical/stockton-durability/audit.qmd --execute
+	@echo "Done. Stage with: git add _freeze/posts/technical/stockton-durability/audit/"
+
+freeze-post:  ## Re-execute any post and write its freeze cache: make freeze-post POST=<path>
+	@test -n "$(POST)" || (echo "Usage: make freeze-post POST=<path/to/post.qmd>" && exit 1)
+	conda run -n blog quarto render $(POST) --execute
+	@echo "Done. Stage with: git add _freeze/"
 
 # C4: render targets depend on data files so a data refresh forces re-execution
 render-wc-leagues: data/wc_players.csv  ## Re-execute WC leagues post (needs data/)
