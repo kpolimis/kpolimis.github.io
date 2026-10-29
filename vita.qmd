@@ -63,12 +63,12 @@ toc-depth: 2
 
 **2017** &emsp; Ph.D., Computational Social Science, University of Washington
 
+- Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
+- Advised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
 - National Science Foundation Graduate Research Fellowship recipient
 - Center for Statistics and the Social Sciences: Certification in Social Statistics
 - Center for the Study of Demography and Ecology Pre-doctoral Fellow
 - Data Science for Social Good Fellow
-- Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
-- Advised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
 
 **2012** &emsp; M.A., Sociology, University of North Carolina at Chapel Hill
 
