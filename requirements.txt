@@ -1,0 +1,22 @@
+# Blog post execution dependencies
+# Install via: pip install -r requirements.txt
+# Conda env: conda activate blog
+
+altair==6.2.2
+numpy==2.3.5
+pandas==2.3.3
+pyarrow==25.0.1
+scipy==1.16.3
+statsmodels==0.14.6
+
+# Data fetch script only
+soccerdata==1.9.1
+
+pytest>=8.0
+
+ruff>=0.9
+
+# footy is private — install via SSH from pinned SHA (requires kpolimis/football access):
+#   pip install git+ssh://git@github.com/kpolimis/football.git@80c1d74#subdirectory=footy
+# Local editable dev override (takes precedence; keep in sync with the SHA above):
+#   pip install -e ~/repos/football/footy

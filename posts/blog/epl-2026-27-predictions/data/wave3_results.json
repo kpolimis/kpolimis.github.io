@@ -1,0 +1,70 @@
+{
+  "stage": "wave3_decay_curve_descriptive",
+  "status": "complete",
+  "decay_curve": [
+    {
+      "week": 2,
+      "beta_market": 0.04697430156369337,
+      "se_market": 0.011032487613484705,
+      "ci_lo": 0.025058861616755117,
+      "ci_hi": 0.0687044331124183,
+      "n_matches": 167,
+      "n_seasons": 18,
+      "share_closing": 0.38922155688622756
+    },
+    {
+      "week": 3,
+      "beta_market": 0.03305653407578354,
+      "se_market": 0.012259546632076419,
+      "ci_lo": 0.008868786245048612,
+      "ci_hi": 0.05568701172241942,
+      "n_matches": 162,
+      "n_seasons": 18,
+      "share_closing": 0.3950617283950617
+    },
+    {
+      "week": 4,
+      "beta_market": 0.03536723219362181,
+      "se_market": 0.011875522694949117,
+      "ci_lo": 0.013286953546447924,
+      "ci_hi": 0.060084691311157214,
+      "n_matches": 164,
+      "n_seasons": 18,
+      "share_closing": 0.3902439024390244
+    },
+    {
+      "week": 5,
+      "beta_market": 0.0038716340346487826,
+      "se_market": 0.010378250971836518,
+      "ci_lo": -0.01505810793330684,
+      "ci_hi": 0.024717464866533458,
+      "n_matches": 163,
+      "n_seasons": 18,
+      "share_closing": 0.39263803680981596
+    },
+    {
+      "week": 6,
+      "beta_market": 0.04400281881870573,
+      "se_market": 0.009833745735826875,
+      "ci_lo": 0.025499125015578418,
+      "ci_hi": 0.06401140507230002,
+      "n_matches": 164,
+      "n_seasons": 18,
+      "share_closing": 0.3902439024390244
+    }
+  ],
+  "consistency_check": {
+    "wave3_k2_beta": 0.04697430156369337,
+    "wave1_beta_market": 0.04697430156369337,
+    "abs_diff": 0.0,
+    "tolerance": 0.001,
+    "pass": true
+  },
+  "sanity_gates": {
+    "k2_matches_wave1_beta": true,
+    "n_weeks": 5,
+    "all_weeks_present": true
+  },
+  "note": "full-sample descriptive (Wave 1 priors + link; not LOSO); season-block bootstrap CIs, n_boot=10000, seed=42",
+  "runtime_seconds": 618.9
+}

@@ -1,0 +1,12 @@
+/* Kivan Polimis — minimal custom styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+pre code {
+  font-size: 0.875rem;
+}

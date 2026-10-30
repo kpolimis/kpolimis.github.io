@@ -1,0 +1,60 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - CNAME
+  # C6: exclude Pelican-era archive and draft directories — they contain Jinja tags
+  # and relative image paths that render broken under Quarto
+  render:
+    - "*.qmd"
+    - "!.content-archive/**"
+    - "!.drafts/**"
+    - "!posts/**/*.md"
+
+website:
+  title: "Kivan Polimis"
+  description: "Data Scientist | ML Engineer | Public Policy Researcher"
+  site-url: https://kivanpolimis.com
+
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Technical Articles"
+        href: technical.qmd
+      - text: "Blog"
+        href: blog.qmd
+      - text: "Teaching"
+        href: teaching.qmd
+      - text: "Software"
+        href: software.qmd
+      - text: "Vita"
+        href: vita.qmd
+    right:
+      - icon: github
+        href: https://github.com/kpolimis
+      - icon: linkedin
+        href: https://www.linkedin.com/in/kivan-polimis-36b54a9/
+      - icon: twitter-x
+        href: https://twitter.com/kpolimis
+
+  page-footer:
+    center: "© Kivan Polimis. Built with [Quarto](https://quarto.org)."
+
+format:
+  html:
+    theme:
+      - cosmo
+      - custom.scss
+    css: styles.css
+    include-after-body: include-script.html
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    highlight-style: github
+    link-external-newwindow: true
+
+execute:
+  freeze: auto
+  cache: true
