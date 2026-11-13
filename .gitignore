@@ -161,3 +161,21 @@ uv.lock
 
 # Multi-LLM panel synthesis working docs — not post content
 panel_synthesis_*.md
+
+# Quarto local preview renders inside post subdirectories
+# diaw and nba-population have no tracked files in docs/ — ignore whole dir
+posts/technical/diaw-35bpm/docs/
+posts/technical/nba-durability-population/docs/
+# stockton-durability/docs/ has tracked files (project-status.*) — ignore build outputs only
+posts/technical/*/docs/index.html
+posts/technical/*/docs/site_libs/
+posts/technical/*/docs/search.json
+posts/technical/*/docs/listings.json
+posts/technical/*/docs/sitemap.xml
+posts/technical/*/docs/robots.txt
+posts/technical/*/docs/styles.css
+posts/technical/*/docs/bayesian-waves-bg.js
+posts/technical/*/docs/technical.html
+posts/technical/*/docs/posts/
+posts/technical/*/docs/_site/
+posts/technical/*/docs/CNAME
