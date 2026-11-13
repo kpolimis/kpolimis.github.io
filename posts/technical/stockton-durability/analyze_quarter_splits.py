@@ -506,12 +506,134 @@ def run(cohort: str, n_perm: int = 5000) -> None:
     plot_e6_quarter_profile(df, treated_id, treated_name, cohort)
 
 
+def run_population(
+    parquet: str = "quarter_splits_e9.parquet",
+    min_q4_fta: int = 50,
+    n_perm: int = 5000,
+) -> None:
+    """Population-level Q4 FT% advantage analysis (E9).
+
+    For each player with sufficient Q4 FTA, computes attempt-weighted Q4 FT%
+    minus attempt-weighted Q1-Q3 FT%.  Reports rank + percentile for Stockton
+    and Diaw, then runs a permutation test (resample treatment label) consistent
+    with the E1/E3 methodology.
+
+    Args:
+        parquet: Filename under DATA_DIR for the population quarter-splits file.
+        min_q4_fta: Minimum Q4 free-throw attempts required to include a player.
+        n_perm: Number of permutation resamples.
+    """
+    path = DATA_DIR / parquet
+    if not path.exists():
+        raise FileNotFoundError(f"{path} not found — pull from Apollo first.")
+
+    df = pd.read_parquet(path)
+    logger.info("Loaded %s rows from %s (%d players)", f"{len(df):,}", parquet, df["player_id"].nunique())
+
+    quarters = ["1", "2", "3", "4"]
+    df_q = df[df["quarter"].astype(str).str.strip().isin(quarters)].copy()
+    for col in ("FT", "FTA"):
+        df_q[col] = pd.to_numeric(df_q[col], errors="coerce")
+
+    agg = (
+        df_q.groupby(["player_id", "player_name", "quarter"])
+        .agg(FT=("FT", "sum"), FTA=("FTA", "sum"))
+        .reset_index()
+    )
+    agg = agg[agg["FTA"] > 0].copy()
+    agg["ft_pct"] = agg["FT"] / agg["FTA"]
+
+    # Separate Q4 vs Q1-Q3
+    q4 = agg[agg["quarter"] == "4"][["player_id", "player_name", "FT", "FTA", "ft_pct"]].copy()
+    q4.columns = ["player_id", "player_name", "ft_q4", "fta_q4", "ftpct_q4"]
+
+    q123 = (
+        agg[agg["quarter"].isin(["1", "2", "3"])]
+        .groupby(["player_id", "player_name"])
+        .agg(ft_q123=("FT", "sum"), fta_q123=("FTA", "sum"))
+        .reset_index()
+    )
+    q123["ftpct_q123"] = q123["ft_q123"] / q123["fta_q123"]
+
+    merged = q4.merge(q123, on=["player_id", "player_name"])
+    qualified = merged[merged["fta_q4"] >= min_q4_fta].copy()
+    qualified["q4_advantage"] = qualified["ftpct_q4"] - qualified["ftpct_q123"]
+    qualified = qualified.sort_values("q4_advantage", ascending=False).reset_index(drop=True)
+
+    n = len(qualified)
+    logger.info("Qualified players (≥%d Q4 FTA): %d", min_q4_fta, n)
+
+    for pid, name in [("stockjo01", "Stockton"), ("diawbo01", "Diaw")]:
+        row = qualified[qualified["player_id"] == pid]
+        if row.empty:
+            logger.warning("%s not in qualified set (insufficient Q4 FTA).", name)
+            continue
+        rank = int(row.index[0]) + 1
+        pctile = 100.0 * (1 - (rank - 1) / n)
+        adv = float(row["q4_advantage"].iloc[0])
+        q4p = float(row["ftpct_q4"].iloc[0])
+        q123p = float(row["ftpct_q123"].iloc[0])
+        logger.info(
+            "%s: rank %d/%d (%.1f pctile) | Q4 FT%% %.3f vs Q1-Q3 %.3f | advantage %.4f",
+            name, rank, n, pctile, q4p, q123p, adv,
+        )
+
+    # Permutation test: how likely is Stockton's Q4 advantage under the null?
+    stockton_row = qualified[qualified["player_id"] == "stockjo01"]
+    if not stockton_row.empty:
+        obs_adv = float(stockton_row["q4_advantage"].iloc[0])
+        rng = np.random.default_rng(42)
+        null_advs = rng.choice(qualified["q4_advantage"].values, size=n_perm, replace=True)
+        p_val = float(np.mean(null_advs >= obs_adv))
+        logger.info("Stockton permutation p-value (one-sided): %.4f  (obs=%.4f)", p_val, obs_adv)
+
+        null_df = pd.DataFrame({"null_q4_advantage": null_advs})
+        null_path = DATA_DIR / "e9_population_permutation.parquet"
+        null_df.to_parquet(null_path, index=False)
+        logger.info("Null distribution saved to %s", null_path)
+
+    # Save ranked table
+    out_csv = DATA_DIR / "e9_q4_advantage.csv"
+    qualified.to_csv(out_csv, index=False)
+    logger.info("Ranked table saved to %s", out_csv)
+
+    # Figure: histogram with Stockton + Diaw annotated
+    fig_dir = DATA_DIR / "figures" / "population"
+    fig_dir.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.hist(qualified["q4_advantage"], bins=40, color="#4C72B0", alpha=0.75, edgecolor="white")
+
+    colors = {"stockjo01": "#E84D3C", "diawbo01": "#2CA02C"}
+    for pid, label in [("stockjo01", "Stockton"), ("diawbo01", "Diaw")]:
+        row = qualified[qualified["player_id"] == pid]
+        if not row.empty:
+            adv = float(row["q4_advantage"].iloc[0])
+            ax.axvline(adv, color=colors[pid], linewidth=2, linestyle="--", label=f"{label} ({adv:+.3f})")
+
+    ax.axvline(0, color="black", linewidth=1, linestyle=":")
+    ax.set_xlabel("Q4 FT% − Q1–Q3 FT% (attempt-weighted)")
+    ax.set_ylabel("Players")
+    ax.set_title(f"E9: Q4 FT% advantage — population ({n} players, ≥{min_q4_fta} Q4 FTA)")
+    ax.legend()
+    fig.tight_layout()
+    out_fig = fig_dir / "e9_q4_advantage_distribution.png"
+    fig.savefig(out_fig, dpi=150)
+    plt.close(fig)
+    logger.info("Saved %s", out_fig)
+
+
 if __name__ == "__main__":
     _ensure_dirs()
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--cohort", required=True, choices=["pg", "pf"], help="Cohort to analyze (pg or pf)"
+        "--cohort", required=True, choices=["pg", "pf", "population"], help="Cohort to analyze"
     )
     parser.add_argument("--n-perm", type=int, default=5000, help="Permutation iterations")
+    parser.add_argument(
+        "--min-q4-fta", type=int, default=50, help="Min Q4 FTA for population analysis"
+    )
     args = parser.parse_args()
-    run(cohort=args.cohort, n_perm=args.n_perm)
+    if args.cohort == "population":
+        run_population(n_perm=args.n_perm, min_q4_fta=args.min_q4_fta)
+    else:
+        run(cohort=args.cohort, n_perm=args.n_perm)

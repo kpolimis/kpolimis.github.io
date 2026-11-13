@@ -128,13 +128,34 @@ The TS% result is robust across sensitivity cohorts. Among ≥400-game players (
 
 ---
 
-## E8: Within-Game Resilience at Population Scale
+## E9: Within-Game Resilience at Population Scale
 
-*This section is pending completion of the quarter-splits fetch for the top-50 most-durable players (container `bref-qs-fetch` on Apollo; ~59,837 games to process). Results will be added here once data is available.*
+```{python}
+#| echo: false
+#| label: fig-e9-dist
+#| fig-cap: "Q4 FT% advantage (Q4 minus Q1–Q3) — 487 BRef-era players with ≥50 career Q4 free throw attempts. Positive values mean Q4 FT% above the player's own Q1–Q3 baseline. Stockton and Diaw marked."
+#| fig-alt: "Distribution of Q4 FT% advantage across 487 BRef-era long-career players. Distribution is approximately centered at zero with slight right skew. Stockton is near center-right at +1.5 pp; Diaw is in the left tail at -5.1 pp."
+p = DATA_DIR / "figures/population/e9_q4_advantage_distribution.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
 
-E1, E3, and E7 measure career-aggregate patterns. E8 asks a finer question: among the 50 players with the most active career game rows, do Stockton and Diaw show distinct within-game shooting profiles — specifically, a Q4 true shooting percentage that holds up or improves relative to Q1–Q3 — compared to the other long-career peers?
+E1, E3, and E7 measure career-aggregate patterns. E9 asks a finer question: does either player's Q4 free-throw percentage hold up or improve relative to their own Q1–Q3 baseline — and if so, is that tendency exceptional at population scale?
 
-The analysis will use `fetch_quarter_splits.py --top-n-by-games 50` output (`quarter_splits_e8.parquet`) and the same permutation framework as E2 in Posts 1 and 2. Stockton is rank 3 in the top-50 cohort (1,504 active games). Diaw is just outside it: his 1,064 active games fall 6 short of the 50th-ranked player's 1,070, making the E8 estimand Stockton-only — whether his Q4 TS% profile relative to the 49 most-durable peers is consistent with the within-game resilience hypothesis.
+The metric follows E2 from Posts 1 and 2 (Q4 FT% vs. Q1–Q3 FT%) rather than a composite efficiency figure, because FT% isolates physical execution from late-game shot-selection changes. Quarter splits were fetched for all 738 players in the primary population cohort (686,102 game-quarter rows, `quarter_splits_e9.parquet`). After requiring ≥50 career Q4 free throw attempts — the minimum for a stable FT% estimate — **487 players** qualify.
+
+**Stockton** shoots **84.7% from the line in Q4** against an **83.2%** mark in Q1–Q3 — a **+1.5 percentage point** advantage. That places him **rank 154 out of 487** (68.6th percentile), meaning roughly two-thirds of long-career BRef-era players show a smaller or negative Q4 FT% shift than he does. The permutation p-value is **0.319** — no statistical evidence that this advantage exceeds what chance variation would produce among 487 players.
+
+**Diaw** shoots **67.5% from the line in Q4** against **72.6%** in Q1–Q3 — a **−5.1 pp** decline. He ranks **423rd out of 487** (13.3th percentile); nearly 87% of the population shows better Q4 FT% maintenance than he does.
+
+| | Q4 FT% | Q1–Q3 FT% | Q4 Advantage | Rank | Pctile | p |
+|:--|-------:|----------:|-------------:|-----:|-------:|--:|
+| Stockton | 84.7% | 83.2% | +1.5 pp | 154/487 | **68.6th** | 0.319 |
+| Diaw | 67.5% | 72.6% | −5.1 pp | 423/487 | 13.3th | — |
+
+The Post 1 finding — Stockton was the only player in his named PG cohort to improve from Q1 to Q4 — does not replicate in the full population. At population scale he is above average in Q4 FT% maintenance, but well within the range of ordinary variation. E9 is a null result for both players.
+
+This is worth stating plainly rather than obscuring. The cherry-picking objection to the named-cohort result was well-founded for this estimand: the within-cohort signal disappears when the reference class expands to the full BRef era. Stockton's extreme E1 placement (0.3rd percentile) and E7 placement (97.8th percentile) survive the population test; his E9 placement does not. That asymmetry is itself informative — the durability and efficiency claims carry forward; the within-game fatigue-resistance claim, as operationalized here, does not.
 
 ---
 
@@ -148,7 +169,9 @@ The analysis will use `fetch_quarter_splits.py --top-n-by-games 50` output (`qua
 
 4. **Era effects.** True shooting percentage drifted upward as the league adopted the three-pointer. Stockton's career (1985–2003) predates the three-point revolution; his TS% was achieved in a lower-TS% era, which means the population comparison may understate his relative standing within his era.
 
-5. **No causality.** Nothing in this analysis establishes a causal connection between resting heart rate and any of the observed statistical patterns. The frame throughout is "consistent with" and "does not contradict" — not "caused by." Box-score data cannot identify the mechanism.
+5. **E9 coverage gap.** Basketball-Reference's play-by-play data (which underlies quarter splits) begins with the 1996–97 season. E9 therefore covers only the post-1996 portion of careers — for Stockton, ages 34–40, the tail of his career. His peak years (ages 22–33, 1985–1996) are unavailable. The E9 null result is conditional on this window; whether the within-game resilience pattern would appear in prime-years data cannot be determined from publicly available box scores.
+
+6. **No causality.** Nothing in this analysis establishes a causal connection between resting heart rate and any of the observed statistical patterns. The frame throughout is "consistent with" and "does not contradict" — not "caused by." Box-score data cannot identify the mechanism.
 
 ---
 
@@ -158,7 +181,9 @@ The cherry-picking objection to the individual posts rests on the claim that Sto
 
 It does not. Across 738 BRef-era players who cleared Basketball-Reference's own qualifying threshold for career rate statistics, Stockton's 1.18 games missed per 82 ranks second — behind only A.C. Green, a player whose durability record is independently notable. Diaw's 4.93 ranks in the bottom 3% of the same population. Both findings hold at ≥600-game and ≥820-game thresholds. Stockton's career shooting efficiency (rank 10/464, p = 0.022) is the highest of any point guard in the distribution.
 
-The individual posts established signals in curated cohorts; the population study confirms that neither signal is an artifact of how the cohorts were assembled. What the data cannot establish — in the cohort analyses or here — is whether the physiological claim (35 BPM resting heart rate) causes any of the observed patterns. That question is not answerable from box scores. The appropriate inference remains: the statistics are *consistent with* an unusual physiological baseline, and the consistency holds at population scale.
+The individual posts established signals in curated cohorts; the population study partially confirms that those signals are not artifacts of cohort construction — but it also draws a sharper line. The durability (E1) and shooting efficiency (E7) findings hold at population scale. The within-game fatigue-resistance claim (E9), as operationalized through Q4 FT% vs. Q1–Q3 FT%, does not survive the expansion to the full BRef-era population. Null results matter: this analysis reports all three alongside each other rather than foregrounding the confirmatory ones.
+
+What the data cannot establish — in the cohort analyses or here — is whether the physiological claim (35 BPM resting heart rate) causes any of the observed patterns. That question is not answerable from box scores. The appropriate inference remains: the statistics are *consistent with* an unusual physiological baseline where that consistency is confirmed, and the E9 null result specifies one dimension where it is not.
 
 ---
 
@@ -167,5 +192,6 @@ The individual posts established signals in curated cohorts; the population stud
 - Population cohort: `fetch_bref_data.py --build-population`, then `fetch_bref_data.py --population-fetch`; 2,067 players fetched; 738 with ≥400 active game rows
 - Analysis: `analyze_durability.py --cohort population` (runs 400/600/820-game passes automatically)
 - E7: `analyze_durability.py --cohort population` (E7 pass uses ≥5,000 TSA primary + ≥400 and ≥820 game sensitivities)
+- E9: `fetch_quarter_splits.py --cohort population` for data; `analyze_quarter_splits.py --cohort population` for analysis; outputs `data/e9_q4_advantage.csv`, `data/figures/population/e9_q4_advantage_distribution.png`
 - Data: `posts/technical/stockton-durability/data/`
 - BRef disambiguation: see `posts/technical/stockton-durability/docs/bref-id-disambiguation.md`
