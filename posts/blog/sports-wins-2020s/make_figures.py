@@ -47,10 +47,11 @@ OKABE_ITO = [
 
 # Panel order: MLB/NBA top pair, NFL/NHL, MLS/NWSL, WNBA alone.
 PANEL_ORDER = ["MLB", "NBA", "NFL", "NHL", "MLS", "NWSL", "WNBA"]
-LEAGUE_COLORS = dict(zip(PANEL_ORDER, OKABE_ITO))
+LEAGUE_COLORS = dict(zip(PANEL_ORDER, OKABE_ITO, strict=False))
 
 
 def load_data() -> pd.DataFrame:
+    """Load and type-cast the teams dataset."""
     df = pd.read_csv(DATA)
     df["created_after_2020_01_01"] = df["created_after_2020_01_01"].astype(bool)
     return df
@@ -71,6 +72,7 @@ def scatter_split(ax, sub, x, y, sizes, color):
 
 
 def make_fig1(df: pd.DataFrame) -> None:
+    """Plot within-league win % rankings as horizontal dot plots."""
     fig, axes = plt.subplots(4, 2, figsize=(14, 28))
     axes = axes.ravel()
 
@@ -134,6 +136,7 @@ def make_fig1(df: pd.DataFrame) -> None:
 
 
 def make_fig2(df: pd.DataFrame) -> None:
+    """Plot win % z-score vs. championships won, by league."""
     fig, axes = plt.subplots(4, 2, figsize=(12, 16), sharex=True, sharey=True)
     axes = axes.ravel()
 
@@ -208,6 +211,7 @@ def make_fig2(df: pd.DataFrame) -> None:
 
 
 def main() -> None:
+    """Generate all figures for the sports-wins-2020s post."""
     FIGDIR.mkdir(exist_ok=True)
     df = load_data()
     make_fig1(df)

@@ -1,14 +1,14 @@
-"""
-National Tight End Day TD Analysis
-===================================
+"""National Tight End Day TD Analysis.
+
 Run from this directory: conda run -n blog python analysis.py
 """
 
 import io
 import pathlib
-import requests
+
 import numpy as np
 import pandas as pd
+import requests
 
 DATA = pathlib.Path("data")
 DATA.mkdir(exist_ok=True)
@@ -36,6 +36,7 @@ PBP_COLS = [
 
 
 def download(url: str, dest: pathlib.Path) -> pathlib.Path:
+    """Download url to dest, returning dest (uses cache if already present)."""
     if dest.exists():
         print(f"  cached  {dest.name}")
         return dest
@@ -52,12 +53,14 @@ def download(url: str, dest: pathlib.Path) -> pathlib.Path:
 
 
 def load_pbp(year: int) -> pd.DataFrame:
+    """Load play-by-play parquet for a given season, downloading if needed."""
     path = download(PBP_URL.format(year=year), DATA / f"pbp_{year}.parquet")
     df = pd.read_parquet(path, columns=PBP_COLS)
     return df
 
 
 def load_roster(year: int) -> pd.DataFrame:
+    """Load weekly roster parquet for a given season, filtered to TEs."""
     path = download(ROSTER_URL.format(year=year), DATA / f"roster_{year}.parquet")
     df = pd.read_parquet(path, columns=["gsis_id", "position", "season", "week"])
     return df[df["position"] == "TE"].dropna(subset=["gsis_id"])

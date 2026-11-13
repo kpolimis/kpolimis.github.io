@@ -528,7 +528,9 @@ def run_population(
         raise FileNotFoundError(f"{path} not found — pull from Apollo first.")
 
     df = pd.read_parquet(path)
-    logger.info("Loaded %s rows from %s (%d players)", f"{len(df):,}", parquet, df["player_id"].nunique())
+    logger.info(
+        "Loaded %s rows from %s (%d players)", f"{len(df):,}", parquet, df["player_id"].nunique()
+    )
 
     quarters = ["1", "2", "3", "4"]
     df_q = df[df["quarter"].astype(str).str.strip().isin(quarters)].copy()
@@ -575,7 +577,13 @@ def run_population(
         q123p = float(row["ftpct_q123"].iloc[0])
         logger.info(
             "%s: rank %d/%d (%.1f pctile) | Q4 FT%% %.3f vs Q1-Q3 %.3f | advantage %.4f",
-            name, rank, n, pctile, q4p, q123p, adv,
+            name,
+            rank,
+            n,
+            pctile,
+            q4p,
+            q123p,
+            adv,
         )
 
     # Permutation test: how likely is Stockton's Q4 advantage under the null?
@@ -608,7 +616,9 @@ def run_population(
         row = qualified[qualified["player_id"] == pid]
         if not row.empty:
             adv = float(row["q4_advantage"].iloc[0])
-            ax.axvline(adv, color=colors[pid], linewidth=2, linestyle="--", label=f"{label} ({adv:+.3f})")
+            ax.axvline(
+                adv, color=colors[pid], linewidth=2, linestyle="--", label=f"{label} ({adv:+.3f})"
+            )
 
     ax.axvline(0, color="black", linewidth=1, linestyle=":")
     ax.set_xlabel("Q4 FT% − Q1–Q3 FT% (attempt-weighted)")

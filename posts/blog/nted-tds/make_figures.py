@@ -1,12 +1,13 @@
-"""
-NTED figures — run after analysis.py
+"""NTED figures — run after analysis.py.
+
 conda run -n blog python make_figures.py
 """
 
 import pathlib
-import pandas as pd
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import pandas as pd
 
 DATA = pathlib.Path("data")
 FIGS = pathlib.Path("figures")
