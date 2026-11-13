@@ -29,19 +29,30 @@ for _, row in results.iterrows():
     # grey dots for all other ranks
     other_ranks = [r for r in range(1, n + 1) if r != row["season_rank"]]
     ax.scatter(
-        [year] * len(other_ranks), other_ranks,
-        color=GRAY, s=18, zorder=2, alpha=0.6,
+        [year] * len(other_ranks),
+        other_ranks,
+        color=GRAY,
+        s=18,
+        zorder=2,
+        alpha=0.6,
     )
     # NTED dot
     ax.scatter(
-        year, row["season_rank"],
-        color=BLUE, s=80, zorder=3, label="_nted" if year != 2018 else "NTED slate",
+        year,
+        row["season_rank"],
+        color=BLUE,
+        s=80,
+        zorder=3,
+        label="_nted" if year != 2018 else "NTED slate",
     )
     ax.annotate(
         f"{int(row['season_rank'])}",
         (year, row["season_rank"]),
-        textcoords="offset points", xytext=(6, 0),
-        fontsize=8, color=BLUE, va="center",
+        textcoords="offset points",
+        xytext=(6, 0),
+        fontsize=8,
+        color=BLUE,
+        va="center",
     )
 
 ax.invert_yaxis()
@@ -71,12 +82,20 @@ avg_rates = results["season_avg_rate"].values
 years = results["year"].astype(int).values
 
 bars_avg = ax.bar(
-    [i - bar_w / 2 for i in x], avg_rates,
-    width=bar_w, color=GRAY, label="Season Sunday avg", alpha=0.8,
+    [i - bar_w / 2 for i in x],
+    avg_rates,
+    width=bar_w,
+    color=GRAY,
+    label="Season Sunday avg",
+    alpha=0.8,
 )
 bars_nted = ax.bar(
-    [i + bar_w / 2 for i in x], nted_rates,
-    width=bar_w, color=BLUE, label="NTED slate", alpha=0.9,
+    [i + bar_w / 2 for i in x],
+    nted_rates,
+    width=bar_w,
+    color=BLUE,
+    label="NTED slate",
+    alpha=0.9,
 )
 
 # annotate 2024 with measurement note
@@ -85,7 +104,8 @@ ax.annotate(
     "16 TDs\n(media: 17)",
     xy=(idx_2024 + bar_w / 2, nted_rates[idx_2024]),
     xytext=(idx_2024 + bar_w / 2 + 0.45, nted_rates[idx_2024] + 0.12),
-    fontsize=7.5, color=BLUE,
+    fontsize=7.5,
+    color=BLUE,
     arrowprops=dict(arrowstyle="-", color=BLUE, lw=0.8),
 )
 
@@ -95,7 +115,8 @@ ax.annotate(
     "18th/18",
     xy=(idx_2022 + bar_w / 2, nted_rates[idx_2022] + 0.01),
     xytext=(idx_2022 + bar_w / 2 - 0.5, nted_rates[idx_2022] + 0.25),
-    fontsize=7.5, color=RED,
+    fontsize=7.5,
+    color=RED,
     arrowprops=dict(arrowstyle="-", color=RED, lw=0.8),
 )
 

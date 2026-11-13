@@ -62,12 +62,22 @@ def scatter_split(ax, sub, x, y, sizes, color):
     est = ~sub["created_after_2020_01_01"]
     exp = sub["created_after_2020_01_01"]
     ax.scatter(
-        x[est], y[est], s=sizes[est], color=color, edgecolors=color,
-        linewidths=1.2, zorder=3,
+        x[est],
+        y[est],
+        s=sizes[est],
+        color=color,
+        edgecolors=color,
+        linewidths=1.2,
+        zorder=3,
     )
     ax.scatter(
-        x[exp], y[exp], s=sizes[exp], facecolors="none", edgecolors=color,
-        linewidths=1.4, zorder=3,
+        x[exp],
+        y[exp],
+        s=sizes[exp],
+        facecolors="none",
+        edgecolors=color,
+        linewidths=1.4,
+        zorder=3,
     )
 
 
@@ -99,34 +109,61 @@ def make_fig1(df: pd.DataFrame) -> None:
     legend_ax.axis("off")
     gray = "#555555"
     handles = [
-        Line2D([], [], marker="o", linestyle="", color=gray,
-               markersize=8, label="Established franchise"),
-        Line2D([], [], marker="o", linestyle="", markerfacecolor="none",
-               markeredgecolor=gray, markersize=8,
-               label="Created after Jan 1, 2020"),
-        Line2D([], [], marker="o", linestyle="", color=gray,
-               markersize=(60 ** 0.5), label="0 titles"),
-        Line2D([], [], marker="o", linestyle="", color=gray,
-               markersize=(100 ** 0.5), label="1 title"),
-        Line2D([], [], marker="o", linestyle="", color=gray,
-               markersize=(180 ** 0.5), label="3 titles"),
+        Line2D(
+            [],
+            [],
+            marker="o",
+            linestyle="",
+            color=gray,
+            markersize=8,
+            label="Established franchise",
+        ),
+        Line2D(
+            [],
+            [],
+            marker="o",
+            linestyle="",
+            markerfacecolor="none",
+            markeredgecolor=gray,
+            markersize=8,
+            label="Created after Jan 1, 2020",
+        ),
+        Line2D(
+            [], [], marker="o", linestyle="", color=gray, markersize=(60**0.5), label="0 titles"
+        ),
+        Line2D(
+            [], [], marker="o", linestyle="", color=gray, markersize=(100**0.5), label="1 title"
+        ),
+        Line2D(
+            [], [], marker="o", linestyle="", color=gray, markersize=(180**0.5), label="3 titles"
+        ),
     ]
     legend_ax.legend(
-        handles=handles, loc="upper left", frameon=False, fontsize=11,
-        title="Marker key", title_fontsize=12, labelspacing=1.2,
+        handles=handles,
+        loc="upper left",
+        frameon=False,
+        fontsize=11,
+        title="Marker key",
+        title_fontsize=12,
+        labelspacing=1.2,
     )
 
     # Figure is very tall, so header spacing needs generous figure-fraction
     # gaps; bbox_inches="tight" picks up text above y=1.
     fig.suptitle(
         "Win % in the 2020s — within-league rankings",
-        fontsize=18, fontweight="bold", y=1.012,
+        fontsize=18,
+        fontweight="bold",
+        y=1.012,
     )
     fig.text(
-        0.5, 1.0,
+        0.5,
+        1.0,
         "Dot size = championships won. Hollow circles = franchises created "
         "after Jan 1, 2020. Data: Jan 2020–Oct 2026.",
-        ha="center", fontsize=12, color="#444444",
+        ha="center",
+        fontsize=12,
+        color="#444444",
     )
     fig.tight_layout()
     out = FIGDIR / "fig1_league_panels.png"
@@ -154,12 +191,21 @@ def make_fig2(df: pd.DataFrame) -> None:
 
         ax.axvline(0, linestyle="--", color="#999999", linewidth=1, zorder=1)
         ax.text(
-            0, y_max - 0.08, "League avg", ha="center", va="top",
-            fontsize=8, color="#777777",
+            0,
+            y_max - 0.08,
+            "League avg",
+            ha="center",
+            va="top",
+            fontsize=8,
+            color="#777777",
         )
         scatter_split(
-            ax, sub, sub["win_pct_z_in_league"], sub["titles_2020s"],
-            sizes, color,
+            ax,
+            sub,
+            sub["win_pct_z_in_league"],
+            sub["titles_2020s"],
+            sizes,
+            color,
         )
 
         # Label notable outliers: high win% with no ring, or multi-champions.
@@ -174,9 +220,14 @@ def make_fig2(df: pd.DataFrame) -> None:
             if prev is not None and prev[1] == y and abs(x - prev[0]) < 0.7:
                 offset, va = (0, -12), "top"  # drop below to avoid overlap
             ax.annotate(
-                row["short_name"], (x, y),
-                textcoords="offset points", xytext=offset,
-                ha="center", va=va, fontsize=8, color="#333333",
+                row["short_name"],
+                (x, y),
+                textcoords="offset points",
+                xytext=offset,
+                ha="center",
+                va=va,
+                fontsize=8,
+                color="#333333",
             )
             prev = (x, y)
 
@@ -195,13 +246,18 @@ def make_fig2(df: pd.DataFrame) -> None:
 
     fig.suptitle(
         "High win % doesn't guarantee championships",
-        fontsize=17, fontweight="bold", y=0.99,
+        fontsize=17,
+        fontweight="bold",
+        y=0.99,
     )
     fig.text(
-        0.5, 0.965,
+        0.5,
+        0.965,
         "Dot size = seasons of data (larger = more certain). x-axis is "
         "standardized within each league. Data: Jan 2020–Oct 2026.",
-        ha="center", fontsize=11, color="#444444",
+        ha="center",
+        fontsize=11,
+        color="#444444",
     )
     fig.tight_layout(rect=(0.02, 0.02, 1, 0.955))
     out = FIGDIR / "fig2_wins_vs_titles.png"

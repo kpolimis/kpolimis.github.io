@@ -26,12 +26,20 @@ NTED_DATES = {
     2025: "2025-10-26",
 }
 
-PBP_URL = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_{year}.parquet"
+PBP_URL = (
+    "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_{year}.parquet"
+)
 ROSTER_URL = "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_{year}.parquet"
 
 PBP_COLS = [
-    "game_id", "game_date", "season", "week", "season_type",
-    "td_player_id", "td_player_name", "td_team",
+    "game_id",
+    "game_date",
+    "season",
+    "week",
+    "season_type",
+    "td_player_id",
+    "td_player_name",
+    "td_team",
 ]
 
 
@@ -72,10 +80,7 @@ def te_tds_for_year(year: int) -> pd.DataFrame:
     roster = load_roster(year)
 
     # TD plays only, regular season, with a scorer
-    tds = pbp[
-        (pbp["season_type"] == "REG")
-        & pbp["td_player_id"].notna()
-    ].copy()
+    tds = pbp[(pbp["season_type"] == "REG") & pbp["td_player_id"].notna()].copy()
     tds["game_date"] = pd.to_datetime(tds["game_date"])
 
     # Sunday games only
@@ -90,18 +95,11 @@ def te_tds_for_year(year: int) -> pd.DataFrame:
     te_tds = tds[tds["position"] == "TE"]
 
     # Count TE TDs per game
-    te_per_game = (
-        te_tds.groupby(["game_date", "game_id"])
-        .size()
-        .reset_index(name="te_tds")
-    )
+    te_per_game = te_tds.groupby(["game_date", "game_id"]).size().reset_index(name="te_tds")
 
     # All Sunday games (to get game counts per slate)
     all_sunday_games = (
-        pbp[
-            (pbp["season_type"] == "REG")
-            & (pd.to_datetime(pbp["game_date"]).dt.dayofweek == 6)
-        ]
+        pbp[(pbp["season_type"] == "REG") & (pd.to_datetime(pbp["game_date"]).dt.dayofweek == 6)]
         .drop_duplicates("game_id")[["game_id", "game_date"]]
         .copy()
     )
@@ -153,16 +151,18 @@ for year, nted_date in NTED_DATES.items():
         continue
 
     row = match.iloc[0]
-    rows.append({
-        "year": year,
-        "nted_date": nted_date,
-        "nted_te_tds": int(row["te_tds"]),
-        "nted_games": int(row["n_games"]),
-        "nted_rate": round(row["te_rate"], 3),
-        "season_avg_rate": round(season_slates["te_rate"].mean(), 3),
-        "season_rank": int(row["rank"]),
-        "n_sunday_slates": len(season_slates),
-    })
+    rows.append(
+        {
+            "year": year,
+            "nted_date": nted_date,
+            "nted_te_tds": int(row["te_tds"]),
+            "nted_games": int(row["n_games"]),
+            "nted_rate": round(row["te_rate"], 3),
+            "season_avg_rate": round(season_slates["te_rate"].mean(), 3),
+            "season_rank": int(row["rank"]),
+            "n_sunday_slates": len(season_slates),
+        }
+    )
     print(
         f"{year}  NTED={nted_date}  TDs={int(row['te_tds']):2d}  "
         f"games={int(row['n_games']):2d}  rate={row['te_rate']:.2f}  "
@@ -179,10 +179,7 @@ N_PERM = 10_000
 obs_sum = results["season_rank"].sum()
 null_sums = []
 for _ in range(N_PERM):
-    s = sum(
-        np.random.randint(1, r["n_sunday_slates"] + 1)
-        for _, r in results.iterrows()
-    )
+    s = sum(np.random.randint(1, r["n_sunday_slates"] + 1) for _, r in results.iterrows())
     null_sums.append(s)
 
 null_arr = np.array(null_sums)
