@@ -13,6 +13,10 @@ on:
       - "!posts/technical/stockton-durability/index.qmd"
       - "!posts/technical/stockton-durability/data/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   lint-test:
     name: Lint + Test

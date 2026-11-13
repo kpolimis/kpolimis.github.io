@@ -3,6 +3,10 @@ name: Publish Quarto Site
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "LICENSE"
+      - ".gitignore"
+      - "*.txt"
   workflow_dispatch:
 
 jobs:
