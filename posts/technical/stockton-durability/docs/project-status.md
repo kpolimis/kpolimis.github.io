@@ -1,6 +1,6 @@
 ---
 title: "Can We See John Stockton's Heart Rate in the Box Score?"
-subtitle: "3-Post NBA Durability Series — Status 2026-10-21 (v9)"
+subtitle: "3-Post NBA Durability Series — Status 2026-10-29 (v11)"
 geometry: "margin=0.75in"
 fontsize: 10pt
 linestretch: 1.0
@@ -75,13 +75,14 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | Population game logs (complete) | **2,067/2,067 players, 656,839 rows** — 0% NULLs |
 | Population season splits (complete) | **738/738 players (≥400 games), 665,598 rows** — home/away, rest, W/L, month, opponent |
 
-**Analysis: E1/E3/E7 population complete. E8 fetch running on Apollo.**
+**Analysis: E1/E3/E7 population complete. E8 complete. E9 complete.**
 
 | Estimand | Primary cohort | Sensitivity cohorts | Status |
 |:---------|:--------------|:--------------------|:-------|
 | E7 TS% | ≥5,000 TSA (464 players, BRef standard) | ≥400 games (738), ≥820 games (233) | **Done** — Stockton rank 10/464 (97.8 pctile, p=0.022) |
 | E1/E3 population | ≥400 games (738 players, BRef standard) | ≥600 games (478), ≥820 games (233) | **Done** — Stockton 0.3rd/2.7th pctile; E3 percentiles quantified |
-| E8 quarter splits | Top-50 most-durable players (59,837 games) | — | **In progress** — Apollo `bref-qs-fetch` container; 429 rate-limit active; est. completion ~2026-10-27 |
+| E8 quarter splits | Top-50 most-durable players (59,837 games) | — | **Complete** — `bref-qs-fetch` exited cleanly; 36,211 new + 29,456 cache hits; 102,355 rows; `quarter_splits_e8.parquet` (1.2MB) |
+| E9 quarter splits | Full ≥400-game population (738 players) | — | **Complete** — 24,803 new requests + 467,054 cache hits; 686,102 rows; `quarter_splits_e9.parquet` (6.6MB); container exited cleanly 2026-10-29 |
 
 **Post drafts:**
 
@@ -89,7 +90,7 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 |:-----|:------|:---------|:---|:---|:---|:-------|
 | Stockton | Written | E2 written; E4/E5 dropped | Written | — | — | **draft: true** (ready to publish) |
 | Diaw | Written | E2 written (null); E4/E5 dropped | Written | — | — | **draft: true** (ready to publish) |
-| Population | Done | — | — | Done | Stub | **draft: true** — complete draft; E8 section pending fetch |
+| Population | Done | — | — | Done | Done | **draft: true** — E9 section written; ready to publish |
 
 ## Caveats (mandatory in every post)
 
@@ -113,8 +114,10 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 | ~~Population post draft~~ | **Done** — E1/E3/E7/E8 stub written; `draft: true` | — |
 | ~~Fable 5 audit (Posts 1+2+3)~~ | **Done** — 6 stat fixes applied (gap, percentile, cohort desc, p-value floor, FT% footnotes) | — |
 | ~~Standards playbook remediation~~ | **Done** — Stage 0 compliance: README, pyproject, .gitignore, CI, untrack data artifacts | — |
-| **E8 fetch** | Apollo `bref-qs-fetch` container; 429 rate-limiting; est. ~2026-10-27 | 1 week |
-| **E8 analysis + fill section** | Depends on fetch; then `analyze_quarter_splits.py` E8 pass | 2 hr |
+| ~~**E8 fetch**~~ | **Done** — 36,211 new + 29,456 cache hits; 102,355 rows; `quarter_splits_e8.parquet` (1.2MB) | — |
+| ~~**E9 fetch**~~ | **Done** — 24,803 new requests + 467,054 cache hits; 686,102 rows; 6.6MB | — |
+| ~~**E9 analysis**~~ | **Done** — Stockton rank 154/487 (68.6th pctile), +1.5 pp Q4 advantage, p=0.319 (null); Diaw rank 423/487 (13.3th pctile), −5.1 pp (null); outputs in `data/e9_q4_advantage.csv` + `figures/population/` | — |
+| ~~**Fill E9 section in population post**~~ | **Done** — null result written plainly; E1/E7 hold, E9 null; caveats updated | — |
 | **Set `draft: false` on all 3 posts** | User decision; CI publish triggers on push | 30 min |
 | **Jacobs outreach (#22)** — manual browser form | Human action; pre-1996 Stockton quarter data | 20 min |
 | Season splits analysis script | home/away, rest, W/L angles → potential Post 4 | future |
@@ -126,6 +129,63 @@ E1's denominator corrects for lockout-shortened seasons: 1999→50 games, 2012�
 ---
 
 ## Changelog
+
+### v11 — 2026-10-29
+
+**Session focus: E9 fetch complete, E9 analysis run.**
+
+- **E9 fetch complete** (`bref-qs-e9` container exited cleanly 2026-10-29):
+  - 24,803 new network requests + 467,054 cache hits (mostly E8 top-50 overlap)
+  - 686,102 rows saved to `data/quarter_splits_e9.parquet` (6.6MB)
+  - Pulled from Apollo; container stopped
+- **E9 analysis complete** (`analyze_quarter_splits.py --cohort population`):
+  - 487 qualified players (≥50 Q4 FTA, out of 581 with post-1996 data)
+  - Stockton: rank 154/487 (68.6th pctile) | Q4 FT% 84.7% vs Q1-Q3 83.2% | advantage +1.5 pp | p=0.319 (null)
+  - Diaw: rank 423/487 (13.3th pctile) | Q4 FT% 67.5% vs Q1-Q3 72.6% | advantage −5.1 pp (null)
+  - Outputs: `data/e9_q4_advantage.csv`, `data/e9_population_permutation.parquet`, `data/figures/population/e9_q4_advantage_distribution.png`
+- **Interpretation**: E9 is a null result for both players. Stockton is above average in Q4 FT% maintenance but not exceptional at the population level (p=0.32). Diaw declines in Q4 relative to Q1-Q3. The within-named-cohort distinction (Stockton as only PG improver) does not replicate in the full BRef-era population.
+- **`analyze_quarter_splits.py` extended**: added `--cohort population` mode with `run_population()` function; consistent with E1/E3 percentile-ranking methodology
+
+### v10 — 2026-10-27
+
+**Session focus: E8 completion confirmed, E9 full-population fetch launched.**
+
+- **E8 fetch complete** (`bref-qs-fetch` container exited cleanly):
+  - 36,211 new network requests + 29,456 cache hits
+  - 102,355 rows saved to `data/quarter_splits_e8.parquet` (1.2MB)
+  - Scope was top-50 most-durable players; 59,837 games
+- **E9 fetch launched** (`bref-qs-e9` container, Apollo):
+  - Scope: full ≥400-game population — 738 players from `data/population_e9.csv`
+  - Container up 46 hours; 17,440+ pages processed at ~388 pages/hr
+  - Initial output: 160,883 rows, `data/quarter_splits_e9.parquet` (1.7MB and growing)
+  - ETA: weeks (substantially larger than E8; all BRef-era post-1996 player-games for 738 players)
+  - VPN rotation via `gluetun-bref` (healthy); `SESSION_COOLDOWN_PAGES=40`, 120s cooldown
+- **E9 status update (2026-10-27 ~18:00)**:
+  - 48 hours running; 19,560+ pages at ~407 pages/hr
+  - 218,386 rows; `quarter_splits_e9.parquet` 2.2MB
+  - Transient DNS/SSL/timeout retries firing (NameResolutionError, SSLEOFError, RemoteDisconnected) — all caught by 4-attempt retry loop; container advancing
+  - Revised ETA: ~6–12 days
+- **E9 status update (2026-10-27 ~20:00)**:
+  - 20,040+ pages; 237,013 rows; 2.4MB parquet
+  - Same retry churn, not stalling; ~400 pages/hr sustained
+  - ETA holding at ~6 days (~Nov 2)
+- **E9 status update (2026-10-27 ~22:00)**:
+  - 20,360+ pages; parquet at 2.4MB (next save ~20,500 pages)
+  - One game (202104220SAS) hit 3/4 retry attempts before container moved on — expected gap
+  - ~400 pages/hr sustained; ETA ~5–6 days (~Nov 2)
+- **E9 status update (2026-10-28 morning)**:
+  - 21,440+ pages; 255,945 rows; 2.6MB parquet (written Oct 27 22:12)
+  - Retry noise lighter — mostly clean cooldown cycles
+  - ~400 pages/hr sustained; ETA ~4–5 days (~Nov 1–2)
+- **E9 status update (2026-10-28 afternoon)**:
+  - 22,680+ pages; 350,133 rows (last save at 22,513 pages); 3.5MB parquet (written Oct 28 06:27)
+  - Retry noise (NameResolutionError, SSLEOFError, RemoteDisconnected) continuing — all caught, container advancing
+  - ~315 pages/hr effective (includes cooldown/retry overhead); ~400 pages/hr during active fetch windows
+  - ETA ~Nov 1–2 unchanged
+- **E9 status update (2026-10-28 evening)**:
+  - 23,880+ pages; 429,829 rows (last save at 23,514 pages); 4.2MB parquet (written Oct 28 12:47)
+  - Retry churn heavier this window (NetworkUnreachable, ReadTimeout, SSLEOFError, RemoteDisconnected) — all caught; no stall
+  - ~305 pages/hr effective; ETA ~Nov 1–2 unchanged
 
 ### v9 — 2026-10-21
 
