@@ -34,6 +34,25 @@ toc-depth: 2
 
 ---
 
+## Education
+
+**2017** &emsp; Ph.D., Computational Social Science, University of Washington
+
+- Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
+- Advised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
+- National Science Foundation Graduate Research Fellow
+- Center for Statistics and the Social Sciences: Certification in Social Statistics
+- Center for the Study of Demography and Ecology Pre-doctoral Fellow
+- Data Science for Social Good Fellow
+
+**2012** &emsp; M.A., Sociology, University of North Carolina at Chapel Hill
+
+- Carolina Population Center Pre-doctoral Fellow
+
+**2009** &emsp; B.A., Sociology, Princeton University
+
+---
+
 ## Projects
 
 <div class="cv-section">
@@ -65,25 +84,6 @@ toc-depth: 2
 - Designed and operate an AI-agent dispatch system that runs overnight coding sessions across 6 repos, synthesizes a prioritized work queue by 7 AM, and routes tasks by cost tier, from local Qwen (free) through DeepSeek to Claude, with a shared JSONL spend ledger and per-call budget caps; runs in production on a 92-container platform behind Cloudflare Tunnel, Authentik SSO, and Grafana/Loki observability, with a 5-model frontier panel that auto-escalates to Gemini Flash on model disagreement.
 
 </div>
-
----
-
-## Education
-
-**2017** &emsp; Ph.D., Computational Social Science, University of Washington
-
-- Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
-- Advised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
-- National Science Foundation Graduate Research Fellow
-- Center for Statistics and the Social Sciences: Certification in Social Statistics
-- Center for the Study of Demography and Ecology Pre-doctoral Fellow
-- Data Science for Social Good Fellow
-
-**2012** &emsp; M.A., Sociology, University of North Carolina at Chapel Hill
-
-- Carolina Population Center Pre-doctoral Fellow
-
-**2009** &emsp; B.A., Sociology, Princeton University
 
 ---
 
