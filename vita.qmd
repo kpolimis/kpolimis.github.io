@@ -20,40 +20,49 @@ toc-depth: 2
 
 **2021–Present** &emsp; Senior Data Scientist, [Karna](https://karna.com), Atlanta, GA
 
-- Engineered a document intelligence microservice that automated clinical document extraction (Azure Document Intelligence, Textract) and AI-powered synthetic data generation (GPT-4); deployed on ECS with schema enforcement and data validation to protect downstream quality.
-- Built compliant Snowflake data infrastructure and SQL-based ETL pipelines using Python, R, and shell scripting to ingest multi-source clinical datasets and surface opioid use trends, program utilization metrics, and drug co-occurrence patterns supporting national federal opioid response planning.
-- Designed and deployed a HIPAA/NIST-compliant ML pipeline for maternal CVD risk stratification on Azure, with automated drift monitoring and a Flask API; migrated from SQLite to PostgreSQL in production; applied causal inference (ITS and diff-in-differences) to measure the program's impact on emergency care utilization.
-- Partnered with data science, research and evaluation, and health communications teams to design and run A/B message testing for CDC NCIRD's COVID Vaccine Task Force; tested message variants across hesitancy segments, political ideology, and demographics using ordered logistic regression; findings directly shaped national vaccine communication decisions.
-- *Awards: [President's Award (2023)](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w), [Technical Achievement Award (2023)](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w), [Community Engagement Award (2022)](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD), [Outstanding Publication runner-up (2022)](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD), Technical Achievement runner-up (2024)*
-
-**2021–Present** &emsp; Lecturer, [University of Washington, Department of Sociology](https://sociology.washington.edu), Seattle, WA
-
-- Designed and taught applied labs on behavioral and digital trace data analysis (Google Trends, Fitbit, sensor data), data visualization, NLP, and algorithmic fairness; challenged students to interrogate models for potential bias from training data, historical inequities, and deployment context.
-- Designed and ran in-class randomized experiments (A/B tests) covering random assignment, hypothesis testing, and power analysis, demonstrating how controlled experimentation underpins data-driven product and policy decisions and where purely observational analysis falls short.
-
 **2020–2021** &emsp; Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX
 
-- Automated COVID-19 surveillance reporting by replacing hand-transcribed web data and manual multi-source joins with a reproducible R pipeline ingesting DSHS, HCPH, and national datasets, reducing processing latency by 90% and enabling real-time data quality for policymakers.
-- Applied statistical modeling to evaluate county-wide housing initiatives, projecting $6 million in annual savings from permanent supportive housing proposals.
-
-**2020–Present** &emsp; Principal, [Atlas Analytics](https://www.analyticsbyatlas.com/), Houston, TX
-
-- Built a Python/SQL entity resolution pipeline joining fragmented SBA datasets with merchant registries via a tiered probabilistic matching algorithm (86% recall on a manually labeled hold-out set), enabling downstream customer analytics and market segmentation.
-- Built data pipelines integrating a 2.2M-member consumer transaction panel (Earnest Analytics), device mobility data (SafeGraph), and COVID policy records; analyzed user acquisition and retention cohorts to quantify COVID-19's long-term impact on consumer behavior across 12 categories; acknowledged for research assistance in Oblander & McCarthy, *Marketing Science* (2023).
+**2020–Present** &emsp; Principal and Founder, [Atlas Analytics](https://www.analyticsbyatlas.com/), Houston, TX
 
 **2018–2020** &emsp; Data Scientist, MAANA, Houston, TX
-
-- Partnered with solutions architects to engineer and deploy containerized ML microservices (Docker, Kubernetes) powering a real-time vessel routing optimizer across global multi-port routes, with ingestion pipelines parsing Q88 XML and integrating live weather, war-risk, and port data to cut fleet planning from hours to minutes; cost forecasting on historical trades projected $100M in annual savings.
 
 **2017–2018** &emsp; Postdoctoral Researcher, [Università Bocconi](http://www.dondena.unibocconi.it/wps/wcm/connect/Cdr/Centro_Dondena/Home), Milan, Italy
 
 - Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy
-- Engineered multi-source data fusion pipelines from social media APIs and digital trace data to produce high-frequency population estimates and evaluate policy outcomes at scale.
 
-**2016–2017** &emsp; Program Manager, eScience Institute, Data Science for Social Good, Seattle, WA
+</div>
 
-- Organized program resources, created student selection process, and scheduled activities.
-- Coordinated with industry partners to incorporate real-world data science challenges into projects.
+---
+
+## Projects
+
+<div class="cv-section">
+
+**Wandarr — Travel Intelligence & Itinerary Platform**
+
+- Built and launched wandarr, a production travel-intelligence PWA (FastAPI, PostgreSQL, React + Vite) that fuses Google Places POI discovery with OpenAIP drone-airspace data into ranked itineraries; self-hosted via Docker Compose behind Cloudflare with account-free invite links.
+
+**Multi-Sport Data & Analytics Platform**
+
+- Engineered a production-grade sports prediction web app and FastAPI service serving calibrated win probabilities for NBA, NCAA, and NFL games; designed ETL pipelines ingesting from The Odds API, KenPom, and Sports-Reference into a Postgres backend with schema enforcement and lineage tracking.
+- Built an NBA data platform (nba_api, Airflow, dbt, Postgres) with medallion architecture, dbt schema tests, source freshness checks, and automated data quality validation.
+
+**Job Intelligence Platform**
+
+- Architected a self-hosted, containerized job intelligence platform (Docker Compose + Ollama) that aggregates postings from multiple job boards daily, enriches each listing with a local LLM, and ranks by résumé fit using sentence embeddings and cosine similarity, delivering plain-language match narratives and a transparent Apply Priority heuristic on fully local infrastructure.
+- Developed a capability-matrix scoring layer that maps job requirements to structured skill ratings and generates per-match talking points; a self-service data product that converts a judgment-heavy screening process into a quantified, reproducible workflow with end-to-end data quality validation.
+
+**forest-confidence-interval (scikit-learn-contrib)**
+
+- Led original development and first-authored the peer-reviewed JOSS publication (2017) for forestci (PyPI, scikit-learn-contrib) — a Python implementation of Wager, Hastie & Efron's infinitesimal jackknife confidence intervals for random forests; contributes to ongoing development.
+
+**DroneVitals: UAV Telemetry & Operations Ecosystem**
+
+- Built DroneVitals, a UAV post-shoot automation system pairing deterministic threshold agents with Claude Sonnet LLM agents under a SQLite-ledger orchestrator (idempotent, exactly-once delivery across subagents) — its SHA-256 + RFC-3161 forensic evidence layer produced a cryptographically verifiable claim packet used in a real Asurion warranty dispute; published to PyPI with 90%+ enforced test coverage.
+
+**Homelab AI Orchestration Platform**
+
+- Designed and operate an AI-agent dispatch system that runs overnight coding sessions across 6 repos, synthesizes a prioritized work queue by 7 AM, and routes tasks by cost tier, from local Qwen (free) through DeepSeek to Claude, with a shared JSONL spend ledger and per-call budget caps; runs in production on a 92-container platform behind Cloudflare Tunnel, Authentik SSO, and Grafana/Loki observability, with a 5-model frontier panel that auto-escalates to Gemini Flash on model disagreement.
 
 </div>
 
@@ -193,8 +202,11 @@ Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-in
 | | |
 |---|---|
 | **Instructor** | [Software Carpentry](https://software-carpentry.org) Instructor, [Data Carpentry](https://datacarpentry.org) Instructor |
-| **Software** | R, Python, Spark, GraphQL, Docker, Jira, Stata, Microsoft Office Suite |
-| **Tools** | Git, LaTeX, shell scripting, Amazon Web Services, Microsoft Azure |
+| **Languages** | Python, R, SQL, shell scripting |
+| **Typesetting/Tooling** | Git, LaTeX, GNU Make |
+| **ML/Analytics** | XGBoost, scikit-learn, MLflow, PyTorch, NLP/text methods |
+| **Cloud/Infrastructure** | AWS (ECS/Fargate, SageMaker, S3), Azure (AKS, Blob Storage), Docker, GitHub Actions |
+| **Data Engineering** | Snowflake, dbt, PostgreSQL, ETL/ELT pipeline design |
 
 ---
 
@@ -216,9 +228,10 @@ Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-in
 
 | Year | |
 |---|---|
-| 2024 | Karna — Technical Achievement Award runner-up |
+| 2024 | Karna — Technical Achievement Award |
 | 2023 | Karna — [President's Award](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w) |
 | 2023 | Karna — [Technical Achievement Award](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w) |
+| 2023 | Karna — [Health Impact Award](https://www.linkedin.com/posts/karnallc_2023-karna-annual-awardees-activity-7146207174480785409-j72w) |
 | 2022 | Karna — [Community Engagement Award](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD) |
 | 2022 | Karna — [Outstanding Publication Award runner-up](https://www.linkedin.com/posts/karnallc_karnallc-publichealth-2022awards-activity-7014680288492421120-ZHZD) |
 | 2018 | [Online calculator to help tackle disparities in the criminal justice system in Washington state](https://blogs.microsoft.com/on-the-issues/2018/06/07/online-calculator-to-help-tackle-disparities-in-the-criminal-justice-system-in-washington-state/) |
