@@ -11,35 +11,14 @@
     "href": "vita.html#employment",
     "title": "Vita",
     "section": "Employment",
-    "text": "Employment\n\n2021–Present   Senior Data Scientist, Karna, Atlanta, GA\n2020–2021   Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX\n2020–Present   Principal and Founder, Atlas Analytics, Houston, TX\n2018–2020   Data Scientist, MAANA, Houston, TX\n2017–2018   Postdoctoral Researcher, Università Bocconi, Milan, Italy\n\nCarlo F. Dondena Centre for Research on Social Dynamics and Public Policy"
+    "text": "Employment\n\n2021–Present   Senior Data Scientist, Karna, Atlanta, GA\n2020–2021   Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX\n2020–Present   Principal and Founder, Atlas Analytics, Houston, TX\n2018–2020   Data Scientist, MAANA, Houston, TX\n2017–2018   Postdoctoral Researcher, Università Bocconi, Milan, Italy        Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy"
   },
   {
     "objectID": "vita.html#education",
     "href": "vita.html#education",
     "title": "Vita",
     "section": "Education",
-    "text": "Education\n2017   Ph.D., Computational Social Science, University of Washington\n\nDissertation: Developing Computational Approaches to Investigate Health Inequalities\nAdvised by: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman\nNational Science Foundation Graduate Research Fellow\nCenter for Statistics and the Social Sciences: Certification in Social Statistics\nCenter for the Study of Demography and Ecology Pre-doctoral Fellow\nData Science for Social Good Fellow\n\n2012   M.A., Sociology, University of North Carolina at Chapel Hill\n\nCarolina Population Center Pre-doctoral Fellow\n\n2009   B.A., Sociology, Princeton University"
-  },
-  {
-    "objectID": "vita.html#projects",
-    "href": "vita.html#projects",
-    "title": "Vita",
-    "section": "Projects",
-    "text": "Projects\n\nWandarr — Travel Intelligence & Itinerary Platform\n\nBuilt and launched wandarr, a production travel-intelligence PWA (FastAPI, PostgreSQL, React + Vite) that fuses Google Places POI discovery with OpenAIP drone-airspace data into ranked itineraries; self-hosted via Docker Compose behind Cloudflare with account-free invite links.\n\nMulti-Sport Data & Analytics Platform\n\nEngineered a production-grade sports prediction web app and FastAPI service serving calibrated win probabilities for NBA, NCAA, and NFL games; designed ETL pipelines ingesting from The Odds API, KenPom, and Sports-Reference into a Postgres backend with schema enforcement and lineage tracking.\nBuilt an NBA data platform (nba_api, Airflow, dbt, Postgres) with medallion architecture, dbt schema tests, source freshness checks, and automated data quality validation.\n\nJob Intelligence Platform\n\nArchitected a self-hosted, containerized job intelligence platform (Docker Compose + Ollama) that aggregates postings from multiple job boards daily, enriches each listing with a local LLM, and ranks by résumé fit using sentence embeddings and cosine similarity, delivering plain-language match narratives and a transparent Apply Priority heuristic on fully local infrastructure.\nDeveloped a capability-matrix scoring layer that maps job requirements to structured skill ratings and generates per-match talking points; a self-service data product that converts a judgment-heavy screening process into a quantified, reproducible workflow with end-to-end data quality validation.\n\nforest-confidence-interval (scikit-learn-contrib)\n\nLed original development and first-authored the peer-reviewed JOSS publication (2017) for forestci (PyPI, scikit-learn-contrib) — a Python implementation of Wager, Hastie & Efron’s infinitesimal jackknife confidence intervals for random forests; contributes to ongoing development.\n\nDroneVitals: UAV Telemetry & Operations Ecosystem\n\nBuilt DroneVitals, a UAV post-shoot automation system pairing deterministic threshold agents with Claude Sonnet LLM agents under a SQLite-ledger orchestrator (idempotent, exactly-once delivery across subagents) — its SHA-256 + RFC-3161 forensic evidence layer produced a cryptographically verifiable claim packet used in a real Asurion warranty dispute; published to PyPI with 90%+ enforced test coverage.\n\nHomelab AI Orchestration Platform\n\nDesigned and operate an AI-agent dispatch system that runs overnight coding sessions across 6 repos, synthesizes a prioritized work queue by 7 AM, and routes tasks by cost tier, from local Qwen (free) through DeepSeek to Claude, with a shared JSONL spend ledger and per-call budget caps; runs in production on a 92-container platform behind Cloudflare Tunnel, Authentik SSO, and Grafana/Loki observability, with a 5-model frontier panel that auto-escalates to Gemini Flash on model disagreement."
-  },
-  {
-    "objectID": "vita.html#affiliations",
-    "href": "vita.html#affiliations",
-    "title": "Vita",
-    "section": "Affiliations",
-    "text": "Affiliations\n2019–   Regional Affiliate, Center for the Study of Demography and Ecology, University of Washington, Seattle, WA\n2017–2018   Postdoctoral Affiliate, Bocconi Institute for Data Science and Analytics, Milan, Italy"
-  },
-  {
-    "objectID": "vita.html#fellowships",
-    "href": "vita.html#fellowships",
-    "title": "Vita",
-    "section": "Fellowships",
-    "text": "Fellowships\n\n\n\n\n\n\n\nYear\nFellowship\n\n\n\n\n2017\nSummer Institute in Computational Social Science Fellow, Russell Sage Foundation and Princeton University\n\n\n2017\nCivic Technology Fellow, Microsoft Civic Technology and Engagement\n\n\n2016\nPre-doctoral Fellow, Big Data-Scientist Training Enhancement Program, Department of Veterans Affairs, Puget Sound Healthcare\n\n\n2015\nData Science for Social Good Fellow, eScience Institute, University of Washington\n\n\n2011\nGraduate Research Fellow, National Science Foundation Graduate Research Fellowship Program\n\n\n2010\nPre-doctoral Fellow, Carolina Population Center, University of North Carolina at Chapel Hill\n\n\n2008\nJunior Summer Institute Fellow, Public Policy and International Affairs, Carnegie Mellon University"
+    "text": "Education\n2017   Ph.D., Computational Social Science, University of Washington\n\nCenter for Statistics and the Social Sciences: Certification in Social Statistics\nDissertation: Developing Computational Approaches to Investigate Health Inequalities\nAdvisors: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman\n\n2012   M.A., Sociology, University of North Carolina at Chapel Hill\n\nCarolina Population Center Pre-doctoral Fellow\nComprehensive Exams: Stratification and Inequality, Race and Ethnicity\n\n2009   B.A., Sociology, Princeton University"
   },
   {
     "objectID": "vita.html#publications",
@@ -49,6 +28,48 @@
     "text": "Publications\nAlexander, Monica, Kivan Polimis, and Emilio Zagheni. 2020. “Combining social media and survey data to nowcast migrant stocks in the United States.” Population Research and Policy Review.\nSalganik, Matthew, Ian Lundberg, Alexander T. Kindel, Caitlin E. Ahearn, et al. 2020. “Measuring the predictability of life outcomes with a scientific mass collaboration.” Proceedings of the National Academy of Sciences.\nAlexander, Monica, Kivan Polimis, and Emilio Zagheni. 2019. “The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook.” Population and Development Review.\nFilippova, Anna, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Kivan Polimis, Adaner Usmani, and Tong Wang. 2019. “Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data.” Socius.\nPolimis, Kivan, Ariel Rokem, and Bryna Hazelton. 2017. “Confidence Intervals for Random Forests in Python.” Journal of Open Source Software, 2(19), 124.\nMarsh, Kris and Kivan Polimis. 2015. “The Lifecourse Perspective in Explaining Racial Residential Segregation.” Chapter 4 in Race, Space and Exclusion: Segregation and Beyond in Metropolitan America, edited by Robert Adelman and Christopher Mele. New York: Routledge.\nTurner, Robert W., Asheley Skinner, Eliana Perrin, Kivan Polimis, and Tamera Coyne-Beasley. 2014. “High School Sports Participation: Risk and Protective Factors for Early Adulthood Physical Activity and Obesity in a Representative Longitudinal Study.” Journal of Adolescent Health, 54(2, Supplement)."
   },
   {
+    "objectID": "vita.html#presentations",
+    "href": "vita.html#presentations",
+    "title": "Vita",
+    "section": "Presentations",
+    "text": "Presentations\n2022   “Introduction to Application Programming Interfaces.” Public Health Data Workshop: Harris County Public Health. Houston, TX. April.\n2019   “Combining Facebook and traditional surveys: A case study with Hurricane Maria and Puerto Rican out-migration” (with Emilio Zagheni, Monica Alexander, Ingmar Weber, and Francesco Billari). Center for Statistics and the Social Sciences: University of Washington. Seattle, WA. April.\n2019   “The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook data” (with Monica Alexander and Emilio Zagheni). Population Association of America. Austin, TX. April.\n2018   “Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data” (with Anna Filippova, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Adaner Usmani, and Tong Wang). International Institute for Social Studies: Erasmus University. The Hague, The Netherlands. April.\n2018   “Can social media assess demographic variations in physical activity attitudes?”. Young Demographers Conference. Prague, Czech Republic. February.\n2018   “Comparing typological approaches to family homelessness.” Alpine Population Conference. La Thuile, Italy. January.\n2017   “Can social media be used to assess demographic variations in physical activity attitudes?”. Population Association of America. Chicago, IL. April.\n2017   “Social Media and Demographic Methods” (with Emilio Zagheni and Lee Fiorio). Workshop at the Population Association of America. Chicago, IL. April.\n2016   “Web, Social Media Data and Demographic Research Workshop: Twitter Module” (with Emilio Zagheni and Monica Alexander). Workshop at the European Population Conference. Mainz, Germany. August.\n2016   “Social Media and Demographic Methods Workshop: Twitter Module” (with Emilio Zagheni, Nina Cesare, Charles Lanfear, and Joan Ryan). Workshop at the Population Association of America. Washington, D.C. April.\n2012   “Junk in the Trunk: Evaluating the Relationship between Body-Mass Index and Interracial Dating.” Add Health Users Conference. Bethesda, MD. July.\n2011   “Adolescent Experiences & Adult Neighborhood Attainment” (with Kris Marsh and Kyle Crowder). Paper presentation at the Population Association of America. Washington, D.C. April."
+  },
+  {
+    "objectID": "vita.html#fellowships",
+    "href": "vita.html#fellowships",
+    "title": "Vita",
+    "section": "Fellowships",
+    "text": "Fellowships\n\n\n\n\n\n\n\nYear\nFellowship\n\n\n\n\n2017\nSummer Institute in Computational Social Science Fellow, Russell Sage Foundation and Princeton University, Princeton, NJ 08544\n\n\n2017\nCivic Technology Fellow, Microsoft, Civic Technology and Engagement, Seattle, WA 98104\n\n\n2016\nPre-doctoral Fellow, Big Data-Scientist Training Enhancement Program, Department of Veteran Affairs, Puget Sound Healthcare, Seattle, WA 98108\n\n\n2015\nData Science for Social Good Fellow, eScience Institute, Seattle, WA 98195\n\n\n2011\nGraduate Research Fellow, National Science Foundation, Graduate Research Fellowship Program, Arlington, VA 22230\n\n\n2010\nPre-doctoral Fellow, Carolina Population Center, University of North Carolina at Chapel Hill, Chapel Hill, NC 27516\n\n\n2008\nJunior Summer Institute Fellow, Public Policy and International Affairs, Carnegie Mellon University, Pittsburgh, PA 15213"
+  },
+  {
+    "objectID": "vita.html#teaching-experience",
+    "href": "vita.html#teaching-experience",
+    "title": "Vita",
+    "section": "Teaching Experience",
+    "text": "Teaching Experience\n2021–Present   University of Washington, Department of Sociology — Data and Society (SOC 225) (Instructor)\n2016   University of Washington, Center for Statistics and the Social Sciences — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant\n2015   University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant"
+  },
+  {
+    "objectID": "vita.html#research-positions",
+    "href": "vita.html#research-positions",
+    "title": "Vita",
+    "section": "Research Positions",
+    "text": "Research Positions\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2016–2017\nResearch Assistant, Center for the Study of Demography and Ecology, Seattle, WA\n\n\n2016\nResearch Assistant, Center for Evaluation and Research for STEM Equity, Seattle, WA\n\n\n2015–2016\nResearch Assistant, eScience Institute, Gates Foundation, Seattle, WA\n\n\n2013–2014\nData Analyst, San Francisco 49ers, Santa Clara, CA\n\n\n2009–2010\nResearch Assistant, Office of Population Research, Princeton University, Princeton, NJ"
+  },
+  {
+    "objectID": "vita.html#consulting-and-management-experience",
+    "href": "vita.html#consulting-and-management-experience",
+    "title": "Vita",
+    "section": "Consulting and Management Experience",
+    "text": "Consulting and Management Experience\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2017\nProgram Coordinator, eScience Institute, Data Science for Social Good, Seattle, WA\n\n\n2016–2017\nConsultant, King County Auditor’s Office, Seattle, WA\n\n\n2016\nConsultant, eScience Institute, Data Science for Social Good, Seattle, WA\n\n\n2014\nProduct Development Consultant, Seremedi, Houston, TX\n\n\n2013–2014\nSpecial Projects Manager, Councilman Ed Gonzalez, Houston City Council, Houston, TX"
+  },
+  {
+    "objectID": "vita.html#affiliations",
+    "href": "vita.html#affiliations",
+    "title": "Vita",
+    "section": "Affiliations",
+    "text": "Affiliations\n2019–Present   Regional Affiliate, Center for the Study of Demography and Ecology, Seattle, WA 98105\n2017–2018   Postdoctoral Affiliate, Bocconi Institute for Data Science and Analytics, Milan, Italy 20136"
+  },
+  {
     "objectID": "vita.html#software",
     "href": "vita.html#software",
     "title": "Vita",
@@ -56,32 +77,11 @@
     "text": "Software\nPolimis, Kivan. 2017. yandex-translater: R package to interface with the Yandex Translate API.\nRokem, Ariel, Kivan Polimis, and Bryna Hazelton. 2016. forest-confidence-interval: Confidence intervals for Forest algorithms."
   },
   {
-    "objectID": "vita.html#presentations",
-    "href": "vita.html#presentations",
+    "objectID": "vita.html#projects",
+    "href": "vita.html#projects",
     "title": "Vita",
-    "section": "Presentations",
-    "text": "Presentations\n2022   “Introduction to Application Programming Interfaces.” Public Health Data Workshop, Harris County Public Health. Houston, TX.\n2019   “Combining Facebook and traditional surveys: A case study with Hurricane Maria and Puerto Rican out-migration” (with Emilio Zagheni, Monica Alexander, Ingmar Weber, and Francesco Billari). Center for Statistics and the Social Sciences, University of Washington. Seattle, WA.\n2019   “The impact of Hurricane Maria on out-migration from Puerto Rico: Evidence from Facebook data” (with Monica Alexander and Emilio Zagheni). Population Association of America. Austin, TX.\n2018   “Humans-in-the-Loop: Incorporating Expert and Crowdsourced Knowledge for Predictions in Survey Data” (with Anna Filippova, Connor Gilroy, Ridhi Kashyap, Antje Kirchner, Allison C. Morgan, Adaner Usmani, and Tong Wang). International Institute for Social Studies, Erasmus University. The Hague, The Netherlands.\n2018   “Can social media assess demographic variations in physical activity attitudes?” Young Demographers Conference. Prague, Czech Republic.\n2018   “Comparing typological approaches to family homelessness.” Alpine Population Conference. La Thuile, Italy.\n2017   “Can social media be used to assess demographic variations in physical activity attitudes?” Population Association of America. Chicago, IL.\n2017   “Social Media and Demographic Methods” (with Emilio Zagheni and Lee Fiorio). Workshop at the Population Association of America. Chicago, IL.\n2016   “Web, Social Media Data and Demographic Research Workshop: Twitter Module” (with Emilio Zagheni and Monica Alexander). European Population Conference. Mainz, Germany.\n2016   “Social Media and Demographic Methods Workshop: Twitter Module” (with Emilio Zagheni, Nina Cesare, Charles Lanfear, and Joan Ryan). Population Association of America. Washington, D.C.\n2012   “Junk in the Trunk: Evaluating the Relationship between Body-Mass Index and Interracial Dating.” Add Health Users Conference. Bethesda, MD.\n2011   “Adolescent Experiences & Adult Neighborhood Attainment” (with Kris Marsh and Kyle Crowder). Population Association of America. Washington, D.C."
-  },
-  {
-    "objectID": "vita.html#teaching",
-    "href": "vita.html#teaching",
-    "title": "Vita",
-    "section": "Teaching",
-    "text": "Teaching\n2021–   University of Washington, Department of Sociology — Data and Society (SOC 225)\n2016   University of Washington, CSSS — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant\n2015   University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant"
-  },
-  {
-    "objectID": "vita.html#research-positions",
-    "href": "vita.html#research-positions",
-    "title": "Vita",
-    "section": "Research Positions",
-    "text": "Research Positions\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2016–2017\nResearch Assistant, Center for the Study of Demography and Ecology, University of Washington\n\n\n2016–2016\nResearch Assistant, Center for Evaluation and Research for STEM Equity, University of Washington\n\n\n2015–2016\nResearch Assistant, eScience Institute, Gates Foundation, University of Washington\n\n\n2013–2014\nData Analyst, San Francisco 49ers\n\n\n2009–2010\nResearch Assistant, Office of Population Research, Princeton University"
-  },
-  {
-    "objectID": "vita.html#consulting-and-management",
-    "href": "vita.html#consulting-and-management",
-    "title": "Vita",
-    "section": "Consulting and Management",
-    "text": "Consulting and Management\n\n\n\n\n\n\n\nYears\nPosition\n\n\n\n\n2017\nProgram Coordinator, eScience Institute, Data Science for Social Good\n\n\n2016–2017\nConsultant, King County Auditor’s Office, Seattle, WA\n\n\n2016\nConsultant, eScience Institute, Data Science for Social Good\n\n\n2014\nProduct Development Consultant, Seremedi, Houston, TX\n\n\n2013–2014\nSpecial Projects Manager, Councilman Ed Gonzalez, Houston City Council"
+    "section": "Projects",
+    "text": "Projects\n\nforest-confidence-interval (scikit-learn-contrib)\n\nLed original development and first-authored the peer-reviewed JOSS publication (2017) for forestci (PyPI, scikit-learn-contrib) — a Python implementation of Wager, Hastie & Efron’s infinitesimal jackknife confidence intervals for random forests; contributes to ongoing development.\n\nWandarr — Travel Intelligence & Itinerary Platform\n\nBuilt and launched wandarr, a production travel-intelligence PWA (FastAPI, PostgreSQL, React + Vite) that fuses Google Places POI discovery with OpenAIP drone-airspace data into ranked itineraries; self-hosted via Docker Compose behind Cloudflare with account-free invite links.\n\nMulti-Sport Data & Analytics Platform\n\nEngineered a production-grade sports prediction web app and FastAPI service serving calibrated win probabilities for NBA, NCAA, and NFL games; designed ETL pipelines ingesting from The Odds API, KenPom, and Sports-Reference into a Postgres backend with schema enforcement and lineage tracking.\nBuilt an NBA data platform (nba_api, Airflow, dbt, Postgres) with medallion architecture, dbt schema tests, source freshness checks, and automated data quality validation.\n\nJob Intelligence Platform\n\nArchitected a self-hosted, containerized job intelligence platform (Docker Compose + Ollama) that aggregates postings from multiple job boards daily, enriches each listing with a local LLM, and ranks by résumé fit using sentence embeddings and cosine similarity, delivering plain-language match narratives and a transparent Apply Priority heuristic on fully local infrastructure.\nDeveloped a capability-matrix scoring layer that maps job requirements to structured skill ratings and generates per-match talking points; a self-service data product that converts a judgment-heavy screening process into a quantified, reproducible workflow with end-to-end data quality validation.\n\nDroneVitals: UAV Telemetry & Operations Ecosystem\n\nBuilt DroneVitals, a UAV post-shoot automation system pairing deterministic threshold agents with Claude Sonnet LLM agents under a SQLite-ledger orchestrator (idempotent, exactly-once delivery across subagents) — its SHA-256 + RFC-3161 forensic evidence layer produced a cryptographically verifiable claim packet used in a real Asurion warranty dispute; published to PyPI with 90%+ enforced test coverage.\n\nHomelab AI Orchestration Platform\n\nDesigned and operate an AI-agent dispatch system that runs overnight coding sessions across 6 repos, synthesizes a prioritized work queue by 7 AM, and routes tasks by cost tier, from local Qwen (free) through DeepSeek to Claude, with a shared JSONL spend ledger and per-call budget caps; runs in production on a 92-container platform behind Cloudflare Tunnel, Authentik SSO, and Grafana/Loki observability, with a 5-model frontier panel that auto-escalates to Gemini Flash on model disagreement."
   },
   {
     "objectID": "vita.html#technical-skills",
@@ -95,21 +95,21 @@
     "href": "vita.html#professional-service",
     "title": "Vita",
     "section": "Professional Service",
-    "text": "Professional Service\nMemberships: American Sociological Association, Population Association of America, International Union for the Scientific Study of Population, Cascadia Urban Analytics Cooperative, Association for the Advancement of Artificial Intelligence\nRefereeing: Population Research and Policy Review, Population and Environment, Social Forces, Socius, Urban Affairs"
+    "text": "Professional Service\nMember   American Sociological Association, Population Association of America, International Union for the Scientific Study of Population, Cascadia Urban Analytics Cooperative, Association for the Advancement of Artificial Intelligence\nRefereeing   Population Research and Policy Review, Population and Environment, Social Forces, Socius, Urban Affairs"
   },
   {
-    "objectID": "vita.html#volunteer",
-    "href": "vita.html#volunteer",
+    "objectID": "vita.html#volunteer-experience",
+    "href": "vita.html#volunteer-experience",
     "title": "Vita",
-    "section": "Volunteer",
-    "text": "Volunteer\n2023–   Communications Vice Chair, Princeton Alumni Association of Houston"
+    "section": "Volunteer Experience",
+    "text": "Volunteer Experience\n2023–Present   Communications Vice Chair, Princeton Alumni Association of Houston"
   },
   {
     "objectID": "vita.html#media-and-awards",
     "href": "vita.html#media-and-awards",
     "title": "Vita",
     "section": "Media and Awards",
-    "text": "Media and Awards\n\n\n\nYear\n\n\n\n\n\n2024\nKarna — Technical Achievement Award\n\n\n2023\nKarna — President’s Award\n\n\n2023\nKarna — Technical Achievement Award\n\n\n2023\nKarna — Health Impact Award\n\n\n2022\nKarna — Community Engagement Award\n\n\n2022\nKarna — Outstanding Publication Award runner-up\n\n\n2018\nOnline calculator to help tackle disparities in the criminal justice system in Washington state\n\n\n2017\nMy eScience Experience\n\n\n2017\nGitHub for Collaboration\n\n\n2016\nLegal Financial Obligations\n\n\n2015\nBudding UW Data Scientists Use Their Powers for Social Good\n\n\n2015\nUW students put data science skills to use for social good"
+    "text": "Media and Awards\n\n\n\nYear\n\n\n\n\n\n2024\nKarna – Technical Achievement Award\n\n\n2023\nKarna – President’s Award\n\n\n2023\nKarna – Technical Achievement Award\n\n\n2023\nKarna – Health Impact Award\n\n\n2022\nKarna – Community Engagement Award\n\n\n2022\nKarna – Outstanding Publication Award runner-up\n\n\n2018\nOnline calculator to help tackle disparities in the criminal justice system in Washington state\n\n\n2017\nMy eScience Experience\n\n\n2017\nGitHub for Collaboration\n\n\n2016\nLegal Financial Obligations\n\n\n2015\nBudding UW Data Scientists Use Their Powers for Social Good\n\n\n2015\nUW students put data science skills to use for social good"
   },
   {
     "objectID": "vita.html#references",
