@@ -1,0 +1,240 @@
+---
+title: "Week One Told You Nothing"
+date: "2026-09-26"
+author: "Kivan Polimis"
+description: "I ran an 18-season LOSO horse race — prior, rational updater, market posterior — to ask whether the Week-2 odds are actually better forecasts than the preseason odds were. They are not."
+categories: [sports, football, premier-league, statistics, betting, data-viz]
+draft: false
+jupyter: blog
+---
+
+```{python}
+#| label: setup
+#| include: false
+
+import json
+import os
+import sys
+
+import altair as alt
+import numpy as np
+import pandas as pd
+
+# ── footy helpers (shared) ────────────────────────────────────────────────────
+sys.path.insert(0, os.path.join(os.getcwd(), ".."))
+from _utils import _bar_colour  # noqa: E402
+
+DATA_DIR = "data"
+
+# ── Wave 1: full-sample descriptives (labelled: NOT out-of-sample) ────────────
+with open(f"{DATA_DIR}/wave1_results.json") as f:
+    w1 = json.load(f)
+BETA_MARKET = w1["beta_market"]["constrained"]
+SE_MARKET   = w1["beta_market"]["constrained_se"]
+N_MATCHES   = w1["beta_market"]["n_matches"]
+N_SEASONS   = w1["beta_market"]["n_seasons"]
+K_COMM      = w1["k_hat_commensurated_slope"]
+RATIO       = w1["overreaction_ratio"]
+GAP         = BETA_MARKET - K_COMM
+PRIOR_R     = w1["sanity_gates"]["prior_vs_final_points_r"]
+
+# ── Wave 2: LOSO horse race (18 folds, 10K sims per checkpoint) ───────────────
+with open(f"{DATA_DIR}/wave2_results.json") as f:
+    w2 = json.load(f)
+loso_scores = pd.read_parquet(f"{DATA_DIR}/loso_scores.parquet")
+loso_boot   = pd.read_parquet(f"{DATA_DIR}/loso_boot.parquet")
+loso_diffs  = pd.read_parquet(f"{DATA_DIR}/loso_diffs.parquet")
+
+# ── Wave 3: decay curve (full-sample descriptive, NOT LOSO) ───────────────────
+decay = pd.read_parquet(f"{DATA_DIR}/decay_curve.parquet")
+
+# ── Prior quality: strength vs final points, tier top-4 rates ─────────────────
+panel = pd.read_parquet(f"{DATA_DIR}/panel_priors.parquet")
+panel["club"] = (panel["club_id"].str.replace("epl:", "", regex=False)
+                                 .str.replace("-", " ").str.title())
+panel["season_lbl"] = ("20" + panel["season"].str[:2] + "/"
+                       + panel["season"].str[2:])
+panel["top4"] = panel["final_position"] <= 4
+tier_top4 = (panel.groupby("preseason_tier", observed=True)["top4"]
+                  .mean().reindex(["top", "mid", "bottom"]))
+R_CHECK = np.corrcoef(panel["prior_strength"], panel["final_points"])[0, 1]
+
+# ── Convenience frames for the charts ─────────────────────────────────────────
+TARGET_LBL = {"brier_top4": "Top-4", "brier_releg": "Relegation"}
+
+mean_scores = (loso_scores.groupby("checkpoint")[["brier_top4", "brier_releg"]]
+               .mean().reindex(["prior", "rational", "market"]))
+
+diff_long = (loso_diffs.loc[loso_diffs["checkpoint"] == "market",
+                            ["season", "brier_top4", "brier_releg"]]
+             .melt(id_vars="season", var_name="metric", value_name="diff"))
+diff_long["target"] = diff_long["metric"].map(TARGET_LBL)
+diff_long["season_lbl"] = ("20" + diff_long["season"].str[:2] + "/"
+                           + diff_long["season"].str[2:])
+
+boot_m = loso_boot[(loso_boot["checkpoint"] == "market")
+                   & loso_boot["metric"].isin(TARGET_LBL)].copy()
+boot_m["target"] = boot_m["metric"].map(TARGET_LBL)
+```
+
+The 2026/27 [Premier League](https://www.premierleague.com/en) season opened last month, and the bookmakers did what they always do after an opening weekend: they moved. Teams that won saw their season odds shorten by Tuesday; teams that lost drifted out. The question I want to ask is not whether the market should have moved — new information arrived, and a price that ignores information is a worse price — but whether it should have moved *that much*.
+
+The Bayesian framing makes the stakes precise. The preseason odds are the market's prior, the distillation of everything knowable before a ball is kicked. Week 1 is one observation — 1 of 38 matches, about 2.6% of the season's evidence, and a noisy 2.6% at that. The Week-2 odds are the market's posterior. A rational updater confronted with one match barely moves. If the market moves substantially more than the results justify, and seasons still end near the preseason prior anyway, the Week-1 move was overreaction. I have eighteen seasons of data to check.
+
+## The prior is hard to beat
+
+Before asking whether the posterior overshoots, it is worth establishing what the prior is worth — because the preseason odds turn out to carry a startling amount of information. For every team in every season from 2008/09 through 2025/26 I built a preseason strength rating: a regression-toward-the-mean seed from last season's table, refined by the Week-1 closing lines, which are posted before any match is played. That prior strength correlates with final league points at r = 0.81. For instance, sort the 360 team-seasons into preseason terciles and the top tier goes on to finish in the top four 52% of the time, the middle tier 5% of the time, and the bottom tier never — not once in eighteen seasons. Whatever Week 1 tells the market, it is competing against a prior that already knows most of the answer.
+
+```{python}
+#| label: chart-prior-quality
+#| echo: false
+#| fig-cap: "Preseason prior strength against final league points, 360 team-seasons (2008/09–2025/26). Colour is the preseason tercile; the correlation is r = 0.81."
+
+sc_df = panel[["club", "season_lbl", "prior_strength", "final_points",
+               "preseason_tier"]].copy()
+sc_df["tier"] = sc_df["preseason_tier"].astype(str).str.title()
+
+scatter = alt.Chart(sc_df).mark_circle(size=45, opacity=0.55).encode(
+    x=alt.X("prior_strength:Q",
+            axis=alt.Axis(title="Preseason prior strength")),
+    y=alt.Y("final_points:Q",
+            axis=alt.Axis(title="Final league points"),
+            scale=alt.Scale(zero=False)),
+    color=alt.Color("tier:N",
+                    scale=alt.Scale(domain=["Top", "Mid", "Bottom"],
+                                    range=["#1f77b4", "#999999", "#e67e22"]),
+                    legend=alt.Legend(title="Preseason tier")),
+    tooltip=[
+        alt.Tooltip("club:N",           title="Club"),
+        alt.Tooltip("season_lbl:N",     title="Season"),
+        alt.Tooltip("prior_strength:Q", title="Prior strength", format=".2f"),
+        alt.Tooltip("final_points:Q",   title="Final points"),
+    ],
+)
+scatter.properties(
+    width=620, height=340,
+    title="The Preseason Odds Already Know Most of the Answer",
+).interactive()
+```
+
+## The market moves — about 20% more than the results justify
+
+Now the move itself. Per team, I define the Week-1 shock as points earned minus points expected — where the expectation comes from that very match's own pre-match odds, so opponent quality, venue, and the market's prior all net out in one step. Per Week-2 match, I measure the surprise: how far the Week-2 closing line sits from where the prior ratings said it should. Pooling 167 Week-2 matches across 18 seasons and regressing surprise on shock (season-clustered errors) gives the market's average response, β̂ = 0.047 (SE = 0.011). The rational benchmark — an Elo-style updater with its response fitted historically on the same data, refit onto the same scale — moves K̂ = 0.039 per unit of shock. The ratio is 1.20: the market moves roughly 20% more than a calibrated results-only updater would.
+
+One honest caveat before that number hardens into a headline. The gap β̂ − K̂ is about 0.008, which is less than one clustered standard error (0.011). At full sample the ratio is descriptive — suggestive of overreaction, not statistically distinguishable from a rational update. Which is exactly why the next section exists: rather than argue about the coefficient, I can race the three forecasts and let the season endings adjudicate.
+
+## The horse race
+
+Here is the design. For each of the 18 seasons I hold it out entirely and fit everything — the goals model, the Elo K, the seed and shrinkage weights, the market-response β — on the other 17. Then I build three ratings snapshots for the held-out season: the **prior** (preseason ratings, untouched), the **rational posterior** (prior + K̂ · shock), and the **market posterior** (prior + β̂ · shock). Each snapshot simulates the full 380-fixture season 10,000 times, and the resulting top-4 and relegation probabilities are scored against what actually happened, with Brier scores. No checkpoint ever sees the season it is scored on.
+
+```{python}
+#| label: tbl-horse-race
+#| echo: false
+
+_disp = mean_scores.copy()
+_disp.index = ["Prior", "Rational", "Market"]
+_disp.columns = ["Brier (top-4)", "Brier (relegation)"]
+_disp.round(4).style.format("{:.4f}")
+```
+
+On top-4, the prior wins outright: the market posterior scores *worse* (mean difference +0.0015, season-block bootstrap 95% CI [−0.0016, +0.0046]) — and so, more quietly, does the rational updater (+0.0007). On relegation, the market is marginally better (−0.0018), but the CI straddles zero ([−0.0062, +0.0024]). The pre-registered primary sign tests agree: market vs prior on Brier top-4, Holm-corrected p = 1.000; on Brier relegation, Holm-corrected p = 0.961. Some caution is owed to the sample — eighteen seasons is eighteen coin flips for a sign test — but the direction of the caution matters: nothing here suggests the Week-2 odds are better season forecasts than the preseason odds were, and on top-4 the point estimate runs the other way. Eighteen seasons is a small sample of heavily overlapping clubs, so these season-level intervals and sign tests are best read as descriptive: the design has limited power to detect an effect of this size, and the club overlap across seasons means the intervals are, if anything, slightly too narrow.
+
+```{python}
+#| label: chart-horse-race
+#| echo: false
+#| fig-cap: "Per-season Brier score difference, market posterior minus prior, LOSO. Positive = the market's Week-2 read was a worse season forecast. Orange dots are seasons; the black diamond and rule are the bootstrap mean and 95% CI."
+
+zero_rule = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(
+    color="#333333", strokeDash=[4, 3]).encode(x="x:Q")
+
+season_pts = alt.Chart(diff_long).mark_circle(
+    size=80, opacity=0.55, color="#e67e22").encode(
+    x=alt.X("diff:Q",
+            axis=alt.Axis(title="Brier difference, market − prior "
+                                "(positive = market worse)", format=".3f")),
+    y=alt.Y("target:N", axis=alt.Axis(title=None),
+            sort=["Top-4", "Relegation"]),
+    tooltip=[
+        alt.Tooltip("season_lbl:N", title="Season"),
+        alt.Tooltip("target:N",     title="Target"),
+        alt.Tooltip("diff:Q",       title="Market − prior", format=".4f"),
+    ],
+)
+ci_rule = alt.Chart(boot_m).mark_rule(color="#111111", size=2).encode(
+    x="ci_low:Q", x2="ci_high:Q",
+    y=alt.Y("target:N", sort=["Top-4", "Relegation"]),
+)
+mean_pt = alt.Chart(boot_m).mark_point(
+    shape="diamond", size=140, filled=True, color="#111111").encode(
+    x="mean_diff:Q",
+    y=alt.Y("target:N", sort=["Top-4", "Relegation"]),
+    tooltip=[
+        alt.Tooltip("target:N",    title="Target"),
+        alt.Tooltip("mean_diff:Q", title="Mean diff",  format=".4f"),
+        alt.Tooltip("ci_low:Q",    title="95% CI low", format=".4f"),
+        alt.Tooltip("ci_high:Q",   title="95% CI high", format=".4f"),
+    ],
+)
+(zero_rule + season_pts + ci_rule + mean_pt).properties(
+    width=620, height=160,
+    title="Eighteen Seasons of Market-vs-Prior: the Week-2 Odds Buy Nothing",
+).interactive()
+```
+
+The per-season dots are the honest picture: in some seasons the Week-2 read helps (2009/10 saves the market a solid margin on top-4), in others it hurts (2014/15 costs it more than the average gap), and the mean sits within a hair of zero on relegation and on the wrong side of it on top-4. Eighteen seasons, ten thousand simulations per checkpoint, every fit walled off from the season it was scored on. The market moved. It didn't help.
+
+## Does the market take it back?
+
+If the Week-1 move is overreaction, there should be a signature in the weeks that follow: re-run the surprise regression against the Week-*k* odds for k = 3, 4, 5, 6, and the coefficient should decay toward zero as the market unwinds its overshoot. These are full-sample descriptive fits, not LOSO scores, so read them as texture rather than verdict.
+
+```{python}
+#| label: chart-decay
+#| echo: false
+#| fig-cap: "Week-1 shock coefficient β_k against Week-k odds, k = 2…6, with 95% CIs (full-sample, season-clustered; descriptive, not LOSO). Dashed line: zero. Dotted line: the Week-2 anchor, β = 0.047."
+
+d = decay.copy()
+d["k5_note"] = np.where(d["week"] == 5, "near zero — CI straddles 0", "")
+
+zero_h = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(
+    color="#333333", strokeDash=[4, 3]).encode(y="y:Q")
+anchor_h = alt.Chart(pd.DataFrame({"y": [BETA_MARKET]})).mark_rule(
+    color="#888888", strokeDash=[2, 2]).encode(y="y:Q")
+
+err = alt.Chart(d).mark_rule(color="#1f77b4", size=2).encode(
+    x=alt.X("week:Q",
+            scale=alt.Scale(domain=[1.5, 6.5]),
+            axis=alt.Axis(title="Week k (odds read after Week 1)",
+                          values=[2, 3, 4, 5, 6], format="d")),
+    y=alt.Y("ci_lo:Q", axis=alt.Axis(title="β_k (market response per unit "
+                                           "of Week-1 shock)", format=".2f")),
+    y2="ci_hi:Q",
+)
+pts = alt.Chart(d).mark_circle(size=110, color="#1f77b4").encode(
+    x="week:Q", y="beta_market:Q",
+    tooltip=[
+        alt.Tooltip("week:Q",        title="Week", format="d"),
+        alt.Tooltip("beta_market:Q", title="β_k",  format=".4f"),
+        alt.Tooltip("ci_lo:Q",       title="CI low",  format=".4f"),
+        alt.Tooltip("ci_hi:Q",       title="CI high", format=".4f"),
+        alt.Tooltip("n_matches:Q",   title="Matches"),
+    ],
+)
+k5_txt = alt.Chart(d[d["week"] == 5]).mark_text(
+    align="left", dx=10, dy=-2, fontSize=10, color="#555555").encode(
+    x="week:Q", y="beta_market:Q", text="k5_note:N",
+)
+(zero_h + anchor_h + err + pts + k5_txt).properties(
+    width=620, height=300,
+    title="The Decay Curve Is Noisy — the Unwind Never Cleanly Arrives",
+).interactive()
+```
+
+The clean story would run: β falls week by week and reaches zero once the market has digested its mistake. The actual curve half-cooperates. β drops from 0.047 at Week 2 to the low 0.03s at Weeks 3 and 4, then collapses to 0.004 at Week 5 — which looks exactly like the reversal signature, except the confidence interval straddles zero ([−0.015, +0.025]) — and then bounces back to 0.044 at Week 6. A true unwind does not bounce. The honest reading is that the decay is noisy: the Week-5 dip may be the market taking the overreaction back, or it may be sampling noise in ~163 matches, and this design cannot say which. I will not oversell a curve that refuses to decay.
+
+## What Week 1 is worth
+
+The thesis survives the caveats. The preseason odds already contained the information — r = 0.81 against final points, a 52/5/0 top-4 gradient across the terciles — and Week 1 gave the market an excuse to move on top of it. The market took the excuse, moved about 20% more than a calibrated results-only updater would, and by May had nothing to show for it: the Week-2 posterior beat the preseason prior on neither primary metric, and on top-4 the point estimate says the move made the forecast worse. So when the odds shift dramatically after this or any opening weekend, some caution about reading too much into it is warranted. The season's evidence arrives 38 matches at a time. Week 1 is one of them.
+
+---
+
+*Match results and 1X2 odds from [football-data.co.uk](https://www.football-data.co.uk), seasons 2008/09–2025/26 (Bet365 lines; closing where posted from 2019/20, opening before — about 39% of the surprise rows use true closing lines). All numbers in this post are frozen analysis outputs in the post's `data/` directory; the horse race is nested leave-one-season-out with 10,000 simulation replicates per checkpoint, and sign tests are Holm-corrected. Full method spec and code: [github.com/kpolimis/kpolimis.github.io](https://github.com/kpolimis/kpolimis.github.io).*

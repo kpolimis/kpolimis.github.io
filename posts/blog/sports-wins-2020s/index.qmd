@@ -1,0 +1,72 @@
+---
+title: "Wins Without Rings"
+date: "2026-10-22"
+author: "Kivan Polimis"
+description: "A viral graphic ranks 186 franchises by 2020s win percentage across seven leagues. Three measurement problems make it misleading — and fixing them surfaces a more interesting question."
+categories: [sports, data-viz, nba, nfl, nhl, mlb, nwsl, wnba, mls]
+jupyter: blog
+draft: true
+---
+
+```{python}
+#| echo: false
+#| output: false
+import matplotlib as mpl
+import pandas as pd
+
+mpl.rcParams.update({
+    "figure.dpi": 150,
+    "figure.figsize": (9, 5.5),
+    "font.family": "sans-serif",
+    "font.size": 11,
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+    "axes.grid": True,
+    "grid.linewidth": 0.5,
+    "grid.alpha": 0.4,
+})
+```
+
+A [graphic posted on October 15th](https://x.com) ranked 186 franchises by win percentage across the 2020s — NBA, NFL, MLB, NHL, MLS, NWSL, and WNBA — and pulled 148K views. The concept is genuinely interesting. Three measurement problems make the current version harder to interpret than it looks, and fixing them changes what the data actually says.
+
+## Three problems with the original
+
+**Cross-sport win percentages are not on the same scale.** MLB win percentages cluster tightly around .500 by design: 162 games per season, high parity, strong mean reversion over a long schedule. The NFL spreads much wider with 17 games and higher variance per result. A team at 58% in the NFL sits roughly 2 standard deviations above its league mean; the same figure in MLB is about 1.2 standard deviations. Combining them into a single ranking sorts by league structure as much as by team quality — the NFL and WNBA float to the top not because their champions are more dominant, but because shorter seasons produce more extreme win percentages.
+
+**Expansion franchises distort the ranking.** The Golden State Valkyries appear at #11 overall after roughly 1.4 seasons of data. With that sample size, the standard error on their estimated win percentage is nearly twice what it is for a franchise with a full window. A tenure-weighted adjustment — shrinking short-window franchises toward the league mean in proportion to their sample size, the same logic as a Bayesian prior — moves the Valkyries' effective estimate closer to the WNBA middle. The yellow border in the original graphic flags new teams but gives no indication of how much to discount the number.
+
+**The most interesting question is invisible.** A combined win percentage ranking cannot show whether regular-season dominance translates into championships — and that relationship turns out to be weak in most leagues. The fix is two charts: per-league panels (so comparisons are within the same scale), and a win-percentage-versus-championships scatter (so the conversion question becomes readable).
+
+## Within-league rankings
+
+The first figure breaks the original into per-league panels, sorted by win percentage within each league. Dot size scales with championships won in the window; hollow markers flag expansion franchises.
+
+```{python}
+#| echo: false
+#| label: fig-league-panels
+#| fig-cap: "Within-league win % rankings for all 7 leagues, Jan 2020–Oct 2026. Dot size scales with championships won. Hollow circles = franchises created after Jan 1, 2020. Source: compiled league records."
+from IPython.display import Image
+
+Image("figures/fig1_league_panels.png")
+```
+
+A few things stand out. In the NFL, the Bills and Chiefs are nearly indistinguishable by win percentage — the largest dots (championships) are not at the top. In the NHL, the Bruins and Oilers sit near the top of a crowded cluster, while the Panthers and Lightning — smaller total win%, multiple Cups — are a few spots below. In the WNBA, the Aces are the obvious outlier: large dot, top of the distribution, both wins and rings. The Valkyries appear near the top too, but hollow — one and a half seasons at a high clip, with no hardware yet and no way to know if the rate is real.
+
+## Who converts wins into championships?
+
+The second figure asks the conversion question directly. The x-axis is each team's win percentage standardized within its league (z-score), so a Bills at x ≈ 2.1 and a Chiefs at x ≈ 2.0 are genuinely close in regular-season performance. The y-axis is championships won. Dot size scales with seasons of data.
+
+```{python}
+#| echo: false
+#| label: fig-wins-vs-titles
+#| fig-cap: "Win % (z-score within league) vs. championships won, Jan 2020–Oct 2026. Dot size = seasons of data (larger = more certain estimate). Hollow circles = expansion franchises. Source: compiled league records."
+Image("figures/fig2_wins_vs_titles.png")
+```
+
+The NFL panel makes the Bills-Chiefs inversion impossible to miss: the Bills are the rightmost point in the league at zero championships, while the Chiefs — essentially tied in win percentage — have three Super Bowls and five Finals appearances. This is not a rounding error or a quirk of one bad season; it is a sustained, multi-year gap in playoff execution between two teams whose regular seasons look nearly identical.
+
+The NHL panel shows the same structure. The Bruins have the second-highest win percentage in the league and zero Stanley Cups; the Panthers, a tick below them, have two. The Oilers went to back-to-back Finals and won neither. In the NHL, reaching the Finals is nearly as hard as converting — and the teams that do it most often (Panthers, Lightning) are not the ones with the highest regular-season marks.
+
+The MLB panel is the exception. The Dodgers sit in the upper right — highest win percentage in the league, three World Series titles — which is the expected pattern and the one the original graphic implicitly assumes everywhere. The Dodgers are not representative.
+
+Two things the scatter cannot show: whether the conversion gap reflects playoff structure, roster construction, coaching, or luck — and whether the pattern is stable across a longer window. The 2020s sample covers roughly six to seven seasons for most franchises, which is enough to surface the pattern but not enough to distinguish skill from variance in a single-elimination format. That question is worth a more careful look, and a follow-up post will take it on with the full dataset.
