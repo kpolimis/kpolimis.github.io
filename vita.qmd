@@ -16,20 +16,14 @@ toc-depth: 2
 
 ## Employment
 
-<div class="cv-section">
-
-**2021–Present** &emsp; Senior Data Scientist, [Karna](https://karna.com), Atlanta, GA
-
-**2020–2021** &emsp; Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX
-
-**2020–Present** &emsp; Principal and Founder, [Atlas Analytics](https://www.analyticsbyatlas.com/), Houston, TX
-
-**2018–2020** &emsp; Data Scientist, MAANA, Houston, TX
-
-**2017–2018** &emsp; Postdoctoral Researcher, [Università Bocconi](http://www.dondena.unibocconi.it/wps/wcm/connect/Cdr/Centro_Dondena/Home), Milan, Italy
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy
-
-</div>
+<table style="border-collapse: collapse; width: 100%;">
+<tr><td style="width: 140px; font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2021–Present</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">Senior Data Scientist, <a href="https://karna.com">Karna</a>, Atlanta, GA</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2020–2021</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">Senior Policy Advisor, Office of Harris County Judge Lina Hidalgo, Houston, TX</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2020–Present</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">Principal and Founder, <a href="https://www.analyticsbyatlas.com/">Atlas Analytics</a>, Houston, TX</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2018–2020</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">Data Scientist, MAANA, Houston, TX</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.1em 0;">2017–2018</td><td style="vertical-align: top; padding: 0.2em 0 0.1em 0;">Postdoctoral Researcher, <a href="http://www.dondena.unibocconi.it/wps/wcm/connect/Cdr/Centro_Dondena/Home">Università Bocconi</a>, Milan, Italy</td></tr>
+<tr><td></td><td style="vertical-align: top; padding: 0 0 0 0; color: #555; font-size: 0.95em;">Carlo F. Dondena Centre for Research on Social Dynamics and Public Policy</td></tr>
+</table>
 
 ---
 
@@ -37,9 +31,9 @@ toc-depth: 2
 
 **2017** &emsp; Ph.D., Computational Social Science, University of Washington
 
-- Center for Statistics and the Social Sciences: Certification in Social Statistics
 - Dissertation: *Developing Computational Approaches to Investigate Health Inequalities*
 - Advisors: Hedwig Lee (co-chair), Kyle Crowder (co-chair), Emilio Zagheni, Ariel Rokem, and Darryl Holman
+- Center for Statistics and the Social Sciences: Certification in Social Statistics
 
 **2012** &emsp; M.A., Sociology, University of North Carolina at Chapel Hill
 
@@ -112,11 +106,11 @@ Turner, Robert W., Asheley Skinner, Eliana Perrin, **Kivan Polimis**, and Tamera
 
 ## Teaching Experience
 
-**2021–Present** &emsp; University of Washington, Department of Sociology — Data and Society (SOC 225) (Instructor)
-
-**2016** &emsp; University of Washington, Center for Statistics and the Social Sciences — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant
-
-**2015** &emsp; University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant
+<table style="border-collapse: collapse; width: 100%;">
+<tr><td style="width: 140px; font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2021–Present</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">University of Washington, Department of Sociology — Data and Society (SOC 225) (Instructor)</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2016</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">University of Washington, Center for Statistics and the Social Sciences — Quantitative Techniques in Sociology (CSSS 507/SOC 506), Graduate Teaching Assistant</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0 0;">2015</td><td style="vertical-align: top; padding: 0.2em 0 0 0;">University of Washington, Department of Sociology — Applied Social Statistics I & II (SOC 504 & SOC 505), Graduate Teaching Assistant</td></tr>
+</table>
 
 ---
 
@@ -146,9 +140,10 @@ Turner, Robert W., Asheley Skinner, Eliana Perrin, **Kivan Polimis**, and Tamera
 
 ## Affiliations
 
-**2019–Present** &emsp; Regional Affiliate, [Center for the Study of Demography and Ecology](https://csde.washington.edu), Seattle, WA 98105
-
-**2017–2018** &emsp; Postdoctoral Affiliate, [Bocconi Institute for Data Science and Analytics](https://bidsa.unibocconi.eu), Milan, Italy 20136
+<table style="border-collapse: collapse; width: 100%;">
+<tr><td style="width: 140px; font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0.6em 0;">2019–Present</td><td style="vertical-align: top; padding: 0.2em 0 0.6em 0;">Regional Affiliate, <a href="https://csde.washington.edu">Center for the Study of Demography and Ecology</a>, Seattle, WA 98105</td></tr>
+<tr><td style="font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0 0;">2017–2018</td><td style="vertical-align: top; padding: 0.2em 0 0 0;">Postdoctoral Affiliate, <a href="https://bidsa.unibocconi.eu">Bocconi Institute for Data Science and Analytics</a>, Milan, Italy 20136</td></tr>
+</table>
 
 ---
 
@@ -217,7 +212,9 @@ Rokem, Ariel, **Kivan Polimis**, and Bryna Hazelton. 2016. [forest-confidence-in
 
 ## Volunteer Experience
 
-**2023–Present** &emsp; Communications Vice Chair, Princeton Alumni Association of Houston
+<table style="border-collapse: collapse; width: 100%;">
+<tr><td style="width: 140px; font-weight: bold; vertical-align: top; padding: 0.2em 1.2em 0 0;">2023–Present</td><td style="vertical-align: top; padding: 0.2em 0 0 0;">Communications Vice Chair, Princeton Alumni Association of Houston</td></tr>
+</table>
 
 ---
 
