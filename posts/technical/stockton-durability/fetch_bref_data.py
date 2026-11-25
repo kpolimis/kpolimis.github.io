@@ -299,6 +299,15 @@ def save(df: pd.DataFrame) -> None:
                     df = pd.concat([on_disk, new_rows], ignore_index=True)
                 else:
                     df = on_disk
+            # Dedup on (player_id, Date) before writing (issue #74): the
+            # VPN-rotation resume path can append rows that already exist on
+            # disk, and duplicates corrupt game counts, games_missed_per_82,
+            # and B2B flags downstream.
+            n_before = len(df)
+            df = df.drop_duplicates(subset=["player_id", "Date"], keep="first")
+            n_dupes = n_before - len(df)
+            if n_dupes:
+                logger.warning("Dropped %d duplicate (player_id, Date) row(s) before save", n_dupes)
             # Normalize all object columns to string — BRef HTML parses inconsistently
             # across player pages (some numeric, some string, some NaN), causing
             # PyArrow type errors on concat. String is safe for all BRef text columns.
