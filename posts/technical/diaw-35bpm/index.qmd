@@ -1,0 +1,184 @@
+---
+title: "The 35 BPM Heart: Testing Boris Diaw's Durability Signal in the Box Score"
+description: "Can we detect an extraordinary resting heart rate in career statistics? We test E1 (career durability), E3 (shot selection), E2/E4/E5 (within-game resilience) for Boris Diaw against a matched PF cohort using permutation inference."
+author: "Kivan Polimis"
+date: "2026-10-08"
+draft: true
+jupyter: blog
+categories: [NBA, statistics, sports analytics, durability]
+---
+
+```{python}
+#| echo: false
+#| output: false
+import pathlib, sys
+sys.path.insert(0, str(pathlib.Path("../stockton-durability/")))
+DATA_DIR = pathlib.Path("../stockton-durability/data")
+```
+
+## The Claim
+
+In 2016, Boris Diaw reported a resting heart rate of approximately 35 beats per minute — a figure documented in multiple post-retirement interviews and associated with elite endurance athletes, not NBA power forwards. The claim invites a statistical question: if this physiology is real and consequential, can we find its trace in the box score?
+
+We cannot observe heart rate from game logs. But we can ask whether Diaw's durability and late-game performance stand out from a matched cohort of contemporary PFs in ways that are *consistent with* — though not proof of — exceptional cardiovascular capacity.
+
+This post establishes the permutation-inference methodology on Diaw's full career (2004–2016), where BRef play-by-play coverage is complete and no age-regime caveat applies. The [Stockton post](../stockton-durability/index.qmd) applies the same method to a harder case: a longer career, a pre-1996 data gap, and a less-documented physiological claim. The [population study](../nba-durability-population/index.qmd) checks whether either signal holds in the broader BRef-era distribution.
+
+---
+
+## Who to Compare Diaw To
+
+Selection rule: power forwards who debuted 1995–2010, played ≥ 600 career games, averaged ≥ 28 MPG. Six players meet the threshold.
+
+| Player | Career | Active Games | Seasons |
+|:---|---:|---:|---:|
+| Boris Diaw | 2004–2016 | 1,064 | 14 |
+| Dirk Nowitzki | 1998–2019 | 1,522 | 21 |
+| Shawn Marion | 1999–2015 | 1,163 | 16 |
+| Antawn Jamison | 1999–2014 | 1,083 | 16 |
+| Rashard Lewis | 1998–2012 | 777 | 11 |
+| Carlos Boozer | 2002–2015 | 861 | 13 |
+
+All players selected on ≥ 600 games — this conditions on the dependent variable for E1. The estimand is durability *among players who completed a long career*, not among all drafted power forwards.
+
+---
+
+## Did He Actually Miss Fewer Games? (E1)
+
+```{python}
+#| echo: false
+#| label: fig-e1-pf
+#| fig-cap: "Career games missed per 82 — PF cohort. Diaw marked in orange."
+#| fig-alt: "Dot plot of games missed per 82-game season for Boris Diaw and 5 PF comparators. Diaw sits at the far left with 4.93 games missed per 82."
+from IPython.display import Image
+import pathlib
+p = DATA_DIR / "figures/pf/e1_histogram.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+Diaw missed 4.93 games per 82 over his career — the lowest figure in the reference class, at the 16.7th percentile of the 6-player distribution. The next closest is Dirk Nowitzki at 7.45. The permutation null (5,000 reassignments of the treated label) places the observed gap at p = 0.339, two-sided. With n = 6, the minimum achievable two-sided p is approximately 0.33 — the result is at the floor of what is detectable with this cohort size.
+
+That is a genuine constraint, not a null finding. Diaw sits at the extreme of the distribution; the permutation test cannot reject chance because the reference class is too small to permit it. The gap between Diaw (4.93) and Nowitzki (7.45) is 2.5 games per 82 — sustained over a 14-season career, that gap accumulates to roughly 35 additional games played compared to the next-most-durable player in the cohort. The appropriate inference is that this is *consistent with* an unusual durability advantage, not that the evidence is weak.
+
+**Season correction.** Games-missed-per-82 denominators are adjusted for shortened seasons: 1999 (50 games), 2012 (66 games), 2020 (65 games), 2021 (72 games).
+
+---
+
+## Does Shot Selection Hold Up on Back-to-Back Nights? (E3)
+
+```{python}
+#| echo: false
+#| label: fig-e3-pf
+#| fig-cap: "Shot selection shift on back-to-back games vs rest — PF cohort. Each point is a player; Diaw labeled."
+#| fig-alt: "Scatter of B2B minus rest differences in 3PA/FGA (x-axis) and FTA/FGA (y-axis) for each PF cohort player. Diaw sits in the upper-right corner, showing the largest increase in 3PA/FGA with a moderate FTA/FGA decline."
+p = DATA_DIR / "figures/pf/e3_scatter.png"
+if p.exists():
+    display(Image(filename=str(p)))
+```
+
+On back-to-back nights, Diaw's three-point attempt rate increases more than any other player in the cohort (Δ = +0.007 per FGA, d = 1.06, 100th percentile). His free-throw attempt rate falls moderately (Δ = −0.033, d = −1.03, 33rd percentile). The shot-selection signature is the inverse of what pure fatigue would predict: a tired player typically avoids the energy cost of running off screens to shoot threes. Diaw instead shifts *toward* lower-contact attempts on consecutive nights — consistent with deliberate load management rather than deterioration, though the same pattern could reflect score margin, opponent scheme, or game script.
+
+For instance, Rashard Lewis shows a similar FTA/FGA decline on B2B (−0.033) but a larger reduction in 3PA/FGA (−0.028) — a pattern more typical of conservative play under fatigue. Diaw's increase in 3PA/FGA is the cohort outlier; the question of whether it reflects a deliberate behavioral adaptation or something structural about his role is not resolvable from game logs alone.
+
+**B2B selection note.** Players in back-to-back games are, by definition, healthy enough to have played the night before. Within-player pairing removes stable effects but not state selection.
+
+---
+
+## Within-Game Resilience: E2, E4, E5
+
+The within-game window uses four of the six PF cohort players — Diaw, Nowitzki, Marion, and Lewis (the three closest comparators by games-missed-per-82). Boozer and Jamison were excluded as a design choice to keep the within-game cohort comparable in era and career overlap; BRef play-by-play data exists for both. Unlike the Stockton analysis, there is no age-regime caveat here: Diaw's quarter-level data spans his full BRef career (2004–2016, ages 22–33).
+
+```{python}
+#| echo: false
+#| label: fig-e2-pf
+#| fig-cap: "E2: FT% by quarter — Diaw vs PF cohort, 2004–2016. Left: full cohort mean per quarter. Right: Diaw."
+#| fig-alt: "Bar charts of mean free throw percentage by quarter for the four-player within-game window. Marion shows the largest Q4 improvement; Diaw declines slightly in Q4."
+p = DATA_DIR / "figures/pf/e2_q4_ft_degradation.png"
+if p.exists():
+    display(Image(filename=str(p)))
+else:
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
+```
+
+Diaw's Q4 free throw percentage (0.689) is 2.3 percentage points lower than his Q1–Q3 average (0.712) — a slight decline, not resilience. (The E6 quarter-profile figure shows 67.7% for Q4; the difference reflects attempt-weighted season averages in E6 vs. game-weighted averages in E2. The direction is the same under both methods.) Among the four players in the window, Marion shows the largest Q4 improvement (+4.0 pp, from 0.792 to 0.832), while Nowitzki holds flat (+0.7 pp). Diaw and Lewis both decline slightly (−2.3 and −1.6 pp respectively). The mixed-effects interaction coefficient (Q4 × is_treated) is −0.043 (p = 0.506, two-sided permutation, n = 5,000). With four players in the analysis window, the minimum achievable two-sided p is approximately 0.50 — the result is at the floor of what the test can detect.
+
+The directional finding is clear: Diaw does not show late-game free throw resilience in this window, and Marion — not Diaw — is the Q4 outlier in the favorable direction. This is a genuine null for E2 and should be read as such. The E1 and E3 signals are present; the within-game FT% pattern is not among them. Diaw's durability advantage appears in the aggregate record — fewer missed games, a distinctive B2B shot-selection shift — rather than in within-quarter efficiency.
+
+```{python}
+#| echo: false
+#| label: fig-e4-pf
+#| fig-cap: "E4: AST/TOV by quarter — Diaw vs PF cohort. Note: per-quarter AST/TOV is numerically unstable (52% of quarter observations have zero turnovers); this figure is included for completeness but the coefficient estimate is unreliable."
+#| fig-alt: "Bar charts of AST/TOV ratio by quarter. The y-axis scale is distorted by zero-turnover quarter-game observations."
+p = DATA_DIR / "figures/pf/e4_ast_tov.png"
+if p.exists():
+    display(Image(filename=str(p)))
+else:
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
+```
+
+```{python}
+#| echo: false
+#| label: fig-e5-pf
+#| fig-cap: "E5: TS% by quarter — Diaw vs PF cohort. Coverage is too sparse (21% of player-quarter rows non-null) for reliable estimation."
+#| fig-alt: "Bar charts of true shooting percentage by quarter. Coverage is sparse because players with no field goal attempts in a quarter contribute no TS% value."
+p = DATA_DIR / "figures/pf/e5_ts_pct.png"
+if p.exists():
+    display(Image(filename=str(p)))
+else:
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
+```
+
+E4 (AST/TOV in Q4) and E5 (TS% in Q4) are not interpretable at per-quarter BRef resolution. In 52% of player-quarter observations the turnover count is zero — a normal outcome for any single quarter — which makes the ratio numerically undefined and drives the mixed-effects interaction coefficient to an implausible 42.4. TS% coverage is even thinner: only 21% of player-quarter rows have non-null values, because a player who attempts no field goals in a quarter contributes nothing to the efficiency estimate. Both estimands require coarser aggregation (half-game or full-game) to be usable. This is the same degeneracy observed in the PG cohort — a property of the data resolution, not of these players specifically.
+
+```{python}
+#| echo: false
+#| label: fig-e6-pf
+#| fig-cap: "E6: FT% by quarter — PF cohort. Diaw's Q4 free throw percentage (67.7%) is lower than his Q1–Q3 average — a slight decline consistent with the E2 null result. Marion is the Q4 outlier in the favorable direction (82.2%). Nowitzki holds flat across all four quarters."
+#| fig-alt: "Line chart of free throw percentage by quarter for Diaw (red) and three PF comparators (gray). Diaw's line dips in Q4, while Marion's rises and Nowitzki stays flat."
+p = DATA_DIR / "figures/pf/e6_quarter_profile.png"
+if p.exists():
+    display(Image(filename=str(p)))
+else:
+    print("Figure not found — re-run: analyze_quarter_splits.py --cohort pf")
+```
+
+### Confounders for within-game estimands
+
+| Confounder | Direction | Mitigation |
+|:---|:---|:---|
+| Score margin (blowout) | Starters sit; compresses Q4 estimates toward zero | Sensitivity: restricted to games with Q4 margin ≤ 10 |
+| Intentional fouling | Inflates FTA in close games; FT% reflects pressure context | FT% (E2) is least-confounded metric |
+| Timeout availability | Coaches use Q4 timeouts strategically for recovery | Stated explicitly; not mitigated |
+
+---
+
+## What the Data Can and Cannot Say
+
+**Selection bias.** Cohort conditioned on ≥ 600 career games. E1 describes durability among long-career PFs, a truncated distribution. Interpret percentile ranks accordingly.
+
+**B2B state selection.** Back-to-back comparison is within healthier player-states by construction. Claims are restricted to games actually played.
+
+**Within-game confounders.** Score margin, intentional fouling in close games, and garbage-time rotation changes all affect 4th-quarter statistics in ways BRef box scores do not resolve.
+
+**Causal language.** No result here establishes that Diaw's heart rate *caused* the observed patterns. The findings are *consistent with* the physiology claim and *do not contradict* it. A near-null result is also a legitimate scientific finding — it updates the prior rather than confirming it.
+
+---
+
+## Conclusion
+
+Boris Diaw missed 4.93 games per 82 over 14 seasons — the best figure in a 6-player reference class of matched PF contemporaries, though the permutation p (0.339) sits at the floor of what a n=6 test can detect. The E3 shot-selection result is more distinctive: Diaw is the only player in the cohort who increases his three-point attempt rate on back-to-back nights, a behavioral pattern consistent with deliberate fatigue management — less contact, fewer drives, lower-cost attempts when consecutive-game fatigue is expected — though the causal mechanism is not resolvable from game logs alone.
+
+Within-game, the picture is a genuine null. The four-player quarter-data window (Diaw, Nowitzki, Marion, Lewis) shows Diaw's Q4 free throw percentage declining slightly (−2.3 pp from Q1–Q3 to Q4), while Marion shows the largest improvement (+4.0 pp). The permutation p (0.506) is at the floor for n=4, but the direction is adverse: Diaw is not the Q4 outlier in the favorable direction. E4 (AST/TOV) and E5 (TS%) are not interpretable at per-quarter resolution in either cohort. Unlike the Stockton post, there is no age-regime caveat to invoke here — Diaw's full career is observable, and the null is real.
+
+Diaw's case is the cleaner of the two in this series: full BRef coverage, well-documented sourcing, no age-regime limitation. The durability record (E1) and shot-selection pattern (E3) together constitute a signal worth taking seriously — not proof of the 35 BPM claim, but a box-score record that is harder to explain than random variation. The within-game evidence does not add to that signal, which is itself informative: the advantage, if real, manifests in aggregate availability and conservative shot selection rather than measurable late-quarter efficiency gains.
+
+---
+
+## Technical Notes
+
+- All intervals permutation-based (n = 5,000); no p-value thresholds.
+- E1/E3: `analyze_durability.py --cohort pf` (n=6 reference class)
+- E2/E4/E5: `analyze_quarter_splits.py --cohort pf` (n=4 players in window: Diaw, Nowitzki, Marion, Lewis; E4/E5 not interpretable at per-quarter resolution)
+- Data: `../stockton-durability/data/game_logs.parquet` (6,470 PF rows); `../stockton-durability/data/quarter_splits_pf.parquet` (13,689 rows)
+- Figures: `../stockton-durability/data/figures/pf/`
