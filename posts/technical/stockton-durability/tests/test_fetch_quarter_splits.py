@@ -291,3 +291,67 @@ class TestParseSeasonRange:
 
     def test_none_returns_none(self):
         assert fqs._parse_season_range(None) is None
+
+
+class _Resp:
+    """Minimal stand-in for requests.Response."""
+
+    def __init__(self, status_code: int, text: str = "", headers: dict | None = None):
+        self.status_code = status_code
+        self.text = text
+        self.headers = headers or {}
+
+
+class TestFetchWithRetry404:
+    """Issue #63: 404 paths must sleep before the box-score fallback fetch."""
+
+    def test_404_sleeps_at_least_rate_limit(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(fqs.requests, "get", lambda *a, **k: _Resp(404))
+        sleeps: list[float] = []
+        monkeypatch.setattr(fqs.time, "sleep", sleeps.append)
+
+        cache_path = tmp_path / "190001010UTA_pbp.html"
+        result = fqs._fetch_with_retry(
+            "https://example.test/pbp", {}, "190001010UTA", True, cache_path
+        )
+
+        assert result is None
+        assert not cache_path.exists()
+        assert sum(sleeps) >= fqs.RATE_LIMIT_SEC
+
+    def test_404_makes_single_request(self, tmp_path, monkeypatch):
+        calls: list[str] = []
+
+        def fake_get(url, **kwargs):
+            calls.append(url)
+            return _Resp(404)
+
+        monkeypatch.setattr(fqs.requests, "get", fake_get)
+        monkeypatch.setattr(fqs.time, "sleep", lambda s: None)
+
+        result = fqs._fetch_with_retry(
+            "https://example.test/pbp", {}, "190001010UTA", True, tmp_path / "x.html"
+        )
+        assert result is None
+        assert len(calls) == 1  # 404 is terminal — no retry storm
+
+    def test_request_exception_retries(self, tmp_path, monkeypatch):
+        """Transient connection resets (VPN rotation) must retry, not skip."""
+        calls: list[int] = []
+
+        def flaky_get(url, **kwargs):
+            calls.append(1)
+            if len(calls) == 1:
+                raise fqs.requests.RequestException("connection reset")
+            return _Resp(200, text="<html>ok</html>")
+
+        monkeypatch.setattr(fqs.requests, "get", flaky_get)
+        monkeypatch.setattr(fqs.time, "sleep", lambda s: None)
+
+        cache_path = tmp_path / "200301140UTA_pbp.html"
+        result = fqs._fetch_with_retry(
+            "https://example.test/pbp", {}, "200301140UTA", True, cache_path
+        )
+        assert result == "<html>ok</html>"
+        assert len(calls) == 2
+        assert cache_path.exists()

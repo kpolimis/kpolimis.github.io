@@ -114,7 +114,9 @@ def _audit_missing_seasons(
     logger.info("\n--- Players with missing seasons: %d ---", len(missing_season_rows))
     logger.info("(note: a missing mid-career season can be legitimate, e.g. overseas)")
     if n_known_gaps:
-        logger.info("(%d documented career-gap seasons excluded — see KNOWN_CAREER_GAPS)", n_known_gaps)
+        logger.info(
+            "(%d documented career-gap seasons excluded — see KNOWN_CAREER_GAPS)", n_known_gaps
+        )
     _log_capped([f"  {pid:<12} {name:<28} missing: {ms}" for pid, name, ms in missing_season_rows])
     return gaps
 

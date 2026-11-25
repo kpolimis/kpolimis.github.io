@@ -143,6 +143,69 @@ def _smoke_test_classifier() -> int:
 
 _REQUIRED_COLS = {"FGA", "FTA", "PTS"}
 
+# Zero-rate thresholds below 100% for columns where a partial regression is
+# plausible (issue #72): a broken "makes 3-pt" branch drives FGA zero-rate to
+# ~40–90% without ever reaching 100%, which the all-zero check misses.
+_ZERO_PCT_MAX = {"FGA": 90.0, "PTS": 90.0}
+
+
+def _check_invariants(df: pd.DataFrame) -> int:
+    """Check row-level cross-column invariants (issue #72).
+
+    Invariants:
+        FT <= FTA               (can't make more free throws than attempted)
+        PTS <= 3*FGA + FT       (max 3 points per field-goal attempt)
+        0 <= TS_pct <= 1.5      (1.5 = mathematical max: a made 3 on one FGA
+                                 gives 3 / (2*1); per-quarter rows can hit it)
+
+    Args:
+        df: Parquet contents under audit.
+
+    Returns:
+        Number of violated invariants (one per invariant, not per row).
+    """
+    checks: list[tuple[str, pd.Series]] = []
+    if {"FT", "FTA"} <= set(df.columns):
+        checks.append(("FT <= FTA", df["FT"] > df["FTA"]))
+    if {"PTS", "FGA", "FT"} <= set(df.columns):
+        checks.append(("PTS <= 3*FGA + FT", df["PTS"] > 3 * df["FGA"] + df["FT"]))
+    if "TS_pct" in df.columns:
+        ts = df["TS_pct"]
+        checks.append(("0 <= TS_pct <= 1.5", (ts < 0) | (ts > 1.5)))
+
+    issues = 0
+    for name, violated in checks:
+        count = int(violated.fillna(False).sum())
+        if count:
+            print(f"*** INVARIANT VIOLATION  {name}: {count} row(s)")
+            issues += 1
+    return issues
+
+
+def _column_flag(
+    col: str, null_pct: float, zero_pct: float, expected_all_null: set[str]
+) -> tuple[str, int]:
+    """Classify one column's null/zero rates into a display flag and issue count.
+
+    Args:
+        col: Column name.
+        null_pct: Percent of null values (0–100).
+        zero_pct: Percent of zero values among non-null (0–100, or NaN).
+        expected_all_null: Columns where 100% null is expected.
+
+    Returns:
+        Tuple of (flag string for the report row, issue count 0 or 1).
+    """
+    if null_pct == 100:
+        if col not in expected_all_null:
+            return "*** UNEXPECTED ALL-NULL", 1
+        return "(expected — PBP path only)", 0
+    if zero_pct == 100:
+        return "*** ALL ZERO", 1
+    if col in _ZERO_PCT_MAX and zero_pct > _ZERO_PCT_MAX[col]:
+        return f"*** ZERO RATE {zero_pct:.1f}% > {_ZERO_PCT_MAX[col]:.0f}% threshold", 1
+    return "", 0
+
 
 def _audit_file(path: pathlib.Path, error_on_missing: bool = False) -> int:
     """Report null/zero rates for all numeric columns in one parquet file.
@@ -197,60 +260,124 @@ def _audit_file(path: pathlib.Path, error_on_missing: bool = False) -> int:
         mean_v = nonnull.mean() if len(nonnull) else float("nan")
         p50_v = nonnull.median() if len(nonnull) else float("nan")
 
-        flag = ""
-        if null_pct == 100:
-            if col not in expected_all_null:
-                flag = "*** UNEXPECTED ALL-NULL"
-                issues += 1
-            else:
-                flag = "(expected — PBP path only)"
-        elif zero_pct == 100:
-            flag = "*** ALL ZERO"
-            issues += 1
+        flag, col_issues = _column_flag(col, null_pct, zero_pct, expected_all_null)
+        issues += col_issues
 
         print(
             f"{col:<16} {null_pct:>6.1f}% {zero_pct:>6.1f}% {mean_v:>10.3f} {p50_v:>10.3f}  {flag}"
         )
 
+    issues += _check_invariants(df)
     return issues
 
 
-def _sample_html_parse(n: int) -> int:
-    """Parse n cached PBP HTML files and report aggregate stat totals.
+def _sample_triples(paths: list[pathlib.Path], n: int) -> pd.DataFrame:
+    """Sample (player_id, player_name, game_id) triples from the audited parquets.
+
+    Only PBP-derived rows (quarter != 'full') whose cached ``*_pbp.html`` exists
+    are eligible — a box-fallback row has no PBP HTML to round-trip. The sample
+    is deterministic and round-robins across players so every cohort's
+    name-matching is exercised, not just Stockton's (issue #71).
 
     Args:
-        n: Number of cached files to parse.
+        paths: Parquet files under audit.
+        n: Maximum number of triples to return.
 
     Returns:
-        Number of issues found (0 = clean, >0 = issues).
+        DataFrame with columns player_id, player_name, game_id, season,
+        age_regime; at most n rows (may be empty).
+    """
+    cols = ["player_id", "player_name", "game_id", "season", "age_regime"]
+    frames = []
+    for p in paths:
+        if not p.exists():
+            continue
+        df = pd.read_parquet(p)
+        if not {"player_id", "player_name", "game_id"} <= set(df.columns):
+            continue
+        if "quarter" in df.columns:
+            df = df[df["quarter"].astype(str) != "full"]
+        df = df.copy()
+        if "season" not in df.columns:
+            df["season"] = 0
+        if "age_regime" not in df.columns:
+            df["age_regime"] = "audit"
+        frames.append(df[cols].drop_duplicates(subset=["player_id", "game_id"]))
+
+    if not frames:
+        return pd.DataFrame(columns=cols)
+
+    triples = pd.concat(frames, ignore_index=True)
+    triples = triples.drop_duplicates(subset=["player_id", "game_id"])
+    triples = triples[triples["game_id"].map(lambda g: (HTML_CACHE / f"{g}_pbp.html").exists())]
+    if triples.empty:
+        return triples
+
+    triples = triples.sort_values(["player_id", "game_id"])
+    per_player = max(1, n // triples["player_id"].nunique())
+    return triples.groupby("player_id", sort=True).head(per_player).head(n)
+
+
+def _parse_sampled(sampled: pd.DataFrame) -> tuple[dict[str, int], int, list[tuple[str, str]]]:
+    """Re-parse cached PBP HTML for each sampled (player, game) triple.
+
+    Args:
+        sampled: Output of _sample_triples.
+
+    Returns:
+        Tuple of (stat totals, quarter-row count, list of (player_name,
+        game_id) pairs that produced zero rows — a name-matching/parser
+        regression signal, since the parquet has PBP rows for those games).
     """
     import fetch_quarter_splits as fqs  # noqa: PLC0415
 
-    pbp_files = sorted(HTML_CACHE.glob("*_pbp.html"))[:n]
-    if not pbp_files:
-        print("\nNo cached PBP HTML found — skipping HTML sample parse.")
-        return 0
-
-    # Use Stockton for the sample (his games are in the cache)
     totals: dict[str, int] = {"FT": 0, "FTA": 0, "FGA": 0, "PTS": 0, "AST": 0, "TOV": 0}
     row_count = 0
-    for path in pbp_files:
-        game_id = path.stem.replace("_pbp", "")
-        html = path.read_text(encoding="utf-8")
+    zero_row_games: list[tuple[str, str]] = []
+    for t in sampled.itertuples(index=False):
+        html = (HTML_CACHE / f"{t.game_id}_pbp.html").read_text(encoding="utf-8")
+        season = int(t.season) if pd.notna(t.season) else 0
         rows = fqs.parse_pbp_quarters(
-            html, "stockjo01", "John Stockton", game_id, 1996, None, "stockton_34_40"
+            html, t.player_id, t.player_name, t.game_id, season, None, str(t.age_regime)
         )
+        if not rows:
+            zero_row_games.append((t.player_name, t.game_id))
         for r in rows:
             for k in totals:
                 totals[k] += int(r.get(k) or 0)
             row_count += 1
+    return totals, row_count, zero_row_games
 
+
+def _sample_html_parse(n: int, paths: list[pathlib.Path]) -> int:
+    """Round-trip-parse cached PBP HTML for players sampled from the audited parquets.
+
+    Args:
+        n: Number of cached files to parse.
+        paths: Parquet files under audit — the sample is drawn from these so
+            each audited player's own name is used for play-text matching.
+
+    Returns:
+        Number of issues found (0 = clean, >0 = issues).
+    """
+    sampled = _sample_triples(paths, n)
+    if sampled.empty:
+        print("\nNo cached PBP HTML matching the audited parquets — skipping HTML sample parse.")
+        return 0
+
+    totals, row_count, zero_row_games = _parse_sampled(sampled)
+    players = sorted(sampled["player_name"].unique())
     print(f"\n{'=' * 60}")
-    print(f"HTML SAMPLE PARSE  ({len(pbp_files)} PBP files, Stockton)")
+    print(f"HTML SAMPLE PARSE  ({len(sampled)} PBP files, {len(players)} player(s))")
+    print(f"Players: {', '.join(players)}")
     print(f"{'=' * 60}")
     print(f"Quarter rows produced: {row_count}")
 
     issues = 0
+    for name, gid in zero_row_games:
+        print(f"*** ZERO ROWS for {name} in {gid} — name matching or parser regression")
+        issues += 1
+
     if row_count == 0:
         print("*** ZERO QUARTER ROWS across all sample files — parser likely broken")
         issues += 1
@@ -311,7 +438,7 @@ def main() -> int:
 
     html_issues = 0
     if args.sample_html > 0:
-        html_issues = _sample_html_parse(args.sample_html)
+        html_issues = _sample_html_parse(args.sample_html, paths)
 
     print(f"\n{'=' * 60}")
     if total_issues or classifier_failures or html_issues:

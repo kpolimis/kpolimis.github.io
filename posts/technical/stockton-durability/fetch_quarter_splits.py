@@ -215,7 +215,11 @@ def _fetch_with_retry(
                 _ip_blocked_until = time.time() + wait
                 time.sleep(wait)
         elif resp.status_code == 404:
-            return None  # don't log 404 — pre-PBP-era games are expected
+            # Don't log 404 — pre-PBP-era games are expected. But DO sleep:
+            # the caller immediately falls back to a box-score fetch, and an
+            # unslept 404 + fallback pair exceeds BRef's 20 req/min limit.
+            time.sleep(RATE_LIMIT_SEC + _random.uniform(0, RATE_LIMIT_JITTER))
+            return None
         else:
             logger.warning("HTTP %d for game_id=%s (pbp=%s)", resp.status_code, game_id, pbp)
             return None
